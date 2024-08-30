@@ -1,15 +1,21 @@
 package week.on.a.plate.repository.repositoriesForFeatures
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.map
 import week.on.a.plate.core.data.week.DayData
 import week.on.a.plate.core.data.week.RecipeInMenu
 import week.on.a.plate.core.data.week.SelectionInDayData
 import week.on.a.plate.core.data.week.WeekData
+import week.on.a.plate.repository.tables.weekOrg.day.DayAndSelections
 import week.on.a.plate.repository.tables.weekOrg.day.DayDataRepository
 import week.on.a.plate.repository.tables.weekOrg.day.DayMapper
+import week.on.a.plate.repository.tables.weekOrg.recipeInMenu.RecipeInMenuAndRecipe
 import week.on.a.plate.repository.tables.weekOrg.recipeInMenu.RecipeInMenuMapper
 import week.on.a.plate.repository.tables.weekOrg.recipeInMenu.RecipeInMenuRepository
+import week.on.a.plate.repository.tables.weekOrg.selectionInDay.SelectionAndRecipesInMenu
 import week.on.a.plate.repository.tables.weekOrg.selectionInDay.SelectionInDayMapper
 import week.on.a.plate.repository.tables.weekOrg.selectionInDay.SelectionInDayRepository
 import week.on.a.plate.repository.tables.weekOrg.week.WeekDataRepository
@@ -26,6 +32,127 @@ class MenuRepository @Inject constructor(
     private val selectionRepository: SelectionInDayRepository
 ) {
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    fun getWeekFlow(today: Date): Flow<WeekData> {
+        val d = dayRepository.findDay(today).flatMapConcat { day ->
+            weekRepository.getWeekAndDay(day.weekId)
+        }.flatMapConcat { weekAndDays ->
+
+            val weekSelect =
+                selectionRepository.getSelectionAndRecipesInMenu(weekAndDays.week.selectionId)
+
+            val mapDaysSelections = mutableMapOf<Long, Flow<DayAndSelections>>()
+            weekAndDays.days.forEach { day ->
+                mapDaysSelections[day.dayId] = dayRepository.getDayAndSelection(day.dayId)
+            }
+
+            val mapSelectionAndRecipesInMenu = mutableMapOf<Long, Flow<SelectionAndRecipesInMenu>>()
+            mapDaysSelections.values.forEach { flow ->
+                flow.map { dayAndSel ->
+                    dayAndSel.selections.forEach { sel ->
+                        mapSelectionAndRecipesInMenu[sel.selectionId] =
+                            selectionRepository.getSelectionAndRecipesInMenu(sel.selectionId)
+                    }
+                }
+            }
+
+            val mapRecipeInMenuAndRecipe = mutableMapOf<Long, Flow<RecipeInMenuAndRecipe>>()
+            mapSelectionAndRecipesInMenu.values.forEach { flow ->
+                flow.map { selectionAndRecipesInMenu ->
+                    selectionAndRecipesInMenu.recipeInMenu.forEach { recipeInMenu ->
+                        mapRecipeInMenuAndRecipe[recipeInMenu.recipeInMenuId] =
+                            recipeInMenuRepository.getRecipeInMenuAndRecipe(recipeInMenu.recipeId)
+                    }
+                }
+            }
+
+            val weekRecipeInMenuAndRecipe = mutableListOf<Flow<RecipeInMenuAndRecipe>>()
+            weekSelect.map { selectionAndRecipesInMenu ->
+                selectionAndRecipesInMenu.recipeInMenu.forEach { recipeInMenu ->
+                    weekRecipeInMenuAndRecipe.add(
+                        recipeInMenuRepository.getRecipeInMenuAndRecipe(
+                            recipeInMenu.recipeId
+                        )
+                    )
+                }
+            }
+
+            //second
+
+            val mapRecipeInMenuView = mutableMapOf<Long, MutableList<RecipeInMenu>>()
+            mapRecipeInMenuAndRecipe.values.forEach { flow ->
+                flow.map { recipeInMenuAndRecipe ->
+                    with(RecipeInMenuMapper()) {
+                        val newRecipeInMenuView =
+                            recipeInMenuAndRecipe.recipeInMenu.roomToView(recipeInMenuAndRecipe.recipe)
+                        val selectionId = recipeInMenuAndRecipe.recipeInMenu.selectionId
+
+                        if (mapRecipeInMenuView[selectionId] == null) {
+                            mapRecipeInMenuView[selectionId] = mutableListOf(newRecipeInMenuView)
+                        } else {
+                            mapRecipeInMenuView[selectionId]!!.add(newRecipeInMenuView)
+                        }
+                    }
+                }
+            }
+
+            val mapSelectionsView = mutableMapOf<Long, MutableList<SelectionInDayData>>()
+            mapSelectionAndRecipesInMenu.values.forEach { flow ->
+                flow.map { sel ->
+                    with(SelectionInDayMapper()) {
+                        val newSel =
+                            sel.selectionInDay.roomToView(mapRecipeInMenuView[sel.selectionInDay.selectionId]!!)
+                        val dayId = sel.selectionInDay.dayId
+
+                        if (mapSelectionsView[dayId] == null) {
+                            mapSelectionsView[dayId] = mutableListOf(newSel)
+                        } else {
+                            mapSelectionsView[dayId]!!.add(newSel)
+                        }
+                    }
+                }
+            }
+
+            val mapDaysView = mutableListOf<DayData>()
+            mapDaysSelections.values.forEach { flow ->
+                flow.map { dayAndSelections ->
+                    with(DayMapper()) {
+                        val newDay =
+                            dayAndSelections.day.roomToView(mapSelectionsView[dayAndSelections.day.dayId]!!)
+                        mapDaysView.add(newDay)
+                    }
+                }
+            }
+
+
+            val mapWeekRecipeInMenuView = mutableListOf<RecipeInMenu>()
+            weekRecipeInMenuAndRecipe.forEach { flow ->
+                flow.map { recipeInMenuAndRecipe ->
+                    with(RecipeInMenuMapper()) {
+                        val newRecipeInMenuView =
+                            recipeInMenuAndRecipe.recipeInMenu.roomToView(recipeInMenuAndRecipe.recipe)
+
+                        mapWeekRecipeInMenuView.add(newRecipeInMenuView)
+                    }
+                }
+            }
+
+            val mapWeekSelectionsView = weekSelect.map { sel ->
+                with(SelectionInDayMapper()) {
+                    sel.selectionInDay.roomToView(mapWeekRecipeInMenuView)
+                }
+            }
+
+            val weekData = mapWeekSelectionsView.map { weekSelection->
+                with(WeekMapper()) { weekAndDays.week.roomToView(weekSelection, mapDaysView) }
+            }
+
+            weekData
+        }
+        return d
+    }
+
+
     suspend fun getWeek(today: Date): WeekData {
         // цель с помощью наименьшего кол-ва вызовов собрать картину week по кусочкам и отправить
         // желательно при этом не нарушать Flow, чтобы все изменения в объектах отслеживались
@@ -37,6 +164,7 @@ class MenuRepository @Inject constructor(
             mutableMapOf<Long, week.on.a.plate.repository.tables.weekOrg.recipeInMenu.RecipeInMenu>()
         val mapRecipeRoom =
             mutableMapOf<Long, week.on.a.plate.repository.tables.recipe.recipe.Recipe>()
+
 
         // 1. get today
         val todayDay = dayRepository.findDay(today).first()
@@ -139,6 +267,7 @@ class MenuRepository @Inject constructor(
             }
         }
 
+        //6
         val week = with(WeekMapper()) { weekRoom.roomToView(weekSelection!!, days) }
 
         return week
