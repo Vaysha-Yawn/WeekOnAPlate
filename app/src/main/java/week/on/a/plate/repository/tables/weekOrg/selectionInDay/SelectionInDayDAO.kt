@@ -16,9 +16,12 @@ interface SelectionInDayDAO {
     @Query("SELECT * FROM selectioninday")
     fun getAll(): Flow<List<SelectionInDay>>
 
+    @Query("SELECT * FROM selectioninday WHERE selectionId=:selectionId")
+    fun findSelection(selectionId:Long): Flow<SelectionInDay>
+
     @Transaction
     @Query("SELECT * FROM selectioninday WHERE selectionId=:selectionId")
-    fun getSelectionAndRecipesInMenu(selectionId:Long): Flow<List<SelectionAndRecipesInMenu>>
+    fun getSelectionAndRecipesInMenu(selectionId:Long): Flow<SelectionAndRecipesInMenu>
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(selectionInDay: SelectionInDay)

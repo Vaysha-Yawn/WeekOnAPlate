@@ -1,8 +1,10 @@
 package week.on.a.plate.core.data.week
 
+import java.util.Date
+
 data class DayData(
     val id: Long,
-    val date: Int,
+    val date: Date,
     val dayInWeek: DayInWeekData,
     val selections: MutableList<SelectionInDayData>
 ){

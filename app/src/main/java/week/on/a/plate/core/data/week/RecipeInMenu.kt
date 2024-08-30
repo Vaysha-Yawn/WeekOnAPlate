@@ -4,8 +4,8 @@ import week.on.a.plate.core.data.recipe.RecipeState
 import week.on.a.plate.core.data.recipe.RecipeView
 
 data class RecipeInMenu(
-    val id:Long,
+    val id: Long,
     var state: RecipeState,
-    var recipe: RecipeView,
-    var portionsCount:Int
+    var recipe: RecipeShortView,
+    var portionsCount: Int
 )

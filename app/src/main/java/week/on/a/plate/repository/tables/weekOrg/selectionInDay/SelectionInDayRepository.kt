@@ -8,16 +8,15 @@ class SelectionInDayRepository(val dao: SelectionInDayDAO) {
 
     fun read(): Flow<List<SelectionInDay>> = dao.getAll()
 
-    suspend fun create(selectionInDay: SelectionInDay) {
-        dao.insert(selectionInDay)
-    }
+    fun findSelection(selectionId: Long): Flow<SelectionInDay> = dao.findSelection(selectionId)
 
-    suspend fun update(selectionInDay: SelectionInDay) {
-        dao.update(selectionInDay)
-    }
+    fun getSelectionAndRecipesInMenu(selectionId: Long): Flow<SelectionAndRecipesInMenu> =
+        dao.getSelectionAndRecipesInMenu(selectionId)
 
-    suspend fun delete(selectionInDay: SelectionInDay) {
-        dao.delete(selectionInDay)
-    }
+    suspend fun create(selectionInDay: SelectionInDay) = dao.insert(selectionInDay)
+
+    suspend fun update(selectionInDay: SelectionInDay) = dao.update(selectionInDay)
+
+    suspend fun delete(selectionInDay: SelectionInDay) = dao.delete(selectionInDay)
 
 }

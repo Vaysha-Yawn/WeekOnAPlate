@@ -16,13 +16,16 @@ interface WeekDataDAO {
     @Query("SELECT * FROM weekdata")
     fun getAll(): Flow<List<WeekData>>
 
-    @Transaction
     @Query("SELECT * FROM weekdata WHERE weekId=:weekId")
-    fun getWeekAndSelection(weekId:Long): Flow<List<SelectionAndWeek>>
+    fun findWeek(weekId:Long): Flow<WeekData>
 
     @Transaction
     @Query("SELECT * FROM weekdata WHERE weekId=:weekId")
-    fun getWeekAndDay(weekId:Long): Flow<List<WeekAndDays>>
+    fun getWeekAndSelection(weekId:Long): Flow<SelectionAndWeek>
+
+    @Transaction
+    @Query("SELECT * FROM weekdata WHERE weekId=:weekId")
+    fun getWeekAndDay(weekId:Long): Flow<WeekAndDays>
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(weekData: WeekData)

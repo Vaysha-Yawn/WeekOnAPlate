@@ -8,6 +8,12 @@ class WeekDataRepository(val dao: WeekDataDAO) {
 
     fun read(): Flow<List<WeekData>> = dao.getAll()
 
+    fun findWeek(weekId:Long): Flow<WeekData> = dao.findWeek(weekId)
+
+    fun getWeekAndSelection(weekId:Long): Flow<SelectionAndWeek> = dao.getWeekAndSelection(weekId)
+
+    fun getWeekAndDay(weekId:Long): Flow<WeekAndDays> = dao.getWeekAndDay(weekId)
+
     suspend fun create(week: WeekData) {
         dao.insert(week)
     }

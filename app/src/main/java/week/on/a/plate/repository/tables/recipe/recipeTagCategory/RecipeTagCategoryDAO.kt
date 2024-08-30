@@ -18,7 +18,7 @@ interface RecipeTagCategoryDAO {
 
     @Transaction
     @Query("SELECT * FROM recipeTagCategory WHERE recipeTagCategoryId=:recipeTagCategoryId")
-    fun getRecipeTagCategoryAndRecipeTag(recipeTagCategoryId:Long): Flow<List<RecipeTagCategoryAndRecipeTag>>
+    fun getRecipeTagCategoryAndRecipeTag(recipeTagCategoryId:Long): Flow<RecipeTagCategoryAndRecipeTag>
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(recipeTagCategory: RecipeTagCategory)

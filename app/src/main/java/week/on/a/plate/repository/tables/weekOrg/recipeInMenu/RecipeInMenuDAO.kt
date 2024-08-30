@@ -18,7 +18,7 @@ interface RecipeInMenuDAO {
 
     @Transaction
     @Query("SELECT * FROM recipe WHERE recipeId=:recipeId")
-    fun getRecipeInMenuAndRecipe(recipeId:Long): Flow<List<RecipeInMenuAndRecipe>>
+    fun getRecipeInMenuAndRecipe(recipeId:Long): Flow<RecipeInMenuAndRecipe>
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(recipeInMenu: RecipeInMenu)

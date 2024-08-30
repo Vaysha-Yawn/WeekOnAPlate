@@ -21,7 +21,7 @@ interface IngredientCategoryDAO {
 
     @Transaction
     @Query("SELECT * FROM ingredientcategory WHERE ingredientCategoryId=:ingredientCategoryId")
-    fun getIngredientCategoryAndIngredients(ingredientCategoryId:Long): Flow<List<IngredientCategoryAndIngredients>>
+    fun getIngredientCategoryAndIngredients(ingredientCategoryId:Long): Flow<IngredientCategoryAndIngredients>
 
     @Update
     suspend fun update(ingredientCategory: IngredientCategory)

@@ -24,6 +24,7 @@ import week.on.a.plate.repository.tables.recipe.recipeTagCategory.RecipeTagCateg
 import week.on.a.plate.repository.tables.recipe.recipeTagCategory.RecipeTagCategoryDAO
 import week.on.a.plate.repository.tables.weekOrg.day.DayData
 import week.on.a.plate.repository.tables.weekOrg.day.DayDataDAO
+import week.on.a.plate.repository.tables.weekOrg.day.DayDateTypeConverter
 import week.on.a.plate.repository.tables.weekOrg.day.DayInWeekDataTypeConverter
 import week.on.a.plate.repository.tables.weekOrg.recipeInMenu.RecipeInMenu
 import week.on.a.plate.repository.tables.weekOrg.recipeInMenu.RecipeInMenuDAO
@@ -39,7 +40,10 @@ import week.on.a.plate.repository.tables.weekOrg.week.WeekDataDAO
         RecipeTag::class, RecipeTagCategory::class, DayData::class, RecipeInMenu::class, SelectionInDay::class, WeekData::class
     ], version = 1, exportSchema = false
 )
-@TypeConverters(RecipeStateTypeConverter::class, DayInWeekDataTypeConverter::class)
+@TypeConverters(
+    RecipeStateTypeConverter::class, DayInWeekDataTypeConverter::class,
+    DayDateTypeConverter::class
+)
 abstract class RecipeDB : RoomDatabase() {
     abstract fun daoIngredient(): IngredientDAO
     abstract fun daoIngredientCategory(): IngredientCategoryDAO
