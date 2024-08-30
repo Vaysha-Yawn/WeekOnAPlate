@@ -1,6 +1,7 @@
 package week.on.a.plate.core.data.week
 
 data class DayData(
+    val id: Long,
     val date: Int,
     val dayInWeek: DayInWeekData,
     val selections: MutableList<SelectionInDayData>
