@@ -21,6 +21,9 @@ interface RecipeInMenuDAO {
     @Query("SELECT * FROM recipe WHERE recipeId=:recipeId")
     suspend fun getRecipeInMenuAndRecipe(recipeId:Long): RecipeInMenuAndRecipe
 
+    @Query("SELECT * FROM recipeinmenuroom WHERE selectionId=:selectionId")
+    fun getAllInSel(selectionId:Long): Flow<List<RecipeInMenuRoom>>
+
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(recipeRoom: Recipe):Long
 

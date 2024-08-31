@@ -17,7 +17,7 @@ class RecipeInMenuMapper() {
         RecipeInMenuRoom(
             state = this.state,
             recipeId = this.recipe.id,
-            recipeName = "",
+            recipeName = this.recipe.name,
             portionsCount = this.portionsCount,
             selectionId = selectionId
         )

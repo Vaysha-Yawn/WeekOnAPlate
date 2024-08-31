@@ -1,17 +1,18 @@
 package week.on.a.plate.menuScreen.logic
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import week.on.a.plate.core.data.example.EmptyWeek
 import week.on.a.plate.core.data.example.WeekDataExample
 import week.on.a.plate.core.data.week.RecipeShortView
+import week.on.a.plate.core.data.week.SelectionView
+import week.on.a.plate.core.data.week.WeekView
 import week.on.a.plate.menuScreen.logic.useCase.CRUDRecipeInMenu
 import week.on.a.plate.menuScreen.logic.useCase.Navigation
 import week.on.a.plate.menuScreen.logic.useCase.SelectedRecipeManager
@@ -25,10 +26,16 @@ class MenuViewModel @Inject constructor(
     private val navigation: Navigation
 ) : ViewModel() {
 
+    val week: MutableStateFlow<WeekView> = MutableStateFlow<WeekView>(EmptyWeek)
     val today = LocalDate.now()
+
     init {
         viewModelScope.launch {
-            val testData = sCRUDRecipeInMenu.menuR.getCurrentWeek(today)
+           // sCRUDRecipeInMenu.menuR.insertNewWeek(WeekDataExample)
+            sCRUDRecipeInMenu.menuR.getCurrentWeek(today)
+                .collect {
+                    week.value = it
+                }
         }
     }
 
@@ -36,9 +43,6 @@ class MenuViewModel @Inject constructor(
     val itsDayMenu = mutableStateOf(true)
     val editing = mutableStateOf(false)
     val activeDayInd = mutableIntStateOf(0)
-
-    //data
-    val week = mutableStateOf(WeekDataExample)
 
     fun switchWeekOrDayView() {
         selectedRecipeManager.clear()

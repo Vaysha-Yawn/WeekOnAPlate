@@ -27,7 +27,7 @@ interface WeekDAO {
 
     @Transaction
     @Query("SELECT * FROM weekroom WHERE weekId=:weekId")
-    suspend fun getWeekAndDay(weekId:Long): WeekAndDays
+    suspend fun getWeekAndDay(weekId:Long): WeekAndDays?
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(weekRoom: WeekRoom):Long

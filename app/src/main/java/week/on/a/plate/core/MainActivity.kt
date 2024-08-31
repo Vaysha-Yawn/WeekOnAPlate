@@ -1,7 +1,6 @@
 package week.on.a.plate.core
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -12,8 +11,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import week.on.a.plate.menuScreen.logic.MenuViewModel
 import week.on.a.plate.menuScreen.view.MenuScreen
 import week.on.a.plate.ui.theme.WeekOnAPlateTheme
@@ -28,19 +31,27 @@ class MainActivity : ComponentActivity() {
         viewModel = ViewModelProvider(this)[MenuViewModel::class.java]
 
         enableEdgeToEdge()
-        setContent {
-            WeekOnAPlateTheme {
-                Scaffold(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.White)
-                ) { innerPadding ->
-                    innerPadding
+        this.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.week.collect { uiState ->
+                    setContent {
+                        WeekOnAPlateTheme {
+                            Scaffold(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(Color.White)
+                            ) { innerPadding ->
+                                innerPadding
 
-                    MenuScreen(viewModel)
+                                MenuScreen(viewModel, uiState)
+                            }
+                        }
+                    }
                 }
             }
         }
+
+
     }
 }
 

@@ -13,5 +13,5 @@ interface IMenuRepository {
     suspend fun changeRecipeInRecipeInMenu(newRecipe:RecipeShortView)
     suspend fun changePortionsCount(newCount:Int)
     suspend fun insertNewWeek(week: WeekView)
-    suspend fun getCurrentWeek(day:LocalDate): WeekView
+    suspend fun getCurrentWeek(day:LocalDate): Flow<WeekView>
 }

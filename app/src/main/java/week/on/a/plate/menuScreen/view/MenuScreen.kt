@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import week.on.a.plate.core.data.week.WeekView
 import week.on.a.plate.menuScreen.logic.MenuViewModel
 import week.on.a.plate.menuScreen.view.calendar.BlockCalendar
 import week.on.a.plate.menuScreen.view.dayweekview.DayView
@@ -20,7 +21,8 @@ import week.on.a.plate.menuScreen.view.uiTools.EditingRow
 import week.on.a.plate.ui.theme.WeekOnAPlateTheme
 
 @Composable
-fun MenuScreen(vm: MenuViewModel) {
+fun MenuScreen(vm: MenuViewModel, weekView: WeekView) {
+    if (weekView.days.size==0)return
     Column(Modifier.padding(top = 30.dp)) {
         Row(
             Modifier
@@ -34,7 +36,7 @@ fun MenuScreen(vm: MenuViewModel) {
             }
         }
         if (vm.itsDayMenu.value) {
-            BlockCalendar(vm.week.value.days, vm.today, vm.activeDayInd.intValue) { ind ->
+            BlockCalendar(weekView.days, vm.today, vm.activeDayInd.intValue) { ind ->
                 vm.activeDayInd.intValue = ind
             }
             Spacer(Modifier.height(20.dp))
@@ -50,9 +52,9 @@ fun MenuScreen(vm: MenuViewModel) {
             Spacer(Modifier.height(10.dp))
         }
         if (vm.itsDayMenu.value) {
-            DayView(vm.week.value!!.days[vm.activeDayInd.intValue], vm.editing, vm)
+            DayView(weekView.days[vm.activeDayInd.intValue], vm.editing, vm)
         } else {
-            WeekView(vm.week.value!!, vm.editing, vm)
+            WeekView(weekView, vm.editing, vm)
         }
     }
 }

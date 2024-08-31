@@ -19,7 +19,7 @@ interface DayDAO {
     suspend fun getAll(): List<DayRoom>
 
     @Query("SELECT * FROM dayroom WHERE date=:date")
-    suspend fun findDay(date:LocalDate): DayRoom
+    suspend fun findDay(date:LocalDate): DayRoom?
 
     @Transaction
     @Query("SELECT * FROM dayroom WHERE dayId=:dayId")

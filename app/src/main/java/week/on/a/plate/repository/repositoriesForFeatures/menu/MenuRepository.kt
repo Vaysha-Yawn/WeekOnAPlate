@@ -1,5 +1,10 @@
 package week.on.a.plate.repository.repositoriesForFeatures.menu
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.transform
 import week.on.a.plate.core.data.recipe.RecipeStateView
 import week.on.a.plate.core.data.week.DayView
 import week.on.a.plate.core.data.week.RecipeInMenuView
@@ -10,6 +15,7 @@ import week.on.a.plate.repository.tables.weekOrg.day.DayDAO
 import week.on.a.plate.repository.tables.weekOrg.day.DayMapper
 import week.on.a.plate.repository.tables.weekOrg.recipeInMenu.RecipeInMenuDAO
 import week.on.a.plate.repository.tables.weekOrg.recipeInMenu.RecipeInMenuMapper
+import week.on.a.plate.repository.tables.weekOrg.recipeInMenu.RecipeInMenuRoom
 import week.on.a.plate.repository.tables.weekOrg.selectionInDay.SelectionAndRecipesInMenu
 import week.on.a.plate.repository.tables.weekOrg.selectionInDay.SelectionDAO
 import week.on.a.plate.repository.tables.weekOrg.selectionInDay.SelectionMapper
@@ -85,39 +91,61 @@ class MenuRepository @Inject constructor(
         }
     }
 
-    override suspend fun getCurrentWeek(day: LocalDate): WeekView {
-        val today = dayDAO.findDay(day)
-        val weekAndDays = weekDAO.getWeekAndDay(today.weekId)
+    override suspend fun getCurrentWeek(day: LocalDate): Flow<WeekView> {
+        val today = dayDAO.findDay(day)?:return flowOf()
+        val weekAndDays = weekDAO.getWeekAndDay(today.weekId)?:return flowOf()
 
-        val listDaysView = mutableListOf<DayView>()
+        val listDaysView = mutableListOf<Flow<DayView>>()
         weekAndDays.days.forEach { currentDay ->
             val dayAndSelections = dayDAO.getDayAndSelection(currentDay.dayId)
-            val listSelection = mutableListOf<SelectionView>()
+            val listSelection = mutableListOf<Flow<SelectionView>>()
             dayAndSelections.selections.forEach { sel ->
                 val selectionAndRecipesInMenu = selectionDAO.getSelectionAndRecipesInMenu(sel.selectionId)
                 val selectionView = mapSelection(selectionAndRecipesInMenu)
                 listSelection.add(selectionView)
             }
-            with(DayMapper()) {
-                val newDay =
-                    dayAndSelections.day.roomToView(listSelection)
-                listDaysView.add(newDay)
+
+            var flowList = flow { emit(mutableListOf<SelectionView>()) }
+            listSelection.forEach { flow->
+                flowList = flowList.combine(flow){ f1, f2->
+                    f1.add(f2)
+                    f1
+                }
+            }
+
+            val newDayFlow = flowList.transform<MutableList<SelectionView>, DayView> { listSel->
+                val newDay = with(DayMapper()) {
+                    dayAndSelections.day.roomToView(listSel)
+                }
+                emit(newDay)
+            }
+
+            listDaysView.add(newDayFlow)
+        }
+
+        var flowListDay = flow { emit(mutableListOf<DayView>()) }
+        listDaysView.forEach { flow->
+            flowListDay = flowListDay.combine(flow){ f1, f2->
+                f1.add(f2)
+                f1
             }
         }
 
         val weekSelectAndRecipesInMenu = selectionDAO.getSelectionAndRecipesInMenu(weekAndDays.week.selectionId)
         val weekSel = mapSelection(weekSelectAndRecipesInMenu)
 
-        val weekData =
-            with(WeekMapper()) { weekAndDays.week.roomToView(weekSel, listDaysView) }
+        val weekFlow = weekSel.combine(flowListDay){sel, listDay->
+            with(WeekMapper()) { weekAndDays.week.roomToView(sel, listDay) }
+        }
 
-        return weekData
+        return weekFlow
     }
 
 
-    private fun mapSelection(selectionAndRecipesInMenu:SelectionAndRecipesInMenu):SelectionView{
-        val list = mutableListOf<RecipeInMenuView>()
-        selectionAndRecipesInMenu.recipeInMenuRooms.forEach { recipeInMenu ->
+    private suspend fun mapSelection(selectionAndRecipesInMenu:SelectionAndRecipesInMenu): Flow<SelectionView> {
+        val t = recipeInMenuDAO.getAllInSel(selectionAndRecipesInMenu.selectionRoom.selectionId).transform<List<RecipeInMenuRoom>,SelectionView> {
+            val list = mutableListOf<RecipeInMenuView>()
+            it.forEach { recipeInMenu ->
             with(RecipeInMenuMapper()) {
                 val newRecipeInMenuView =
                     recipeInMenu.roomToView(
@@ -125,11 +153,13 @@ class MenuRepository @Inject constructor(
                     )
                 list.add(newRecipeInMenuView)
             }
+            }
+            val sel = selectionAndRecipesInMenu.selectionRoom
+            val newSel = with(SelectionMapper()) {
+                sel.roomToView(list)
+            }
+            emit(newSel)
         }
-        val sel = selectionAndRecipesInMenu.selectionRoom
-        val newSel = with(SelectionMapper()) {
-            sel.roomToView(list)
-        }
-        return newSel
+        return t
     }
 }
