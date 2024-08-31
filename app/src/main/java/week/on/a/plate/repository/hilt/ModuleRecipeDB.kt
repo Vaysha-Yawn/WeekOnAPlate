@@ -6,18 +6,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import week.on.a.plate.repository.tables.RecipeDB
-import week.on.a.plate.repository.tables.recipe.ingredient.IngredientRepository
-import week.on.a.plate.repository.tables.recipe.ingredientCategory.IngredientCategoryRepository
-import week.on.a.plate.repository.tables.recipe.ingredientInRecipe.IngredientInRecipeRepository
-import week.on.a.plate.repository.tables.recipe.recipe.RecipeRepository
-import week.on.a.plate.repository.tables.recipe.recipeRecipeTagCrossRef.RecipeRecipeTagCrossRefRepository
-import week.on.a.plate.repository.tables.recipe.recipeStep.RecipeStepRepository
-import week.on.a.plate.repository.tables.recipe.recipeTag.RecipeTagRepository
-import week.on.a.plate.repository.tables.recipe.recipeTagCategory.RecipeTagCategoryRepository
-import week.on.a.plate.repository.tables.weekOrg.day.DayRepository
-import week.on.a.plate.repository.tables.weekOrg.recipeInMenu.RecipeInMenuRepository
-import week.on.a.plate.repository.tables.weekOrg.selectionInDay.SelectionRepository
-import week.on.a.plate.repository.tables.weekOrg.week.WeekRepository
 import javax.inject.Singleton
 
 
@@ -31,50 +19,50 @@ object ModuleRecipeDB {
 
     @Provides
     @Singleton
-    fun provideIngredientRepository(recipeDB: RecipeDB) = IngredientRepository(recipeDB.daoIngredient())
+    fun provideIngredientDAO(recipeDB: RecipeDB) = recipeDB.daoIngredient()
 
     @Provides
     @Singleton
-    fun provideIngredientCategoryRepository(recipeDB: RecipeDB) = IngredientCategoryRepository(recipeDB.daoIngredientCategory())
+    fun provideIngredientCategoryDAO(recipeDB: RecipeDB) = recipeDB.daoIngredientCategory()
 
     @Provides
     @Singleton
-    fun provideIngredientInRecipeRepository(recipeDB: RecipeDB) = IngredientInRecipeRepository(recipeDB.daoIngredientInRecipe())
+    fun provideIngredientInRecipeDAO(recipeDB: RecipeDB) = recipeDB.daoIngredientInRecipe()
 
     @Provides
     @Singleton
-    fun provideRecipeRepository(recipeDB: RecipeDB) = RecipeRepository(recipeDB.daoRecipe())
+    fun provideRecipeDAO(recipeDB: RecipeDB) = recipeDB.daoRecipe()
 
     @Provides
     @Singleton
-    fun provideRecipeRecipeTagCrossRefRepository(recipeDB: RecipeDB) = RecipeRecipeTagCrossRefRepository(recipeDB.daoRecipeRecipeTagCrossRef())
+    fun provideRecipeRecipeTagCrossRefDAO(recipeDB: RecipeDB) = recipeDB.daoRecipeRecipeTagCrossRef()
 
     @Provides
     @Singleton
-    fun provideRecipeStepRepository(recipeDB: RecipeDB) = RecipeStepRepository(recipeDB.daoRecipeStep())
+    fun provideRecipeStepDAO(recipeDB: RecipeDB) = recipeDB.daoRecipeStep()
 
     @Provides
     @Singleton
-    fun provideRecipeTagRepository(recipeDB: RecipeDB) = RecipeTagRepository(recipeDB.daoRecipeTag())
+    fun provideRecipeTagDAO(recipeDB: RecipeDB) =recipeDB.daoRecipeTag()
 
     @Provides
     @Singleton
-    fun provideRecipeTagCategoryRepository(recipeDB: RecipeDB) = RecipeTagCategoryRepository(recipeDB.daoRecipeTagCategory())
+    fun provideRecipeTagCategoryDAO(recipeDB: RecipeDB) = recipeDB.daoRecipeTagCategory()
 
     @Provides
     @Singleton
-    fun provideDAODayData(recipeDB: RecipeDB) = DayRepository(recipeDB.daoDayData())
+    fun provideDayDAO(recipeDB: RecipeDB) = recipeDB.daoDayData()
 
     @Provides
     @Singleton
-    fun provideRecipeInMenuRepository(recipeDB: RecipeDB) = RecipeInMenuRepository(recipeDB.daoRecipeInMenu())
+    fun provideRecipeInMenuDAO(recipeDB: RecipeDB) = recipeDB.daoRecipeInMenu()
 
     @Provides
     @Singleton
-    fun provideSelectionInDayRepository(recipeDB: RecipeDB) = SelectionRepository(recipeDB.daoSelectionInDay())
+    fun provideSelectionInDayDAO(recipeDB: RecipeDB) = recipeDB.daoSelectionInDay()
 
     @Provides
     @Singleton
-    fun provideWeekDataRepository(recipeDB: RecipeDB) = WeekRepository(recipeDB.daoWeekDataDAO())
+    fun provideWeekDAO(recipeDB: RecipeDB) = recipeDB.daoWeekDataDAO()
 
 }

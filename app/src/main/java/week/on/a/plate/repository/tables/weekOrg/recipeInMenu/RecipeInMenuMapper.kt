@@ -5,11 +5,11 @@ import week.on.a.plate.repository.tables.recipe.recipe.Recipe
 
 
 class RecipeInMenuMapper() {
-    fun RecipeInMenuRoom.roomToView(recipe: Recipe): week.on.a.plate.core.data.week.RecipeInMenuView =
+    fun RecipeInMenuRoom.roomToView(recipeId:Long, name:String): week.on.a.plate.core.data.week.RecipeInMenuView =
         week.on.a.plate.core.data.week.RecipeInMenuView(
             id = this.recipeInMenuId,
             state = this.state,
-            recipe = RecipeShortView(recipe.recipeId, recipe.name) ,
+            recipe = RecipeShortView(recipeId, name) ,
             portionsCount = this.portionsCount
         )
 
@@ -17,6 +17,7 @@ class RecipeInMenuMapper() {
         RecipeInMenuRoom(
             state = this.state,
             recipeId = this.recipe.id,
+            recipeName = "",
             portionsCount = this.portionsCount,
             selectionId = selectionId
         )

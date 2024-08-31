@@ -15,17 +15,17 @@ import week.on.a.plate.repository.tables.recipe.recipe.Recipe
 @Dao
 interface RecipeInMenuDAO {
     @Query("SELECT * FROM recipeinmenuroom")
-    fun getAll(): Flow<List<RecipeInMenuRoom>>
+    suspend fun getAll(): List<RecipeInMenuRoom>
 
     @Transaction
     @Query("SELECT * FROM recipe WHERE recipeId=:recipeId")
-    fun getRecipeInMenuAndRecipe(recipeId:Long): Flow<RecipeInMenuAndRecipe>
+    suspend fun getRecipeInMenuAndRecipe(recipeId:Long): RecipeInMenuAndRecipe
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(recipeRoom: Recipe)
+    suspend fun insert(recipeRoom: Recipe):Long
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(recipeInMenuRoom: RecipeInMenuRoom)
+    suspend fun insert(recipeInMenuRoom: RecipeInMenuRoom):Long
 
     @Update
     suspend fun update(recipeInMenuRoom: RecipeInMenuRoom)

@@ -10,6 +10,7 @@ data class RecipeInMenuRoom(
     @TypeConverters(RecipeStateTypeConverter::class)
     val state: RecipeStateView,
     val recipeId: Long,
+    val recipeName: String,
     var portionsCount: Int,
     val selectionId: Long,
 ){

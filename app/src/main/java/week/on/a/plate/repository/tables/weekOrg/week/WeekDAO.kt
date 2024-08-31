@@ -16,27 +16,21 @@ import week.on.a.plate.repository.tables.weekOrg.selectionInDay.SelectionRoom
 @Dao
 interface WeekDAO {
     @Query("SELECT * FROM weekroom")
-    fun getAll(): Flow<List<WeekRoom>>
+    suspend fun getAll(): List<WeekRoom>
 
     @Query("SELECT * FROM weekroom WHERE weekId=:weekId")
-    fun findWeek(weekId:Long): Flow<WeekRoom>
-
-    @Transaction
-    @Query("SELECT * FROM weekroom WHERE weekId=:weekId")
-    fun getWeekAndSelection(weekId:Long): Flow<SelectionAndWeek>
+    suspend fun findWeek(weekId:Long): WeekRoom
 
     @Transaction
     @Query("SELECT * FROM weekroom WHERE weekId=:weekId")
-    fun getWeekAndDay(weekId:Long): Flow<WeekAndDays>
+    suspend fun getWeekAndSelection(weekId:Long): SelectionAndWeek
+
+    @Transaction
+    @Query("SELECT * FROM weekroom WHERE weekId=:weekId")
+    suspend fun getWeekAndDay(weekId:Long): WeekAndDays
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(weekRoom: WeekRoom):Long
-
-    @Insert (onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(selection: SelectionRoom):Long
-
-    @Insert (onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(day: DayRoom):Long
 
     @Update
     suspend fun update(weekRoom: WeekRoom)

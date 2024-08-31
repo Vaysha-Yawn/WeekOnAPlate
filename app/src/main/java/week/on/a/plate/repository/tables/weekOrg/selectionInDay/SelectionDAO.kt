@@ -15,20 +15,17 @@ import week.on.a.plate.repository.tables.weekOrg.recipeInMenu.RecipeInMenuRoom
 @Dao
 interface SelectionDAO {
     @Query("SELECT * FROM selectionroom")
-    fun getAll(): Flow<List<SelectionRoom>>
+    suspend fun getAll(): List<SelectionRoom>
 
     @Query("SELECT * FROM selectionroom WHERE selectionId=:selectionId")
-    fun findSelection(selectionId:Long): Flow<SelectionRoom>
+    suspend fun findSelection(selectionId:Long): SelectionRoom
 
     @Transaction
     @Query("SELECT * FROM selectionroom WHERE selectionId=:selectionId")
-    fun getSelectionAndRecipesInMenu(selectionId:Long): Flow<SelectionAndRecipesInMenu>
+    suspend fun getSelectionAndRecipesInMenu(selectionId:Long): SelectionAndRecipesInMenu
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(recipeInMenu: RecipeInMenuRoom)
-
-    @Insert (onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(selectionRoom: SelectionRoom)
+    suspend fun insert(selectionRoom: SelectionRoom):Long
 
     @Update
     suspend fun update(selectionRoom: SelectionRoom)

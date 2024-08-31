@@ -16,20 +16,17 @@ import java.time.LocalDate
 @Dao
 interface DayDAO {
     @Query("SELECT * FROM dayroom")
-    fun getAll(): Flow<List<DayRoom>>
+    suspend fun getAll(): List<DayRoom>
 
     @Query("SELECT * FROM dayroom WHERE date=:date")
-    fun findDay(date:LocalDate): Flow<DayRoom>
+    suspend fun findDay(date:LocalDate): DayRoom
 
     @Transaction
     @Query("SELECT * FROM dayroom WHERE dayId=:dayId")
-    fun getDayAndSelection(dayId:Long): Flow<DayAndSelections>
+    suspend fun getDayAndSelection(dayId:Long): DayAndSelections
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(dayRoom: DayRoom)
-
-    @Insert (onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(selection: SelectionRoom)
+    suspend fun insert(dayRoom: DayRoom):Long
 
     @Update
     suspend fun update(dayRoom: DayRoom)

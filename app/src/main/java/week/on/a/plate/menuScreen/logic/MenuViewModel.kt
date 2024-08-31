@@ -1,8 +1,10 @@
 package week.on.a.plate.menuScreen.logic
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
@@ -23,10 +25,12 @@ class MenuViewModel @Inject constructor(
     private val navigation: Navigation
 ) : ViewModel() {
 
-
+    val today = LocalDate.now()
     init {
         viewModelScope.launch {
-            sCRUDRecipeInMenu.menuR.insertWeek(WeekDataExample)
+           //sCRUDRecipeInMenu.menuR.insertNewWeek(WeekDataExample)
+            val testData= sCRUDRecipeInMenu.menuR.getCurrentWeek(today)
+            Log.e("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh", "EEEE ${testData}")
            // val d = sCRUDRecipeInMenu.menuR.getDay().asLiveData()
            // val s = d.value?.get(0)?.weekId
         }
@@ -39,11 +43,6 @@ class MenuViewModel @Inject constructor(
 
     //data
     val week = mutableStateOf(WeekDataExample)
-
-    val today = LocalDate.now()
-    //sCRUDRecipeInMenu.menuR.getWeekFlow(LocalDate.now()).asLiveData()
-    val testData = sCRUDRecipeInMenu.menuR.getDay(today).asLiveData()
-
 
     fun switchWeekOrDayView() {
         selectedRecipeManager.clear()
