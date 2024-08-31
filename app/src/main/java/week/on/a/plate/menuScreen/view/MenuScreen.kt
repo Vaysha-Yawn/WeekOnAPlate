@@ -65,6 +65,6 @@ fun MenuScreen(vm: MenuViewModel, weekView: WeekView) {
 fun PreviewMenuScreen() {
     //val vm = MenuViewModel()
     WeekOnAPlateTheme {
-       // MenuScreen(vm)
+        //MenuScreen(vm)
     }
 }

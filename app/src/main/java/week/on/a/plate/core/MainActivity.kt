@@ -17,8 +17,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import week.on.a.plate.core.data.example.WeekDataExample
 import week.on.a.plate.menuScreen.logic.MenuViewModel
 import week.on.a.plate.menuScreen.view.MenuScreen
+import week.on.a.plate.menuScreen.view.editDialogs.PlaceRecipe
 import week.on.a.plate.ui.theme.WeekOnAPlateTheme
 
 @AndroidEntryPoint
@@ -42,8 +44,10 @@ class MainActivity : ComponentActivity() {
                                     .background(Color.White)
                             ) { innerPadding ->
                                 innerPadding
+                                PlaceRecipe(WeekDataExample.days, WeekDataExample.days[0]){d,s->
 
-                                MenuScreen(viewModel, uiState)
+                                }
+                                //MenuScreen(viewModel, uiState)
                             }
                         }
                     }
