@@ -1,13 +1,11 @@
 package week.on.a.plate.repository.repositoriesForFeatures.menu
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import week.on.a.plate.core.data.recipe.RecipeStateView
 import week.on.a.plate.core.data.week.DayView
 import week.on.a.plate.core.data.week.RecipeInMenuView
 import week.on.a.plate.core.data.week.RecipeShortView
 import week.on.a.plate.core.data.week.SelectionView
 import week.on.a.plate.core.data.week.WeekView
-import week.on.a.plate.repository.tables.weekOrg.day.DayAndSelections
 import week.on.a.plate.repository.tables.weekOrg.day.DayDAO
 import week.on.a.plate.repository.tables.weekOrg.day.DayMapper
 import week.on.a.plate.repository.tables.weekOrg.recipeInMenu.RecipeInMenuDAO
@@ -90,68 +88,48 @@ class MenuRepository @Inject constructor(
     override suspend fun getCurrentWeek(day: LocalDate): WeekView {
         val today = dayDAO.findDay(day)
         val weekAndDays = weekDAO.getWeekAndDay(today.weekId)
-        val mapDaysSelections = mutableMapOf<Long, DayAndSelections>()
-        weekAndDays.days.forEach { day ->
-            mapDaysSelections[day.dayId] = dayDAO.getDayAndSelection(day.dayId)
-        }
-
-        val mapSelectionAndRecipesInMenu =
-            mutableMapOf<Long, SelectionAndRecipesInMenu>()
-        mapDaysSelections.values.forEach { dayAndSel ->
-            dayAndSel.selections.forEach { sel ->
-                mapSelectionAndRecipesInMenu[sel.selectionId] =
-                    selectionDAO.getSelectionAndRecipesInMenu(sel.selectionId)
-            }
-        }
-
-        val weekSelect =
-            selectionDAO.getSelectionAndRecipesInMenu(weekAndDays.week.selectionId)
-        mapSelectionAndRecipesInMenu[weekSelect.selectionRoom.selectionId] = weekSelect
-
-
-        //second
-
-        val mapSelectionsView = mutableMapOf<Long, MutableList<SelectionView>>()
-        mapSelectionAndRecipesInMenu.values.forEach { selectionAndRecipesInMenu ->
-            val list = mutableListOf<RecipeInMenuView>()
-            selectionAndRecipesInMenu.recipeInMenuRooms.forEach { recipeInMenu ->
-                with(RecipeInMenuMapper()) {
-                    val newRecipeInMenuView =
-                        recipeInMenu.roomToView(
-                            recipeInMenu.recipeId, recipeInMenu.recipeName
-                        )
-                    list.add(newRecipeInMenuView)
-                }
-            }
-            val sel = selectionAndRecipesInMenu.selectionRoom
-            with(SelectionMapper()) {
-                val newSel =
-                    sel.roomToView(list)
-                val dayId = sel.dayId
-
-                if (mapSelectionsView[dayId] == null) {
-                    mapSelectionsView[dayId] = mutableListOf(newSel)
-                } else {
-                    mapSelectionsView[dayId]!!.add(newSel)
-                }
-            }
-        }
-
 
         val listDaysView = mutableListOf<DayView>()
-        mapDaysSelections.values.forEach { dayAndSelections ->
+        weekAndDays.days.forEach { currentDay ->
+            val dayAndSelections = dayDAO.getDayAndSelection(currentDay.dayId)
+            val listSelection = mutableListOf<SelectionView>()
+            dayAndSelections.selections.forEach { sel ->
+                val selectionAndRecipesInMenu = selectionDAO.getSelectionAndRecipesInMenu(sel.selectionId)
+                val selectionView = mapSelection(selectionAndRecipesInMenu)
+                listSelection.add(selectionView)
+            }
             with(DayMapper()) {
                 val newDay =
-                    dayAndSelections.day.roomToView(mapSelectionsView[dayAndSelections.day.dayId]!!)
+                    dayAndSelections.day.roomToView(listSelection)
                 listDaysView.add(newDay)
             }
         }
 
+        val weekSelectAndRecipesInMenu = selectionDAO.getSelectionAndRecipesInMenu(weekAndDays.week.selectionId)
+        val weekSel = mapSelection(weekSelectAndRecipesInMenu)
 
-        val weekSelection = mapSelectionsView[0]?.get(0)
         val weekData =
-            with(WeekMapper()) { weekAndDays.week.roomToView(weekSelection!!, listDaysView) }
+            with(WeekMapper()) { weekAndDays.week.roomToView(weekSel, listDaysView) }
 
         return weekData
+    }
+
+
+    private fun mapSelection(selectionAndRecipesInMenu:SelectionAndRecipesInMenu):SelectionView{
+        val list = mutableListOf<RecipeInMenuView>()
+        selectionAndRecipesInMenu.recipeInMenuRooms.forEach { recipeInMenu ->
+            with(RecipeInMenuMapper()) {
+                val newRecipeInMenuView =
+                    recipeInMenu.roomToView(
+                        recipeInMenu.recipeId, recipeInMenu.recipeName
+                    )
+                list.add(newRecipeInMenuView)
+            }
+        }
+        val sel = selectionAndRecipesInMenu.selectionRoom
+        val newSel = with(SelectionMapper()) {
+            sel.roomToView(list)
+        }
+        return newSel
     }
 }

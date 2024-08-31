@@ -28,11 +28,7 @@ class MenuViewModel @Inject constructor(
     val today = LocalDate.now()
     init {
         viewModelScope.launch {
-           //sCRUDRecipeInMenu.menuR.insertNewWeek(WeekDataExample)
-            val testData= sCRUDRecipeInMenu.menuR.getCurrentWeek(today)
-            Log.e("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh", "EEEE ${testData}")
-           // val d = sCRUDRecipeInMenu.menuR.getDay().asLiveData()
-           // val s = d.value?.get(0)?.weekId
+            val testData = sCRUDRecipeInMenu.menuR.getCurrentWeek(today)
         }
     }
 
