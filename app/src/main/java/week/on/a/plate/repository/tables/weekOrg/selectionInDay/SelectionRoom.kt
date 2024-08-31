@@ -4,10 +4,11 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class SelectionInDay(
-    @PrimaryKey(autoGenerate = true)
-    val selectionId: Long = 0,
+data class SelectionRoom(
     // ссылка на день, может быть 0 если это нераспред недели
     val dayId:Long,
     val category:String,
-)
+){
+    @PrimaryKey(autoGenerate = true)
+    var selectionId: Long = 0
+}

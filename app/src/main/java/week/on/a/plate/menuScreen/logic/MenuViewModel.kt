@@ -4,11 +4,16 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import week.on.a.plate.core.data.recipe.RecipeView
+import kotlinx.coroutines.launch
+import week.on.a.plate.core.data.example.WeekDataExample
+import week.on.a.plate.core.data.week.RecipeShortView
 import week.on.a.plate.menuScreen.logic.useCase.CRUDRecipeInMenu
 import week.on.a.plate.menuScreen.logic.useCase.Navigation
 import week.on.a.plate.menuScreen.logic.useCase.SelectedRecipeManager
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,14 +22,28 @@ class MenuViewModel @Inject constructor(
     private val selectedRecipeManager: SelectedRecipeManager,
     private val navigation: Navigation
 ) : ViewModel() {
+
+
+    init {
+        viewModelScope.launch {
+            sCRUDRecipeInMenu.menuR.insertWeek(WeekDataExample)
+           // val d = sCRUDRecipeInMenu.menuR.getDay().asLiveData()
+           // val s = d.value?.get(0)?.weekId
+        }
+    }
+
     //states
     val itsDayMenu = mutableStateOf(true)
     val editing = mutableStateOf(false)
     val activeDayInd = mutableIntStateOf(0)
 
     //data
-    val week = sCRUDRecipeInMenu.weekDataExample
-    val today = 21
+    val week = mutableStateOf(WeekDataExample)
+
+    val today = LocalDate.now()
+    //sCRUDRecipeInMenu.menuR.getWeekFlow(LocalDate.now()).asLiveData()
+    val testData = sCRUDRecipeInMenu.menuR.getDay(today).asLiveData()
+
 
     fun switchWeekOrDayView() {
         selectedRecipeManager.clear()
@@ -34,7 +53,7 @@ class MenuViewModel @Inject constructor(
         return selectedRecipeManager.getState(id)
     }
 
-    fun actionNavToFullRecipe(rec: RecipeView) {
+    fun actionNavToFullRecipe(rec: RecipeShortView) {
         selectedRecipeManager.clear()
         navigation.actionNavToFullRecipe(rec)
     }
@@ -47,7 +66,7 @@ class MenuViewModel @Inject constructor(
         selectedRecipeManager.actionCheckRecipe(id)
     }
 
-    fun actionAddRecipeToCategory(date: Int, category: String) {
+    fun actionAddRecipeToCategory(date: LocalDate, category: String) {
         //put in memory date: Int, category: String
         navigation.actionToFindRecipe()
 

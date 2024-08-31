@@ -1,15 +1,15 @@
 package week.on.a.plate.repository.tables.recipe.recipe
 
-import week.on.a.plate.core.data.recipe.IngredientInRecipe
-import week.on.a.plate.core.data.recipe.RecipeStep
-import week.on.a.plate.core.data.recipe.RecipeTag
+import week.on.a.plate.core.data.recipe.IngredientInRecipeView
+import week.on.a.plate.core.data.recipe.RecipeStepView
+import week.on.a.plate.core.data.recipe.RecipeTagView
 
 
 class RecipeMapper() {
     fun Recipe.roomToView(
-        tags: List<RecipeTag>,
-        ingredients: List<IngredientInRecipe>,
-        steps: List<RecipeStep>
+        tags: List<RecipeTagView>,
+        ingredients: List<IngredientInRecipeView>,
+        steps: List<RecipeStepView>
     ): week.on.a.plate.core.data.recipe.RecipeView =
         week.on.a.plate.core.data.recipe.RecipeView(
             id = this.recipeId,

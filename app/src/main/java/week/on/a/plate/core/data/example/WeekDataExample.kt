@@ -1,38 +1,39 @@
 package week.on.a.plate.core.data.example
 
-import week.on.a.plate.core.data.week.DayData
+import week.on.a.plate.core.data.week.DayView
 import week.on.a.plate.core.data.week.DayInWeekData
-import week.on.a.plate.core.data.week.RecipeInMenu
-import week.on.a.plate.core.data.recipe.RecipeState
-import week.on.a.plate.core.data.week.SelectionInDayData
-import week.on.a.plate.core.data.week.WeekData
+import week.on.a.plate.core.data.week.RecipeInMenuView
+import week.on.a.plate.core.data.recipe.RecipeStateView
+import week.on.a.plate.core.data.week.SelectionView
+import week.on.a.plate.core.data.week.WeekView
+import java.time.LocalDate
 
-val WeekDataExample = WeekData(
-    SelectionInDayData(
+val WeekDataExample = WeekView(0,
+    SelectionView(7,
         "Нераспределенное",
-        mutableListOf(RecipeInMenu(0, RecipeState.Created, recipeTom, 3))
+        mutableListOf(RecipeInMenuView(0, RecipeStateView.Created, shortRecipe, 3))
     ),
     mutableListOf(
-        DayData(
-            20, DayInWeekData.Mon, dayMenuExample
+        DayView(1,
+            LocalDate.of(2024,8,26), DayInWeekData.Mon, dayMenuExample
         ),
-        DayData(
-            21, DayInWeekData.Tues, dayMenuExample
+        DayView(2,
+            LocalDate.of(2024,8,27), DayInWeekData.Tues, dayMenuExample
         ),
-        DayData(
-            22, DayInWeekData.Wed, mutableListOf()
+        DayView(3,
+            LocalDate.of(2024,8,28), DayInWeekData.Wed, mutableListOf()
         ),
-        DayData(
-            23, DayInWeekData.Thurs, dayMenuExample
+        DayView(4,
+            LocalDate.of(2024,8,29), DayInWeekData.Thurs, dayMenuExample
         ),
-        DayData(
-            24, DayInWeekData.Fri, dayMenuExample
+        DayView(5,
+            LocalDate.of(2024,8,30), DayInWeekData.Fri, dayMenuExample
         ),
-        DayData(
-            25, DayInWeekData.Sat, dayMenuExample
+        DayView(6,
+            LocalDate.of(2024,8,31), DayInWeekData.Sat, dayMenuExample
         ),
-        DayData(
-            26, DayInWeekData.Sun, dayMenuExample
+        DayView(7,
+            LocalDate.of(2024,8,1), DayInWeekData.Sun, dayMenuExample
         ),
     )
 )

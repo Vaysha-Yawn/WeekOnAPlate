@@ -1,7 +1,7 @@
 package week.on.a.plate.core.data.week
 
-data class SelectionInDayData(
+data class SelectionView(
     val id:Long,
     val category:String,
-    val recipes: MutableList<RecipeInMenu>
+    val recipes: MutableList<RecipeInMenuView>
 )

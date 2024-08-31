@@ -36,9 +36,10 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import week.on.a.plate.core.data.recipe.RecipeState
-import week.on.a.plate.core.data.recipe.RecipeView
-import week.on.a.plate.core.data.week.RecipeInMenu
+import week.on.a.plate.core.data.example.shortRecipe
+import week.on.a.plate.core.data.recipe.RecipeStateView
+import week.on.a.plate.core.data.week.RecipeInMenuView
+import week.on.a.plate.core.data.week.RecipeShortView
 import week.on.a.plate.core.uitools.TextInApp
 import week.on.a.plate.core.uitools.TextInAppColored
 import week.on.a.plate.core.uitools.buttons.CheckButton
@@ -51,9 +52,9 @@ import week.on.a.plate.ui.theme.WeekOnAPlateTheme
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun RecipePosition(
-    recipe: RecipeInMenu,
+    recipe: RecipeInMenuView,
     editing: MutableState<Boolean>,
-    actionNavToFullRecipe: (RecipeView) -> Unit,
+    actionNavToFullRecipe: (RecipeShortView) -> Unit,
     checkAction: (id: Long) -> Unit,
     switchEditMode: () -> Unit,
     actionEdit: (id: Long) -> Unit,
@@ -177,31 +178,27 @@ fun PreviewRecipePosition() {
         }
         Column {
             RecipePosition(
-                RecipeInMenu(
+                RecipeInMenuView(
                     0,
-                    RecipeState.Done,
-                    shortRecipe("Хачапури по-мексикански"),
+                    RecipeStateView.Done,
+                    week.on.a.plate.core.data.example.shortRecipe,
                     1,
                 ), editing, {}, { id -> }, {}, {}, {}, { i -> editing })
             RecipePosition(
-                RecipeInMenu(
+                RecipeInMenuView(
                     0,
-                    RecipeState.Eated,
-                    shortRecipe("Лагман с картофелем и лапшой"),
+                    RecipeStateView.Eated,
+                    shortRecipe,
                     2,
                 ), editing, {}, { id -> }, {}, {}, {}, { i -> editing })
             RecipePosition(
-                RecipeInMenu(
+                RecipeInMenuView(
                     0,
-                    RecipeState.Created,
-                    shortRecipe("Суп с морепродуктами и не-морепродуктами и возможно еще с чем-то"),
+                    RecipeStateView.Created,
+                    shortRecipe,
                     3,
                 ), editing, {}, { id -> }, {}, {}, {}, { i -> editing })
         }
 
     }
-}
-
-fun shortRecipe(name: String): RecipeView {
-    return RecipeView(0, name, "", listOf(), 0, 0, 0, listOf(), listOf(), "")
 }

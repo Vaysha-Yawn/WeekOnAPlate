@@ -3,6 +3,7 @@ package week.on.a.plate.ui.theme
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
@@ -10,13 +11,15 @@ val Typography = Typography(
     bodyMedium = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Normal,
+        fontStyle = FontStyle.Normal,
         fontSize = 14.sp,
         lineHeight = 14.sp,
         color = ColorText
     ),
     bodyLarge = TextStyle(
         fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Light,
+        fontStyle = FontStyle.Italic,
         fontSize = 32.sp,
         lineHeight = 32.sp,
         color = ColorText
@@ -24,6 +27,7 @@ val Typography = Typography(
     bodySmall = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Normal,
+        fontStyle = FontStyle.Normal,
         fontSize = 10.sp,
         lineHeight = 10.sp,
         color = ColorText

@@ -14,10 +14,10 @@ import week.on.a.plate.repository.tables.recipe.recipeRecipeTagCrossRef.RecipeRe
 import week.on.a.plate.repository.tables.recipe.recipeStep.RecipeStepRepository
 import week.on.a.plate.repository.tables.recipe.recipeTag.RecipeTagRepository
 import week.on.a.plate.repository.tables.recipe.recipeTagCategory.RecipeTagCategoryRepository
-import week.on.a.plate.repository.tables.weekOrg.day.DayDataRepository
+import week.on.a.plate.repository.tables.weekOrg.day.DayRepository
 import week.on.a.plate.repository.tables.weekOrg.recipeInMenu.RecipeInMenuRepository
-import week.on.a.plate.repository.tables.weekOrg.selectionInDay.SelectionInDayRepository
-import week.on.a.plate.repository.tables.weekOrg.week.WeekDataRepository
+import week.on.a.plate.repository.tables.weekOrg.selectionInDay.SelectionRepository
+import week.on.a.plate.repository.tables.weekOrg.week.WeekRepository
 import javax.inject.Singleton
 
 
@@ -63,7 +63,7 @@ object ModuleRecipeDB {
 
     @Provides
     @Singleton
-    fun provideDAODayData(recipeDB: RecipeDB) = DayDataRepository(recipeDB.daoDayData())
+    fun provideDAODayData(recipeDB: RecipeDB) = DayRepository(recipeDB.daoDayData())
 
     @Provides
     @Singleton
@@ -71,10 +71,10 @@ object ModuleRecipeDB {
 
     @Provides
     @Singleton
-    fun provideSelectionInDayRepository(recipeDB: RecipeDB) = SelectionInDayRepository(recipeDB.daoSelectionInDay())
+    fun provideSelectionInDayRepository(recipeDB: RecipeDB) = SelectionRepository(recipeDB.daoSelectionInDay())
 
     @Provides
     @Singleton
-    fun provideWeekDataRepository(recipeDB: RecipeDB) = WeekDataRepository(recipeDB.daoWeekDataDAO())
+    fun provideWeekDataRepository(recipeDB: RecipeDB) = WeekRepository(recipeDB.daoWeekDataDAO())
 
 }

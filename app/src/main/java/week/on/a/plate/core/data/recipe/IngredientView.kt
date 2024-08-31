@@ -1,6 +1,6 @@
 package week.on.a.plate.core.data.recipe
 
-data class Ingredient(
+data class IngredientView(
     val ingredientId: Long,
     val img: String,
     val name: String,

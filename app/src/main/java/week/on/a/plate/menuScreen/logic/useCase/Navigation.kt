@@ -1,11 +1,11 @@
 package week.on.a.plate.menuScreen.logic.useCase
 
-import week.on.a.plate.core.data.recipe.RecipeView
+import week.on.a.plate.core.data.week.RecipeShortView
 import javax.inject.Inject
 
 class Navigation @Inject constructor() {
 
-    fun actionNavToFullRecipe(rec: RecipeView){
+    fun actionNavToFullRecipe(rec: RecipeShortView){
 
     }
 

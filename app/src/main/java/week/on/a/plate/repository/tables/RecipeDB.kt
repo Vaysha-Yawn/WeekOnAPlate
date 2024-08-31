@@ -22,27 +22,27 @@ import week.on.a.plate.repository.tables.recipe.recipeTag.RecipeTag
 import week.on.a.plate.repository.tables.recipe.recipeTag.RecipeTagDAO
 import week.on.a.plate.repository.tables.recipe.recipeTagCategory.RecipeTagCategory
 import week.on.a.plate.repository.tables.recipe.recipeTagCategory.RecipeTagCategoryDAO
-import week.on.a.plate.repository.tables.weekOrg.day.DayData
-import week.on.a.plate.repository.tables.weekOrg.day.DayDataDAO
-import week.on.a.plate.repository.tables.weekOrg.day.DayDateTypeConverter
+import week.on.a.plate.repository.tables.weekOrg.day.DayRoom
+import week.on.a.plate.repository.tables.weekOrg.day.DayDAO
+import week.on.a.plate.repository.tables.weekOrg.day.DateTypeConverter
 import week.on.a.plate.repository.tables.weekOrg.day.DayInWeekDataTypeConverter
-import week.on.a.plate.repository.tables.weekOrg.recipeInMenu.RecipeInMenu
+import week.on.a.plate.repository.tables.weekOrg.recipeInMenu.RecipeInMenuRoom
 import week.on.a.plate.repository.tables.weekOrg.recipeInMenu.RecipeInMenuDAO
 import week.on.a.plate.repository.tables.weekOrg.recipeInMenu.RecipeStateTypeConverter
-import week.on.a.plate.repository.tables.weekOrg.selectionInDay.SelectionInDay
-import week.on.a.plate.repository.tables.weekOrg.selectionInDay.SelectionInDayDAO
-import week.on.a.plate.repository.tables.weekOrg.week.WeekData
-import week.on.a.plate.repository.tables.weekOrg.week.WeekDataDAO
+import week.on.a.plate.repository.tables.weekOrg.selectionInDay.SelectionRoom
+import week.on.a.plate.repository.tables.weekOrg.selectionInDay.SelectionDAO
+import week.on.a.plate.repository.tables.weekOrg.week.WeekRoom
+import week.on.a.plate.repository.tables.weekOrg.week.WeekDAO
 
 
 @Database(
     entities = [Ingredient::class, IngredientCategory::class, IngredientInRecipe::class, Recipe::class, RecipeRecipeTagCrossRef::class, RecipeStep::class,
-        RecipeTag::class, RecipeTagCategory::class, DayData::class, RecipeInMenu::class, SelectionInDay::class, WeekData::class
+        RecipeTag::class, RecipeTagCategory::class, DayRoom::class, RecipeInMenuRoom::class, SelectionRoom::class, WeekRoom::class
     ], version = 1, exportSchema = false
 )
 @TypeConverters(
     RecipeStateTypeConverter::class, DayInWeekDataTypeConverter::class,
-    DayDateTypeConverter::class
+    DateTypeConverter::class
 )
 abstract class RecipeDB : RoomDatabase() {
     abstract fun daoIngredient(): IngredientDAO
@@ -53,10 +53,10 @@ abstract class RecipeDB : RoomDatabase() {
     abstract fun daoRecipeStep(): RecipeStepDAO
     abstract fun daoRecipeTag(): RecipeTagDAO
     abstract fun daoRecipeTagCategory(): RecipeTagCategoryDAO
-    abstract fun daoDayData(): DayDataDAO
+    abstract fun daoDayData(): DayDAO
     abstract fun daoRecipeInMenu(): RecipeInMenuDAO
-    abstract fun daoSelectionInDay(): SelectionInDayDAO
-    abstract fun daoWeekDataDAO(): WeekDataDAO
+    abstract fun daoSelectionInDay(): SelectionDAO
+    abstract fun daoWeekDataDAO(): WeekDAO
 
     companion object {
         fun buildDatabase(context: Context): RecipeDB {

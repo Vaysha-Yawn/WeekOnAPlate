@@ -1,16 +1,14 @@
 package week.on.a.plate.menuScreen.logic.useCase
 
-import week.on.a.plate.core.data.example.WeekDataExample
-import week.on.a.plate.core.data.week.RecipeInMenu
-import week.on.a.plate.repository.repositoriesForFeatures.MenuRepository
+import week.on.a.plate.core.data.week.RecipeInMenuView
+import week.on.a.plate.repository.repositoriesForFeatures.menu.MenuRepository
 import javax.inject.Inject
 
 class CRUDRecipeInMenu @Inject constructor(
-    val menuR:MenuRepository
+    val menuR: MenuRepository
 ) {
-    // доступ к бд
-    var weekDataExample = WeekDataExample
-    fun actionAddRecipeToCategory(date: Int, category: String, recipe: RecipeInMenu) {
+
+    fun actionAddRecipeToCategory(date: Int, category: String, recipe: RecipeInMenuView) {
         //+case date == 0 sel = "нераспределенное" = week нераспред
     }
 

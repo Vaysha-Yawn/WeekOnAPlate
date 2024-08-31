@@ -34,7 +34,7 @@ fun MenuScreen(vm: MenuViewModel) {
             }
         }
         if (vm.itsDayMenu.value) {
-            BlockCalendar(vm.week.days, vm.today, vm.activeDayInd.intValue) { ind ->
+            BlockCalendar(vm.week.value.days, vm.today, vm.activeDayInd.intValue) { ind ->
                 vm.activeDayInd.intValue = ind
             }
             Spacer(Modifier.height(20.dp))
@@ -50,9 +50,9 @@ fun MenuScreen(vm: MenuViewModel) {
             Spacer(Modifier.height(10.dp))
         }
         if (vm.itsDayMenu.value) {
-            DayView(vm.week.days[vm.activeDayInd.intValue], vm.editing, vm)
+            DayView(vm.week.value!!.days[vm.activeDayInd.intValue], vm.editing, vm)
         } else {
-            WeekView(vm.week, vm.editing, vm)
+            WeekView(vm.week.value!!, vm.editing, vm)
         }
     }
 }

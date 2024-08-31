@@ -9,23 +9,27 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
+import week.on.a.plate.repository.tables.recipe.recipe.Recipe
 
 
 @Dao
 interface RecipeInMenuDAO {
-    @Query("SELECT * FROM recipeinmenu")
-    fun getAll(): Flow<List<RecipeInMenu>>
+    @Query("SELECT * FROM recipeinmenuroom")
+    fun getAll(): Flow<List<RecipeInMenuRoom>>
 
     @Transaction
     @Query("SELECT * FROM recipe WHERE recipeId=:recipeId")
     fun getRecipeInMenuAndRecipe(recipeId:Long): Flow<RecipeInMenuAndRecipe>
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(recipeInMenu: RecipeInMenu)
+    suspend fun insert(recipeRoom: Recipe)
+
+    @Insert (onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(recipeInMenuRoom: RecipeInMenuRoom)
 
     @Update
-    suspend fun update(recipeInMenu: RecipeInMenu)
+    suspend fun update(recipeInMenuRoom: RecipeInMenuRoom)
 
     @Delete
-    suspend fun delete(recipeInMenu: RecipeInMenu)
+    suspend fun delete(recipeInMenuRoom: RecipeInMenuRoom)
 }

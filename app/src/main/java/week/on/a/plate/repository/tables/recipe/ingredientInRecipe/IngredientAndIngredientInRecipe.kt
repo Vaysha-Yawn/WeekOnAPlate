@@ -2,11 +2,11 @@ package week.on.a.plate.repository.tables.recipe.ingredientInRecipe
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import week.on.a.plate.core.data.recipe.Ingredient
+import week.on.a.plate.core.data.recipe.IngredientView
 
 
 data class IngredientAndIngredientInRecipe(
-    @Embedded val ingredient: Ingredient,
+    @Embedded val ingredientView: IngredientView,
     @Relation(
          parentColumn = "ingredientId",
          entityColumn = "ingredientId"

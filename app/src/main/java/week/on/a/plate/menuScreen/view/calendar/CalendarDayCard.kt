@@ -9,10 +9,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableIntState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import week.on.a.plate.core.data.example.WeekDataExample
 import week.on.a.plate.core.uitools.TextInApp
 import week.on.a.plate.ui.theme.ColorPanel
 import week.on.a.plate.ui.theme.ColorPlan
@@ -20,10 +20,11 @@ import week.on.a.plate.ui.theme.ColorText
 import week.on.a.plate.ui.theme.ColorToday
 import week.on.a.plate.ui.theme.ColorTransparent
 import week.on.a.plate.ui.theme.WeekOnAPlateTheme
+import java.time.LocalDate
 
 @Composable
 fun CalendarDayCard(
-    dayNumber: Int,
+    dayNumber: LocalDate,
     dayInWeek: String,
     itToday: Boolean,
     itPlanned: Boolean,
@@ -50,7 +51,7 @@ fun CalendarDayCard(
                 .padding(horizontal = 4.dp)
         )
         TextInApp(
-            dayNumber.toString(), modifier = Modifier
+            dayNumber.dayOfMonth.toString(), modifier = Modifier
                 .background(
                     if (itToday) {
                         ColorToday
@@ -69,11 +70,11 @@ fun CalendarDayCard(
 @Preview(showBackground = true)
 @Composable
 fun PreviewCalendarDayCard() {
-    val activeDayInd = 3
+    val week = WeekDataExample
     WeekOnAPlateTheme {
         Row {
             CalendarDayCard(
-                20,
+                week.days[0].date,
                 "пн",
                 itToday = false,
                 itPlanned = true,
@@ -81,7 +82,7 @@ fun PreviewCalendarDayCard() {
                 0,
             ) {}
             CalendarDayCard(
-                21,
+                week.days[1].date,
                 "вт",
                 itToday = true,
                 itPlanned = true,
@@ -90,7 +91,7 @@ fun PreviewCalendarDayCard() {
 
                 ) {}
             CalendarDayCard(
-                22,
+                week.days[2].date,
                 "ср",
                 itToday = false,
                 itPlanned = false,
@@ -99,7 +100,7 @@ fun PreviewCalendarDayCard() {
 
                 ) {}
             CalendarDayCard(
-                23,
+                week.days[3].date,
                 "чт",
                 itToday = false,
                 itPlanned = true,

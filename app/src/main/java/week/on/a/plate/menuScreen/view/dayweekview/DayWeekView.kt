@@ -1,7 +1,6 @@
 package week.on.a.plate.menuScreen.view.dayweekview
 
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -10,17 +9,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import week.on.a.plate.core.data.week.DayData
-import week.on.a.plate.core.data.week.WeekData
+import week.on.a.plate.core.data.week.DayView
+import week.on.a.plate.core.data.week.WeekView
 import week.on.a.plate.core.uitools.TextInApp
 import week.on.a.plate.menuScreen.logic.MenuViewModel
 import week.on.a.plate.menuScreen.view.recipeBlock.BlockSelection
 import week.on.a.plate.menuScreen.view.recipeBlock.BlockSelectionSmall
 import week.on.a.plate.ui.theme.Typography
+import java.time.LocalDate
 
 @Composable
 fun WeekView(
-    week: WeekData,
+    week: WeekView,
     editing: MutableState<Boolean>,
     vm: MenuViewModel
 ) {
@@ -29,7 +29,7 @@ fun WeekView(
             BlockSelection(
                 selection = week.selection,
                 editing = editing,
-                actionAdd = { vm.actionAddRecipeToCategory(0, week.selection.category) },
+                actionAdd = { vm.actionAddRecipeToCategory(LocalDate.parse("0"), week.selection.category) },
                 actionNavToFullRecipe = { rec -> vm.actionNavToFullRecipe(rec) },
                 checkAction = {id -> vm.actionCheckRecipe(id) },
                 switchEditMode = { vm.actionSwitchEditMode() },
@@ -68,7 +68,7 @@ fun WeekView(
 }
 
 @Composable
-fun DayView(day: DayData, editing: MutableState<Boolean>, vm: MenuViewModel) {
+fun DayView(day: DayView, editing: MutableState<Boolean>, vm: MenuViewModel) {
     LazyColumn {
         items(day.selections.size) { index ->
             BlockSelection(

@@ -2,14 +2,14 @@ package week.on.a.plate.repository.tables.weekOrg.day
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import week.on.a.plate.repository.tables.weekOrg.selectionInDay.SelectionInDay
+import week.on.a.plate.repository.tables.weekOrg.selectionInDay.SelectionRoom
 
 
 data class DayAndSelections(
-    @Embedded val day: DayData,
+    @Embedded val day: DayRoom,
     @Relation(
          parentColumn = "dayId",
          entityColumn = "dayId"
     )
-    val selections: List<SelectionInDay>,
+    val selections: List<SelectionRoom>,
 )
