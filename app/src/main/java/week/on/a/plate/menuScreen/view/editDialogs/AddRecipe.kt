@@ -28,7 +28,7 @@ fun AddRecipe() {
     Column( modifier = Modifier.padding(20.dp)) {
         TextInApp(
             "Изменить кол-во порций",
-            textStyle = Typography.bodyLarge, textAlign = TextAlign.Center
+            textStyle = Typography.titleLarge, textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(30.dp))
         val posrc = remember {
@@ -40,7 +40,7 @@ fun AddRecipe() {
         Spacer(modifier = Modifier.height(50.dp))
         TextInApp(
             "Дублировать Паста в...",
-            textStyle = Typography.bodyLarge
+            textStyle = Typography.titleLarge
         )
         Spacer(modifier = Modifier.height(30.dp))
         ButtonText(

@@ -14,10 +14,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.core.data.example.WeekDataExample
 import week.on.a.plate.core.uitools.TextInApp
-import week.on.a.plate.ui.theme.ColorPanel
-import week.on.a.plate.ui.theme.ColorPlan
-import week.on.a.plate.ui.theme.ColorText
-import week.on.a.plate.ui.theme.ColorToday
+import week.on.a.plate.ui.theme.ColorButtonGreen
+import week.on.a.plate.ui.theme.ColorButtonYellow
+import week.on.a.plate.ui.theme.ColorPanelLightGrey
+import week.on.a.plate.ui.theme.ColorTextBlack
 import week.on.a.plate.ui.theme.ColorTransparent
 import week.on.a.plate.ui.theme.WeekOnAPlateTheme
 import java.time.LocalDate
@@ -37,7 +37,7 @@ fun CalendarDayCard(
             .padding(end = 5.dp)
             .border(
                 1.dp, if (active) {
-                    ColorText
+                    ColorTextBlack
                 } else {
                     ColorTransparent
                 }, RoundedCornerShape(10.dp)
@@ -54,11 +54,11 @@ fun CalendarDayCard(
             dayNumber.dayOfMonth.toString(), modifier = Modifier
                 .background(
                     if (itToday) {
-                        ColorToday
+                        ColorButtonYellow
                     } else if (itPlanned) {
-                        ColorPlan
+                        ColorButtonGreen
                     } else {
-                        ColorPanel
+                        ColorPanelLightGrey
                     }, androidx.compose.foundation.shape.CircleShape
                 )
                 .padding(5.dp)

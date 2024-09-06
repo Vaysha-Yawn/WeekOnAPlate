@@ -8,5 +8,6 @@ data class RecipeTag(
     @PrimaryKey(autoGenerate = true)
     val recipeTagId: Long = 0,
     val recipeTagCategoryId: Long,
-    var tagName: String,
+    val tagName: String,
+    val isTypeOfMeal:Boolean,
 )

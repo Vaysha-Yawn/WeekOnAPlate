@@ -3,6 +3,7 @@ package week.on.a.plate.core.data.recipe
 data class RecipeView(
     val id: Long,
     var name: String,
+    var description: String,
     var img:String,
     var tags: List<RecipeTagView>,
     var prepTime: Int,

@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.data.example.EmptyWeek
 import week.on.a.plate.core.data.example.WeekDataExample
@@ -26,23 +27,38 @@ class MenuViewModel @Inject constructor(
     private val navigation: Navigation
 ) : ViewModel() {
 
-    val week: MutableStateFlow<WeekView> = MutableStateFlow<WeekView>(EmptyWeek)
+    val uiState : MutableStateFlow<MenuUIState> = MutableStateFlow(MenuUIState.Loading)
     val today = LocalDate.now()
 
     init {
+        uiState.value = MenuUIState.Loading
         viewModelScope.launch {
            // sCRUDRecipeInMenu.menuR.insertNewWeek(WeekDataExample)
-            sCRUDRecipeInMenu.menuR.getCurrentWeek(today)
-                .collect {
-                    week.value = it
+            sCRUDRecipeInMenu.menuR.getCurrentWeek(today).catch {
+                uiState.value = MenuUIState.Error("")
+            }.collect {
+                    if (it!=null){
+                        uiState.value = MenuUIState.EmptyWeek
+                    }else{
+                        uiState.value = MenuUIState.Success(it)
+                    }
                 }
         }
     }
+    //todo добавить ивенты для изоляции
 
     //states
     val itsDayMenu = mutableStateOf(true)
     val editing = mutableStateOf(false)
     val activeDayInd = mutableIntStateOf(0)
+
+
+    fun onEvent(event:MenuEvents){
+        when(event){
+            is MenuEvents.ChangeDay -> TODO()
+            is MenuEvents.getCheckState -> TODO()
+        }
+    }
 
     fun switchWeekOrDayView() {
         selectedRecipeManager.clear()

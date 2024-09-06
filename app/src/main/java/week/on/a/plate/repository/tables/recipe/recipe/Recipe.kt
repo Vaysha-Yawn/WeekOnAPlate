@@ -8,6 +8,7 @@ data class Recipe(
     @PrimaryKey(autoGenerate = true)
     val recipeId: Long = 0,
     val name: String,
+    val description: String,
     val img:String,
     val prepTime: Int,
     val allTime: Int,

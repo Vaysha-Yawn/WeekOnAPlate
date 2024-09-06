@@ -17,13 +17,13 @@ import week.on.a.plate.ui.theme.WeekOnAPlateTheme
 fun EditRecipePanel(){
     Column(modifier = Modifier.padding(20.dp)) {
         ButtonText(
-            "Изменить состояние", modifier = Modifier.fillMaxWidth().clickable {
+            "Добавить в список покупок", modifier = Modifier.fillMaxWidth().clickable {
                 //
             }
         )
         Spacer(modifier = Modifier.height(30.dp))
         ButtonText(
-            "Дублировать в ...", modifier = Modifier.fillMaxWidth().clickable {
+            "Дублировать", modifier = Modifier.fillMaxWidth().clickable {
                 //
             }
         )
@@ -46,6 +46,11 @@ fun EditRecipePanel(){
             }
         )
     }
+}
+
+@Composable
+fun ButtonRow(imgRec:Int){
+
 }
 
 @Preview(showBackground = true)

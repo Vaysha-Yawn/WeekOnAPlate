@@ -11,26 +11,28 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.core.uitools.TextInApp
-import week.on.a.plate.ui.theme.ColorButton
+import week.on.a.plate.ui.theme.ColorButtonNegativeGrey
+import week.on.a.plate.ui.theme.ColorPanelGreen
 import week.on.a.plate.ui.theme.Typography
 import week.on.a.plate.ui.theme.WeekOnAPlateTheme
 
+//todo delete
 @Composable
 fun ButtonText(
     text: String,
     modifier: Modifier = Modifier,
     maxLines: Int? = null,
-    textStyle: TextStyle = Typography.bodyLarge,
-    color: Color = Typography.bodyLarge.color,
+    textStyle: TextStyle = Typography.titleLarge,
+    color: Color = Typography.titleLarge.color,
     textAlign: TextAlign = TextAlign.Center,
-    colorBackground: Color = ColorButton,
+    colorBackground: Color = ColorButtonNegativeGrey,
 ) {
     TextInApp(
         text, modifier = modifier
             .background(
                 colorBackground, RoundedCornerShape(30.dp)
             )
-            .padding(horizontal = 10.dp), textStyle = textStyle,
+            .padding(horizontal = 20.dp), textStyle = textStyle,
         maxLines = maxLines, color = color,
         textAlign = textAlign
     )
@@ -40,6 +42,6 @@ fun ButtonText(
 @Composable
 fun PreviewButtonText() {
     WeekOnAPlateTheme {
-        ButtonText("Button", colorBackground = ColorButton)
+        ButtonText("Button", colorBackground = ColorPanelGreen)
     }
 }

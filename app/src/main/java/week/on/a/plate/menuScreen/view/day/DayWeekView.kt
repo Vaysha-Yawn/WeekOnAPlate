@@ -1,4 +1,4 @@
-package week.on.a.plate.menuScreen.view.dayweekview
+package week.on.a.plate.menuScreen.view.day
 
 import android.util.Log
 import androidx.compose.foundation.layout.Spacer
@@ -42,7 +42,7 @@ fun WeekView(
             item {
                 TextInApp(
                     text = day.dayInWeek.fullName,
-                    textStyle = Typography.bodyLarge,
+                    textStyle = Typography.titleLarge,
                     modifier = Modifier.padding(start = 10.dp)
                 )
                 Spacer(Modifier.height(10.dp))

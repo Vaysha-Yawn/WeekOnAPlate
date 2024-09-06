@@ -1,8 +1,6 @@
 package week.on.a.plate.core.uitools
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,10 +13,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import week.on.a.plate.ui.theme.ColorSecond
-import week.on.a.plate.ui.theme.ColorText
+import week.on.a.plate.core.data.recipe.IngredientView
+import week.on.a.plate.core.data.recipe.RecipeTagView
+import week.on.a.plate.ui.theme.ColorBluePanel
+import week.on.a.plate.ui.theme.ColorButtonGreen
+import week.on.a.plate.ui.theme.ColorPanelGreen
+import week.on.a.plate.ui.theme.ColorPanelYellow
+import week.on.a.plate.ui.theme.ColorSubTextGrey
+import week.on.a.plate.ui.theme.ColorTextBlack
 import week.on.a.plate.ui.theme.Typography
 import week.on.a.plate.ui.theme.WeekOnAPlateTheme
+import week.on.a.plate.ui.theme.bodyGrey
+import week.on.a.plate.ui.theme.titleLargeNonItalic
+import week.on.a.plate.ui.theme.titleMediumItalic
 
 
 @Composable
@@ -26,8 +33,8 @@ fun TextInApp(
     text: String,
     modifier: Modifier = Modifier,
     maxLines: Int? = null,
-    textStyle: TextStyle = Typography.bodySmall,
-    color: Color = Typography.bodySmall.color,
+    textStyle: TextStyle = Typography.bodyMedium,
+    color: Color = Typography.bodyMedium.color,
     textAlign: TextAlign = TextAlign.Left
 ) {
     Text(
@@ -41,14 +48,147 @@ fun TextInApp(
     )
 }
 
+
+@Composable
+fun TextDisplayItalic(
+    text: String,
+    modifier: Modifier = Modifier,
+    textAlign: TextAlign = TextAlign.Start
+) {
+    TextInApp(
+        text,
+        modifier,
+        textStyle = Typography.displayMedium,
+        color = ColorTextBlack,
+        textAlign = textAlign
+    )
+}
+
+@Composable
+fun TextTitleLargeItalic(
+    text: String,
+    modifier: Modifier = Modifier,
+    textAlign: TextAlign = TextAlign.Start
+) {
+    TextInApp(
+        text,
+        modifier,
+        textStyle = Typography.titleLarge,
+        color = ColorTextBlack,
+        textAlign = textAlign
+    )
+}
+
+@Composable
+fun TextTitleLarge(
+    text: String,
+    modifier: Modifier = Modifier,
+    textAlign: TextAlign = TextAlign.Start
+) {
+    TextInApp(
+        text,
+        modifier,
+        textStyle = titleLargeNonItalic,
+        color = ColorTextBlack,
+        textAlign = textAlign
+    )
+}
+
+
+@Composable
+fun TextTitleItalic(text: String, modifier: Modifier = Modifier) {
+    TextInApp(
+        text,
+        modifier,
+        textStyle = titleMediumItalic,
+        color = ColorTextBlack,
+        textAlign = TextAlign.Start
+    )
+}
+
+@Composable
+fun TextTitle(text: String, modifier: Modifier = Modifier) {
+    TextInApp(
+        text,
+        modifier,
+        textStyle = Typography.titleMedium,
+        color = ColorTextBlack,
+        textAlign = TextAlign.Start
+    )
+}
+
+@Composable
+fun TextBodyDisActive(text: String, modifier: Modifier = Modifier) {
+    TextInApp(
+        text,
+        modifier,
+        textStyle = bodyGrey,
+        color = ColorSubTextGrey,
+        textAlign = TextAlign.Start
+    )
+}
+
+@Composable
+fun SubText(text: String, modifier: Modifier = Modifier) {
+    TextInApp(
+        text,
+        modifier,
+        textStyle = Typography.bodySmall,
+        color = ColorSubTextGrey,
+        textAlign = TextAlign.Start
+    )
+}
+
+@Composable
+fun TextBody(text: String, modifier: Modifier = Modifier) {
+    TextInApp(
+        text,
+        modifier,
+        textStyle = Typography.bodyMedium,
+        color = ColorTextBlack,
+        textAlign = TextAlign.Start
+    )
+}
+
+@Composable
+fun TagSmall(tag: RecipeTagView) {
+    val backg = if (tag.isTypeOfMeal) {
+        ColorBluePanel
+    } else {
+        ColorPanelGreen
+    }
+    TagSmall(tag.tagName, backg)
+}
+
+@Composable
+fun TagSmall(ingredientView: IngredientView) {
+    val backg = ColorPanelYellow
+    TagSmall(ingredientView.name, backg)
+}
+
+@Composable
+private fun TagSmall(text: String, color: Color) {
+    TextInApp(
+        text, modifier = Modifier
+            .background(
+                color, RoundedCornerShape(10.dp)
+            )
+            .padding(horizontal = 10.dp, vertical = 2.dp), textStyle = Typography.bodySmall,
+        maxLines = 1, color = Color.Black,
+        textAlign = TextAlign.Start
+    )
+}
+
+
+// todo: del
 @Composable
 fun TextInAppColored(
     text: String,
     colorBackground: Color,
     modifier: Modifier = Modifier,
     maxLines: Int? = null,
-    textStyle: TextStyle = Typography.bodySmall,
-    color: Color = Typography.bodySmall.color,
+    textStyle: TextStyle = Typography.bodyMedium,
+    color: Color = Typography.bodyMedium.color,
     textAlign: TextAlign = TextAlign.Left,
 ) {
     TextInApp(
@@ -62,37 +202,24 @@ fun TextInAppColored(
     )
 }
 
-
-@Composable
-fun TextInAppColoredWithBorder(
-    text: String,
-    colorBackground: Color,
-    borderColor: Color,
-    modifier: Modifier = Modifier,
-    maxLines: Int? = null,
-    textStyle: TextStyle = Typography.bodySmall,
-    color: Color = Typography.bodySmall.color,
-    textAlign: TextAlign = TextAlign.Left,
-) {
-    TextInApp(
-        text, modifier = modifier
-            .background(
-                colorBackground, RoundedCornerShape(10.dp)
-            )
-            .border(BorderStroke(1.dp, borderColor), RoundedCornerShape(10.dp))
-            .padding(horizontal = 10.dp, vertical = 2.dp), textStyle = textStyle, maxLines = maxLines, color = color,
-        textAlign = textAlign
-    )
-}
-
 @Preview(showBackground = true)
 @Composable
 fun PreviewPlusButton() {
     WeekOnAPlateTheme {
         Column {
             TextInApp("Text 1")
-            TextInAppColored("Text 2", ColorSecond)
-            TextInAppColoredWithBorder("Text 3", ColorSecond, ColorText)
+            TextInAppColored("Text 2", ColorButtonGreen)
+            TagSmall("Гречка", ColorPanelYellow)
+
+
+            TextDisplayItalic("TextDisplayItalic")
+            TextTitleLargeItalic("TextTitleLargeItalic")
+            TextTitleLarge("TextTitleLarge")
+            TextTitleItalic("TextTitleItalic")
+            TextTitle("TextTitle")
+            TextBodyDisActive( "TextBodyDisActive")
+            TextBody("TextBody")
+            SubText( "SubText")
         }
     }
 }

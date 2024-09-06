@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import week.on.a.plate.core.uitools.TextInAppColored
-import week.on.a.plate.ui.theme.ColorSecond
+import week.on.a.plate.ui.theme.ColorBluePanel
 import week.on.a.plate.ui.theme.Typography
 import week.on.a.plate.ui.theme.WeekOnAPlateTheme
 
@@ -17,7 +17,7 @@ fun ButtonMenuNav(itsDayMenu:Boolean, actionNav:()->Unit) {
             "К меню на неделю ->"
         } else {
             "К меню на день ->"
-        }, colorBackground = ColorSecond,
+        }, colorBackground = ColorBluePanel,
         modifier = Modifier.clickable(onClick = actionNav),
         textStyle = Typography.bodyMedium
     )

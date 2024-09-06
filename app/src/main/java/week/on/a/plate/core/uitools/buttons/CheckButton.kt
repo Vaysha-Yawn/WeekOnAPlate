@@ -11,18 +11,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import week.on.a.plate.ui.theme.ColorNav
-import week.on.a.plate.ui.theme.ColorSecond
-import week.on.a.plate.ui.theme.PurpleGrey40
+import week.on.a.plate.ui.theme.ColorStrokeBlue
 import week.on.a.plate.ui.theme.WeekOnAPlateTheme
 
 @Composable
-fun CheckButton(checked:State<Boolean>, actionCheck: () -> Unit) {
-    RadioButton(selected = checked.value, onClick = {
-        actionCheck()
-    }, Modifier.size(20.dp), colors = RadioButtonDefaults.colors(
-        Color.Gray, Color.Gray,Color.Gray,Color.Gray,
-    ))
+fun CheckButton(checked: State<Boolean>, actionCheck: () -> Unit) {
+    RadioButton(
+        selected = checked.value, onClick = {
+            actionCheck()
+        }, Modifier.size(24.dp), colors = RadioButtonDefaults.colors(
+            selectedColor = ColorStrokeBlue,
+            unselectedColor = Color.Gray,
+            disabledSelectedColor = Color.Gray,
+            disabledUnselectedColor = Color.Gray,
+        )
+    )
 }
 
 @Preview(showBackground = true)

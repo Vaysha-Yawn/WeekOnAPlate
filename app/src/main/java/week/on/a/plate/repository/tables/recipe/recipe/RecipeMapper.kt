@@ -14,6 +14,7 @@ class RecipeMapper() {
         week.on.a.plate.core.data.recipe.RecipeView(
             id = this.recipeId,
             name = this.name,
+            description = this.description,
             img = this.img,
             tags = tags,
             prepTime = this.prepTime,
@@ -28,6 +29,7 @@ class RecipeMapper() {
         Recipe(
             recipeId = this.id,
             name = this.name,
+            description = this.description,
             img = this.img,
             prepTime = this.prepTime,
             allTime = this.allTime,

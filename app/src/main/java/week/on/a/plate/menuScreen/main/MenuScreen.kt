@@ -1,5 +1,6 @@
-package week.on.a.plate.menuScreen.view
+package week.on.a.plate.menuScreen.main
 
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,18 +12,44 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.launch
 import week.on.a.plate.core.data.week.WeekView
+import week.on.a.plate.menuScreen.logic.MenuEvents
+import week.on.a.plate.menuScreen.logic.MenuUIState
 import week.on.a.plate.menuScreen.logic.MenuViewModel
 import week.on.a.plate.menuScreen.view.calendar.BlockCalendar
-import week.on.a.plate.menuScreen.view.dayweekview.DayView
-import week.on.a.plate.menuScreen.view.dayweekview.WeekView
+import week.on.a.plate.menuScreen.view.day.DayView
+import week.on.a.plate.menuScreen.view.day.WeekView
 import week.on.a.plate.menuScreen.view.uiTools.ButtonMenuNav
 import week.on.a.plate.menuScreen.view.uiTools.EditingRow
 import week.on.a.plate.ui.theme.WeekOnAPlateTheme
 
 @Composable
-fun MenuScreen(vm: MenuViewModel, weekView: WeekView) {
-    if (weekView.days.size==0)return
+fun MenuScreen(viewModel: MenuViewModel = hiltViewModel()){
+    MenuScreen(viewModel.uiState.value){ event: MenuEvents ->
+        viewModel.onEvent(event)
+    }
+}
+
+@Composable
+fun MenuScreen(uiState: MenuUIState, onEvent:(event: MenuEvents)->Unit) {
+    when (uiState) {
+        MenuUIState.EmptyWeek -> {}
+        is MenuUIState.Error -> {}
+        MenuUIState.Loading -> {}
+        is MenuUIState.Success -> {
+           // MenuScreenSuccess(uiState, onEvent)
+        }
+    }
+}
+
+/*
+@Composable
+fun MenuScreenSuccess(uiState: MenuUIState, onEvent:(event: MenuEvents)->Unit) {
     Column(Modifier.padding(top = 30.dp)) {
         Row(
             Modifier
@@ -57,7 +84,7 @@ fun MenuScreen(vm: MenuViewModel, weekView: WeekView) {
             WeekView(weekView, vm.editing, vm)
         }
     }
-}
+}*/
 
 
 @Preview(showBackground = true)

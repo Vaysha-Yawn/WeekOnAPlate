@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.core.uitools.TextInAppColored
-import week.on.a.plate.ui.theme.ColorButton
+import week.on.a.plate.ui.theme.ColorButtonNegativeGrey
 import week.on.a.plate.ui.theme.Typography
 
 @Composable
@@ -22,17 +22,17 @@ fun EditingRow(
 ) {
     Row(horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.fillMaxWidth()) {
         TextInAppColored(
-            "Выбрать всё", colorBackground = ColorButton, modifier = Modifier
+            "Выбрать всё", colorBackground = ColorButtonNegativeGrey, modifier = Modifier
                 .clickable (onClick = actionChooseAll),
             textStyle = Typography.bodyMedium
         )
         TextInAppColored(
-            "Удалить", colorBackground = ColorButton, modifier = Modifier
+            "Удалить", colorBackground = ColorButtonNegativeGrey, modifier = Modifier
                 .clickable (onClick = actionDeleteSelected),
             textStyle = Typography.bodyMedium
         )
         TextInAppColored(
-            "В список покупок ", colorBackground = ColorButton, modifier = Modifier
+            "В список покупок ", colorBackground = ColorButtonNegativeGrey, modifier = Modifier
                 .clickable (onClick = actionSelectedToShopList),
             textStyle = Typography.bodyMedium
         )

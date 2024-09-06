@@ -11,8 +11,9 @@ val recipeTom =
     RecipeView(
         0,
         "Салат из помидоров с огурцом и луком",
+        description = "",
         img = "https://static.1000.menu/res/640/img/content-v2/dc/1d/36406/salat-iz-pomidorov-s-ogurcom-i-lukom_1613988871_7_max.jpg",
-        tags = listOf(RecipeTagView(0, "салат"),RecipeTagView(0, "салат")),
+        tags = listOf(RecipeTagView(0, "салат", true),RecipeTagView(0, "салат", true)),
         prepTime = 15,
         allTime = 15,
         6,

@@ -43,9 +43,9 @@ import week.on.a.plate.core.data.week.RecipeShortView
 import week.on.a.plate.core.uitools.TextInApp
 import week.on.a.plate.core.uitools.TextInAppColored
 import week.on.a.plate.core.uitools.buttons.CheckButton
-import week.on.a.plate.core.uitools.buttons.EditButton
-import week.on.a.plate.ui.theme.ColorPanel
-import week.on.a.plate.ui.theme.ColorSecond
+import week.on.a.plate.core.uitools.buttons.MoreButton
+import week.on.a.plate.ui.theme.ColorButtonGreen
+import week.on.a.plate.ui.theme.ColorPanelLightGrey
 import week.on.a.plate.ui.theme.Typography
 import week.on.a.plate.ui.theme.WeekOnAPlateTheme
 
@@ -61,36 +61,6 @@ fun RecipePosition(
     actionRecipeToNextStep: (id: Long) -> Unit,
     getCheckState: (id: Long) -> State<Boolean>
 ) {
-    val density = LocalDensity.current
-    val anchors = DraggableAnchors {
-        false at with(density) { 0.dp.toPx() }
-        true at with(density) { 80.dp.toPx() }
-    }
-
-    val interactionSource = remember { MutableInteractionSource() }
-    val state = remember {
-        AnchoredDraggableState(
-            false, anchors = anchors,
-            positionalThreshold = { distance: Float -> distance * 0.9f },
-            velocityThreshold = { with(density) { 1.dp.toPx() } },
-            animationSpec = tween()
-        )
-    }
-
-    val backgroundColor = animateColorAsState(
-        if (state.offset.dp >= 180.dp) ColorSecond else ColorPanel
-    )
-
-    LaunchedEffect(state.currentValue) {
-        when (state.currentValue) {
-            false -> {}
-            true -> {
-                actionRecipeToNextStep(recipe.id)
-                state.animateTo(false)
-            }
-        }
-    }
-
     Card(
         Modifier
             .padding(bottom = 10.dp),
@@ -103,14 +73,6 @@ fun RecipePosition(
                     .fillMaxWidth()
                     .background(Color.White)
                     .padding(horizontal = 10.dp, vertical = 5.dp)
-                    .anchoredDraggable(
-                        state = state,
-                        reverseDirection = false,
-                        orientation = Orientation.Horizontal,
-                        enabled = true,
-                        interactionSource = interactionSource
-                    )
-                    .offset(x = state.offset.dp)
                     .combinedClickable(
                         onClick = {},
                         onLongClick = switchEditMode,
@@ -129,7 +91,7 @@ fun RecipePosition(
                 ) {
                     Row(Modifier.padding(bottom = 3.dp)) {
                         TextInAppColored(
-                            recipe.state.names, colorBackground = ColorSecond,
+                            recipe.state.names, colorBackground = ColorButtonGreen,
                             modifier = Modifier
                                 .padding(end = 10.dp)
                         )
@@ -153,17 +115,7 @@ fun RecipePosition(
                         )
                     }
                 }
-                EditButton { actionEdit(recipe.id) }
-            }
-            if (recipe.state.nextStep!=""){
-                TextInApp(
-                    text = recipe.state.nextStep,
-                    modifier = Modifier
-                        .width(200.dp)
-                        .offset(x = state.offset.dp - 220.dp)
-                        .background(backgroundColor.value)
-                        .padding(vertical = 15.dp, horizontal = 20.dp), textAlign = TextAlign.End
-                )
+                MoreButton { actionEdit(recipe.id) }
             }
         }
     }

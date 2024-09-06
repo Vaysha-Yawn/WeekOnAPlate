@@ -2,21 +2,20 @@ package week.on.a.plate.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
-
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
-
-val ColorText = Color(0xFF242424)
-val ColorPanel = Color(0xFFEBEBEB)
-val ColorPlus = Color(0xFFDBDBDB)
-val ColorButton = Color(0xFFD9D9D9)
-val ColorNav = Color(0xFFCADFFF)
-val ColorSecond = Color(0xFFCADFFF)
-
-val ColorToday = Color(0xFFF1B23B)
-val ColorPlan = Color(0xFF81DBC6)
+val ColorTextBlack = Color(0xFF262626)
+val ColorSubTextGrey = Color(0xFF777777)
+val ColorBackgroundWhite = Color(0xFFFFFFFF)
+val ColorPanelLightGrey = Color(0xFFF6F6F6)
+val ColorPanelEdit = Color(0xFFB9B9B9)
+val ColorButtonNegativeGrey = Color(0xFFEAEAEA)
+val ColorStrokeGrey = Color(0xFFBFBFBF)
+val ColorBluePanel = Color(0xFFDDEFFF)
+val ColorBlueButton = Color(0xFFAAD7FF)
+val ColorButtonYellow = Color(0xFFFFD17B)
+val ColorPanelYellow = Color(0xFFFFE4B9)
+val ColorBackgroundYellow = Color(0xFFFFF8EE)
+val ColorStrokeBlue = Color(0xFF127CDA)
+val ColorPlusStrokeGreen = Color(0xFF184A00)
+val ColorButtonGreen = Color(0xFFD3F4AB)
+val ColorPanelGreen = Color(0xFFEBFFCF)
 val ColorTransparent = Color(0x00000000)
