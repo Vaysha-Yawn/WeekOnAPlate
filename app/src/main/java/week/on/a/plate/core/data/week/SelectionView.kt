@@ -3,5 +3,5 @@ package week.on.a.plate.core.data.week
 data class SelectionView(
     val id:Long,
     val category:String,
-    val recipes: MutableList<RecipeInMenuView>
+    val positions: MutableList<Position>
 )

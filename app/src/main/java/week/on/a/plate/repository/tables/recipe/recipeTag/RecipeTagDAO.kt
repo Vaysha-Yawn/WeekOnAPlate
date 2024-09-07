@@ -12,15 +12,15 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface RecipeTagDAO {
-    @Query("SELECT * FROM recipeTag")
-    fun getAll(): Flow<List<RecipeTag>>
+    @Query("SELECT * FROM RecipeTagRoom")
+    fun getAll(): Flow<List<RecipeTagRoom>>
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(recipeTag: RecipeTag)
+    suspend fun insert(recipeTagRoom: RecipeTagRoom)
 
     @Update
-    suspend fun update(recipeTag: RecipeTag)
+    suspend fun update(recipeTagRoom: RecipeTagRoom)
 
     @Delete
-    suspend fun delete(recipeTag: RecipeTag)
+    suspend fun delete(recipeTagRoom: RecipeTagRoom)
 }

@@ -1,24 +1,23 @@
 package week.on.a.plate.repository.tables.recipe.ingredient
 
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class IngredientRepository (val dao: IngredientDAO) {
 
-    fun read(): Flow<List<Ingredient>> = dao.getAll()
+    fun read(): Flow<List<IngredientRoom>> = dao.getAll()
 
-    suspend fun create(ingredient: Ingredient) {
-        dao.insert(ingredient)
+    suspend fun create(ingredientRoom: IngredientRoom) {
+        dao.insert(ingredientRoom)
     }
 
-    suspend fun update(ingredient: Ingredient) {
-        dao.update(ingredient)
+    suspend fun update(ingredientRoom: IngredientRoom) {
+        dao.update(ingredientRoom)
     }
 
-    suspend fun delete(ingredient: Ingredient) {
-        dao.delete(ingredient)
+    suspend fun delete(ingredientRoom: IngredientRoom) {
+        dao.delete(ingredientRoom)
     }
 
 }

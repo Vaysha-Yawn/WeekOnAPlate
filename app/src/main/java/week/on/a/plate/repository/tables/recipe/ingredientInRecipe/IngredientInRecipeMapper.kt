@@ -4,17 +4,19 @@ import week.on.a.plate.core.data.recipe.IngredientView
 
 
 class IngredientInRecipeMapper() {
-    fun IngredientInRecipe.roomToView(ingredientView: IngredientView): week.on.a.plate.core.data.recipe.IngredientInRecipeView =
+    fun IngredientInRecipeRoom.roomToView(ingredientView: IngredientView): week.on.a.plate.core.data.recipe.IngredientInRecipeView =
         week.on.a.plate.core.data.recipe.IngredientInRecipeView(
+            id = this.id,
             ingredientView = ingredientView,
-            count = this.count
+            description = this.description,
+            count = this.count,
         )
 
-    fun week.on.a.plate.core.data.recipe.IngredientInRecipeView.viewToRoom(recipeId:Long): IngredientInRecipe =
-        IngredientInRecipe(
-            id = this.ingredientView.ingredientId,
+    fun week.on.a.plate.core.data.recipe.IngredientInRecipeView.viewToRoom(recipeId:Long): IngredientInRecipeRoom =
+        IngredientInRecipeRoom(
             recipeId = recipeId,
             ingredientId = this.ingredientView.ingredientId,
+            description = this.description,
             count = this.count
         )
 }

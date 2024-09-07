@@ -2,14 +2,14 @@ package week.on.a.plate.repository.tables.recipe.recipe
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import week.on.a.plate.repository.tables.recipe.recipeStep.RecipeStep
+import week.on.a.plate.repository.tables.recipe.recipeStep.RecipeStepRoom
 
 
 data class RecipeAndRecipeSteps(
-    @Embedded val recipe: Recipe,
+    @Embedded val recipeRoom: RecipeRoom,
     @Relation(
          parentColumn = "recipeId",
          entityColumn = "recipeId"
     )
-    val recipeStep: List<RecipeStep>
+    val recipeStepRoom: List<RecipeStepRoom>
 )

@@ -65,4 +65,25 @@ object ModuleRecipeDB {
     @Singleton
     fun provideWeekDAO(recipeDB: RecipeDB) = recipeDB.daoWeekDataDAO()
 
+    @Provides
+    @Singleton
+    fun providePositionIngredientDAO(recipeDB: RecipeDB) = recipeDB.daoPositionIngredient()
+
+    @Provides
+    @Singleton
+    fun providePositionNoteDAO(recipeDB: RecipeDB) = recipeDB.daoPositionNote()
+
+    @Provides
+    @Singleton
+    fun providePositionDraftDAO(recipeDB: RecipeDB) = recipeDB.daoPositionDraft()
+
+    @Provides
+    @Singleton
+    fun provideDraftAndIngredientCrossRefDAO(recipeDB: RecipeDB) = recipeDB.daoDraftAndIngredientCrossRef()
+
+    @Provides
+    @Singleton
+    fun provideDraftAndTagCrossRefDAO(recipeDB: RecipeDB) = recipeDB.daoDraftAndTagCrossRef()
+
+
 }

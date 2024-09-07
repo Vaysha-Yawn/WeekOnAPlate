@@ -8,8 +8,6 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import kotlinx.coroutines.flow.Flow
-import week.on.a.plate.repository.tables.weekOrg.recipeInMenu.RecipeInMenuRoom
 
 
 @Dao
@@ -23,6 +21,10 @@ interface SelectionDAO {
     @Transaction
     @Query("SELECT * FROM selectionroom WHERE selectionId=:selectionId")
     suspend fun getSelectionAndRecipesInMenu(selectionId:Long): SelectionAndRecipesInMenu
+
+    @Transaction
+    @Query("SELECT * FROM selectionroom WHERE selectionId=:selectionId")
+    suspend fun getSelectionAndPositionIngredient(selectionId:Long): SelectionAndPositionIngredient
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(selectionRoom: SelectionRoom):Long

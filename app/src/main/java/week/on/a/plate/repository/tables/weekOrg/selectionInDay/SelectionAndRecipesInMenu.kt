@@ -2,8 +2,7 @@ package week.on.a.plate.repository.tables.weekOrg.selectionInDay
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import kotlinx.coroutines.flow.Flow
-import week.on.a.plate.repository.tables.weekOrg.recipeInMenu.RecipeInMenuRoom
+import week.on.a.plate.repository.tables.weekOrg.position.recipeInMenu.PositionRecipeRoom
 
 
 data class SelectionAndRecipesInMenu(
@@ -12,5 +11,5 @@ data class SelectionAndRecipesInMenu(
          parentColumn = "selectionId",
          entityColumn = "selectionId"
     )
-    val recipeInMenuRooms: List<RecipeInMenuRoom>
+    val positionRecipeRooms: List<PositionRecipeRoom>
 )

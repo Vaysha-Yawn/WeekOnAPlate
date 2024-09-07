@@ -7,18 +7,18 @@ import javax.inject.Singleton
 @Singleton
 class IngredientCategoryRepository(val dao: IngredientCategoryDAO) {
 
-    fun read(): Flow<List<IngredientCategory>> = dao.getAll()
+    fun read(): Flow<List<IngredientCategoryRoom>> = dao.getAll()
 
-    suspend fun create(ingredientCategory: IngredientCategory) {
-        dao.insert(ingredientCategory)
+    suspend fun create(ingredientCategoryRoom: IngredientCategoryRoom) {
+        dao.insert(ingredientCategoryRoom)
     }
 
-    suspend fun update(ingredientCategory: IngredientCategory) {
-        dao.update(ingredientCategory)
+    suspend fun update(ingredientCategoryRoom: IngredientCategoryRoom) {
+        dao.update(ingredientCategoryRoom)
     }
 
-    suspend fun delete(ingredientCategory: IngredientCategory) {
-        dao.delete(ingredientCategory)
+    suspend fun delete(ingredientCategoryRoom: IngredientCategoryRoom) {
+        dao.delete(ingredientCategoryRoom)
     }
 }
 

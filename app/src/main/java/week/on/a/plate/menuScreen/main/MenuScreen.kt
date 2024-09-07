@@ -30,7 +30,9 @@ import java.time.LocalDate
 fun MenuScreen(viewModel: MenuViewModel = hiltViewModel()) {
     val uiState = viewModel.weekState.collectAsStateWithLifecycle().value
     when (uiState) {
-        WeekState.EmptyWeek -> {}
+        WeekState.EmptyWeek -> {
+            viewModel
+        }
         is WeekState.Error -> {}
         WeekState.Loading -> {}
         is WeekState.Success -> {
@@ -87,8 +89,7 @@ fun MenuScreenSuccess(
 @Preview(showBackground = true)
 @Composable
 fun PreviewMenuScreen() {
-    //val vm = MenuViewModel()
     WeekOnAPlateTheme {
-        //MenuScreen(vm)
+        MenuScreenSuccess(MenuIUState.MenuIUStateExample){}
     }
 }

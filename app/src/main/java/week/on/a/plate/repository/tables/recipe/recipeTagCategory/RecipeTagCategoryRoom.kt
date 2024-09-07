@@ -4,8 +4,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class RecipeTagCategory(
-    @PrimaryKey(autoGenerate = true)
-    val recipeTagCategoryId: Long = 0,
+data class RecipeTagCategoryRoom(
     var name: String,
-)
+){
+    @PrimaryKey(autoGenerate = true)
+    var recipeTagCategoryId: Long = 0
+}

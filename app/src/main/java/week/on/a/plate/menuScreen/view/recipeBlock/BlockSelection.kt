@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import week.on.a.plate.core.data.week.Position
 import week.on.a.plate.core.data.week.SelectionView
 import week.on.a.plate.menuScreen.logic.MenuEvent
 import week.on.a.plate.menuScreen.logic.MenuIUState
@@ -23,8 +24,13 @@ fun BlockSelection(
         onEvent(MenuEvent.AddRecipeToCategory(date, selection.category))
     }
     Spacer(Modifier.height(10.dp))
-    for (rec in selection.recipes) {
-        RecipePosition(rec, menuIUState, onEvent)
+    for (rec in selection.positions) {
+        when(rec){
+            is Position.PositionDraftView -> {}
+            is Position.PositionIngredientView -> {}
+            is Position.PositionNoteView -> {}
+            is Position.PositionRecipeView -> { RecipePosition(rec, menuIUState, onEvent)}
+        }
     }
     Spacer(Modifier.height(10.dp))
 }
@@ -41,7 +47,12 @@ fun BlockSelectionSmall(
         onEvent(MenuEvent.AddRecipeToCategory(date, selection.category))
     }
     Spacer(Modifier.height(10.dp))
-    for (rec in selection.recipes) {
-        RecipePosition(rec, menuIUState, onEvent)
+    for (rec in selection.positions) {
+        when(rec){
+            is Position.PositionDraftView -> {}
+            is Position.PositionIngredientView -> {}
+            is Position.PositionNoteView -> {}
+            is Position.PositionRecipeView -> { RecipePosition(rec, menuIUState, onEvent)}
+        }
     }
 }

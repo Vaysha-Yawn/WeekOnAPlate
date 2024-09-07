@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.data.example.EmptyWeek
+import week.on.a.plate.core.data.example.WeekDataExample
 import week.on.a.plate.menuScreen.logic.useCase.CRUDRecipeInMenu
 import week.on.a.plate.menuScreen.logic.useCase.Navigation
 import week.on.a.plate.menuScreen.logic.useCase.SelectedRecipeManager
@@ -31,12 +32,13 @@ class MenuViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            // sCRUDRecipeInMenu.menuR.insertNewWeek(WeekDataExample)
+           //sCRUDRecipeInMenu.menuR.insertNewWeek(WeekDataExample)
             sCRUDRecipeInMenu.menuR.getCurrentWeek(today)
-                .catch { weekState.value = WeekState.Error("") }
-                .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), 0)
+                .catch {
+                    weekState.value = WeekState.Error("") }
+                .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), EmptyWeek)
                 .collect {
-                    if (it != null) {
+                    if (it == null) {
                         weekState.value = WeekState.EmptyWeek
                     } else {
                         weekState.value = WeekState.Success(it)

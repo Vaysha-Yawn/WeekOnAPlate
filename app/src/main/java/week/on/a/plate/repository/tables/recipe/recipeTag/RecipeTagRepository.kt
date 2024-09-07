@@ -6,18 +6,18 @@ import javax.inject.Singleton
 @Singleton
 class RecipeTagRepository(val dao: RecipeTagDAO) {
 
-    fun read(): Flow<List<RecipeTag>> = dao.getAll()
+    fun read(): Flow<List<RecipeTagRoom>> = dao.getAll()
 
-    suspend fun create(recipeTag: RecipeTag) {
-        dao.insert(recipeTag)
+    suspend fun create(recipeTagRoom: RecipeTagRoom) {
+        dao.insert(recipeTagRoom)
     }
 
-    suspend fun update(recipeTag: RecipeTag) {
-        dao.update(recipeTag)
+    suspend fun update(recipeTagRoom: RecipeTagRoom) {
+        dao.update(recipeTagRoom)
     }
 
-    suspend fun delete(recipeTag: RecipeTag) {
-        dao.delete(recipeTag)
+    suspend fun delete(recipeTagRoom: RecipeTagRoom) {
+        dao.delete(recipeTagRoom)
     }
 
 }

@@ -6,7 +6,7 @@ import week.on.a.plate.core.data.recipe.RecipeTagView
 
 
 class RecipeMapper() {
-    fun Recipe.roomToView(
+    fun RecipeRoom.roomToView(
         tags: List<RecipeTagView>,
         ingredients: List<IngredientInRecipeView>,
         steps: List<RecipeStepView>
@@ -25,9 +25,8 @@ class RecipeMapper() {
             link = this.link
         )
 
-    fun week.on.a.plate.core.data.recipe.RecipeView.viewToRoom(): Recipe =
-        Recipe(
-            recipeId = this.id,
+    fun week.on.a.plate.core.data.recipe.RecipeView.viewToRoom(): RecipeRoom =
+        RecipeRoom(
             name = this.name,
             description = this.description,
             img = this.img,

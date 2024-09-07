@@ -4,9 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class Recipe(
-    @PrimaryKey(autoGenerate = true)
-    val recipeId: Long = 0,
+data class RecipeRoom(
     val name: String,
     val description: String,
     val img:String,
@@ -14,4 +12,7 @@ data class Recipe(
     val allTime: Int,
     val standardPortionsCount: Int,
     val link: String
-)
+){
+    @PrimaryKey(autoGenerate = true)
+    var recipeId: Long = 0
+}

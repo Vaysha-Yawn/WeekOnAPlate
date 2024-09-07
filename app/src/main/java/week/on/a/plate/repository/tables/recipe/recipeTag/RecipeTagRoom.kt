@@ -4,10 +4,11 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class RecipeTag(
-    @PrimaryKey(autoGenerate = true)
-    val recipeTagId: Long = 0,
+data class RecipeTagRoom(
     val recipeTagCategoryId: Long,
     val tagName: String,
     val isTypeOfMeal:Boolean,
-)
+){
+    @PrimaryKey(autoGenerate = true)
+    var recipeTagId: Long = 0
+}

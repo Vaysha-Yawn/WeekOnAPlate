@@ -6,18 +6,18 @@ import javax.inject.Singleton
 @Singleton
 class IngredientInRecipeRepository(val dao:IngredientInRecipeDAO) {
 
-    fun read(): Flow<List<IngredientInRecipe>> = dao.getAll()
+    fun read(): Flow<List<IngredientInRecipeRoom>> = dao.getAll()
 
-    suspend fun create(ingredientInRecipe: IngredientInRecipe) {
-        dao.insert(ingredientInRecipe)
+    suspend fun create(ingredientInRecipeRoom: IngredientInRecipeRoom) {
+        dao.insert(ingredientInRecipeRoom)
     }
 
-    suspend fun update(ingredientInRecipe: IngredientInRecipe) {
-        dao.update(ingredientInRecipe)
+    suspend fun update(ingredientInRecipeRoom: IngredientInRecipeRoom) {
+        dao.update(ingredientInRecipeRoom)
     }
 
-    suspend fun delete(ingredientInRecipe: IngredientInRecipe) {
-        dao.delete(ingredientInRecipe)
+    suspend fun delete(ingredientInRecipeRoom: IngredientInRecipeRoom) {
+        dao.delete(ingredientInRecipeRoom)
     }
 
 }

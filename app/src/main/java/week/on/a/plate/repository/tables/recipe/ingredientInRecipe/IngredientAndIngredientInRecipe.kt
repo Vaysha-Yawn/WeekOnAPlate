@@ -11,5 +11,5 @@ data class IngredientAndIngredientInRecipe(
          parentColumn = "ingredientId",
          entityColumn = "ingredientId"
     )
-    val ingredientInRecipe: IngredientInRecipe
+    val ingredientInRecipeRoom: IngredientInRecipeRoom
 )

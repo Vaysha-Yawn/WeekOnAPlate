@@ -13,19 +13,19 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface RecipeTagCategoryDAO {
-    @Query("SELECT * FROM recipeTagCategory")
-    fun getAll(): Flow<List<RecipeTagCategory>>
+    @Query("SELECT * FROM RecipeTagCategoryRoom")
+    fun getAll(): Flow<List<RecipeTagCategoryRoom>>
 
     @Transaction
-    @Query("SELECT * FROM recipeTagCategory WHERE recipeTagCategoryId=:recipeTagCategoryId")
+    @Query("SELECT * FROM RecipeTagCategoryRoom WHERE recipeTagCategoryId=:recipeTagCategoryId")
     fun getRecipeTagCategoryAndRecipeTag(recipeTagCategoryId:Long): Flow<RecipeTagCategoryAndRecipeTag>
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(recipeTagCategory: RecipeTagCategory)
+    suspend fun insert(recipeTagCategoryRoom: RecipeTagCategoryRoom)
 
     @Update
-    suspend fun update(recipeTagCategory: RecipeTagCategory)
+    suspend fun update(recipeTagCategoryRoom: RecipeTagCategoryRoom)
 
     @Delete
-    suspend fun delete(recipeTagCategory: RecipeTagCategory)
+    suspend fun delete(recipeTagCategoryRoom: RecipeTagCategoryRoom)
 }

@@ -1,0 +1,50 @@
+package week.on.a.plate.repository.tables.weekOrg.position.positionDraft
+
+
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Transaction
+import androidx.room.Update
+import kotlinx.coroutines.flow.Flow
+import week.on.a.plate.repository.tables.recipe.ingredientInRecipe.IngredientInRecipeRoom
+import week.on.a.plate.repository.tables.weekOrg.position.positionDraft.draftIngredientCrossRef.DraftAndIngredient
+import week.on.a.plate.repository.tables.weekOrg.position.positionDraft.draftIngredientCrossRef.DraftAndIngredientCrossRef
+import week.on.a.plate.repository.tables.weekOrg.position.positionDraft.draftTagCrossRef.DraftAndTag
+import week.on.a.plate.repository.tables.weekOrg.position.positionDraft.draftTagCrossRef.DraftAndTagCrossRef
+import week.on.a.plate.repository.tables.weekOrg.position.positionIngredient.PositionIngredientRoom
+
+
+@Dao
+interface PositionDraftDAO {
+    @Query("SELECT * FROM PositionDraftRoom")
+    suspend fun getAll(): List<PositionDraftRoom>
+
+    @Query("SELECT * FROM PositionDraftRoom WHERE selectionId=:selectionId")
+    fun getAllInSel(selectionId:Long): Flow<List<PositionDraftRoom>>
+
+    @Insert (onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(positionDraft: PositionDraftRoom):Long
+
+    @Transaction
+    @Query("SELECT * FROM draftandtagcrossref WHERE draftId =:draftId")
+    suspend fun getDraftAndTagByDraftId(draftId:Long): DraftAndTag
+
+    @Transaction
+    @Query("SELECT * FROM draftandtagcrossref WHERE draftId =:draftId")
+    suspend fun getDraftAndIngredientByDraftId(draftId:Long): DraftAndIngredient
+
+    @Insert (onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(draftAndIngredientCrossRefs: List<DraftAndIngredientCrossRef>)
+
+    @Insert (onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(draftAndTagCrossRefs: List<DraftAndTagCrossRef>)
+
+    @Update
+    suspend fun update(positionDraft: PositionDraftRoom)
+
+    @Delete
+    suspend fun delete(positionDraft: PositionDraftRoom)
+}

@@ -14,8 +14,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,9 +21,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.core.data.example.shortRecipe
-import week.on.a.plate.core.data.recipe.RecipeStateView
-import week.on.a.plate.core.data.week.RecipeInMenuView
-import week.on.a.plate.core.data.week.RecipeShortView
+import week.on.a.plate.core.data.week.Position
 import week.on.a.plate.core.uitools.TextInApp
 import week.on.a.plate.core.uitools.TextInAppColored
 import week.on.a.plate.core.uitools.buttons.CheckButton
@@ -39,7 +35,7 @@ import week.on.a.plate.ui.theme.WeekOnAPlateTheme
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun RecipePosition(
-    recipe: RecipeInMenuView,
+    recipe: Position.PositionRecipeView,
     menuIUState: MenuIUState,
     onEvent: (event: MenuEvent) -> Unit
 ) {
@@ -49,7 +45,7 @@ fun RecipePosition(
         elevation = CardDefaults.elevatedCardElevation(5.dp),
         shape = RectangleShape
     ) {
-        Box() {
+        Box {
             Row(
                 Modifier
                     .fillMaxWidth()
@@ -63,12 +59,12 @@ fun RecipePosition(
             ) {
                 if (menuIUState.editing.value) {
                     val state = menuIUState.chosenRecipes[recipe.id]
-                    if (state!=null){
+                    if (state != null) {
                         CheckButton(state) {
                             onEvent(MenuEvent.CheckRecipe(recipe.id))
                         }
                         Spacer(modifier = Modifier.width(10.dp))
-                    }else{
+                    } else {
                         onEvent(MenuEvent.AddCheckState(recipe.id))
                     }
                 }
@@ -77,11 +73,6 @@ fun RecipePosition(
                     horizontalAlignment = Alignment.Start,
                 ) {
                     Row(Modifier.padding(bottom = 3.dp)) {
-                        TextInAppColored(
-                            recipe.state.names, colorBackground = ColorButtonGreen,
-                            modifier = Modifier
-                                .padding(end = 10.dp)
-                        )
                         TextInApp(
                             "${recipe.portionsCount} Порции"
                         )
@@ -96,9 +87,10 @@ fun RecipePosition(
                             maxLines = 1,
                             modifier = Modifier.combinedClickable(
                                 onClick = {
-                                    onEvent(MenuEvent.NavToFullRecipe(recipe.recipe)) },
+                                    onEvent(MenuEvent.NavToFullRecipe(recipe.recipe))
+                                },
                                 onLongClick =
-                                { onEvent(MenuEvent.SwitchEditMode) } ,
+                                { onEvent(MenuEvent.SwitchEditMode) },
                             ),
                             textStyle = Typography.bodyMedium
                         )
@@ -117,25 +109,23 @@ fun RecipePosition(
 fun PreviewRecipePosition() {
     WeekOnAPlateTheme {
         val menuIUState = MenuIUState.MenuIUStateExample
+
         Column {
             RecipePosition(
-                RecipeInMenuView(
+                Position.PositionRecipeView(
                     0,
-                    RecipeStateView.Done,
-                    week.on.a.plate.core.data.example.shortRecipe,
+                    shortRecipe,
                     1,
                 ), menuIUState, {})
             RecipePosition(
-                RecipeInMenuView(
+                Position.PositionRecipeView(
                     0,
-                    RecipeStateView.Eated,
                     shortRecipe,
                     2,
                 ), menuIUState, {})
             RecipePosition(
-                RecipeInMenuView(
+                Position.PositionRecipeView(
                     0,
-                    RecipeStateView.Created,
                     shortRecipe,
                     3,
                 ), menuIUState, {})

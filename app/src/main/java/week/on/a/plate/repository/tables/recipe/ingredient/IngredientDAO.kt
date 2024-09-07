@@ -12,21 +12,21 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface IngredientDAO {
-    @Query("SELECT * FROM ingredient")
-    fun getAll(): Flow<List<Ingredient>>
+    @Query("SELECT * FROM IngredientRoom")
+    fun getAll(): Flow<List<IngredientRoom>>
 
-    @Query("SELECT * FROM ingredient WHERE ingredientId = :ingredientId")
-    fun getCurrent(ingredientId: Long): Flow<Ingredient>
+    @Query("SELECT * FROM IngredientRoom WHERE ingredientId = :ingredientId")
+    fun getCurrent(ingredientId: Long): Flow<IngredientRoom>
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(ingredient: Ingredient)
+    suspend fun insert(ingredientRoom: IngredientRoom)
 
     @Update
-    suspend fun update(ingredient: Ingredient)
+    suspend fun update(ingredientRoom: IngredientRoom)
 
-    @Query("UPDATE ingredient SET img=:img WHERE ingredientId = :ingredientId")
+    @Query("UPDATE IngredientRoom SET img=:img WHERE ingredientId = :ingredientId")
     suspend fun update(ingredientId: Long, img: String, )
 
     @Delete
-    suspend fun delete(ingredient: Ingredient)
+    suspend fun delete(ingredientRoom: IngredientRoom)
 }

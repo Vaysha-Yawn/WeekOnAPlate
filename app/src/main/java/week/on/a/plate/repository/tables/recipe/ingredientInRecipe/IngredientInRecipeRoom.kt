@@ -4,10 +4,12 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class IngredientInRecipe(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
+data class IngredientInRecipeRoom(
     val recipeId: Long,
     val ingredientId: Long,
+    val description: String,
     val count:Double
-)
+){
+    @PrimaryKey(autoGenerate = true)
+    var id: Long = 0
+}

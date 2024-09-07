@@ -2,8 +2,7 @@ package week.on.a.plate.core.data.example
 
 import week.on.a.plate.core.data.week.DayView
 import week.on.a.plate.core.data.week.DayInWeekData
-import week.on.a.plate.core.data.week.RecipeInMenuView
-import week.on.a.plate.core.data.recipe.RecipeStateView
+import week.on.a.plate.core.data.week.Position
 import week.on.a.plate.core.data.week.SelectionView
 import week.on.a.plate.core.data.week.WeekView
 import java.time.LocalDate
@@ -39,7 +38,7 @@ val EmptyWeek = WeekView(
 val WeekDataExample = WeekView(0,
     SelectionView(7,
         "Нераспределенное",
-        mutableListOf(RecipeInMenuView(0, RecipeStateView.Created, shortRecipe, 3))
+        mutableListOf(Position.PositionRecipeView(0, shortRecipe, 3))
     ),
     mutableListOf(
         DayView(1,

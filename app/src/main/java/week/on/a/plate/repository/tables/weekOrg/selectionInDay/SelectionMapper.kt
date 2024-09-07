@@ -1,17 +1,19 @@
 package week.on.a.plate.repository.tables.weekOrg.selectionInDay
 
-import week.on.a.plate.core.data.week.RecipeInMenuView
+import week.on.a.plate.core.data.week.Position
 
 
 class SelectionMapper() {
-    fun SelectionRoom.roomToView(recipes: MutableList<RecipeInMenuView>): week.on.a.plate.core.data.week.SelectionView =
+    fun SelectionRoom.roomToView(
+        positions: MutableList<Position>,
+    ): week.on.a.plate.core.data.week.SelectionView =
         week.on.a.plate.core.data.week.SelectionView(
             id = this.selectionId,
             category = this.category,
-            recipes = recipes
+            positions = positions
         )
 
-    fun week.on.a.plate.core.data.week.SelectionView.viewToRoom(dayId:Long): SelectionRoom =
+    fun week.on.a.plate.core.data.week.SelectionView.viewToRoom(dayId: Long): SelectionRoom =
         SelectionRoom(
             dayId = dayId,
             category = this.category

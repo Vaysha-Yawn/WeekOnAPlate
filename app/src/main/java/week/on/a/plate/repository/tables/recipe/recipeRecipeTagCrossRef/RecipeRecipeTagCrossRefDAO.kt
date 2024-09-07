@@ -17,11 +17,11 @@ interface RecipeRecipeTagCrossRefDAO {
     fun getAll(): Flow<List<RecipeRecipeTagCrossRef>>
 
     @Transaction
-    @Query("SELECT * FROM Recipe")
+    @Query("SELECT * FROM RecipeRoom")
     fun getRecipeAndRecipeTag(): Flow<List<RecipeAndRecipeTag>>
 
     @Transaction
-    @Query("SELECT * FROM RecipeTag")
+    @Query("SELECT * FROM RecipeTagRoom")
     fun getRecipeTagAndRecipe(): Flow<List<RecipeTagAndRecipe>>
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
