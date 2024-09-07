@@ -1,19 +1,16 @@
 package week.on.a.plate.menuScreen.logic
 
-import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.data.example.EmptyWeek
-import week.on.a.plate.core.data.example.WeekDataExample
-import week.on.a.plate.core.data.week.RecipeShortView
-import week.on.a.plate.core.data.week.SelectionView
-import week.on.a.plate.core.data.week.WeekView
 import week.on.a.plate.menuScreen.logic.useCase.CRUDRecipeInMenu
 import week.on.a.plate.menuScreen.logic.useCase.Navigation
 import week.on.a.plate.menuScreen.logic.useCase.SelectedRecipeManager
@@ -27,86 +24,98 @@ class MenuViewModel @Inject constructor(
     private val navigation: Navigation
 ) : ViewModel() {
 
-    val uiState : MutableStateFlow<MenuUIState> = MutableStateFlow(MenuUIState.Loading)
-    val today = LocalDate.now()
+    private val today = LocalDate.now()
+    val weekState: MutableStateFlow<WeekState> = MutableStateFlow(WeekState.Loading)
+    val menuUIState =
+        MenuIUState(EmptyWeek, selectedRecipeManager.chosenRecipes, mutableStateOf(true), mutableStateOf(false), mutableIntStateOf(0))
 
     init {
-        uiState.value = MenuUIState.Loading
         viewModelScope.launch {
-           // sCRUDRecipeInMenu.menuR.insertNewWeek(WeekDataExample)
-            sCRUDRecipeInMenu.menuR.getCurrentWeek(today).catch {
-                uiState.value = MenuUIState.Error("")
-            }.collect {
-                    if (it!=null){
-                        uiState.value = MenuUIState.EmptyWeek
-                    }else{
-                        uiState.value = MenuUIState.Success(it)
+            // sCRUDRecipeInMenu.menuR.insertNewWeek(WeekDataExample)
+            sCRUDRecipeInMenu.menuR.getCurrentWeek(today)
+                .catch { weekState.value = WeekState.Error("") }
+                .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), 0)
+                .collect {
+                    if (it != null) {
+                        weekState.value = WeekState.EmptyWeek
+                    } else {
+                        weekState.value = WeekState.Success(it)
                     }
                 }
         }
     }
-    //todo добавить ивенты для изоляции
 
-    //states
-    val itsDayMenu = mutableStateOf(true)
-    val editing = mutableStateOf(false)
-    val activeDayInd = mutableIntStateOf(0)
+    fun onEvent(event: MenuEvent) {
+        when (event) {
+            is MenuEvent.SwitchWeekOrDayView -> {
+                // Логика для переключения между неделей и днем
+                menuUIState.itsDayMenu.value = !menuUIState.itsDayMenu.value
+                selectedRecipeManager.clear()
+            }
 
+            is MenuEvent.AddCheckState -> {
+                // Логика для получения состояния
+                val id = event.id
+                selectedRecipeManager.addNewState(id)
+            }
 
-    fun onEvent(event:MenuEvents){
-        when(event){
-            is MenuEvents.ChangeDay -> TODO()
-            is MenuEvents.getCheckState -> TODO()
+            is MenuEvent.NavToFullRecipe -> {
+                // Логика навигации к полному рецепту
+                val recipe = event.rec
+                selectedRecipeManager.clear()
+                navigation.actionNavToFullRecipe(recipe)
+            }
+
+            is MenuEvent.SwitchEditMode -> {
+                // Логика переключения режима редактирования
+                menuUIState.editing.value = !menuUIState.editing.value
+            }
+
+            is MenuEvent.CheckRecipe -> {
+                // Логика проверки рецепта по id
+                val id = event.id
+                selectedRecipeManager.actionCheckRecipe(id)
+            }
+
+            is MenuEvent.AddRecipeToCategory -> {
+                // Логика добавления рецепта в категорию
+                val date = event.date
+                val category = event.category
+                //put in memory date: Int, category: String
+                navigation.actionToFindRecipe()
+                //sCRUDRecipeInMenu.actionAddRecipeToCategory(date, category)
+            }
+
+            is MenuEvent.RecipeToNextStep -> {
+                // Логика продвижения рецепта на следующий шаг
+                val id = event.id
+
+            }
+
+            is MenuEvent.Edit -> {
+                // Логика редактирования рецепта по id
+                val id = event.id
+                navigation.actionShowEditDialog(id)
+            }
+
+            is MenuEvent.ChooseAll -> {
+                // Логика выбора всех рецептов
+                selectedRecipeManager.actionChooseAll()
+            }
+
+            is MenuEvent.DeleteSelected -> {
+                // Логика удаления выбранных рецептов
+                sCRUDRecipeInMenu.actionDeleteSelected(selectedRecipeManager.getSelected())
+            }
+
+            is MenuEvent.SelectedToShopList -> {
+                // Логика перемещения выбранных рецептов в список покупок
+                navigation.actionSelectedToShopList(selectedRecipeManager.getSelected())
+            }
         }
     }
 
-    fun switchWeekOrDayView() {
-        selectedRecipeManager.clear()
-    }
-
-    fun getCheckState(id: Long): State<Boolean> {
-        return selectedRecipeManager.getState(id)
-    }
-
-    fun actionNavToFullRecipe(rec: RecipeShortView) {
-        selectedRecipeManager.clear()
-        navigation.actionNavToFullRecipe(rec)
-    }
-
-    fun actionSwitchEditMode() {
-        editing.value = !editing.value
-    }
-
-    fun actionCheckRecipe(id: Long) {
-        selectedRecipeManager.actionCheckRecipe(id)
-    }
-
-    fun actionAddRecipeToCategory(date: LocalDate, category: String) {
-        //put in memory date: Int, category: String
-        navigation.actionToFindRecipe()
-
-        //sCRUDRecipeInMenu.actionAddRecipeToCategory(date, category)
-    }
-
-    fun actionRecipeToNextStep(id: Long) {
-        sCRUDRecipeInMenu.actionRecipeToNextStep(id)
-    }
-
-    fun actionEdit(id: Long) {
-        navigation.actionShowEditDialog(id)
-    }
-
-    fun actionChooseAll() {
-        selectedRecipeManager.actionChooseAll()
-    }
-
-    fun actionDeleteSelected() {
-        sCRUDRecipeInMenu.actionDeleteSelected(selectedRecipeManager.getSelected())
-    }
-
-    fun actionSelectedToShopList() {
-        navigation.actionSelectedToShopList(selectedRecipeManager.getSelected())
-    }
-
-
+    /* fun getCheckState(id: Long): State<Boolean> {
+         return selectedRecipeManager.getState(id)
+     }*/
 }

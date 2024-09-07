@@ -8,7 +8,7 @@ import javax.inject.Inject
 class SelectedRecipeManager @Inject constructor() {
 
     var chosenRecipes = mutableMapOf<Long, MutableState<Boolean>>()
-    val isAllSelected = mutableStateOf(false)
+    private val isAllSelected = mutableStateOf(false)
 
     fun clear (){
         isAllSelected.value = false
@@ -20,12 +20,9 @@ class SelectedRecipeManager @Inject constructor() {
         check.value = !check.value
     }
 
-    fun getState(id: Long) = chosenRecipes[id] ?: addNewState(id)
-
-    private fun addNewState(id: Long): State<Boolean> {
+    fun addNewState(id: Long) {
         val state = mutableStateOf(false)
         chosenRecipes[id] = state
-        return state
     }
 
     fun actionChooseAll() {
