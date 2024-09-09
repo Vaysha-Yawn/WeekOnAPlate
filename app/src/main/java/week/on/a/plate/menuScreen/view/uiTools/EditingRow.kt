@@ -1,42 +1,53 @@
 package week.on.a.plate.menuScreen.view.uiTools
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import week.on.a.plate.core.uitools.TextInAppColored
-import week.on.a.plate.ui.theme.ColorButtonNegativeGrey
-import week.on.a.plate.ui.theme.Typography
+import week.on.a.plate.R
+import week.on.a.plate.ui.theme.ColorBlueButton
+import week.on.a.plate.ui.theme.ColorBluePanel
+import week.on.a.plate.ui.theme.ColorTransparent
 
 @Composable
 fun EditingRow(
-    actionChooseAll:()->Unit,
-    actionDeleteSelected:()->Unit,
-    actionSelectedToShopList:()->Unit,
+    actionChooseAll: () -> Unit,
+    actionDeleteSelected: () -> Unit,
+    actionSelectedToShopList: () -> Unit,
+    value: Boolean,
 ) {
-    Row(horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.fillMaxWidth()) {
-        TextInAppColored(
-            "Выбрать всё", colorBackground = ColorButtonNegativeGrey, modifier = Modifier
-                .clickable (onClick = actionChooseAll),
-            textStyle = Typography.bodyMedium
+    Row(horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier) {
+        Image(
+            painter = painterResource(id = R.drawable.select_all),
+            contentDescription = "",
+            modifier = Modifier
+                .padding(horizontal = 12.dp)
+                .size(24.dp).background(if (value) ColorBluePanel else ColorTransparent, CircleShape)
+                .clickable { actionChooseAll() },
         )
-        TextInAppColored(
-            "Удалить", colorBackground = ColorButtonNegativeGrey, modifier = Modifier
-                .clickable (onClick = actionDeleteSelected),
-            textStyle = Typography.bodyMedium
+        Image(
+            painter = painterResource(id = R.drawable.delete),
+            contentDescription = "",
+            modifier = Modifier
+                .padding(horizontal = 12.dp)
+                .size(24.dp)
+                .clickable { actionDeleteSelected() },
         )
-        TextInAppColored(
-            "В список покупок ", colorBackground = ColorButtonNegativeGrey, modifier = Modifier
-                .clickable (onClick = actionSelectedToShopList),
-            textStyle = Typography.bodyMedium
+        Image(
+            painter = painterResource(id = R.drawable.add_shopping_cart),
+            contentDescription = "",
+            modifier = Modifier
+                .padding(horizontal = 12.dp)
+                .size(24.dp)
+                .clickable { actionSelectedToShopList() },
         )
     }
-    Spacer(Modifier.height(10.dp))
-    HorizontalDivider(thickness = 1.dp)
 }

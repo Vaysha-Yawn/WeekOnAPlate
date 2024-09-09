@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -36,7 +37,7 @@ fun MoreButtonWithBackg(actionEdit: () -> Unit) {
         painter = painterResource(id = R.drawable.more),
         contentDescription = "",
         modifier = Modifier
-            .background(ColorPanelLightGrey, RoundedCornerShape(5.dp))
+            .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(5.dp))
             .size(24.dp)
             .clickable { actionEdit() },
     )

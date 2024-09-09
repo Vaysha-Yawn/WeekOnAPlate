@@ -12,20 +12,22 @@ import week.on.a.plate.ui.theme.Typography
 import week.on.a.plate.core.uitools.buttons.PlusButtonCard
 import week.on.a.plate.core.uitools.buttons.PlusButtonTitle
 import week.on.a.plate.core.uitools.TextInApp
+import week.on.a.plate.core.uitools.TextTitle
+import week.on.a.plate.core.uitools.TextTitleItalic
 import week.on.a.plate.ui.theme.WeekOnAPlateTheme
 
 @Composable
 fun TitleMenu(name:String, actionAdd:()->Unit){
-    Row(Modifier.padding(horizontal = 10.dp), verticalAlignment = Alignment.CenterVertically) {
-        TextInApp(text = name, textStyle = Typography.titleLarge, modifier = Modifier.padding(end = 20.dp))
-        PlusButtonCard(actionAdd)
+    Row(Modifier.padding(horizontal = 10.dp).padding(start = 20.dp), verticalAlignment = Alignment.CenterVertically) {
+        TextTitle(text = name, modifier = Modifier.padding(end = 20.dp))
+        PlusButtonTitle(actionAdd)
     }
 }
 
 @Composable
 fun TitleMenuSmall(name:String, actionAdd:()->Unit){
-    Row(Modifier.padding(horizontal = 10.dp), verticalAlignment = Alignment.CenterVertically) {
-        TextInApp(text = name, textStyle = Typography.bodyMedium, modifier = Modifier.padding(end = 10.dp))
+    Row(Modifier.padding(horizontal = 10.dp).padding(start = 20.dp), verticalAlignment = Alignment.CenterVertically) {
+        TextTitleItalic(text = name, modifier = Modifier.padding(end = 10.dp))
         PlusButtonTitle(actionAdd)
     }
 }

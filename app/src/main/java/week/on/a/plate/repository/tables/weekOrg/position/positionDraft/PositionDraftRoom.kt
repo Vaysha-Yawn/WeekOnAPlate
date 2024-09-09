@@ -8,5 +8,5 @@ import week.on.a.plate.repository.tables.weekOrg.position.PositionRoom
 @Entity
 class PositionDraftRoom(val selectionId: Long) : PositionRoom() {
     @PrimaryKey(autoGenerate = true)
-    var id: Long = 0
+    var draftId: Long = 0
 }

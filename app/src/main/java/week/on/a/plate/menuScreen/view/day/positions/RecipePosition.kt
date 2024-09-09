@@ -1,0 +1,71 @@
+package week.on.a.plate.menuScreen.view.day.positions
+
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import week.on.a.plate.core.data.week.Position
+import week.on.a.plate.core.uitools.SubText
+import week.on.a.plate.core.uitools.TextBody
+import week.on.a.plate.core.uitools.buttons.CheckButton
+import week.on.a.plate.menuScreen.logic.MenuEvent
+import week.on.a.plate.menuScreen.logic.MenuIUState
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun RecipePosition(
+    recipe: Position.PositionRecipeView,
+    menuIUState: MenuIUState,
+    onEvent: (event: MenuEvent) -> Unit,
+    rowScope: RowScope
+) {
+    with(rowScope) {
+        Row(
+            Modifier
+                .weight(3f)
+                .combinedClickable(
+                    onClick = {
+                        onEvent(MenuEvent.NavToFullRecipe(recipe.recipe))
+                    },
+                    onLongClick =
+                    { onEvent(MenuEvent.SwitchEditMode) },
+                ).padding(vertical = 5.dp), verticalAlignment = Alignment.CenterVertically
+        ) {
+            if (menuIUState.editing.value) {
+                var state = menuIUState.chosenRecipes[recipe.id]
+                if (state == null) {
+                    state = remember { mutableStateOf(false) }
+                    menuIUState.chosenRecipes[recipe.id] = state
+                }
+                CheckButton(state) {
+                    onEvent(MenuEvent.CheckRecipe(recipe.id))
+                }
+                Spacer(modifier = Modifier.width(10.dp))
+            }else{
+                Spacer(modifier = Modifier.width(20.dp))
+            }
+            Column(
+                Modifier
+                    .weight(3f),
+                horizontalAlignment = Alignment.Start,
+            ) {
+                SubText(
+                    "${recipe.portionsCount} Порции"
+                )
+                TextBody(
+                    recipe.recipe.name
+                )
+            }
+        }
+    }
+}

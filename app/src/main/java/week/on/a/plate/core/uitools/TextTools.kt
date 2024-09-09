@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -34,7 +35,7 @@ fun TextInApp(
     modifier: Modifier = Modifier,
     maxLines: Int? = null,
     textStyle: TextStyle = Typography.bodyMedium,
-    color: Color = Typography.bodyMedium.color,
+    color: Color = MaterialTheme.colorScheme.onBackground,
     textAlign: TextAlign = TextAlign.Left
 ) {
     Text(
@@ -59,7 +60,7 @@ fun TextDisplayItalic(
         text,
         modifier,
         textStyle = Typography.displayMedium,
-        color = ColorTextBlack,
+        color = MaterialTheme.colorScheme.onBackground,
         textAlign = textAlign
     )
 }
@@ -74,7 +75,7 @@ fun TextTitleLargeItalic(
         text,
         modifier,
         textStyle = Typography.titleLarge,
-        color = ColorTextBlack,
+        color = MaterialTheme.colorScheme.onBackground,
         textAlign = textAlign
     )
 }
@@ -89,7 +90,7 @@ fun TextTitleLarge(
         text,
         modifier,
         textStyle = titleLargeNonItalic,
-        color = ColorTextBlack,
+        color = MaterialTheme.colorScheme.onBackground,
         textAlign = textAlign
     )
 }
@@ -101,19 +102,20 @@ fun TextTitleItalic(text: String, modifier: Modifier = Modifier) {
         text,
         modifier,
         textStyle = titleMediumItalic,
-        color = ColorTextBlack,
+        color = MaterialTheme.colorScheme.onBackground,
         textAlign = TextAlign.Start
     )
 }
 
 @Composable
-fun TextTitle(text: String, modifier: Modifier = Modifier) {
+fun TextTitle(text: String, modifier: Modifier = Modifier, textAlign: TextAlign = TextAlign.Start) {
     TextInApp(
         text,
         modifier,
         textStyle = Typography.titleMedium,
-        color = ColorTextBlack,
-        textAlign = TextAlign.Start
+        color = MaterialTheme.colorScheme.onBackground,
+        textAlign = textAlign,
+        maxLines = 1
     )
 }
 
@@ -135,18 +137,30 @@ fun SubText(text: String, modifier: Modifier = Modifier) {
         modifier,
         textStyle = Typography.bodySmall,
         color = ColorSubTextGrey,
+        textAlign = TextAlign.Center
+    )
+}
+
+@Composable
+fun TextSmall(text: String, modifier: Modifier = Modifier) {
+    TextInApp(
+        text,
+        modifier,
+        textStyle = Typography.bodySmall,
+        color = MaterialTheme.colorScheme.onBackground,
         textAlign = TextAlign.Start
     )
 }
 
 @Composable
-fun TextBody(text: String, modifier: Modifier = Modifier) {
+fun TextBody(text: String, modifier: Modifier = Modifier, textAlign:TextAlign = TextAlign.Start, maxLines:Int? = null) {
     TextInApp(
         text,
         modifier,
         textStyle = Typography.bodyMedium,
-        color = ColorTextBlack,
-        textAlign = TextAlign.Start
+        color = MaterialTheme.colorScheme.onBackground,
+        textAlign = textAlign,
+        maxLines = maxLines
     )
 }
 
@@ -174,7 +188,7 @@ private fun TagSmall(text: String, color: Color) {
                 color, RoundedCornerShape(10.dp)
             )
             .padding(horizontal = 10.dp, vertical = 2.dp), textStyle = Typography.bodySmall,
-        maxLines = 1, color = Color.Black,
+        maxLines = 1, color = ColorTextBlack,
         textAlign = TextAlign.Start
     )
 }
@@ -217,9 +231,9 @@ fun PreviewPlusButton() {
             TextTitleLarge("TextTitleLarge")
             TextTitleItalic("TextTitleItalic")
             TextTitle("TextTitle")
-            TextBodyDisActive( "TextBodyDisActive")
+            TextBodyDisActive("TextBodyDisActive")
             TextBody("TextBody")
-            SubText( "SubText")
+            SubText("SubText")
         }
     }
 }

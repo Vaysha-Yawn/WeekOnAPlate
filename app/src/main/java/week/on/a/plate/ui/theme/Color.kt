@@ -3,6 +3,7 @@ package week.on.a.plate.ui.theme
 import androidx.compose.ui.graphics.Color
 
 val ColorTextBlack = Color(0xFF262626)
+val ColorSurfaceBlack = Color(0xFF2C2C2C)
 val ColorSubTextGrey = Color(0xFF777777)
 val ColorBackgroundWhite = Color(0xFFFFFFFF)
 val ColorPanelLightGrey = Color(0xFFF6F6F6)

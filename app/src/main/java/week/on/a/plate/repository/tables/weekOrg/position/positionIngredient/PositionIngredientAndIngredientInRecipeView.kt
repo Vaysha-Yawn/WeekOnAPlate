@@ -8,8 +8,8 @@ import week.on.a.plate.repository.tables.recipe.ingredientInRecipe.IngredientInR
 data class PositionIngredientAndIngredientInRecipeView(
     @Embedded val ingredientInRecipeRoom: IngredientInRecipeRoom,
     @Relation(
-         parentColumn = "ingredientInRecipeId",
-         entityColumn = "id"
+         parentColumn = "id",
+         entityColumn = "positionIngredientId"
     )
     val positionIngredientRoom: PositionIngredientRoom,
 )

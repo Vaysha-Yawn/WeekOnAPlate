@@ -16,7 +16,7 @@ interface RecipeTagDAO {
     fun getAll(): Flow<List<RecipeTagRoom>>
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(recipeTagRoom: RecipeTagRoom)
+    suspend fun insert(recipeTagRoom: RecipeTagRoom):Long
 
     @Update
     suspend fun update(recipeTagRoom: RecipeTagRoom)

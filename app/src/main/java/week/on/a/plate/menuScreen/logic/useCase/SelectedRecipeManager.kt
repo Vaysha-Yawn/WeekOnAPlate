@@ -1,46 +1,43 @@
 package week.on.a.plate.menuScreen.logic.useCase
 
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import week.on.a.plate.menuScreen.logic.MenuIUState
 import javax.inject.Inject
 
 class SelectedRecipeManager @Inject constructor() {
 
-    var chosenRecipes = mutableMapOf<Long, MutableState<Boolean>>()
-    private val isAllSelected = mutableStateOf(false)
-
-    fun clear (){
-        isAllSelected.value = false
-        chosenRecipes = mutableMapOf<Long, MutableState<Boolean>>()
+    fun clear(menuUIState: MenuIUState) {
+        menuUIState.isAllSelected.value = false
+        menuUIState.chosenRecipes = mutableMapOf<Long, MutableState<Boolean>>()
     }
 
-    fun actionCheckRecipe(id: Long) {
-        val check = chosenRecipes[id] ?: return
+    fun actionCheckRecipe(menuUIState: MenuIUState, id: Long) {
+        val check =  menuUIState.chosenRecipes[id] ?: return
         check.value = !check.value
     }
 
-    fun addNewState(id: Long) {
+    fun addNewState(menuUIState: MenuIUState,id: Long) {
         val state = mutableStateOf(false)
-        chosenRecipes[id] = state
+        menuUIState.chosenRecipes[id] = state
     }
 
-    fun actionChooseAll() {
-        if (isAllSelected.value){
-            chosenRecipes.values.forEach {
+    fun actionChooseAll(menuUIState: MenuIUState) {
+        if (menuUIState.isAllSelected.value){
+            menuUIState.chosenRecipes.values.forEach {
                 it.value = false
             }
         }else{
-            chosenRecipes.values.forEach {
+            menuUIState.chosenRecipes.values.forEach {
                 it.value = true
             }
         }
-        isAllSelected.value = !isAllSelected.value
+        menuUIState.isAllSelected.value = !menuUIState.isAllSelected.value
     }
 
-    fun getSelected(): List<Long> {
+    fun getSelected(menuUIState: MenuIUState): List<Long> {
         val list = mutableListOf<Long>()
-        chosenRecipes.entries.forEach {
+        menuUIState.chosenRecipes.entries.forEach {
             val id = it.key
             val state = it.value
             if (state.value){list.add(id)}

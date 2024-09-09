@@ -6,22 +6,23 @@ import androidx.compose.runtime.mutableStateOf
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import week.on.a.plate.core.data.example.EmptyWeek
+import week.on.a.plate.core.data.example.WeekDataExample
 import week.on.a.plate.core.data.week.WeekView
 
 data class MenuIUState(
-    var week: WeekView,
-    val chosenRecipes: MutableMap<Long, MutableState<Boolean>>,
+    var chosenRecipes: MutableMap<Long, MutableState<Boolean>>,
     val itsDayMenu: MutableState<Boolean>,
     val editing: MutableState<Boolean>,
     val activeDayInd: MutableState<Int>,
+    val isAllSelected: MutableState<Boolean>
 ) {
     companion object {
         val MenuIUStateExample = MenuIUState(
-            EmptyWeek,
             mutableMapOf<Long, MutableState<Boolean>>(),
             mutableStateOf(true),
             mutableStateOf(false),
-            mutableIntStateOf(0)
+            mutableIntStateOf(0),
+            mutableStateOf(false),
         )
     }
 }

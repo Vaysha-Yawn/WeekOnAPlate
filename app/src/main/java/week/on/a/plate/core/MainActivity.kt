@@ -45,7 +45,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             WeekOnAPlateTheme {
                 val navController = rememberNavController()
-                Scaffold(modifier = Modifier.fillMaxSize(),
+                Scaffold(modifier = Modifier.fillMaxSize().background(ColorBackgroundWhite),
                     bottomBar = {
                         BottomBar(navController)
                     }

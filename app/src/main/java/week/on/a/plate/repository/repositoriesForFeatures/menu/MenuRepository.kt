@@ -13,17 +13,20 @@ import week.on.a.plate.core.data.week.RecipeShortView
 import week.on.a.plate.core.data.week.SelectionView
 import week.on.a.plate.core.data.week.WeekView
 import week.on.a.plate.repository.tables.recipe.ingredient.IngredientMapper
+import week.on.a.plate.repository.tables.recipe.ingredient.IngredientRoom
 import week.on.a.plate.repository.tables.recipe.ingredientInRecipe.IngredientInRecipeDAO
 import week.on.a.plate.repository.tables.recipe.ingredientInRecipe.IngredientInRecipeMapper
+import week.on.a.plate.repository.tables.recipe.ingredientInRecipe.IngredientInRecipeRoom
+import week.on.a.plate.repository.tables.recipe.recipeTag.RecipeTagDAO
 import week.on.a.plate.repository.tables.recipe.recipeTag.RecipeTagMapper
 import week.on.a.plate.repository.tables.weekOrg.day.DayDAO
 import week.on.a.plate.repository.tables.weekOrg.day.DayMapper
 import week.on.a.plate.repository.tables.weekOrg.position.positionDraft.PositionDraftDAO
 import week.on.a.plate.repository.tables.weekOrg.position.positionDraft.PositionDraftMapper
 import week.on.a.plate.repository.tables.weekOrg.position.positionDraft.PositionDraftRoom
-import week.on.a.plate.repository.tables.weekOrg.position.positionIngredient.PositionIngredientAndIngredientInRecipeView
 import week.on.a.plate.repository.tables.weekOrg.position.positionIngredient.PositionIngredientDAO
 import week.on.a.plate.repository.tables.weekOrg.position.positionIngredient.PositionIngredientMapper
+import week.on.a.plate.repository.tables.weekOrg.position.positionIngredient.PositionIngredientRoom
 import week.on.a.plate.repository.tables.weekOrg.position.positionNote.PositionNoteDAO
 import week.on.a.plate.repository.tables.weekOrg.position.positionNote.PositionNoteMapper
 import week.on.a.plate.repository.tables.weekOrg.position.positionNote.PositionNoteRoom
@@ -52,6 +55,9 @@ class MenuRepository @Inject constructor(
     private val dayDAO: DayDAO,
     private val selectionDAO: SelectionDAO,
     private val ingredientInRecipeDAO: IngredientInRecipeDAO,
+
+    //todo move to recipe module
+    private val recipeTagDAO: RecipeTagDAO,
 ) : IMenuRepository {
 
     override suspend fun addRecipeInMenu() {
@@ -103,15 +109,23 @@ class MenuRepository @Inject constructor(
                             }
                             val newId = positionDraftDAO.insert(positionRoom)
 
-                            val tagRefs = with(PositionDraftMapper()) {
-                                position.genTagCrossRefs(newId)
+                            //todo move to recipe module
+                            position.tags.forEach {
+                                val newTagId = addTag(it)
+                                val tagRefs = with(PositionDraftMapper()) {
+                                    genTagCrossRef(newId, newTagId)
+                                }
+                                positionDraftDAO.insertDraftAndTagCrossRef(tagRefs)
                             }
-                            positionDraftDAO.insertAll(tagRefs)
 
-                            val ingredientRefs = with(PositionDraftMapper()) {
-                                position.genIngredientCrossRefs(newId)
+                            //todo move to recipe module
+                            position.ingredients.forEach {
+                                val newIngredientId = addIngredient(it)
+                                val ingredientRefs = with(PositionDraftMapper()) {
+                                    genIngredientCrossRef(newId, newIngredientId)
+                                }
+                                positionDraftDAO.insertDraftAndIngredientCrossRef(ingredientRefs)
                             }
-                            positionDraftDAO.insertAll(ingredientRefs)
                         }
 
                         is Position.PositionIngredientView -> {
@@ -119,8 +133,12 @@ class MenuRepository @Inject constructor(
                                 position.viewToRoom(selectionId)
                             }
                             positionIngredientDAO.insert(positionRoom)
+
+                            //todo move to recipe module
+                            val idIngredient = addIngredient(position.ingredient.ingredientView)
+
                             val ingredientRoom = with(IngredientInRecipeMapper()) {
-                                position.ingredient.viewToRoom(0)//todo мб сделать кросс реф
+                                position.ingredient.viewToRoom(0, idIngredient)
                             }
                             positionIngredientDAO.insert(ingredientRoom)
                         }
@@ -142,6 +160,22 @@ class MenuRepository @Inject constructor(
                 }
             }
         }
+    }
+
+    //todo move to recipe module
+    suspend fun addTag(recipeTagView: RecipeTagView): Long {
+        val recipeTagRoom = with(RecipeTagMapper()) {
+            recipeTagView.viewToRoom(0)
+        }
+        return recipeTagDAO.insert(recipeTagRoom)
+    }
+
+    //todo move to recipe module
+    suspend fun addIngredient(ingredientView: IngredientView):Long{
+        val ingredientRoom = with(IngredientMapper()) {
+            ingredientView.viewToRoom(0)
+        }
+        return ingredientInRecipeDAO.insert(ingredientRoom)
     }
 
     override suspend fun getCurrentWeek(day: LocalDate): Flow<WeekView> {
@@ -196,13 +230,11 @@ class MenuRepository @Inject constructor(
         return weekFlow
     }
 
-
     private suspend fun mapSelection(selectionAndRecipesInMenu: SelectionAndRecipesInMenu): Flow<SelectionView> {
         val flowListPositionRecipe =
             recipeInMenuDAO.getAllInSel(selectionAndRecipesInMenu.selectionRoom.selectionId)
                 .transform<List<PositionRecipeRoom>, List<Position>> {
                     val list = mutableListOf<Position>()
-
                     it.forEach { recipeInMenu ->
                         with(RecipeInMenuMapper()) {
                             val newRecipeInMenuView =
@@ -216,18 +248,14 @@ class MenuRepository @Inject constructor(
                 }
 
         val flowListPositionIngredient =
-            positionIngredientDAO.getAllInSelCrossRef(selectionAndRecipesInMenu.selectionRoom.selectionId)
-                .transform<List<PositionIngredientAndIngredientInRecipeView>, List<Position>> {
+            positionIngredientDAO.getAllInSel(selectionAndRecipesInMenu.selectionRoom.selectionId)
+                .transform<List<PositionIngredientRoom>, List<Position>> {
                     val list = mutableListOf<Position>()
-                    it.forEach { AandB ->
-                        val position = AandB.positionIngredientRoom
-                        val ingredientInMenu = AandB.ingredientInRecipeRoom
-
-                        val ingredientRoom =
-                            ingredientInRecipeDAO.getCurrent(ingredientInMenu.ingredientId)
-                        val ingredientView =
-                            with(IngredientMapper()) { ingredientRoom.roomToView() }
-
+                    it.forEach {  position ->
+                        val ingredient = ingredientInRecipeDAO.getIngredientAndIngredientInRecipe(position.positionIngredientId)
+                        val ingredientInMenu = ingredient.ingredientInRecipeRoom
+                        val ingredientRoom = ingredient.ingredientRoom
+                        val ingredientView = with(IngredientMapper()) { ingredientRoom.roomToView() }
                         val ingredientInMenuView = with(IngredientInRecipeMapper()) {
                             ingredientInMenu.roomToView(ingredientView)
                         }
@@ -237,6 +265,7 @@ class MenuRepository @Inject constructor(
                             list.add(positionIngredientView)
                         }
                     }
+
                     emit(list)
                 }
 
@@ -260,7 +289,7 @@ class MenuRepository @Inject constructor(
                 .transform<List<PositionDraftRoom>, List<Position>> {
                     val list = mutableListOf<Position>()
                     it.forEach { draftRoom ->
-                        val draftAndTags = positionDraftDAO.getDraftAndTagByDraftId(draftRoom.id)
+                        val draftAndTags = positionDraftDAO.getDraftAndTagByDraftId(draftRoom.draftId)
                         val listTags = mutableListOf<RecipeTagView>()
                         draftAndTags.tags.forEach {
                             with(RecipeTagMapper()) {
@@ -270,7 +299,7 @@ class MenuRepository @Inject constructor(
                         }
 
                         val draftAndIngredient =
-                            positionDraftDAO.getDraftAndIngredientByDraftId(draftRoom.id)
+                            positionDraftDAO.getDraftAndIngredientByDraftId(draftRoom.draftId)
                         val listIngredients = mutableListOf<IngredientView>()
                         draftAndIngredient.ingredients.forEach {
                             with(IngredientMapper()) {
@@ -292,31 +321,22 @@ class MenuRepository @Inject constructor(
                     emit(list)
                 }
 
-
-        var flowListPosition = flowListPositionRecipe.combine(flowListPositionIngredient){list1,list2->
-            val combinedList = list1.toMutableList()
-            combinedList.addAll(list2)
-            combinedList
-        }
-        flowListPosition = flowListPosition.combine(flowListPositionNote){list1,list2->
-            val combinedList = list1.toMutableList()
-            combinedList.addAll(list2)
-            combinedList
+        val listFlows = listOf(flowListPositionRecipe,flowListPositionIngredient,  flowListPositionNote, flowListPositionDraft)
+        var flowListDay = flow { emit(mutableListOf<Position>()) }
+        listFlows.forEach { flow ->
+            flowListDay = flowListDay.combine(flow) { f1, f2 ->
+                f1.addAll(f2)
+                f1
+            }
         }
 
-        flowListPosition = flowListPosition.combine(flowListPositionDraft){list1,list2->
-            val combinedList = list1.toMutableList()
-            combinedList.addAll(list2)
-            combinedList
-        }
-
-        val sel = flowListPosition.transform<MutableList<Position>, SelectionView>{ listPos->
+        val sel = flowListDay.transform<MutableList<Position>, SelectionView>{ listPos->
             val newSel = with(SelectionMapper()) {
                 selectionAndRecipesInMenu.selectionRoom.roomToView(listPos)
             }
             emit(newSel)
         }
-        
+
         return sel
     }
 }

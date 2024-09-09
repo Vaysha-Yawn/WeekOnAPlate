@@ -12,10 +12,10 @@ class IngredientInRecipeMapper() {
             count = this.count,
         )
 
-    fun week.on.a.plate.core.data.recipe.IngredientInRecipeView.viewToRoom(recipeId:Long): IngredientInRecipeRoom =
+    fun week.on.a.plate.core.data.recipe.IngredientInRecipeView.viewToRoom(recipeId:Long, ingredientId:Long,): IngredientInRecipeRoom =
         IngredientInRecipeRoom(
             recipeId = recipeId,
-            ingredientId = this.ingredientView.ingredientId,
+            ingredientId = ingredientId,
             description = this.description,
             count = this.count
         )

@@ -1,5 +1,6 @@
 package week.on.a.plate.menuScreen.logic.useCase
 
+import week.on.a.plate.core.data.week.Position
 import week.on.a.plate.core.data.week.RecipeShortView
 import javax.inject.Inject
 
@@ -9,7 +10,7 @@ class Navigation @Inject constructor() {
 
     }
 
-    fun actionShowEditDialog(id:Long){
+    fun actionShowEditDialog(id: Position){
 
     }
 

@@ -19,11 +19,7 @@ interface PositionIngredientDAO {
 
     @Transaction
     @Query("SELECT * FROM IngredientInRecipeRoom WHERE id=:ingredientInRecipeId")
-    suspend fun getPositionIngredientAndIngredientInRecipeView(ingredientInRecipeId:Long): Flow<PositionIngredientAndIngredientInRecipeView>
-
-    @Transaction
-    @Query("SELECT * FROM PositionIngredientRoom WHERE selectionId=:selectionId")
-    suspend fun getAllInSelCrossRef(selectionId:Long): Flow<List<PositionIngredientAndIngredientInRecipeView>>
+    suspend fun getPositionIngredientAndIngredientInRecipeView(ingredientInRecipeId:Long): PositionIngredientAndIngredientInRecipeView
 
     @Query("SELECT * FROM PositionIngredientRoom WHERE selectionId=:selectionId")
     fun getAllInSel(selectionId:Long): Flow<List<PositionIngredientRoom>>

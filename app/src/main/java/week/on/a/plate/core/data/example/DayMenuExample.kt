@@ -1,21 +1,51 @@
 package week.on.a.plate.core.data.example
 
 
+import week.on.a.plate.core.data.recipe.IngredientInRecipeView
+import week.on.a.plate.core.data.recipe.IngredientView
+import week.on.a.plate.core.data.recipe.RecipeTagView
 import week.on.a.plate.core.data.week.Position
 import week.on.a.plate.core.data.week.SelectionView
 
+
+val positionRecipeExample = Position.PositionRecipeView(0, shortRecipe, 2)
+
+val ingredientTomato = IngredientView(0, "", "Помидор", "штук")
+
+val positionIngredientExample =
+    Position.PositionIngredientView(0, IngredientInRecipeView(0, ingredientTomato, "Целые", 6.0))
+
+val positionNoteExample = Position.PositionNoteView(0, "Завтракаю на работе")
+
+val positionDraftExample = Position.PositionDraftView(
+    0, listOf(
+        RecipeTagView(0, "Без тепловой обработки", false),
+        RecipeTagView(0, "Салаты", true),
+    ),
+    listOf(ingredientTomato)
+)
+
 val dayMenuExample = mutableListOf(
-    SelectionView(0, "Нераспределенное",
-        mutableListOf(Position.PositionRecipeView(0, shortRecipe, 2))
+    SelectionView(
+        0, "Нераспределенное",
+        mutableListOf(
+            positionRecipeExample,
+            positionNoteExample,
+            positionDraftExample,
+            positionIngredientExample
+        )
     ),
-    SelectionView(1, "Завтрак",
-        mutableListOf(Position.PositionRecipeView(1, shortRecipe, 4))
+    SelectionView(
+        1, "Завтрак",
+        mutableListOf(positionNoteExample)
     ),
-    SelectionView(2, "Обед",
-        mutableListOf(Position.PositionRecipeView(2, shortRecipe, 6))
+    SelectionView(
+        2, "Обед",
+        mutableListOf(positionDraftExample)
     ),
-    SelectionView(3, "Ужин",
-        mutableListOf(Position.PositionRecipeView(3,shortRecipe, 8))
+    SelectionView(
+        3, "Ужин",
+        mutableListOf(positionIngredientExample)
     ),
 )
 

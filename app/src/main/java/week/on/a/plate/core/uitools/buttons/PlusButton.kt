@@ -51,7 +51,7 @@ fun PlusButtonTitle(actionAdd: () -> Unit) {
         contentDescription = "",
         modifier = Modifier
             .border(1.dp, ColorStrokeGrey, RoundedCornerShape(5.dp))
-            .padding(4.dp)
+            .padding(2.dp)
             .size(24.dp)
             .clickable { actionAdd() },
     )

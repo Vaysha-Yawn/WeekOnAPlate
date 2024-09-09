@@ -51,7 +51,7 @@ val WeekDataExample = WeekView(0,
             LocalDate.of(2024,8,28), DayInWeekData.Wed, mutableListOf()
         ),
         DayView(4,
-            LocalDate.of(2024,8,29), DayInWeekData.Thurs, dayMenuExample
+            LocalDate.of(2024,8,29), DayInWeekData.Thurs, emptyDay
         ),
         DayView(5,
             LocalDate.of(2024,8,30), DayInWeekData.Fri, dayMenuExample

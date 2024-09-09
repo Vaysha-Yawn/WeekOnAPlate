@@ -4,22 +4,25 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
+import week.on.a.plate.core.uitools.TextDisplayItalic
 import week.on.a.plate.core.uitools.TextInApp
 import week.on.a.plate.ui.theme.ColorButtonNegativeGrey
 import week.on.a.plate.ui.theme.Typography
@@ -35,7 +38,7 @@ fun ButtonsCounter(
     Row(
         horizontalArrangement = Arrangement.Absolute.Center, modifier = Modifier
             .background(
-                Color.White, RoundedCornerShape(10.dp)
+                MaterialTheme.colorScheme.tertiary, RoundedCornerShape(10.dp)
             )
             .padding(10.dp), verticalAlignment = Alignment.CenterVertically
     ) {
@@ -72,6 +75,9 @@ fun PreviewButtonsCounter() {
         mutableIntStateOf(0)
     }
     WeekOnAPlateTheme {
-        ButtonsCounter(state, {}, {})
+        Column {
+            ButtonsCounter(state, {}, {})
+        }
+
     }
 }

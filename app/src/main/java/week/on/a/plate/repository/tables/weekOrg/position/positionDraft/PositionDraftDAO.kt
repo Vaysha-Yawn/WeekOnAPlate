@@ -29,18 +29,18 @@ interface PositionDraftDAO {
     suspend fun insert(positionDraft: PositionDraftRoom):Long
 
     @Transaction
-    @Query("SELECT * FROM draftandtagcrossref WHERE draftId =:draftId")
+    @Query("SELECT * FROM PositionDraftRoom WHERE draftId =:draftId")
     suspend fun getDraftAndTagByDraftId(draftId:Long): DraftAndTag
 
     @Transaction
-    @Query("SELECT * FROM draftandtagcrossref WHERE draftId =:draftId")
+    @Query("SELECT * FROM PositionDraftRoom WHERE draftId =:draftId")
     suspend fun getDraftAndIngredientByDraftId(draftId:Long): DraftAndIngredient
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(draftAndIngredientCrossRefs: List<DraftAndIngredientCrossRef>)
+    suspend fun insertDraftAndIngredientCrossRef(draftAndIngredientCrossRefs: DraftAndIngredientCrossRef)
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(draftAndTagCrossRefs: List<DraftAndTagCrossRef>)
+    suspend fun insertDraftAndTagCrossRef(draftAndTagCrossRefs: DraftAndTagCrossRef)
 
     @Update
     suspend fun update(positionDraft: PositionDraftRoom)

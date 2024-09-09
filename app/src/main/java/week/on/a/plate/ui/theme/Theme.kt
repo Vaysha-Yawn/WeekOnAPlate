@@ -14,27 +14,31 @@ import androidx.compose.ui.platform.LocalContext
 private val DarkColorScheme = darkColorScheme(
     primary = ColorButtonYellow,
     secondary = ColorButtonGreen,
-    tertiary = ColorBlueButton,
+    tertiary = ColorSurfaceBlack,
     background = ColorTextBlack,
-    surface = ColorTextBlack,
+    surface = ColorSurfaceBlack,
     onPrimary = ColorTextBlack,
     onSecondary = ColorTextBlack,
     onTertiary = ColorTextBlack,
-    onBackground = ColorBackgroundWhite,
-    onSurface = ColorBackgroundWhite,
+    onBackground = ColorPanelLightGrey,
+    onSurface = ColorStrokeGrey,
+    outline = ColorSubTextGrey,
+    surfaceVariant = ColorTextBlack
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = ColorPanelYellow,
     secondary = ColorPanelGreen,
-    tertiary = ColorBluePanel,
-    background = ColorBackgroundWhite,
+    tertiary = ColorPanelLightGrey,
+    background = ColorPanelLightGrey,
     surface = ColorBackgroundWhite,
     onPrimary = ColorTextBlack,
     onSecondary = ColorTextBlack,
     onTertiary = ColorTextBlack,
     onBackground = ColorTextBlack,
-    onSurface = ColorTextBlack,
+    onSurface = ColorButtonNegativeGrey,
+    outline = ColorButtonNegativeGrey,
+    surfaceVariant = ColorPanelLightGrey
 )
 
 @Composable
@@ -43,7 +47,7 @@ fun WeekOnAPlateTheme(
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
+   /* val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
@@ -51,7 +55,9 @@ fun WeekOnAPlateTheme(
 
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
-    }
+    }*/
+
+    val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
 
     MaterialTheme(
         colorScheme = colorScheme,

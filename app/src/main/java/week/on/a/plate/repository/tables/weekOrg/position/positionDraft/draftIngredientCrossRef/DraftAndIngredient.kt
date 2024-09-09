@@ -10,7 +10,7 @@ import week.on.a.plate.repository.tables.weekOrg.position.positionDraft.Position
 data class DraftAndIngredient(
     @Embedded val draft: PositionDraftRoom,
     @Relation(
-        parentColumn = "id",
+        parentColumn = "draftId",
         entityColumn = "ingredientId",
         associateBy = Junction(DraftAndIngredientCrossRef::class)
     )

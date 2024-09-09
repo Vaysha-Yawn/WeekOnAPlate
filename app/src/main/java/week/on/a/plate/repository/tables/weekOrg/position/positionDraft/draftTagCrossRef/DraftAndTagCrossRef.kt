@@ -3,8 +3,8 @@ package week.on.a.plate.repository.tables.weekOrg.position.positionDraft.draftTa
 import androidx.room.Entity
 
 
-@Entity(primaryKeys = ["draftId", "tagId"])
+@Entity(primaryKeys = ["draftId", "recipeTagId"])
 data class DraftAndTagCrossRef(
     val draftId: Long,
-    val tagId: Long
+    val recipeTagId: Long
 )

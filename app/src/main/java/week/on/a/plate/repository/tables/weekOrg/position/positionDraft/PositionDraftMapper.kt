@@ -13,26 +13,18 @@ class PositionDraftMapper() {
         ingredients: List<IngredientView>,
     ): Position.PositionDraftView =
         Position.PositionDraftView(
-            id = this.id,
+            id = this.draftId,
             tags, ingredients
         )
 
     fun Position.PositionDraftView.viewToRoom(selectionId: Long): PositionDraftRoom =
         PositionDraftRoom(selectionId)
 
-    fun Position.PositionDraftView.genTagCrossRefs(newPositionDraftID:Long): List<DraftAndTagCrossRef> {
-        val list = mutableListOf<DraftAndTagCrossRef>()
-        this.tags.forEach { tag->
-            list.add(DraftAndTagCrossRef(newPositionDraftID, tag.id))
-        }
-        return list
+    fun genTagCrossRef(newPositionDraftID:Long, tagId:Long, ): DraftAndTagCrossRef {
+        return DraftAndTagCrossRef(newPositionDraftID, tagId)
     }
 
-    fun Position.PositionDraftView.genIngredientCrossRefs(newPositionDraftID:Long): List<DraftAndIngredientCrossRef> {
-        val list = mutableListOf<DraftAndIngredientCrossRef>()
-        this.ingredients.forEach { ingredient->
-            list.add(DraftAndIngredientCrossRef(newPositionDraftID, ingredient.ingredientId))
-        }
-        return list
+    fun genIngredientCrossRef(newPositionDraftID:Long, ingredientId:Long): DraftAndIngredientCrossRef {
+        return DraftAndIngredientCrossRef(newPositionDraftID, ingredientId)
     }
 }
