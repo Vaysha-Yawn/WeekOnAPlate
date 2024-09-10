@@ -13,44 +13,21 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableDoubleStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.launch
-import week.on.a.plate.core.data.example.ingredientTomato
+import week.on.a.plate.core.data.example.positionRecipeExample
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.ButtonsCounter
 import week.on.a.plate.core.uitools.buttons.DoneButton
-import week.on.a.plate.menuScreen.logic.MenuEvent
-import week.on.a.plate.menuScreen.logic.MenuIUState
+import week.on.a.plate.menuScreen.logic.eventData.ActionDBData
+import week.on.a.plate.menuScreen.logic.eventData.DialogMenuData
+import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
 import week.on.a.plate.ui.theme.WeekOnAPlateTheme
 
-//todo хранить состояния в stateD, существлять действия с MenuEvent,
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChangePortionsBottomDialog(
-    state: MenuIUState,
-    onEvent: (MenuEvent) -> Unit
-) {
-    val stateD = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    val scope = rememberCoroutineScope()
-    val number = remember { mutableStateOf(0) }
-    BottomDialogContainer(stateD){
-        ChangePortionsPanel(number) {
-            //todo done
-            scope.launch { stateD.hide() }
-        }
-    }
-}
-
-@Composable
-fun ChangePortionsPanel(count: MutableState<Int>, done: () -> Unit) {
+fun ChangePortionsPanel(data: DialogMenuData.ChangePortionsCount, onEvent: (MenuEvent) -> Unit) {
     Column(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.background)
@@ -65,28 +42,30 @@ fun ChangePortionsPanel(count: MutableState<Int>, done: () -> Unit) {
                 .background(MaterialTheme.colorScheme.tertiary, RoundedCornerShape(20.dp)),
             horizontalArrangement = Arrangement.Center
         ) {
-            ButtonsCounter(count, {
-                if (count.value > 0) {
-                    count.value -= 1
+            ButtonsCounter(data.portionsCount, {
+                if (data.portionsCount.intValue > 0) {
+                    data.portionsCount.intValue -= 1
                 }
             }, {
-                if (count.value < 20) {
-                    count.value += 1
+                if (data.portionsCount.intValue < 20) {
+                    data.portionsCount.intValue += 1
                 }
             })
         }
         Spacer(modifier = Modifier.height(24.dp))
-        DoneButton("Готово") { done() }
+        DoneButton("Готово") {
+            onEvent(MenuEvent.ActionDBMenu(ActionDBData.ChangePortionsCountDB(data)))
+            onEvent(MenuEvent.CloseDialog)
+        }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun PreviewChangePortionsPanel() {
     WeekOnAPlateTheme {
-        val state = remember {
-            mutableStateOf(0)
-        }
-        ChangePortionsPanel(state){}
+        val stateBottom = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+        ChangePortionsPanel(DialogMenuData.ChangePortionsCount(positionRecipeExample, stateBottom)){}
     }
 }

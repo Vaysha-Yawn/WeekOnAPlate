@@ -23,6 +23,7 @@ import week.on.a.plate.ui.theme.ColorButtonNegativeGrey
 import week.on.a.plate.ui.theme.ColorTextBlack
 import week.on.a.plate.ui.theme.Typography
 import week.on.a.plate.ui.theme.WeekOnAPlateTheme
+import week.on.a.plate.ui.theme.titleMediumItalic
 
 @Composable
 fun DoneButton(
@@ -59,7 +60,7 @@ fun CommonButton(
             }, horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Spacer(modifier = Modifier)
-        TextInApp(text = text, textStyle = Typography.titleLarge, color = ColorTextBlack)
+        TextInApp(text = text, textStyle = titleMediumItalic, color = ColorTextBlack)
         if (image==null){
             Spacer(modifier = Modifier)
         }else{

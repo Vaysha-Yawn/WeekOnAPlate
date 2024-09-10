@@ -1,19 +1,20 @@
 package week.on.a.plate.menuScreen.view.week.positions
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.core.data.example.WeekDataExample
 import week.on.a.plate.core.data.week.Position
-import week.on.a.plate.menuScreen.logic.MenuEvent
-import week.on.a.plate.menuScreen.logic.MenuIUState
+import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
+import week.on.a.plate.menuScreen.logic.eventData.MenuIUState
 import week.on.a.plate.ui.theme.WeekOnAPlateTheme
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -24,20 +25,21 @@ fun WeekCardPosition(
     onEvent: (event: MenuEvent) -> Unit
 ) {
     Card(
+        Modifier.border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(20.dp)),
         elevation = CardDefaults.elevatedCardElevation(5.dp),
         shape = RoundedCornerShape(20.dp),
     ) {
         when (position) {
             is Position.PositionDraftView -> {
-                WeekDraftPosition(position, menuIUState, onEvent)
+                WeekDraftPosition(position, onEvent)
             }
 
             is Position.PositionIngredientView -> {
-                WeekIngredientPosition(position, menuIUState, onEvent)
+                WeekIngredientPosition(position, onEvent)
             }
 
             is Position.PositionNoteView -> {
-                WeekNotePosition(position, menuIUState, onEvent,)
+                WeekNotePosition(position, onEvent)
             }
 
             is Position.PositionRecipeView -> {

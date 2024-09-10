@@ -2,7 +2,7 @@ package week.on.a.plate.menuScreen.logic.useCase
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import week.on.a.plate.menuScreen.logic.MenuIUState
+import week.on.a.plate.menuScreen.logic.eventData.MenuIUState
 import javax.inject.Inject
 
 class SelectedRecipeManager @Inject constructor() {
@@ -17,7 +17,7 @@ class SelectedRecipeManager @Inject constructor() {
         check.value = !check.value
     }
 
-    fun addNewState(menuUIState: MenuIUState,id: Long) {
+    fun addNewState(menuUIState: MenuIUState, id: Long) {
         val state = mutableStateOf(false)
         menuUIState.chosenRecipes[id] = state
     }

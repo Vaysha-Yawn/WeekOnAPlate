@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
@@ -16,14 +15,12 @@ import androidx.compose.ui.unit.dp
 import week.on.a.plate.core.data.week.Position
 import week.on.a.plate.core.uitools.SubText
 import week.on.a.plate.core.uitools.TextBody
-import week.on.a.plate.menuScreen.logic.MenuEvent
-import week.on.a.plate.menuScreen.logic.MenuIUState
+import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun IngredientPosition(
     ingredient: Position.PositionIngredientView,
-    menuIUState: MenuIUState,
     onEvent: (event: MenuEvent) -> Unit,
     rowScope: RowScope
 ) {
@@ -32,9 +29,7 @@ fun IngredientPosition(
             Modifier
                 .weight(3f)
                 .combinedClickable(
-                    onClick = {
-                        onEvent(MenuEvent.Edit(ingredient))
-                    },
+                    onClick = {},
                     onLongClick =
                     { onEvent(MenuEvent.SwitchEditMode) },
                 ).padding(vertical = 5.dp),

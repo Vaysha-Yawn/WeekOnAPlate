@@ -57,11 +57,11 @@ fun CalendarDayCard(
             dayNumber.dayOfMonth.toString(), modifier = Modifier
                 .background(
                     if (itToday) {
-                        ColorButtonYellow
+                        MaterialTheme.colorScheme.primary
                     } else if (itPlanned) {
-                        ColorButtonGreen
+                        MaterialTheme.colorScheme.secondary
                     } else {
-                        ColorPanelLightGrey
+                        ColorButtonNegativeGrey
                     }, androidx.compose.foundation.shape.CircleShape
                 )
                 .padding(5.dp), color = ColorTextBlack

@@ -22,13 +22,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.core.data.week.Position
 import week.on.a.plate.core.uitools.SubText
-import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextSmall
 import week.on.a.plate.core.uitools.buttons.CheckButton
-import week.on.a.plate.core.uitools.buttons.MoreButton
 import week.on.a.plate.core.uitools.buttons.MoreButtonWithBackg
-import week.on.a.plate.menuScreen.logic.MenuEvent
-import week.on.a.plate.menuScreen.logic.MenuIUState
+import week.on.a.plate.menuScreen.logic.eventData.DialogMenuData
+import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
+import week.on.a.plate.menuScreen.logic.eventData.MenuIUState
+import week.on.a.plate.menuScreen.logic.eventData.NavFromMenuData
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -43,7 +43,7 @@ fun WeekRecipePosition(
             .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(20.dp))
             .padding(20.dp)
             .combinedClickable(
-                onClick = { onEvent(MenuEvent.NavToFullRecipe(recipe.recipe)) },
+                onClick = { onEvent(MenuEvent.NavigateFromMenu(NavFromMenuData.NavToFullRecipe(recipe.recipe))) },
                 onLongClick = { onEvent(MenuEvent.SwitchEditMode) },
             ),
         horizontalAlignment = Alignment.Start,
@@ -66,7 +66,7 @@ fun WeekRecipePosition(
                     Spacer(modifier = Modifier.height(20.dp))
                 }
                 MoreButtonWithBackg {
-                    onEvent(MenuEvent.Edit(recipe))
+                    onEvent(MenuEvent.OpenDialog(DialogMenuData.EditPosition(recipe)))
                 }
             }
         }

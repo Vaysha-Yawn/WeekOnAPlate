@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -50,7 +51,7 @@ fun PlusButtonTitle(actionAdd: () -> Unit) {
         painter = painterResource(id = R.drawable.add),
         contentDescription = "",
         modifier = Modifier
-            .border(1.dp, ColorStrokeGrey, RoundedCornerShape(5.dp))
+            .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(5.dp))
             .padding(2.dp)
             .size(24.dp)
             .clickable { actionAdd() },

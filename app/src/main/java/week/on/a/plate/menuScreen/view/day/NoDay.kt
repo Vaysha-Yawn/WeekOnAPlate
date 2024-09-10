@@ -11,7 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.DoneButton
-import week.on.a.plate.menuScreen.logic.MenuEvent
+import week.on.a.plate.menuScreen.logic.eventData.ActionDBData
+import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
 import java.time.LocalDate
 
 @Composable
@@ -20,7 +21,7 @@ fun NoDay(data: LocalDate, onEvent:(MenuEvent)->Unit){
         TextTitle(text = "Нет данных")
         Spacer(modifier = Modifier.height(24.dp))
         DoneButton("Добавить день") {
-            onEvent(MenuEvent.AddEmptyDay(data))
+            onEvent(MenuEvent.ActionDBMenu(ActionDBData.AddEmptyDay(data)))
         }
     }
 }

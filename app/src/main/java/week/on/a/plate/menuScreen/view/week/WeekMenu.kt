@@ -22,8 +22,9 @@ import week.on.a.plate.core.data.week.WeekView
 import week.on.a.plate.core.uitools.SubText
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.PlusButtonTitle
-import week.on.a.plate.menuScreen.logic.MenuEvent
-import week.on.a.plate.menuScreen.logic.MenuIUState
+import week.on.a.plate.menuScreen.logic.eventData.DialogMenuData
+import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
+import week.on.a.plate.menuScreen.logic.eventData.MenuIUState
 import week.on.a.plate.menuScreen.view.day.calendar.CalendarDayCard
 import week.on.a.plate.menuScreen.view.week.positions.WeekCardPosition
 import java.time.LocalDate
@@ -80,7 +81,7 @@ fun WeekMenu(
                                     modifier = Modifier.width(120.dp),
                                 )
                                 PlusButtonTitle {
-
+                                    onEvent(MenuEvent.OpenDialog(DialogMenuData.AddPosition( day.date, sel.category)))
                                 }
                             }
                             Spacer(modifier = Modifier.height(12.dp))

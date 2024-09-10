@@ -15,15 +15,16 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import week.on.a.plate.core.data.example.WeekDataExample
 import week.on.a.plate.core.data.week.WeekView
-import week.on.a.plate.menuScreen.logic.MenuEvent
-import week.on.a.plate.menuScreen.logic.MenuIUState
+import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
+import week.on.a.plate.menuScreen.logic.eventData.MenuIUState
 import week.on.a.plate.menuScreen.logic.MenuViewModel
-import week.on.a.plate.menuScreen.logic.WeekState
+import week.on.a.plate.menuScreen.logic.eventData.WeekState
 import week.on.a.plate.menuScreen.view.day.calendar.BlockCalendar
 import week.on.a.plate.menuScreen.view.day.DayView
 import week.on.a.plate.menuScreen.view.day.NoDay
+import week.on.a.plate.menuScreen.view.dialogs.DialogsContainer
 import week.on.a.plate.menuScreen.view.week.WeekMenu
-import week.on.a.plate.menuScreen.view.uiTools.topBar.TopBar
+import week.on.a.plate.menuScreen.view.uiTools.TopBar
 import week.on.a.plate.ui.theme.WeekOnAPlateTheme
 import java.time.LocalDate
 
@@ -31,10 +32,7 @@ import java.time.LocalDate
 fun MenuScreen(viewModel: MenuViewModel = hiltViewModel()) {
     val uiState = viewModel.weekState.collectAsStateWithLifecycle().value
     when (uiState) {
-        WeekState.EmptyWeek -> {
-
-        }
-
+        WeekState.EmptyWeek -> {}
         is WeekState.Error -> {}
         WeekState.Loading -> {}
         is WeekState.Success -> {
@@ -44,7 +42,6 @@ fun MenuScreen(viewModel: MenuViewModel = hiltViewModel()) {
         }
     }
 }
-
 
 @Composable
 fun MenuScreenSuccess(
@@ -78,6 +75,7 @@ fun MenuScreenSuccess(
             WeekMenu(uiState, onEvent, week)
         }
     }
+    DialogsContainer(uiState, onEvent)
 }
 
 

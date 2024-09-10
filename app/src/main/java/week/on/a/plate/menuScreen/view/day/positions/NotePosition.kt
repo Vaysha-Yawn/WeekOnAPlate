@@ -2,13 +2,11 @@ package week.on.a.plate.menuScreen.view.day.positions
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -20,14 +18,13 @@ import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.core.data.week.Position
 import week.on.a.plate.core.uitools.TextBody
-import week.on.a.plate.menuScreen.logic.MenuEvent
-import week.on.a.plate.menuScreen.logic.MenuIUState
+import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
+import week.on.a.plate.menuScreen.logic.eventData.MenuIUState
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun NotePosition(
     note: Position.PositionNoteView,
-    menuIUState: MenuIUState,
     onEvent: (event: MenuEvent) -> Unit,
     rowScope: RowScope
 ) {
@@ -35,9 +32,7 @@ fun NotePosition(
         Row(
             Modifier
                 .weight(3f).combinedClickable(
-                onClick = {
-                    onEvent(MenuEvent.Edit(note))
-                },
+                onClick = {},
                 onLongClick =
                 { onEvent(MenuEvent.SwitchEditMode) },
             ).padding(vertical = 5.dp),
@@ -49,8 +44,7 @@ fun NotePosition(
             painter = painterResource(id = R.drawable.note),
             contentDescription = "",
             modifier = Modifier
-                .size(24.dp)
-                .clickable { onEvent(MenuEvent.Edit(note)) },
+                .size(24.dp),
         )
         Spacer(modifier = Modifier.width(12.dp))
         TextBody(

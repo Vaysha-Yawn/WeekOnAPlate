@@ -13,12 +13,12 @@ import kotlinx.coroutines.launch
 @Composable
 fun BottomDialogContainer(
     state: SheetState,
+    onClose:()->Unit,
     content: @Composable ()->Unit
 ) {
     if (state.isVisible){
-        val scope = rememberCoroutineScope()
         ModalBottomSheet(
-            onDismissRequest = { scope.launch { state.hide() } },
+            onDismissRequest = { onClose()},
             sheetState = state,
             containerColor = MaterialTheme.colorScheme.background,
         ) { content() }

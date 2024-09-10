@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import week.on.a.plate.menuScreen.logic.MenuEvent
 import week.on.a.plate.ui.theme.ColorPanelLightGrey
 import week.on.a.plate.ui.theme.ColorTextBlack
 import week.on.a.plate.ui.theme.Typography

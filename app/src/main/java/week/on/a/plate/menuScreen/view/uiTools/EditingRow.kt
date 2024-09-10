@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
-import week.on.a.plate.ui.theme.ColorBlueButton
 import week.on.a.plate.ui.theme.ColorBluePanel
 import week.on.a.plate.ui.theme.ColorTransparent
 
@@ -30,7 +29,8 @@ fun EditingRow(
             contentDescription = "",
             modifier = Modifier
                 .padding(horizontal = 12.dp)
-                .size(24.dp).background(if (value) ColorBluePanel else ColorTransparent, CircleShape)
+                .size(24.dp)
+                .background(if (value) ColorBluePanel else ColorTransparent, CircleShape)
                 .clickable { actionChooseAll() },
         )
         Image(

@@ -3,14 +3,12 @@ package week.on.a.plate.menuScreen.view.week.positions
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -23,18 +21,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.core.data.week.Position
-import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextSmall
-import week.on.a.plate.core.uitools.buttons.MoreButton
 import week.on.a.plate.core.uitools.buttons.MoreButtonWithBackg
-import week.on.a.plate.menuScreen.logic.MenuEvent
-import week.on.a.plate.menuScreen.logic.MenuIUState
+import week.on.a.plate.menuScreen.logic.eventData.DialogMenuData
+import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun WeekNotePosition(
     note: Position.PositionNoteView,
-    menuIUState: MenuIUState,
     onEvent: (event: MenuEvent) -> Unit
 ) {
     Column(
@@ -43,7 +38,7 @@ fun WeekNotePosition(
             .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(20.dp))
             .padding(20.dp)
             .combinedClickable(
-                onClick = { onEvent(MenuEvent.Edit(note)) },
+                onClick = {  },
                 onLongClick = { onEvent(MenuEvent.SwitchEditMode) },
             ),
         horizontalAlignment = Alignment.Start,
@@ -53,11 +48,10 @@ fun WeekNotePosition(
                 painter = painterResource(id = R.drawable.note),
                 contentDescription = "",
                 modifier = Modifier
-                    .size(24.dp)
-                    .clickable { onEvent(MenuEvent.Edit(note)) },
+                    .size(24.dp),
             )
             MoreButtonWithBackg {
-                onEvent(MenuEvent.Edit(note))
+                onEvent(MenuEvent.OpenDialog(DialogMenuData.EditPosition(note)))
             }
         }
         Spacer(modifier = Modifier.size(12.dp))

@@ -18,8 +18,9 @@ import week.on.a.plate.core.data.week.Position
 import week.on.a.plate.core.uitools.SubText
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.buttons.CheckButton
-import week.on.a.plate.menuScreen.logic.MenuEvent
-import week.on.a.plate.menuScreen.logic.MenuIUState
+import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
+import week.on.a.plate.menuScreen.logic.eventData.MenuIUState
+import week.on.a.plate.menuScreen.logic.eventData.NavFromMenuData
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -34,9 +35,7 @@ fun RecipePosition(
             Modifier
                 .weight(3f)
                 .combinedClickable(
-                    onClick = {
-                        onEvent(MenuEvent.NavToFullRecipe(recipe.recipe))
-                    },
+                    onClick = { onEvent(MenuEvent.NavigateFromMenu(NavFromMenuData.NavToFullRecipe(recipe.recipe))) },
                     onLongClick =
                     { onEvent(MenuEvent.SwitchEditMode) },
                 ).padding(vertical = 5.dp), verticalAlignment = Alignment.CenterVertically

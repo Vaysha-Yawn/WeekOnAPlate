@@ -8,71 +8,69 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import week.on.a.plate.core.data.example.positionNoteExample
 import week.on.a.plate.core.uitools.EditTextLine
 import week.on.a.plate.core.uitools.buttons.DoneButton
-import week.on.a.plate.menuScreen.logic.MenuEvent
-import week.on.a.plate.menuScreen.logic.MenuIUState
+import week.on.a.plate.menuScreen.logic.eventData.ActionDBData
+import week.on.a.plate.menuScreen.logic.eventData.DialogMenuData
+import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
 import week.on.a.plate.ui.theme.WeekOnAPlateTheme
 
-//todo хранить состояния в state, существлять действия с MenuEvent,
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditNoteBottomDialog(
-    //note: Position.PositionNoteView,
-    state: MenuIUState,
+fun AddNoteBottomDialogContent(
+    data: DialogMenuData.AddNote,
     onEvent: (MenuEvent) -> Unit
 ) {
-    val stateD = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true
-    )
-    val text = remember { mutableStateOf("") }
-    BottomDialogContainer(stateD) {
-        EditNoteBottomDialogContent(text, state, onEvent) {
-            CoroutineScope(Dispatchers.Main).launch {
-                stateD.expand()
-            }
-        }
+    EditOrAddNoteBottomDialogContent(
+        "Добавить заметку",
+        "Добавить",
+        data.text){
+        onEvent(MenuEvent.ActionDBMenu(ActionDBData.AddNoteDB(data)))
+        onEvent(MenuEvent.CloseDialog)
     }
 }
 
 @Composable
 fun EditNoteBottomDialogContent(
-    //note: Position.PositionNoteView,
+    data: DialogMenuData.EditNote,
+    onEvent: (MenuEvent) -> Unit
+) {
+    EditOrAddNoteBottomDialogContent(
+        "Редактировать заметку",
+        "Подтвердить",
+        data.text){
+        onEvent(MenuEvent.ActionDBMenu(ActionDBData.EditNoteDB(data)))
+        onEvent(MenuEvent.CloseDialog)
+    }
+}
+
+@Composable
+fun EditOrAddNoteBottomDialogContent(
+    title:String,
+    doneButtonText:String,
     text: MutableState<String>,
-    state: MenuIUState,
-    onEvent: (MenuEvent) -> Unit,
-    clickToDone: () -> Unit
+    done:()->Unit
 ) {
     Column(Modifier.padding(24.dp)) {
         EditTextLine(
             text,
-            "Добавить заметку",
+            title,
             "Введите текст заметки",
-        ) {}
+        ) { text.value = it }
         Spacer(modifier = Modifier.height(24.dp))
-        DoneButton(text = "Добавить") {
-            //onEvent(MenuEvent.AddNote(text.value))
-            //onEvent(MenuEvent.EditNote(text.value))
-            //onEvent(MenuEvent.CloseAddNoteDialog)
-            clickToDone()
-        }
+        DoneButton(text = doneButtonText) { done() }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun PreviewEditNoteBottomDialog() {
     WeekOnAPlateTheme {
-        val uiState = MenuIUState.MenuIUStateExample
-        val text = remember { mutableStateOf("") }
-        EditNoteBottomDialogContent(text, uiState, {}) {}
+        val stateBottom = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+        EditNoteBottomDialogContent(DialogMenuData.EditNote(positionNoteExample, stateBottom)) {}
     }
 }

@@ -23,7 +23,7 @@ private val DarkColorScheme = darkColorScheme(
     onBackground = ColorPanelLightGrey,
     onSurface = ColorStrokeGrey,
     outline = ColorSubTextGrey,
-    surfaceVariant = ColorTextBlack
+    surfaceVariant = ColorTextBlack,
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -38,7 +38,7 @@ private val LightColorScheme = lightColorScheme(
     onBackground = ColorTextBlack,
     onSurface = ColorButtonNegativeGrey,
     outline = ColorButtonNegativeGrey,
-    surfaceVariant = ColorPanelLightGrey
+    surfaceVariant = ColorPanelLightGrey,
 )
 
 @Composable

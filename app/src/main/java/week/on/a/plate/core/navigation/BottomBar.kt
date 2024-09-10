@@ -5,8 +5,10 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -29,6 +31,7 @@ import week.on.a.plate.ui.theme.ColorTransparent
 @Composable
 fun BottomBar(navController: NavHostController) {
     BottomAppBar(
+        Modifier.height(72.dp),
         containerColor = MaterialTheme.colorScheme.surface,
         contentColor = MaterialTheme.colorScheme.surface,
     ) {
@@ -44,7 +47,7 @@ fun BottomBar(navController: NavHostController) {
                     currentDestination?.hierarchy?.any { it.route == topLevelRoute.route::class.qualifiedName } == true
                 sel.value = isSelected
                 val radius by animateFloatAsState(
-                    if (isSelected) 16.0f else 0.0f,
+                    if (isSelected) 10.0f else 0.0f,
                     label = "", animationSpec = tween(300)
                 )
                 NavigationBarItem(

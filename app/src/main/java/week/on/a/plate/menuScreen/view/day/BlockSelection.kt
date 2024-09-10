@@ -6,8 +6,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.core.data.week.SelectionView
-import week.on.a.plate.menuScreen.logic.MenuEvent
-import week.on.a.plate.menuScreen.logic.MenuIUState
+import week.on.a.plate.menuScreen.logic.eventData.DialogMenuData
+import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
+import week.on.a.plate.menuScreen.logic.eventData.MenuIUState
 import week.on.a.plate.menuScreen.view.day.positions.CardPosition
 import week.on.a.plate.menuScreen.view.uiTools.TitleMenu
 import java.time.LocalDate
@@ -20,7 +21,7 @@ fun BlockSelection(
     onEvent: (event: MenuEvent) -> Unit,
     ) {
     TitleMenu(selection.category) {
-        onEvent(MenuEvent.AddRecipeToCategory(date, selection.category))
+        onEvent(MenuEvent.OpenDialog(DialogMenuData.AddPosition( date, selection.category)))
     }
     Spacer(Modifier.height(10.dp))
     for (rec in selection.positions) {

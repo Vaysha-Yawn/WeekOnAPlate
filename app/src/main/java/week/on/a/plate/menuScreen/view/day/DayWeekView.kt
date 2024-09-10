@@ -3,8 +3,8 @@ package week.on.a.plate.menuScreen.view.day
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import week.on.a.plate.core.data.week.DayView
-import week.on.a.plate.menuScreen.logic.MenuEvent
-import week.on.a.plate.menuScreen.logic.MenuIUState
+import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
+import week.on.a.plate.menuScreen.logic.eventData.MenuIUState
 
 
 @Composable

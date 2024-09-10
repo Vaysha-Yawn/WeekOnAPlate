@@ -1,13 +1,10 @@
 package week.on.a.plate.menuScreen.view.day.positions
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -20,18 +17,16 @@ import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.core.data.week.Position
 import week.on.a.plate.core.uitools.TagSmall
-import week.on.a.plate.menuScreen.logic.MenuEvent
-import week.on.a.plate.menuScreen.logic.MenuIUState
+import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
+import week.on.a.plate.menuScreen.logic.eventData.NavFromMenuData
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DraftPosition(
     draft: Position.PositionDraftView,
-    menuIUState: MenuIUState,
     onEvent: (event: MenuEvent) -> Unit,
     rowScope: RowScope
 ) {
-    with(rowScope){
+    with(rowScope) {
         Spacer(modifier = Modifier.width(20.dp))
         LazyRow(
             Modifier
@@ -40,11 +35,11 @@ fun DraftPosition(
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            items(draft.tags.size){
-                    TagSmall(tag = draft.tags[it])
-                    Spacer(modifier = Modifier.width(5.dp))
+            items(draft.tags.size) {
+                TagSmall(tag = draft.tags[it])
+                Spacer(modifier = Modifier.width(5.dp))
             }
-            items(draft.ingredients.size){
+            items(draft.ingredients.size) {
                 TagSmall(ingredientView = draft.ingredients[it])
                 Spacer(modifier = Modifier.width(5.dp))
             }
@@ -55,7 +50,7 @@ fun DraftPosition(
             contentDescription = "",
             modifier = Modifier
                 .size(24.dp)
-                .clickable { onEvent(MenuEvent.Search(draft)) },
+                .clickable { onEvent(MenuEvent.NavigateFromMenu(NavFromMenuData.SearchByDraft(draft))) },
         )
         Spacer(modifier = Modifier.width(10.dp))
     }
