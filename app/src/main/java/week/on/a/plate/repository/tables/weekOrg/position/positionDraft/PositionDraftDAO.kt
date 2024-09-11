@@ -45,6 +45,6 @@ interface PositionDraftDAO {
     @Update
     suspend fun update(positionDraft: PositionDraftRoom)
 
-    @Delete
-    suspend fun delete(positionDraft: PositionDraftRoom)
+    @Query("DELETE FROM PositionDraftRoom WHERE draftId = :id")
+    suspend fun deleteById(id: Long)
 }

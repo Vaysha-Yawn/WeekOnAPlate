@@ -9,10 +9,11 @@ class PositionNoteMapper() {
     fun PositionNoteRoom.roomToView(): Position.PositionNoteView =
         Position.PositionNoteView(
             id = this.id,
-            note = this.note
+            note = this.note,
+            selectionId = this.selectionId
         )
 
-    fun Position.PositionNoteView.viewToRoom(selectionId: Long): PositionNoteRoom =
+    fun Position.PositionNoteView.viewToRoom(selectionId:Long): PositionNoteRoom =
         PositionNoteRoom(
             note = this.note,
             selectionId = selectionId

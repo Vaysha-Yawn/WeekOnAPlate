@@ -1,20 +1,21 @@
 package week.on.a.plate.menuScreen.logic.eventData
 
-import week.on.a.plate.core.data.week.Position
+import week.on.a.plate.core.data.week.CategoriesSelection
+import java.time.LocalDate
 
 sealed class MenuEvent {
-    class AddRecipeToShoppingList(val recipe: Position.PositionRecipeView) : MenuEvent()
     data object SwitchEditMode : MenuEvent()
-    class CheckRecipe(val id: Long) : MenuEvent()
     data object SwitchWeekOrDayView : MenuEvent()
-    class AddCheckState(val id: Long) : MenuEvent()
-    data object ChooseAll : MenuEvent()
-    data object DeleteSelected : MenuEvent()
     data object CloseDialog : MenuEvent()
     class OpenDialog(val dialog: DialogMenuData) : MenuEvent()
     class NavigateFromMenu(val navData: NavFromMenuData) : MenuEvent()
     class ActionDBMenu(val actionDBData: ActionDBData) : MenuEvent()
-    data object SelectedToShopList : MenuEvent()
+    class ActionSelect(val selectedData: SelectedData) : MenuEvent()
+    data class GetSelIdAndCreate(
+        val action: (Long) -> Unit,
+        val dateToLocalDate: LocalDate,
+        val categoriesSelection: CategoriesSelection
+    ) : MenuEvent()
 }
 
 

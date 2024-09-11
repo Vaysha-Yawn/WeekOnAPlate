@@ -19,7 +19,7 @@ sealed class DialogMenuData() {
     class AddPositionToMenu @OptIn(ExperimentalMaterial3Api::class) constructor(
         val state: DatePickerState, val recipe: Position.PositionRecipeView,
         val date: LocalDate, val category: String,
-        ) : DialogMenuData() {
+    ) : DialogMenuData() {
         val checkWeek = mutableStateOf<Boolean>(false)
         val checkDayCategory = mutableStateOf<CategoriesSelection?>(null)
         val showDatePicker: MutableState<Boolean> = mutableStateOf(false)
@@ -53,12 +53,12 @@ sealed class DialogMenuData() {
         val sheetState: SheetState
     ) : DialogMenuData() {
         val ingredientState = mutableStateOf(ingredient?.ingredient?.ingredientView)
-        val text = mutableStateOf(ingredient?.ingredient?.description?:"")
-        val count = mutableDoubleStateOf(ingredient?.ingredient?.count?:0.0)
+        val text = mutableStateOf(ingredient?.ingredient?.description ?: "")
+        val count = mutableDoubleStateOf(ingredient?.ingredient?.count ?: 0.0)
     }
 
     class AddIngredient @OptIn(ExperimentalMaterial3Api::class) constructor(
-        val date: LocalDate, val category: String,
+        val selectionId: Long,
         val sheetState: SheetState
     ) : DialogMenuData() {
         val ingredientState = mutableStateOf<IngredientView?>(null)
@@ -74,20 +74,33 @@ sealed class DialogMenuData() {
     }
 
     class AddNote @OptIn(ExperimentalMaterial3Api::class) constructor(
-        val date: LocalDate, val category: String, val sheetState: SheetState
+        val selectionId: Long, val sheetState: SheetState
     ) : DialogMenuData() {
         val text = mutableStateOf("")
     }
-
-    class AddPosition (
-        val date: LocalDate, val category: String,
+    class AddPosition(
+        val selectionId:Long,
     ) : DialogMenuData()
 
+    class AddPositionNeedSelId() : DialogMenuData()
+
     // include recipe position
-    class EditPosition (
+    class EditPosition(
         val position: Position
     ) : DialogMenuData()
 
-    data class SelectedToShopList(val recipes:List<Position.PositionRecipeView>) : DialogMenuData()
+    data class ChooseDay
+    @OptIn(ExperimentalMaterial3Api::class) constructor(val state: DatePickerState) :
+        DialogMenuData()
 
+    data object SelectedToShopList : DialogMenuData()
+    data class ToShopList(val recipe: Position.PositionRecipeView) : DialogMenuData()
+
+    class SpecifyDate @OptIn(ExperimentalMaterial3Api::class) constructor(
+        val state: DatePickerState, val eventAfter:(Long)->Unit
+    ) : DialogMenuData() {
+        val checkWeek = mutableStateOf<Boolean>(false)
+        val checkDayCategory = mutableStateOf<CategoriesSelection?>(null)
+        val showDatePicker: MutableState<Boolean> = mutableStateOf(false)
+    }
 }

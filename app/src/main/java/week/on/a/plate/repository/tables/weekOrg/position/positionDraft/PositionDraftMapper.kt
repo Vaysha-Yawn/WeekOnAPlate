@@ -14,10 +14,10 @@ class PositionDraftMapper() {
     ): Position.PositionDraftView =
         Position.PositionDraftView(
             id = this.draftId,
-            tags, ingredients
+            tags, ingredients, this.selectionId
         )
 
-    fun Position.PositionDraftView.viewToRoom(selectionId: Long): PositionDraftRoom =
+    fun Position.PositionDraftView.viewToRoom(selectionId:Long): PositionDraftRoom =
         PositionDraftRoom(selectionId)
 
     fun genTagCrossRef(newPositionDraftID:Long, tagId:Long, ): DraftAndTagCrossRef {

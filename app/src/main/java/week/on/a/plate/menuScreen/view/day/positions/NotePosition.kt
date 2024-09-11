@@ -19,7 +19,6 @@ import week.on.a.plate.R
 import week.on.a.plate.core.data.week.Position
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
-import week.on.a.plate.menuScreen.logic.eventData.MenuIUState
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

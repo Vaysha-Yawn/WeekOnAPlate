@@ -26,8 +26,8 @@ fun TitleMenu(name:String, actionAdd:()->Unit){
 
 @Composable
 fun TitleMenuSmall(name:String, actionAdd:()->Unit){
-    Row(Modifier.padding(horizontal = 10.dp).padding(start = 20.dp), verticalAlignment = Alignment.CenterVertically) {
-        TextTitleItalic(text = name, modifier = Modifier.padding(end = 10.dp))
+    Row(Modifier, verticalAlignment = Alignment.CenterVertically) {
+        TextTitleItalic(text = name, modifier = Modifier.padding(end = 24.dp))
         PlusButtonTitle(actionAdd)
     }
 }

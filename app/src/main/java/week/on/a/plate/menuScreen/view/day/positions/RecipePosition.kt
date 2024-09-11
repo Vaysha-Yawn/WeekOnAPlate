@@ -19,8 +19,9 @@ import week.on.a.plate.core.uitools.SubText
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.buttons.CheckButton
 import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
-import week.on.a.plate.menuScreen.logic.eventData.MenuIUState
+import week.on.a.plate.menuScreen.logic.stateData.MenuIUState
 import week.on.a.plate.menuScreen.logic.eventData.NavFromMenuData
+import week.on.a.plate.menuScreen.logic.eventData.SelectedData
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -41,13 +42,13 @@ fun RecipePosition(
                 ).padding(vertical = 5.dp), verticalAlignment = Alignment.CenterVertically
         ) {
             if (menuIUState.editing.value) {
-                var state = menuIUState.chosenRecipes[recipe.id]
+                var state = menuIUState.chosenRecipes[recipe]
                 if (state == null) {
                     state = remember { mutableStateOf(false) }
-                    menuIUState.chosenRecipes[recipe.id] = state
+                    menuIUState.chosenRecipes[recipe] = state
                 }
                 CheckButton(state) {
-                    onEvent(MenuEvent.CheckRecipe(recipe.id))
+                    onEvent(MenuEvent.ActionSelect(SelectedData.CheckRecipe(recipe)))
                 }
                 Spacer(modifier = Modifier.width(10.dp))
             }else{

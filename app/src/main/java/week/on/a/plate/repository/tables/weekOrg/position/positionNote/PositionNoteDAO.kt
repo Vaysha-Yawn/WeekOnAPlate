@@ -24,6 +24,6 @@ interface PositionNoteDAO {
     @Update
     suspend fun update(positionNoteRoom: PositionNoteRoom)
 
-    @Delete
-    suspend fun delete(positionNoteRoom: PositionNoteRoom)
+    @Query("DELETE FROM PositionNoteRoom WHERE id = :id")
+    suspend fun deleteById(id: Long)
 }

@@ -120,7 +120,7 @@ fun AddMoveDoubleRecipeDialogContent(
             ) {
                 CommonButton(
                     state.selectedDateMillis?.dateToString() ?: "Выберите день",
-                    R.drawable.calendar
+                    R.drawable.calendar_no_dark
                 ) {
                     showDatePicker.value = true
                 }

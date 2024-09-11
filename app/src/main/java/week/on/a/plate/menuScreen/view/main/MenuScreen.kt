@@ -16,9 +16,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import week.on.a.plate.core.data.example.WeekDataExample
 import week.on.a.plate.core.data.week.WeekView
 import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
-import week.on.a.plate.menuScreen.logic.eventData.MenuIUState
+import week.on.a.plate.menuScreen.logic.stateData.MenuIUState
 import week.on.a.plate.menuScreen.logic.MenuViewModel
-import week.on.a.plate.menuScreen.logic.eventData.WeekState
+import week.on.a.plate.menuScreen.logic.stateData.WeekState
 import week.on.a.plate.menuScreen.view.day.calendar.BlockCalendar
 import week.on.a.plate.menuScreen.view.day.DayView
 import week.on.a.plate.menuScreen.view.day.NoDay
@@ -36,8 +36,10 @@ fun MenuScreen(viewModel: MenuViewModel = hiltViewModel()) {
         is WeekState.Error -> {}
         WeekState.Loading -> {}
         is WeekState.Success -> {
-            MenuScreenSuccess(viewModel.menuUIState, uiState.week) { event: MenuEvent ->
-                viewModel.onEvent(event)
+            if (uiState.week!=null && uiState.week.days.isNotEmpty()){
+                MenuScreenSuccess(viewModel.menuUIState, uiState.week) { event: MenuEvent ->
+                    viewModel.onEvent(event)
+                }
             }
         }
     }

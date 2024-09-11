@@ -7,6 +7,28 @@ import week.on.a.plate.menuScreen.logic.eventData.ActionDBData
 import week.on.a.plate.menuScreen.logic.eventData.DialogMenuData
 import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
 
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SpecifyDatePositionDialogContent(
+    data: DialogMenuData.SpecifyDate,
+    onEvent: (MenuEvent) -> Unit
+) {
+    AddMoveDoubleRecipeDialogContent("Добавить позицию",
+        data.state, data.checkWeek, data.checkDayCategory, data.showDatePicker,
+        {
+            onEvent(MenuEvent.GetSelIdAndCreate(data.eventAfter, data.state.selectedDateMillis!!.dateToLocalDate(),
+                if (data.checkWeek.value) {
+                    CategoriesSelection.ForWeek
+                } else {
+                    data.checkDayCategory.value!!
+                },))
+            onEvent(MenuEvent.CloseDialog)
+        }) {
+        onEvent(MenuEvent.CloseDialog)
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DoublePositionDialogContent(
@@ -20,8 +42,11 @@ fun DoublePositionDialogContent(
                 MenuEvent.ActionDBMenu(
                     ActionDBData.DoublePositionInMenuDB(
                         data.state.selectedDateMillis!!.dateToLocalDate(),
-                        data.checkDayCategory.value,
-                        data.checkWeek.value,
+                        if (data.checkWeek.value) {
+                            CategoriesSelection.ForWeek
+                        } else {
+                            data.checkDayCategory.value!!
+                        },
                         data.position
                     )
                 )
@@ -45,8 +70,11 @@ fun MovePositionDialogContent(
                 MenuEvent.ActionDBMenu(
                     ActionDBData.MovePositionInMenuDB(
                         data.state.selectedDateMillis!!.dateToLocalDate(),
-                        data.checkDayCategory.value,
-                        data.checkWeek.value,
+                        if (data.checkWeek.value) {
+                            CategoriesSelection.ForWeek
+                        } else {
+                            data.checkDayCategory.value!!
+                        },
                         data.position
                     )
                 )
@@ -66,6 +94,7 @@ fun AddRecipeDialogContent(data: DialogMenuData.AddPositionToMenu, onEvent: (Men
             data.checkWeek.value = true
             data.checkDayCategory.value = null
         }
+
         CategoriesSelection.NonPosed.fullName -> {
             data.checkWeek.value = false
             data.checkDayCategory.value = CategoriesSelection.NonPosed
@@ -92,16 +121,24 @@ fun AddRecipeDialogContent(data: DialogMenuData.AddPositionToMenu, onEvent: (Men
     AddMoveDoubleRecipeDialogContent("Добавить в меню",
         data.state, data.checkWeek, data.checkDayCategory, data.showDatePicker,
         {
-            onEvent(
-                MenuEvent.ActionDBMenu(
-                    ActionDBData.AddPositionInMenuDB(
-                        data.state.selectedDateMillis!!.dateToLocalDate(),
-                        data.checkDayCategory.value,
-                        data.checkWeek.value,
-                        data.recipe
+            val eventAfter:(Long)->Unit = {id->
+                onEvent(
+                    MenuEvent.ActionDBMenu(
+                        ActionDBData.AddRecipePositionInMenuDB(
+                            id,
+                            data.recipe
+                        )
                     )
                 )
-            )
+            }
+
+            onEvent(MenuEvent.GetSelIdAndCreate(eventAfter, data.state.selectedDateMillis!!.dateToLocalDate(),
+                if (data.checkWeek.value) {
+                    CategoriesSelection.ForWeek
+                } else {
+                    data.checkDayCategory.value!!
+                },))
+
             onEvent(MenuEvent.CloseDialog)
         }) {
         onEvent(MenuEvent.CloseDialog)

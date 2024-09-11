@@ -8,21 +8,21 @@ import week.on.a.plate.core.data.week.Position
 import week.on.a.plate.core.data.week.SelectionView
 
 
-val positionRecipeExample = Position.PositionRecipeView(0, shortRecipe, 2)
+val positionRecipeExample = Position.PositionRecipeView(0, shortRecipe, 2, 0)
 
 val ingredientTomato = IngredientView(0, "", "Помидор", "штук")
 
 val positionIngredientExample =
-    Position.PositionIngredientView(0, IngredientInRecipeView(0, ingredientTomato, "Целые", 6.0))
+    Position.PositionIngredientView(0, IngredientInRecipeView(0, ingredientTomato, "Целые", 6.0), 0)
 
-val positionNoteExample = Position.PositionNoteView(0, "Завтракаю на работе")
+val positionNoteExample = Position.PositionNoteView(0, "Завтракаю на работе", 0)
 
 val positionDraftExample = Position.PositionDraftView(
     0, listOf(
         RecipeTagView(0, "Без тепловой обработки", false),
         RecipeTagView(0, "Салаты", true),
     ),
-    listOf(ingredientTomato)
+    listOf(ingredientTomato), 0
 )
 
 val dayMenuExample = mutableListOf(

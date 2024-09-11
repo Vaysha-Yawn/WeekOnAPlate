@@ -36,7 +36,7 @@ fun EditRecipePositionDialogContent(recipe: Position.PositionRecipeView, onEvent
             R.drawable.add_shopping_cart,
             "Добавить в покупки",
         ) {
-            onEvent(MenuEvent.AddRecipeToShoppingList(recipe))
+            onEvent(MenuEvent.OpenDialog(DialogMenuData.ToShopList(recipe)))
         }
 
         ButtonRow(

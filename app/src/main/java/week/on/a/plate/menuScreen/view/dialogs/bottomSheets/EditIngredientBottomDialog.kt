@@ -1,7 +1,6 @@
 package week.on.a.plate.menuScreen.view.dialogs.bottomSheets
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -31,6 +30,7 @@ import week.on.a.plate.core.uitools.ingredientCard.CardIngredient
 import week.on.a.plate.menuScreen.logic.eventData.ActionDBData
 import week.on.a.plate.menuScreen.logic.eventData.DialogMenuData
 import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
+import week.on.a.plate.menuScreen.logic.eventData.NavFromMenuData
 import week.on.a.plate.ui.theme.WeekOnAPlateTheme
 
 @Composable
@@ -41,7 +41,8 @@ fun AddIngredientBottomDialogContent(
         "Добавить",
         data.ingredientState,
         data.text,
-        data.count
+        data.count,
+        onEvent
     ) {
         onEvent(MenuEvent.ActionDBMenu(ActionDBData.AddIngredientDB(data)))
         onEvent(MenuEvent.CloseDialog)
@@ -57,7 +58,8 @@ fun EditIngredientBottomDialogContent(
         "Подтвердить",
         data.ingredientState,
         data.text,
-        data.count
+        data.count,
+        onEvent
     ) {
         onEvent(MenuEvent.ActionDBMenu(ActionDBData.EditIngredientDB(data)))
         onEvent(MenuEvent.CloseDialog)
@@ -71,6 +73,7 @@ fun EditOrAddIngredientBottomDialogContent(
     ingredientState: MutableState<IngredientView?>,
     description: MutableState<String>,
     count: MutableDoubleState,
+    onEvent: (MenuEvent) -> Unit,
     done: () -> Unit
 ) {
     Column(modifier = Modifier.padding(vertical = 24.dp)) {
@@ -81,21 +84,13 @@ fun EditOrAddIngredientBottomDialogContent(
                 Image(
                     painter = painterResource(id = R.drawable.find_replace),
                     contentDescription = "",
-                    modifier = Modifier
-                        .size(24.dp)
-                        .clickable {
-                            // todo nav
-                            //onEvent(MenuEvent.FindIngredient())
-                        }
-                )
+                    modifier = Modifier.size(24.dp))
             }){
-                // todo nav
-                //onEvent(MenuEvent.FindIngredient())
+                onEvent(MenuEvent.NavigateFromMenu(NavFromMenuData.NavToChooseIngredient))
             }
         } else {
             CommonButton("Указать ингредиент", R.drawable.search) {
-                // todo nav
-                //onEvent(MenuEvent.FindIngredient())
+                onEvent(MenuEvent.NavigateFromMenu(NavFromMenuData.NavToChooseIngredient))
             }
         }
 

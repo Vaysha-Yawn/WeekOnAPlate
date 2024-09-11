@@ -33,6 +33,6 @@ interface RecipeInMenuDAO {
     @Update
     suspend fun update(positionRecipeRoom: PositionRecipeRoom)
 
-    @Delete
-    suspend fun delete(positionRecipeRoom: PositionRecipeRoom)
+    @Query("DELETE FROM positionreciperoom WHERE recipeInMenuId = :id")
+    suspend fun deleteById(id: Long)
 }

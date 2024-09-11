@@ -38,7 +38,7 @@ val EmptyWeek = WeekView(
 val WeekDataExample = WeekView(0,
     SelectionView(7,
         "Нераспределенное",
-        mutableListOf(Position.PositionRecipeView(0, shortRecipe, 3))
+        mutableListOf(Position.PositionRecipeView(0, shortRecipe, 3, 0))
     ),
     mutableListOf(
         DayView(1,
