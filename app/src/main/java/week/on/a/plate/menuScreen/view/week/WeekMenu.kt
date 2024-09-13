@@ -84,8 +84,8 @@ fun WeekMenu(
                                     onEvent(MenuEvent.OpenDialog(DialogMenuData.AddPosition( sel.id)))
                                 }
                             }
-                            Spacer(modifier = Modifier.height(12.dp))
                             sel.positions.forEach { pos ->
+                                Spacer(modifier = Modifier.height(12.dp))
                                 WeekCardPosition(
                                     position = pos,
                                     menuIUState = menuIUState,

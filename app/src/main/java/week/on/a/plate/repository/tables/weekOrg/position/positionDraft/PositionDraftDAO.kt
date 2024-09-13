@@ -23,7 +23,7 @@ interface PositionDraftDAO {
     suspend fun getAll(): List<PositionDraftRoom>
 
     @Query("SELECT * FROM PositionDraftRoom WHERE selectionId=:selectionId")
-    fun getAllInSel(selectionId:Long): Flow<List<PositionDraftRoom>>
+    suspend fun getAllInSel(selectionId:Long): List<PositionDraftRoom>
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(positionDraft: PositionDraftRoom):Long

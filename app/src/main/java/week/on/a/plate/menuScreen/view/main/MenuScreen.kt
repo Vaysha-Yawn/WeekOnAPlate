@@ -40,6 +40,8 @@ fun MenuScreen(viewModel: MenuViewModel = hiltViewModel()) {
                 MenuScreenSuccess(viewModel.menuUIState, uiState.week) { event: MenuEvent ->
                     viewModel.onEvent(event)
                 }
+            }else{
+                viewModel.weekState.value = WeekState.EmptyWeek
             }
         }
     }
@@ -57,7 +59,7 @@ fun MenuScreenSuccess(
             .background(MaterialTheme.colorScheme.background)
             .padding(top = 10.dp)
     ) {
-        TopBar(week, "Август 26-1", uiState, onEvent)
+        TopBar(uiState.titleTopBar.value, uiState, onEvent)
 
         if (uiState.itsDayMenu.value) {
             Spacer(modifier = Modifier.height(24.dp))

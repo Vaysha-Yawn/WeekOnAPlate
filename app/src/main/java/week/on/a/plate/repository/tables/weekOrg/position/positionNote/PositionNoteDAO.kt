@@ -16,7 +16,7 @@ interface PositionNoteDAO {
     suspend fun getAll(): List<PositionNoteRoom>
 
     @Query("SELECT * FROM PositionNoteRoom WHERE selectionId=:selectionId")
-    fun getAllInSel(selectionId:Long): Flow<List<PositionNoteRoom>>
+    suspend fun getAllInSel(selectionId:Long): List<PositionNoteRoom>
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(positionNoteRoom: PositionNoteRoom):Long

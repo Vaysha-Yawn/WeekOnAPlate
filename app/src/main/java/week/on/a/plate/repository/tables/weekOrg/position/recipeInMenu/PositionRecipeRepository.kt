@@ -12,22 +12,37 @@ import javax.inject.Inject
 class PositionRecipeRepository @Inject constructor(
     private val recipeInMenuDAO: RecipeInMenuDAO
 ) {
-    fun getAllInSel(selectionId: Long): Flow<List<Position>> {
-        return recipeInMenuDAO.getAllInSel(selectionId)
-            .transform<List<PositionRecipeRoom>, List<Position>> {
-                val list = mutableListOf<Position>()
-                it.forEach { recipeInMenu ->
-                    with(RecipeInMenuMapper()) {
-                        val newRecipeInMenuView =
-                            recipeInMenu.roomToView(
-                                recipeInMenu.recipeId, recipeInMenu.recipeName
-                            )
-                        list.add(newRecipeInMenuView)
-                    }
-                }
-                emit(list)
+    suspend fun getAllInSel(selectionId: Long): List<Position> {
+         val roomRecipes = recipeInMenuDAO.getAllInSel(selectionId)
+        val list = mutableListOf<Position>()
+        roomRecipes.forEach { recipeInMenu ->
+            with(RecipeInMenuMapper()) {
+                val newRecipeInMenuView =
+                    recipeInMenu.roomToView(
+                        recipeInMenu.recipeId, recipeInMenu.recipeName
+                    )
+                list.add(newRecipeInMenuView)
             }
+        }
+        return list
+
     }
+
+/*    fun getAllInSel(selectionId: Long): Flow<List<Position>> {
+        return recipeInMenuDAO.getAllInSel(selectionId).transform<List<PositionRecipeRoom>, List<Position>> {
+                    val list = mutableListOf<Position>()
+                    it.forEach { recipeInMenu ->
+                        with(RecipeInMenuMapper()) {
+                            val newRecipeInMenuView =
+                                recipeInMenu.roomToView(
+                                    recipeInMenu.recipeId, recipeInMenu.recipeName
+                                )
+                            list.add(newRecipeInMenuView)
+                        }
+                    }
+                    emit(list)
+                }
+    }*/
 
     suspend fun insert(recipeView: Position.PositionRecipeView, selectionId: Long): Long {
         val positionRoom = with(RecipeInMenuMapper()) { recipeView.viewToRoom(selectionId) }

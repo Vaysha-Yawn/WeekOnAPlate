@@ -131,15 +131,13 @@ fun AddRecipeDialogContent(data: DialogMenuData.AddPositionToMenu, onEvent: (Men
                     )
                 )
             }
-
+            onEvent(MenuEvent.CloseDialog)
             onEvent(MenuEvent.GetSelIdAndCreate(eventAfter, data.state.selectedDateMillis!!.dateToLocalDate(),
                 if (data.checkWeek.value) {
                     CategoriesSelection.ForWeek
                 } else {
                     data.checkDayCategory.value!!
                 },))
-
-            onEvent(MenuEvent.CloseDialog)
         }) {
         onEvent(MenuEvent.CloseDialog)
     }

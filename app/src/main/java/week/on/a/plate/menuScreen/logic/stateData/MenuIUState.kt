@@ -12,7 +12,8 @@ data class MenuIUState(
     val editing: MutableState<Boolean>,
     val activeDayInd: MutableState<Int>,
     val isAllSelected: MutableState<Boolean>,
-    val dialogState: MutableState<DialogMenuData?>
+    val dialogState: MutableState<DialogMenuData?>,
+    val titleTopBar:MutableState<String>
 ) {
     companion object {
         val MenuIUStateExample = MenuIUState(
@@ -22,6 +23,7 @@ data class MenuIUState(
             mutableIntStateOf(0),
             mutableStateOf(false),
             mutableStateOf(null),
+            mutableStateOf("Август 26-1"),
         )
     }
 }

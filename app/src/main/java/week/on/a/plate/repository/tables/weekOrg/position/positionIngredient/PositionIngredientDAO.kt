@@ -22,7 +22,7 @@ interface PositionIngredientDAO {
     suspend fun getPositionIngredientAndIngredientInRecipeView(ingredientInRecipeId:Long): PositionIngredientAndIngredientInRecipeView
 
     @Query("SELECT * FROM PositionIngredientRoom WHERE selectionId=:selectionId")
-    fun getAllInSel(selectionId:Long): Flow<List<PositionIngredientRoom>>
+    suspend fun getAllInSel(selectionId:Long): List<PositionIngredientRoom>
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(ingredientInRecipeRoom: IngredientInRecipeRoom):Long

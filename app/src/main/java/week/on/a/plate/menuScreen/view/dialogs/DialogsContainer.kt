@@ -18,6 +18,7 @@ import week.on.a.plate.menuScreen.view.dialogs.dialogFullScreen.DatePickerMy
 import week.on.a.plate.menuScreen.view.dialogs.dialogFullScreen.DoublePositionDialogContent
 import week.on.a.plate.menuScreen.view.dialogs.dialogFullScreen.MovePositionDialogContent
 import week.on.a.plate.menuScreen.view.dialogs.dialogFullScreen.SpecifyDatePositionDialogContent
+import week.on.a.plate.menuScreen.view.dialogs.dialogFullScreen.dateToLocalDate
 import week.on.a.plate.menuScreen.view.dialogs.editDialogs.AddPositionDialogContent
 import week.on.a.plate.menuScreen.view.dialogs.editDialogs.EditOtherPositionDialogContent
 import week.on.a.plate.menuScreen.view.dialogs.editDialogs.EditRecipePositionDialogContent
@@ -114,7 +115,10 @@ fun DialogsContainer(uiState: MenuIUState, onEvent: (event: MenuEvent) -> Unit) 
                     onEvent(MenuEvent.CloseDialog)
                     data.show.value = false
                 }) {
-                //done todo load selected day
+                val date = data.state.selectedDateMillis
+                if (date!=null){
+                    onEvent(MenuEvent.ChangeWeek(date.dateToLocalDate()))
+                }
                 onEvent(MenuEvent.CloseDialog)
                 data.show.value = false
             }

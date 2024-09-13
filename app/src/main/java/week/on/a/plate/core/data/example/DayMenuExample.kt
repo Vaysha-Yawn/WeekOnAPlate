@@ -4,6 +4,7 @@ package week.on.a.plate.core.data.example
 import week.on.a.plate.core.data.recipe.IngredientInRecipeView
 import week.on.a.plate.core.data.recipe.IngredientView
 import week.on.a.plate.core.data.recipe.RecipeTagView
+import week.on.a.plate.core.data.week.CategoriesSelection
 import week.on.a.plate.core.data.week.Position
 import week.on.a.plate.core.data.week.SelectionView
 
@@ -50,8 +51,8 @@ val dayMenuExample = mutableListOf(
 )
 
 val emptyDay = mutableListOf(
-    SelectionView(0, "Нераспределенное", mutableListOf()),
-    SelectionView(1, "Завтрак", mutableListOf()),
-    SelectionView(2, "Обед", mutableListOf()),
-    SelectionView(3, "Ужин", mutableListOf()),
+    SelectionView(0, CategoriesSelection.NonPosed.fullName, mutableListOf()),
+    SelectionView(1, CategoriesSelection.Breakfast.fullName, mutableListOf()),
+    SelectionView(2, CategoriesSelection.Lunch.fullName, mutableListOf()),
+    SelectionView(3, CategoriesSelection.Dinner.fullName, mutableListOf()),
 )

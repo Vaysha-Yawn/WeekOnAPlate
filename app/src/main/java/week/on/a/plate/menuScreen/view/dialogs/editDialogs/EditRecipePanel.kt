@@ -36,6 +36,7 @@ fun EditRecipePositionDialogContent(recipe: Position.PositionRecipeView, onEvent
             R.drawable.add_shopping_cart,
             "Добавить в покупки",
         ) {
+            onEvent(MenuEvent.CloseDialog)
             onEvent(MenuEvent.OpenDialog(DialogMenuData.ToShopList(recipe)))
         }
 
@@ -43,6 +44,7 @@ fun EditRecipePositionDialogContent(recipe: Position.PositionRecipeView, onEvent
             R.drawable.add,
             "Дублировать",
         ) {
+            onEvent(MenuEvent.CloseDialog)
             onEvent(MenuEvent.OpenDialog(DialogMenuData.DoublePositionToMenu(state, recipe)))
         }
 
@@ -50,6 +52,7 @@ fun EditRecipePositionDialogContent(recipe: Position.PositionRecipeView, onEvent
             R.drawable.delete,
             "Удалить",
         ) {
+            onEvent(MenuEvent.CloseDialog)
             onEvent(MenuEvent.ActionDBMenu(ActionDBData.Delete(recipe)))
         }
 
@@ -57,6 +60,7 @@ fun EditRecipePositionDialogContent(recipe: Position.PositionRecipeView, onEvent
             R.drawable.find_replace,
             "Поменять рецепт",
         ) {
+            onEvent(MenuEvent.CloseDialog)
             onEvent(MenuEvent.NavigateFromMenu(NavFromMenuData.FindReplaceRecipe(recipe)))
         }
 
@@ -64,6 +68,7 @@ fun EditRecipePositionDialogContent(recipe: Position.PositionRecipeView, onEvent
             R.drawable.numbers,
             "Изменить кол-во порций"
         ) {
+            onEvent(MenuEvent.CloseDialog)
             onEvent(
                 MenuEvent.OpenDialog(
                     DialogMenuData.ChangePortionsCount(recipe, stateBottom)
@@ -75,6 +80,7 @@ fun EditRecipePositionDialogContent(recipe: Position.PositionRecipeView, onEvent
             R.drawable.back_key,
             "Переместить",
         ) {
+            onEvent(MenuEvent.CloseDialog)
             onEvent(
                 MenuEvent.OpenDialog(
                     DialogMenuData.MovePositionToMenu(state, recipe)

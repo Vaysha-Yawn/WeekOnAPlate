@@ -77,6 +77,7 @@ private fun eventWrapper(
     state: DatePickerState,
     event: (Long) -> Unit,
 ) {
+    onEvent(MenuEvent.CloseDialog)
     if (selId != null) {
         event(selId)
     } else {

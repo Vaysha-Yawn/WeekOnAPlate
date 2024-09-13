@@ -8,14 +8,10 @@ import week.on.a.plate.core.data.week.DayView
 import week.on.a.plate.core.data.week.Position
 import week.on.a.plate.core.data.week.SelectionView
 import week.on.a.plate.core.data.week.WeekView
-import week.on.a.plate.repository.tables.recipe.ingredientInRecipe.IngredientInRecipeDAO
-import week.on.a.plate.repository.tables.recipe.recipeTag.RecipeTagDAO
 import week.on.a.plate.repository.tables.weekOrg.day.DayDAO
 import week.on.a.plate.repository.tables.weekOrg.day.DayMapper
 import week.on.a.plate.repository.tables.weekOrg.day.DayRoom
-import week.on.a.plate.repository.tables.weekOrg.position.positionDraft.PositionDraftDAO
 import week.on.a.plate.repository.tables.weekOrg.position.positionDraft.PositionDraftRepository
-import week.on.a.plate.repository.tables.weekOrg.position.positionIngredient.PositionIngredientDAO
 import week.on.a.plate.repository.tables.weekOrg.position.positionIngredient.PositionIngredientRepository
 import week.on.a.plate.repository.tables.weekOrg.position.positionNote.PositionNoteRepository
 import week.on.a.plate.repository.tables.weekOrg.position.recipeInMenu.PositionRecipeRepository
@@ -28,7 +24,7 @@ import week.on.a.plate.repository.tables.weekOrg.week.WeekRoom
 import java.time.LocalDate
 import javax.inject.Inject
 
-class GetWeekFun  @Inject constructor(
+class GetWeekFun @Inject constructor(
     private val positionDraftRepository: PositionDraftRepository,
     private val positionIngredientRepository: PositionIngredientRepository,
     private val noteRepository: PositionNoteRepository,
@@ -37,7 +33,68 @@ class GetWeekFun  @Inject constructor(
     private val dayDAO: DayDAO,
     private val selectionDAO: SelectionDAO,
 ) {
-    suspend fun getCurrentWeek(day: LocalDate): Flow<WeekView> {
+
+    suspend fun getCurrentWeek(day: LocalDate): WeekView? {
+        val today = dayDAO.findDay(day) ?: return null
+        val weekAndDays = weekDAO.getWeekAndDay(today.weekId) ?: return null
+
+        val listDaysView = mutableListOf<DayView>()
+        weekAndDays.days.forEach { currentDay ->
+            val dayAndSelections = dayDAO.getDayAndSelection(currentDay.dayId)
+
+            val listSelection = mutableListOf<SelectionView>()
+
+            dayAndSelections.selections.forEach { sel ->
+                val selectionAndRecipesInMenu =
+                    selectionDAO.getSelectionAndRecipesInMenu(sel.selectionId)
+                val selectionView = mapSelectionB(selectionAndRecipesInMenu)
+                listSelection.add(selectionView)
+            }
+
+            val dayy = with(DayMapper()) {
+                currentDay.roomToView(listSelection)
+            }
+
+            listDaysView.add(dayy)
+        }
+
+        val weekSelectAndRecipesInMenu =
+            selectionDAO.getSelectionAndRecipesInMenu(weekAndDays.week.selectionId)
+        val weekSel = mapSelectionB(weekSelectAndRecipesInMenu)
+
+        val weekFlow = with(WeekMapper()) { weekAndDays.week.roomToView(weekSel, listDaysView) }
+
+        return weekFlow
+    }
+
+    private suspend fun mapSelectionB(selectionAndRecipesInMenu: SelectionAndRecipesInMenu): SelectionView {
+
+        val listPositionRecipe =
+            positionRecipeRepository.getAllInSel(selectionAndRecipesInMenu.selectionRoom.selectionId)
+
+        val listPositionIngredient =
+            positionIngredientRepository.getAllInSel(selectionAndRecipesInMenu.selectionRoom.selectionId)
+
+        val listPositionNote =
+            noteRepository.getAllInSel(selectionAndRecipesInMenu.selectionRoom.selectionId)
+
+        val listPositionDraft =
+            positionDraftRepository.getAllInSel(selectionAndRecipesInMenu.selectionRoom.selectionId)
+
+        val targetList = mutableListOf<Position>()
+        targetList.addAll(listPositionRecipe)
+        targetList.addAll(listPositionIngredient)
+        targetList.addAll(listPositionNote)
+        targetList.addAll(listPositionDraft)
+
+        val sel = with(SelectionMapper()) {
+            selectionAndRecipesInMenu.selectionRoom.roomToView(targetList)
+        }
+        return sel
+    }
+
+
+  /*  suspend fun getCurrentWeekFlow(day: LocalDate): Flow<WeekView> {
         val today = dayDAO.findDay(day) ?: return flowOf()
         val weekAndDays = weekDAO.getWeekAndDay(today.weekId) ?: return flowOf()
 
@@ -74,7 +131,7 @@ class GetWeekFun  @Inject constructor(
         return combine(selections) { arr ->
 
             val list = mutableListOf<SelectionView>()
-            arr.forEach { sel->
+            arr.forEach { sel ->
                 list.add(sel)
             }
 
@@ -85,15 +142,19 @@ class GetWeekFun  @Inject constructor(
         }
     }
 
-    private suspend fun daysToWeekVariant2(week: WeekRoom, sel: Flow<SelectionView>, days: MutableList<Flow<DayView>>): Flow<WeekView> {
-        val dayz = combine(days){ dayViews ->
+    private suspend fun daysToWeekVariant2(
+        week: WeekRoom,
+        sel: Flow<SelectionView>,
+        days: MutableList<Flow<DayView>>
+    ): Flow<WeekView> {
+        val dayz = combine(days) { dayViews ->
             val list = mutableListOf<DayView>()
-            dayViews.forEach { day->
+            dayViews.forEach { day ->
                 list.add(day)
             }
             list
         }
-        return combine(dayz, sel) { dayList,  select->
+        return combine(dayz, sel) { dayList, select ->
             with(WeekMapper()) { week.roomToView(select, dayList) }
         }
     }
@@ -111,11 +172,15 @@ class GetWeekFun  @Inject constructor(
         }
     }
 
-    private suspend fun daysToWeekVariant(week: WeekRoom, sel: Flow<SelectionView>, days: MutableList<Flow<DayView>>): Flow<WeekView> {
-        val dayz = combine(days){
+    private suspend fun daysToWeekVariant(
+        week: WeekRoom,
+        sel: Flow<SelectionView>,
+        days: MutableList<Flow<DayView>>
+    ): Flow<WeekView> {
+        val dayz = combine(days) {
             it.toMutableList()
         }
-        return combine(dayz, sel) { dayList,  select->
+        return combine(dayz, sel) { dayList, select ->
             with(WeekMapper()) { week.roomToView(select, dayList) }
         }
     }
@@ -141,7 +206,11 @@ class GetWeekFun  @Inject constructor(
         }
     }
 
-    private suspend fun daysToWeek(week: WeekRoom, sel: Flow<SelectionView>, days: MutableList<Flow<DayView>>): Flow<WeekView> {
+    private suspend fun daysToWeek(
+        week: WeekRoom,
+        sel: Flow<SelectionView>,
+        days: MutableList<Flow<DayView>>
+    ): Flow<WeekView> {
         var list = flowOf(mutableListOf<DayView>())
         days.forEach {
             list = list.combine(it) { list, arr ->
@@ -153,9 +222,9 @@ class GetWeekFun  @Inject constructor(
         return list.combine(sel) { listr, selr ->
             with(WeekMapper()) { week.roomToView(selr, listr) }
         }
-    }
+    }*/
 
-    private suspend fun mapSelection(selectionAndRecipesInMenu: SelectionAndRecipesInMenu): Flow<SelectionView> {
+   /* private suspend fun mapSelection(selectionAndRecipesInMenu: SelectionAndRecipesInMenu): Flow<SelectionView> {
 
         val flowListPositionRecipe =
             positionRecipeRepository.getAllInSel(selectionAndRecipesInMenu.selectionRoom.selectionId)
@@ -169,11 +238,17 @@ class GetWeekFun  @Inject constructor(
         val flowListPositionDraft =
             positionDraftRepository.getAllInSel(selectionAndRecipesInMenu.selectionRoom.selectionId)
 
-        return selCombineToOurSelVariant(flowListPositionRecipe, flowListPositionIngredient, flowListPositionNote, flowListPositionDraft, selectionAndRecipesInMenu)
-    }
+        return selCombineToOurSelVariant(
+            flowListPositionRecipe,
+            flowListPositionIngredient,
+            flowListPositionNote,
+            flowListPositionDraft,
+            selectionAndRecipesInMenu
+        )
+    }*/
 
 
-    private fun selCombineToOurSel(
+   /* private fun selCombineToOurSel(
         flowListPositionRecipe: Flow<List<Position>>,
         flowListPositionIngredient: Flow<List<Position>>,
         flowListPositionNote: Flow<List<Position.PositionNoteView>>,
@@ -251,5 +326,5 @@ class GetWeekFun  @Inject constructor(
             }
             emit(sel)
         }
-    }
+    }*/
 }

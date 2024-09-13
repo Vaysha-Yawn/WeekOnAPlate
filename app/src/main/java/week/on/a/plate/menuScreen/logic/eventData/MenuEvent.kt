@@ -16,6 +16,7 @@ sealed class MenuEvent {
         val dateToLocalDate: LocalDate,
         val categoriesSelection: CategoriesSelection
     ) : MenuEvent()
+    class ChangeWeek(val date: LocalDate) : MenuEvent()
 }
 
 

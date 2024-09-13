@@ -19,7 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
-import week.on.a.plate.core.data.week.WeekView
 import week.on.a.plate.core.uitools.TextBodyDisActive
 import week.on.a.plate.menuScreen.logic.eventData.ActionDBData
 import week.on.a.plate.menuScreen.logic.eventData.DialogMenuData
@@ -31,7 +30,6 @@ import week.on.a.plate.ui.theme.ColorButtonNegativeGrey
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar(
-    weekView: WeekView,
     title: String,
     menuIUState: MenuIUState,
     onEvent: (event: MenuEvent) -> Unit

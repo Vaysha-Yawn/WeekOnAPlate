@@ -27,6 +27,7 @@ fun EditOtherPositionDialogContent(position:Position, onEvent: (MenuEvent) -> Un
             R.drawable.edit,
             "Редактировать",
         ){
+            onEvent(MenuEvent.CloseDialog)
             when(position){
                 is Position.PositionDraftView -> {
                     //nav
@@ -47,6 +48,7 @@ fun EditOtherPositionDialogContent(position:Position, onEvent: (MenuEvent) -> Un
             R.drawable.back_key,
             "Переместить",
         ){
+            onEvent(MenuEvent.CloseDialog)
             onEvent(MenuEvent.OpenDialog(DialogMenuData.MovePositionToMenu(state, position)))
         }
 
@@ -54,6 +56,7 @@ fun EditOtherPositionDialogContent(position:Position, onEvent: (MenuEvent) -> Un
             R.drawable.add,
             "Дублировать",
         ){
+            onEvent(MenuEvent.CloseDialog)
             onEvent(MenuEvent.OpenDialog(DialogMenuData.DoublePositionToMenu(state, position)))
         }
 
@@ -61,6 +64,7 @@ fun EditOtherPositionDialogContent(position:Position, onEvent: (MenuEvent) -> Un
             R.drawable.delete,
             "Удалить",
         ){
+            onEvent(MenuEvent.CloseDialog)
             onEvent(MenuEvent.ActionDBMenu(ActionDBData.Delete(position)))
         }
     }
