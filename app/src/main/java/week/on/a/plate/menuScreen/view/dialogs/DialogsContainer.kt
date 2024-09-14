@@ -1,15 +1,15 @@
 package week.on.a.plate.menuScreen.view.dialogs
 
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import week.on.a.plate.core.data.week.Position
+import week.on.a.plate.core.uitools.dialogs.BaseDialogContainer
 import week.on.a.plate.menuScreen.logic.eventData.DialogMenuData
 import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
 import week.on.a.plate.menuScreen.logic.stateData.MenuIUState
 import week.on.a.plate.menuScreen.view.dialogs.bottomSheets.AddIngredientBottomDialogContent
 import week.on.a.plate.menuScreen.view.dialogs.bottomSheets.AddNoteBottomDialogContent
-import week.on.a.plate.menuScreen.view.dialogs.bottomSheets.BottomDialogContainer
+import week.on.a.plate.core.uitools.dialogs.BottomDialogContainer
 import week.on.a.plate.menuScreen.view.dialogs.bottomSheets.ChangePortionsPanel
 import week.on.a.plate.menuScreen.view.dialogs.bottomSheets.EditIngredientBottomDialogContent
 import week.on.a.plate.menuScreen.view.dialogs.bottomSheets.EditNoteBottomDialogContent

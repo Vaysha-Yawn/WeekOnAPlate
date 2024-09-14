@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
@@ -34,7 +35,7 @@ fun AddPositionDialogContent(selId: Long?, onEvent: (MenuEvent) -> Unit) {
         val stateBottom = rememberModalBottomSheetState(skipPartiallyExpanded = true)
         ButtonRowPosition(
             R.drawable.add_recipe,
-            "Добавить рецепт",
+            stringResource(R.string.add_recipe),
         ) {
             eventWrapper(selId, onEvent, state){ id->
                 onEvent(MenuEvent.NavigateFromMenu(NavFromMenuData.NavToAddRecipe(id)))
@@ -43,7 +44,7 @@ fun AddPositionDialogContent(selId: Long?, onEvent: (MenuEvent) -> Unit) {
 
         ButtonRowPosition(
             R.drawable.add_food,
-            "Добавить ингредиент",
+            stringResource(R.string.add_ingredient),
         ) {
             eventWrapper(selId, onEvent, state){ id->
                 onEvent(MenuEvent.OpenDialog(DialogMenuData.AddIngredient(id, stateBottom)))
@@ -52,7 +53,7 @@ fun AddPositionDialogContent(selId: Long?, onEvent: (MenuEvent) -> Unit) {
 
         ButtonRowPosition(
             R.drawable.add_draft,
-            "Добавить набросок",
+            stringResource(R.string.add_draft),
         ) {
             eventWrapper(selId, onEvent, state){ id->
                 onEvent(MenuEvent.NavigateFromMenu(NavFromMenuData.NavToCreateDraft))
@@ -61,7 +62,7 @@ fun AddPositionDialogContent(selId: Long?, onEvent: (MenuEvent) -> Unit) {
 
         ButtonRowPosition(
             R.drawable.add_note,
-            "Добавить заметку"
+            stringResource(R.string.add_note),
         ) {
             eventWrapper(selId, onEvent, state){ id->
                 onEvent(MenuEvent.OpenDialog(DialogMenuData.AddNote(id, stateBottom)))

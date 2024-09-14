@@ -15,8 +15,10 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import week.on.a.plate.R
 import week.on.a.plate.core.data.example.positionRecipeExample
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.ButtonsCounter
@@ -34,7 +36,7 @@ fun ChangePortionsPanel(data: DialogMenuData.ChangePortionsCount, onEvent: (Menu
             .padding(24.dp), verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TextTitle(text = "Изменить количество порций")
+        TextTitle(text = stringResource(R.string.Change_number_of_servings))
         Spacer(modifier = Modifier.height(24.dp))
         Row(
             Modifier
@@ -53,7 +55,7 @@ fun ChangePortionsPanel(data: DialogMenuData.ChangePortionsCount, onEvent: (Menu
             })
         }
         Spacer(modifier = Modifier.height(24.dp))
-        DoneButton("Готово") {
+        DoneButton(stringResource(R.string.done)) {
             onEvent(MenuEvent.ActionDBMenu(ActionDBData.ChangePortionsCountDB(data)))
             onEvent(MenuEvent.CloseDialog)
         }

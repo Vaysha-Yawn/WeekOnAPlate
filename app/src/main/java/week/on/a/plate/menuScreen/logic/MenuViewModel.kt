@@ -2,6 +2,7 @@ package week.on.a.plate.menuScreen.logic
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetState
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.ui.text.capitalize
 import androidx.core.util.rangeTo
 import androidx.lifecycle.ViewModel
@@ -31,6 +32,7 @@ class MenuViewModel @Inject constructor(
     private val navigation: Navigation
 ) : ViewModel() {
 
+    lateinit var snackbarHostState: SnackbarHostState
     private var activeDay = LocalDate.now()
     //private val today = LocalDate.of(2024, 8, 28)
     val weekState: MutableStateFlow<WeekState> = MutableStateFlow(WeekState.Loading)
@@ -111,6 +113,12 @@ class MenuViewModel @Inject constructor(
             is MenuEvent.ChangeWeek -> {
                 activeDay = event.date
                 updateWeek()
+            }
+
+            is MenuEvent.ShowSnackBar -> {
+                viewModelScope.launch {
+                    snackbarHostState.showSnackbar(event.message)
+                }
             }
         }
     }

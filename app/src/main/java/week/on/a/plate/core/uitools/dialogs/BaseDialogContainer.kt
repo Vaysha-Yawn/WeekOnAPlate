@@ -1,4 +1,4 @@
-package week.on.a.plate.menuScreen.view.dialogs
+package week.on.a.plate.core.uitools.dialogs
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column

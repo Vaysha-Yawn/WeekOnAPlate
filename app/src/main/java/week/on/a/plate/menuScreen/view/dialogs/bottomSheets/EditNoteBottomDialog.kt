@@ -9,8 +9,10 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import week.on.a.plate.R
 import week.on.a.plate.core.data.example.positionNoteExample
 import week.on.a.plate.core.uitools.EditTextLine
 import week.on.a.plate.core.uitools.buttons.DoneButton
@@ -25,8 +27,8 @@ fun AddNoteBottomDialogContent(
     onEvent: (MenuEvent) -> Unit
 ) {
     EditOrAddNoteBottomDialogContent(
-        "Добавить заметку",
-        "Добавить",
+        stringResource(R.string.add_note),
+        stringResource(id = R.string.add),
         data.text){
         onEvent(MenuEvent.ActionDBMenu(ActionDBData.AddNoteDB(data)))
         onEvent(MenuEvent.CloseDialog)
@@ -39,8 +41,8 @@ fun EditNoteBottomDialogContent(
     onEvent: (MenuEvent) -> Unit
 ) {
     EditOrAddNoteBottomDialogContent(
-        "Редактировать заметку",
-        "Подтвердить",
+        stringResource(R.string.edit_note),
+        stringResource(R.string.apply),
         data.text){
         onEvent(MenuEvent.ActionDBMenu(ActionDBData.EditNoteDB(data)))
         onEvent(MenuEvent.CloseDialog)
@@ -58,7 +60,7 @@ fun EditOrAddNoteBottomDialogContent(
         EditTextLine(
             text,
             title,
-            "Введите текст заметки",
+            stringResource(R.string.enter_text_note),
         ) { text.value = it }
         Spacer(modifier = Modifier.height(24.dp))
         DoneButton(text = doneButtonText) { done() }

@@ -1,43 +1,32 @@
-package week.on.a.plate.core
+package week.on.a.plate.core.mainView
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.animateIntAsState
-import androidx.compose.animation.core.tween
+import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import week.on.a.plate.core.navigation.BottomBar
 import week.on.a.plate.core.navigation.Navigation
-import week.on.a.plate.core.navigation.bottomScreens
 import week.on.a.plate.ui.theme.ColorBackgroundWhite
-import week.on.a.plate.ui.theme.ColorPanelYellow
-import week.on.a.plate.ui.theme.ColorTransparent
 import week.on.a.plate.ui.theme.WeekOnAPlateTheme
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private val viewModel:MainViewModel by viewModels<MainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,9 +37,19 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize().background(ColorBackgroundWhite),
                     bottomBar = {
                         BottomBar(navController)
+                    }, snackbarHost = { SnackbarHost(hostState = viewModel.snackbarHostState) {
+                        if (viewModel.snackbarHostState.currentSnackbarData != null) {
+                            Snackbar(
+                                snackbarData = viewModel.snackbarHostState.currentSnackbarData!!,
+                                modifier = Modifier.padding(bottom = 80.dp),
+                                containerColor = MaterialTheme.colorScheme.surface,
+                                contentColor = MaterialTheme.colorScheme.onBackground
+                            )
+                        }
+                    }
                     }
                 ) { innerPadding ->
-                    Navigation(navController, innerPadding)
+                    Navigation(navController, innerPadding, viewModel.snackbarHostState)
                 }
             }
         }

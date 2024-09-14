@@ -1,3 +1,35 @@
 <resources>
     <string name="app_name">Week on a Plate</string>
+    <string name="done">Готово</string>
+    <string name="Portions">Порции</string>
+    <string name="data_not_found">Нет данных</string>
+    <string name="add_day">Добавить день</string>
+    <string name="Change_number_of_servings">Изменить количество порций</string>
+    <string name="add">Добавить</string>
+    <string name="apply">Подтвердить</string>
+    <string name="Ingredient">Ингредиент</string>
+    <string name="Specify_ingredient">Указать ингредиент</string>
+    <string name="message_non_validate_place_position_in_menu">Пожалуйста, выберите дату и прием пищи или выберите категорию На неделю</string>
+    <string name="message_select_ingredient">Пожалуйста, выберите ингредиент</string>
+    <string name="add_note">Добавить заметку</string>
+    <string name="edit_note">Редактировать заметку</string>
+    <string name="enter_text_note">Введите текст заметки</string>
+    <string name="select_day">Выберите день</string>
+    <string name="title_in_generally">В общем</string>
+    <string name="title_or_detailed">Или подробнее</string>
+    <string name="title_eating">Прием пищи:</string>
+    <string name="move_position">Переместить позицию</string>
+    <string name="add_to_menu">Добавить в меню</string>
+    <string name="add_recipe">Добавить рецепт</string>
+    <string name="add_draft">Добавить набросок</string>
+    <string name="add_ingredient">Добавить ингредиент</string>
+    <string name="edit">Редактировать</string>
+    <string name="move">Переместить</string>
+    <string name="doubleR">Дублировать</string>
+    <string name="delete">Удалить</string>
+    <string name="add_shopping_cart">Добавить в покупки</string>
+    <string name="change_recipe">Поменять рецепт</string>
+    <string name="week_nav"><![CDATA[<- Неделя]]></string>
+    <string name="day_nav"><![CDATA[<- День]]></string>
+    <string name="for_week">На неделю</string>
 </resources>

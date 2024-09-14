@@ -23,6 +23,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
@@ -47,7 +48,7 @@ fun AddIngredientBottomDialogContent(
     data: DialogMenuData.AddIngredient, onEvent: (MenuEvent) -> Unit
 ) {
     EditOrAddIngredientBottomDialogContent(
-        "Добавить",
+        stringResource(R.string.add),
         data.ingredientState,
         data.text,
         data.count,
@@ -64,7 +65,7 @@ fun EditIngredientBottomDialogContent(
     data: DialogMenuData.EditIngredient, onEvent: (MenuEvent) -> Unit
 ) {
     EditOrAddIngredientBottomDialogContent(
-        "Подтвердить",
+        stringResource(R.string.apply),
         data.ingredientState,
         data.text,
         data.count,
@@ -85,26 +86,8 @@ fun EditOrAddIngredientBottomDialogContent(
     onEvent: (MenuEvent) -> Unit,
     done: () -> Unit
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
-    Scaffold(
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState) {
-                if (snackbarHostState.currentSnackbarData != null) {
-                    Snackbar(
-                        snackbarData = snackbarHostState.currentSnackbarData!!,
-                        modifier = Modifier.padding(bottom = 80.dp),
-                        containerColor = MaterialTheme.colorScheme.surface,
-                        contentColor = MaterialTheme.colorScheme.onBackground
-                    )
-                }
-            }
-        }
-    ) { padding ->
-        padding
-
         Column(modifier = Modifier.padding(vertical = 24.dp)) {
-            TextBody(text = "Ингредиент", modifier = Modifier.padding(horizontal = 48.dp))
+            TextBody(text = stringResource(R.string.Ingredient), modifier = Modifier.padding(horizontal = 48.dp))
             Spacer(modifier = Modifier.height(12.dp))
             if (ingredientState.value != null) {
                 CardIngredient(ingredient = ingredientState.value!!, {
@@ -117,7 +100,7 @@ fun EditOrAddIngredientBottomDialogContent(
                     onEvent(MenuEvent.NavigateFromMenu(NavFromMenuData.NavToChooseIngredient))
                 }
             } else {
-                CommonButton("Указать ингредиент", R.drawable.search) {
+                CommonButton(stringResource(R.string.Specify_ingredient), R.drawable.search) {
                     onEvent(MenuEvent.NavigateFromMenu(NavFromMenuData.NavToChooseIngredient))
                 }
             }
@@ -143,20 +126,16 @@ fun EditOrAddIngredientBottomDialogContent(
                     count.doubleValue = newnum
                 }
             }
+            val messageError = stringResource(id = R.string.message_select_ingredient)
             Spacer(modifier = Modifier.height(24.dp))
             DoneButton(text = doneText, modifier = Modifier.padding(horizontal = 24.dp)) {
                 if (ingredientState.value!=null) {
                     done()
                 } else {
-                    scope.launch {
-                        snackbarHostState.showSnackbar(
-                            "Пожалуйста, выберите ингредиент"
-                        )
-                    }
+                   onEvent(MenuEvent.ShowSnackBar(messageError))
                 }
             }
         }
-    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

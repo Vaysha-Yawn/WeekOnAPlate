@@ -27,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -41,6 +42,7 @@ import week.on.a.plate.core.uitools.buttons.CloseButton
 import week.on.a.plate.core.uitools.buttons.CommonButton
 import week.on.a.plate.core.uitools.buttons.DoneButton
 import week.on.a.plate.menuScreen.logic.eventData.DialogMenuData
+import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
 import week.on.a.plate.ui.theme.WeekOnAPlateTheme
 import java.time.LocalDate
 
@@ -53,27 +55,10 @@ fun AddMoveDoubleRecipeDialogContent(
     checkWeek: MutableState<Boolean>,
     checkDayCategory: MutableState<CategoriesSelection?>,
     showDatePicker: MutableState<Boolean>,
+    event:(MenuEvent)->Unit,
     done: () -> Unit,
     close: () -> Unit,
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
-    Scaffold(
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState) {
-                if (snackbarHostState.currentSnackbarData != null) {
-                    Snackbar(
-                        snackbarData = snackbarHostState.currentSnackbarData!!,
-                        modifier = Modifier.padding(bottom = 80.dp),
-                        containerColor = MaterialTheme.colorScheme.surface,
-                        contentColor = MaterialTheme.colorScheme.onBackground
-                    )
-                }
-            }
-        }
-    ) { padding ->
-        padding
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -89,7 +74,7 @@ fun AddMoveDoubleRecipeDialogContent(
             )
             Spacer(modifier = Modifier.height(48.dp))
 
-            TextTitleItalic(text = "В общем", modifier = Modifier)
+            TextTitleItalic(text = stringResource(R.string.title_in_generally), modifier = Modifier)
             Spacer(modifier = Modifier.height(12.dp))
             Row(
                 Modifier
@@ -110,7 +95,7 @@ fun AddMoveDoubleRecipeDialogContent(
                 TextBody(text = CategoriesSelection.ForWeek.fullName)
             }
             Spacer(modifier = Modifier.height(24.dp))
-            TextTitleItalic(text = "Или подробнее", modifier = Modifier)
+            TextTitleItalic(text = stringResource(R.string.title_or_detailed), modifier = Modifier)
             Spacer(modifier = Modifier.height(12.dp))
             Column(
                 Modifier
@@ -119,14 +104,14 @@ fun AddMoveDoubleRecipeDialogContent(
                     .padding(horizontal = 12.dp, vertical = 12.dp),
             ) {
                 CommonButton(
-                    state.selectedDateMillis?.dateToString() ?: "Выберите день",
+                    state.selectedDateMillis?.dateToString() ?: stringResource(R.string.select_day),
                     R.drawable.calendar_no_dark
                 ) {
                     showDatePicker.value = true
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
-                TextBody(text = "Прием пищи:")
+                TextBody(text = stringResource(R.string.title_eating))
                 Spacer(modifier = Modifier.height(24.dp))
                 listOf(
                     CategoriesSelection.NonPosed,
@@ -158,16 +143,12 @@ fun AddMoveDoubleRecipeDialogContent(
                 }
             }
             Spacer(modifier = Modifier.weight(1f))
-
+            val messageError = stringResource(id = R.string.message_non_validate_place_position_in_menu)
             DoneButton("Готово") {
                 if (checkWeek.value || (state.selectedDateMillis?.dateToLocalDate() != null && checkDayCategory.value != null)) {
                     done()
                 } else {
-                    scope.launch {
-                        snackbarHostState.showSnackbar(
-                            "Пожалуйста, выберите дату и прием пищи или выберите категорию На неделю"
-                        )
-                    }
+                    event(MenuEvent.ShowSnackBar(messageError))
                 }
             }
         }
@@ -176,7 +157,7 @@ fun AddMoveDoubleRecipeDialogContent(
             showDatePicker,
             { showDatePicker.value = false }) { showDatePicker.value = false }
     }
-}
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)

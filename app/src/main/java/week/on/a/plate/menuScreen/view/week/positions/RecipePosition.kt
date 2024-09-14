@@ -19,7 +19,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import week.on.a.plate.R
 import week.on.a.plate.core.data.week.Position
 import week.on.a.plate.core.uitools.SubText
 import week.on.a.plate.core.uitools.TextSmall
@@ -44,7 +46,15 @@ fun WeekRecipePosition(
             .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(20.dp))
             .padding(20.dp)
             .combinedClickable(
-                onClick = { onEvent(MenuEvent.NavigateFromMenu(NavFromMenuData.NavToFullRecipe(recipe.recipe))) },
+                onClick = {
+                    onEvent(
+                        MenuEvent.NavigateFromMenu(
+                            NavFromMenuData.NavToFullRecipe(
+                                recipe.recipe
+                            )
+                        )
+                    )
+                },
                 onLongClick = { onEvent(MenuEvent.SwitchEditMode) },
             ),
         horizontalAlignment = Alignment.Start,
@@ -72,7 +82,7 @@ fun WeekRecipePosition(
             }
         }
         SubText(
-            "${recipe.portionsCount} Порции"
+            "${recipe.portionsCount}"+ stringResource(id = R.string.Portions)
         )
         TextSmall(
             recipe.recipe.name

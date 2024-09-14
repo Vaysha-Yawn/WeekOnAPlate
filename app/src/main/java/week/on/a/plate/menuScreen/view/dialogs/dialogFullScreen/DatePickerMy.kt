@@ -12,8 +12,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import week.on.a.plate.R
 import week.on.a.plate.core.uitools.buttons.DoneButton
 import week.on.a.plate.ui.theme.ColorButtonGreen
 import week.on.a.plate.ui.theme.ColorTextBlack
@@ -64,7 +66,7 @@ fun DatePickerMy(
                         dividerColor = MaterialTheme.colorScheme.outline,
                     )
                 )
-                DoneButton(text = "Подтвердить", Modifier.padding(12.dp)) {
+                DoneButton(text = stringResource(id = R.string.apply), Modifier.padding(12.dp)) {
                     done()
                 }
             }

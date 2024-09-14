@@ -2,6 +2,8 @@ package week.on.a.plate.menuScreen.view.dialogs.dialogFullScreen
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import week.on.a.plate.R
 import week.on.a.plate.core.data.week.CategoriesSelection
 import week.on.a.plate.menuScreen.logic.eventData.ActionDBData
 import week.on.a.plate.menuScreen.logic.eventData.DialogMenuData
@@ -15,7 +17,7 @@ fun SpecifyDatePositionDialogContent(
     onEvent: (MenuEvent) -> Unit
 ) {
     AddMoveDoubleRecipeDialogContent("Добавить позицию",
-        data.state, data.checkWeek, data.checkDayCategory, data.showDatePicker,
+        data.state, data.checkWeek, data.checkDayCategory, data.showDatePicker, onEvent,
         {
             onEvent(MenuEvent.GetSelIdAndCreate(data.eventAfter, data.state.selectedDateMillis!!.dateToLocalDate(),
                 if (data.checkWeek.value) {
@@ -36,7 +38,7 @@ fun DoublePositionDialogContent(
     onEvent: (MenuEvent) -> Unit
 ) {
     AddMoveDoubleRecipeDialogContent("Дублировать позицию",
-        data.state, data.checkWeek, data.checkDayCategory, data.showDatePicker,
+        data.state, data.checkWeek, data.checkDayCategory, data.showDatePicker,onEvent,
         {
             onEvent(
                 MenuEvent.ActionDBMenu(
@@ -63,8 +65,9 @@ fun MovePositionDialogContent(
     data: DialogMenuData.MovePositionToMenu,
     onEvent: (MenuEvent) -> Unit
 ) {
-    AddMoveDoubleRecipeDialogContent("Переместить позицию",
-        data.state, data.checkWeek, data.checkDayCategory, data.showDatePicker,
+    AddMoveDoubleRecipeDialogContent(
+        stringResource(R.string.move_position),
+        data.state, data.checkWeek, data.checkDayCategory, data.showDatePicker,onEvent,
         {
             onEvent(
                 MenuEvent.ActionDBMenu(
@@ -118,8 +121,9 @@ fun AddRecipeDialogContent(data: DialogMenuData.AddPositionToMenu, onEvent: (Men
 
     data.state.selectedDateMillis = data.date.toEpochDay()
 
-    AddMoveDoubleRecipeDialogContent("Добавить в меню",
-        data.state, data.checkWeek, data.checkDayCategory, data.showDatePicker,
+    AddMoveDoubleRecipeDialogContent(
+        stringResource(R.string.add_to_menu),
+        data.state, data.checkWeek, data.checkDayCategory, data.showDatePicker,onEvent,
         {
             val eventAfter:(Long)->Unit = {id->
                 onEvent(

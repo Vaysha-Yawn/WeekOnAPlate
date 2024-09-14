@@ -16,7 +16,7 @@
         android:theme="@style/Theme.WeekOnAPlate"
         tools:targetApi="31">
         <activity
-            android:name=".core.MainActivity"
+            android:name=".core.mainView.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:windowSoftInputMode="adjustResize"

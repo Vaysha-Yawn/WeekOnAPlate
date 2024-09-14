@@ -32,8 +32,8 @@ import week.on.a.plate.ui.theme.paddingCommon
 @Composable
 fun ButtonsCounter(
     value: State<Int>,
-    plus: () -> Unit,
     minus: () -> Unit,
+    plus: () -> Unit,
 ) {
     Row(
         horizontalArrangement = Arrangement.Absolute.Center, modifier = Modifier

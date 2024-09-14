@@ -1,5 +1,6 @@
 package week.on.a.plate.menuScreen.view.main
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,8 +30,12 @@ import week.on.a.plate.menuScreen.view.uiTools.TopBar
 import week.on.a.plate.ui.theme.WeekOnAPlateTheme
 import java.time.LocalDate
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun MenuScreen(viewModel: MenuViewModel = hiltViewModel()) {
+fun MenuScreen(viewModel: MenuViewModel = hiltViewModel(), snackbarHostState: SnackbarHostState) {
+
+    viewModel.snackbarHostState = snackbarHostState
+
     val uiState = viewModel.weekState.collectAsStateWithLifecycle().value
     when (uiState) {
         WeekState.EmptyWeek -> {}

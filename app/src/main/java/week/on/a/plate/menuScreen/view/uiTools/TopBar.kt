@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.core.uitools.TextBodyDisActive
@@ -54,7 +55,9 @@ fun TopBar(
                 }, menuIUState.isAllSelected.value)
             } else {
                 TextBodyDisActive(
-                    text = if (menuIUState.itsDayMenu.value) "<- Неделя" else "<- День",
+                    text = if (menuIUState.itsDayMenu.value) stringResource(R.string.week_nav) else stringResource(
+                        R.string.day_nav
+                    ),
                     modifier = Modifier
                         .clickable {
                             onEvent(MenuEvent.SwitchWeekOrDayView)
@@ -70,7 +73,9 @@ fun TopBar(
                     modifier = Modifier
                         .clickable {
                             onEvent(MenuEvent.OpenDialog(DialogMenuData.ChooseDay(dateState)))
-                        }.padding(6.dp).size(24.dp)
+                        }
+                        .padding(6.dp)
+                        .size(24.dp)
                 )
                 TitleMenuSmall(title) {
                     onEvent(

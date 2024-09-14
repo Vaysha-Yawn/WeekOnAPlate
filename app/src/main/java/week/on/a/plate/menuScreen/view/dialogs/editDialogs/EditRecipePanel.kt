@@ -14,6 +14,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
@@ -34,7 +35,7 @@ fun EditRecipePositionDialogContent(recipe: Position.PositionRecipeView, onEvent
         val stateBottom = rememberModalBottomSheetState(skipPartiallyExpanded = true)
         ButtonRow(
             R.drawable.add_shopping_cart,
-            "Добавить в покупки",
+            stringResource(R.string.add_shopping_cart),
         ) {
             onEvent(MenuEvent.CloseDialog)
             onEvent(MenuEvent.OpenDialog(DialogMenuData.ToShopList(recipe)))
@@ -42,7 +43,7 @@ fun EditRecipePositionDialogContent(recipe: Position.PositionRecipeView, onEvent
 
         ButtonRow(
             R.drawable.add,
-            "Дублировать",
+            stringResource(R.string.doubleR),
         ) {
             onEvent(MenuEvent.CloseDialog)
             onEvent(MenuEvent.OpenDialog(DialogMenuData.DoublePositionToMenu(state, recipe)))
@@ -50,7 +51,7 @@ fun EditRecipePositionDialogContent(recipe: Position.PositionRecipeView, onEvent
 
         ButtonRow(
             R.drawable.delete,
-            "Удалить",
+            stringResource(R.string.delete),
         ) {
             onEvent(MenuEvent.CloseDialog)
             onEvent(MenuEvent.ActionDBMenu(ActionDBData.Delete(recipe)))
@@ -58,7 +59,7 @@ fun EditRecipePositionDialogContent(recipe: Position.PositionRecipeView, onEvent
 
         ButtonRow(
             R.drawable.find_replace,
-            "Поменять рецепт",
+            stringResource(R.string.change_recipe),
         ) {
             onEvent(MenuEvent.CloseDialog)
             onEvent(MenuEvent.NavigateFromMenu(NavFromMenuData.FindReplaceRecipe(recipe)))
@@ -66,7 +67,7 @@ fun EditRecipePositionDialogContent(recipe: Position.PositionRecipeView, onEvent
 
         ButtonRow(
             R.drawable.numbers,
-            "Изменить кол-во порций"
+            stringResource(R.string.Change_number_of_servings)
         ) {
             onEvent(MenuEvent.CloseDialog)
             onEvent(
@@ -78,7 +79,7 @@ fun EditRecipePositionDialogContent(recipe: Position.PositionRecipeView, onEvent
 
         ButtonRow(
             R.drawable.back_key,
-            "Переместить",
+            stringResource(R.string.move),
         ) {
             onEvent(MenuEvent.CloseDialog)
             onEvent(
