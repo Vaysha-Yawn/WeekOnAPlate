@@ -21,8 +21,8 @@ import week.on.a.plate.R
 import week.on.a.plate.core.data.example.positionRecipeExample
 import week.on.a.plate.core.data.week.Position
 import week.on.a.plate.core.uitools.TextBody
-import week.on.a.plate.menuScreen.logic.eventData.ActionDBData
-import week.on.a.plate.menuScreen.logic.eventData.DialogMenuData
+import week.on.a.plate.menuScreen.logic.eventData.ActionMenuDBData
+import week.on.a.plate.menuScreen.logic.eventData.DialogData
 import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
 import week.on.a.plate.menuScreen.logic.eventData.NavFromMenuData
 import week.on.a.plate.ui.theme.WeekOnAPlateTheme
@@ -38,7 +38,7 @@ fun EditRecipePositionDialogContent(recipe: Position.PositionRecipeView, onEvent
             stringResource(R.string.add_shopping_cart),
         ) {
             onEvent(MenuEvent.CloseDialog)
-            onEvent(MenuEvent.OpenDialog(DialogMenuData.ToShopList(recipe)))
+            onEvent(MenuEvent.OpenDialog(DialogData.ToShopList(recipe, onEvent)))
         }
 
         ButtonRow(
@@ -46,7 +46,7 @@ fun EditRecipePositionDialogContent(recipe: Position.PositionRecipeView, onEvent
             stringResource(R.string.doubleR),
         ) {
             onEvent(MenuEvent.CloseDialog)
-            onEvent(MenuEvent.OpenDialog(DialogMenuData.DoublePositionToMenu(state, recipe)))
+            onEvent(MenuEvent.NavigateFromMenu(NavFromMenuData.DoublePositionToMenu(recipe)))
         }
 
         ButtonRow(
@@ -54,7 +54,7 @@ fun EditRecipePositionDialogContent(recipe: Position.PositionRecipeView, onEvent
             stringResource(R.string.delete),
         ) {
             onEvent(MenuEvent.CloseDialog)
-            onEvent(MenuEvent.ActionDBMenu(ActionDBData.Delete(recipe)))
+            onEvent(MenuEvent.ActionDBMenu(ActionMenuDBData.Delete(recipe)))
         }
 
         ButtonRow(
@@ -72,7 +72,7 @@ fun EditRecipePositionDialogContent(recipe: Position.PositionRecipeView, onEvent
             onEvent(MenuEvent.CloseDialog)
             onEvent(
                 MenuEvent.OpenDialog(
-                    DialogMenuData.ChangePortionsCount(recipe, stateBottom)
+                    DialogData.ChangePortionsCount(recipe, stateBottom, onEvent)
                 )
             )
         }
@@ -82,11 +82,7 @@ fun EditRecipePositionDialogContent(recipe: Position.PositionRecipeView, onEvent
             stringResource(R.string.move),
         ) {
             onEvent(MenuEvent.CloseDialog)
-            onEvent(
-                MenuEvent.OpenDialog(
-                    DialogMenuData.MovePositionToMenu(state, recipe)
-                )
-            )
+            onEvent(MenuEvent.NavigateFromMenu(NavFromMenuData.MovePositionToMenu(recipe)))
         }
     }
 }

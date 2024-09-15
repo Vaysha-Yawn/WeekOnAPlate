@@ -49,7 +49,7 @@ val dayMenuExample = mutableListOf(
         mutableListOf(positionIngredientExample)
     ),
 )
-
+val emptyDayWithoutSel = mutableListOf<SelectionView>()
 val emptyDay = mutableListOf(
     SelectionView(0, CategoriesSelection.NonPosed.fullName, mutableListOf()),
     SelectionView(1, CategoriesSelection.Breakfast.fullName, mutableListOf()),

@@ -21,8 +21,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.core.uitools.TextBodyDisActive
-import week.on.a.plate.menuScreen.logic.eventData.ActionDBData
-import week.on.a.plate.menuScreen.logic.eventData.DialogMenuData
+import week.on.a.plate.menuScreen.logic.eventData.ActionMenuDBData
+import week.on.a.plate.menuScreen.logic.eventData.DialogData
 import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
 import week.on.a.plate.menuScreen.logic.eventData.SelectedData
 import week.on.a.plate.menuScreen.logic.stateData.MenuIUState
@@ -49,9 +49,9 @@ fun TopBar(
                 EditingRow(actionChooseAll = {
                     onEvent(MenuEvent.ActionSelect(SelectedData.ChooseAll))
                 }, actionDeleteSelected = {
-                    onEvent(MenuEvent.ActionDBMenu(ActionDBData.DeleteSelected))
+                    onEvent(MenuEvent.ActionDBMenu(ActionMenuDBData.DeleteSelected))
                 }, actionSelectedToShopList = {
-                    onEvent(MenuEvent.OpenDialog(DialogMenuData.SelectedToShopList))
+                    onEvent(MenuEvent.OpenDialog(DialogData.SelectedToShopList( onEvent)))
                 }, menuIUState.isAllSelected.value)
             } else {
                 TextBodyDisActive(
@@ -72,7 +72,7 @@ fun TopBar(
                     contentDescription = "",
                     modifier = Modifier
                         .clickable {
-                            onEvent(MenuEvent.OpenDialog(DialogMenuData.ChooseDay(dateState)))
+                            onEvent(MenuEvent.OpenDialog(DialogData.ChooseDay(dateState, onEvent)))
                         }
                         .padding(6.dp)
                         .size(24.dp)
@@ -80,7 +80,7 @@ fun TopBar(
                 TitleMenuSmall(title) {
                     onEvent(
                         MenuEvent.OpenDialog(
-                            DialogMenuData.AddPositionNeedSelId()
+                            DialogData.AddPositionNeedSelId(onEvent)
                         )
                     )
                 }

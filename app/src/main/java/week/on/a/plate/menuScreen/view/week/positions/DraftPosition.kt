@@ -24,7 +24,7 @@ import week.on.a.plate.R
 import week.on.a.plate.core.data.week.Position
 import week.on.a.plate.core.uitools.TagSmall
 import week.on.a.plate.core.uitools.buttons.MoreButtonWithBackg
-import week.on.a.plate.menuScreen.logic.eventData.DialogMenuData
+import week.on.a.plate.menuScreen.logic.eventData.DialogData
 import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
 import week.on.a.plate.menuScreen.logic.eventData.NavFromMenuData
 
@@ -54,7 +54,7 @@ fun WeekDraftPosition(
                     .clickable { onEvent(MenuEvent.NavigateFromMenu(NavFromMenuData.SearchByDraft(draft))) },
             )
             MoreButtonWithBackg {
-                onEvent(MenuEvent.OpenDialog(DialogMenuData.EditPosition(draft)))
+                onEvent(MenuEvent.OpenDialog(DialogData.EditPosition(draft, onEvent)))
             }
         }
         Spacer(modifier = Modifier.size(10.dp))

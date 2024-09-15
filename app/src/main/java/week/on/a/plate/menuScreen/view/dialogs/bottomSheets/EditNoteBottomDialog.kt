@@ -16,35 +16,31 @@ import week.on.a.plate.R
 import week.on.a.plate.core.data.example.positionNoteExample
 import week.on.a.plate.core.uitools.EditTextLine
 import week.on.a.plate.core.uitools.buttons.DoneButton
-import week.on.a.plate.menuScreen.logic.eventData.ActionDBData
-import week.on.a.plate.menuScreen.logic.eventData.DialogMenuData
+import week.on.a.plate.menuScreen.logic.eventData.ActionMenuDBData
+import week.on.a.plate.menuScreen.logic.eventData.DialogData
 import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
 import week.on.a.plate.ui.theme.WeekOnAPlateTheme
 
 @Composable
 fun AddNoteBottomDialogContent(
-    data: DialogMenuData.AddNote,
-    onEvent: (MenuEvent) -> Unit
+    data: DialogData.AddNote,
 ) {
     EditOrAddNoteBottomDialogContent(
         stringResource(R.string.add_note),
         stringResource(id = R.string.add),
-        data.text){
-        onEvent(MenuEvent.ActionDBMenu(ActionDBData.AddNoteDB(data)))
-        onEvent(MenuEvent.CloseDialog)
-    }
+        data.text, data.done)
 }
 
 @Composable
 fun EditNoteBottomDialogContent(
-    data: DialogMenuData.EditNote,
+    data: DialogData.EditNote,
     onEvent: (MenuEvent) -> Unit
 ) {
     EditOrAddNoteBottomDialogContent(
         stringResource(R.string.edit_note),
         stringResource(R.string.apply),
         data.text){
-        onEvent(MenuEvent.ActionDBMenu(ActionDBData.EditNoteDB(data)))
+        onEvent(MenuEvent.ActionDBMenu(ActionMenuDBData.EditNoteDB(data)))
         onEvent(MenuEvent.CloseDialog)
     }
 }
@@ -73,6 +69,6 @@ fun EditOrAddNoteBottomDialogContent(
 fun PreviewEditNoteBottomDialog() {
     WeekOnAPlateTheme {
         val stateBottom = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-        EditNoteBottomDialogContent(DialogMenuData.EditNote(positionNoteExample, stateBottom)) {}
+        EditNoteBottomDialogContent(DialogData.EditNote(positionNoteExample, stateBottom, {})) {}
     }
 }

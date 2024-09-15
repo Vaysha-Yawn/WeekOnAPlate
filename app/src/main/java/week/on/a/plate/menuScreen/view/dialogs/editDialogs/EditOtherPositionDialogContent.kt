@@ -13,8 +13,8 @@ import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.core.data.example.positionRecipeExample
 import week.on.a.plate.core.data.week.Position
-import week.on.a.plate.menuScreen.logic.eventData.ActionDBData
-import week.on.a.plate.menuScreen.logic.eventData.DialogMenuData
+import week.on.a.plate.menuScreen.logic.eventData.ActionMenuDBData
+import week.on.a.plate.menuScreen.logic.eventData.DialogData
 import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
 import week.on.a.plate.ui.theme.WeekOnAPlateTheme
 
@@ -34,10 +34,10 @@ fun EditOtherPositionDialogContent(position:Position, onEvent: (MenuEvent) -> Un
                     //nav
                 }
                 is Position.PositionIngredientView -> {
-                    onEvent(MenuEvent.OpenDialog(DialogMenuData.EditIngredient(position, stateBottom)))
+                    onEvent(MenuEvent.OpenDialog(DialogData.EditIngredient(position, stateBottom, onEvent)))
                 }
                 is Position.PositionNoteView -> {
-                    onEvent(MenuEvent.OpenDialog(DialogMenuData.EditNote( position, stateBottom)))
+                    onEvent(MenuEvent.OpenDialog(DialogData.EditNote( position, stateBottom, onEvent)))
                 }
                 is Position.PositionRecipeView -> {
                     //nope
@@ -50,7 +50,7 @@ fun EditOtherPositionDialogContent(position:Position, onEvent: (MenuEvent) -> Un
             stringResource(R.string.move),
         ){
             onEvent(MenuEvent.CloseDialog)
-            onEvent(MenuEvent.OpenDialog(DialogMenuData.MovePositionToMenu(state, position)))
+            onEvent(MenuEvent.OpenDialog(DialogData.MovePositionToMenu(state, position, onEvent)))
         }
 
         ButtonRow(
@@ -58,7 +58,7 @@ fun EditOtherPositionDialogContent(position:Position, onEvent: (MenuEvent) -> Un
             stringResource(R.string.doubleR),
         ){
             onEvent(MenuEvent.CloseDialog)
-            onEvent(MenuEvent.OpenDialog(DialogMenuData.DoublePositionToMenu(state, position)))
+            onEvent(MenuEvent.OpenDialog(DialogData.DoublePositionToMenu(state, position, onEvent)))
         }
 
         ButtonRow(
@@ -66,7 +66,7 @@ fun EditOtherPositionDialogContent(position:Position, onEvent: (MenuEvent) -> Un
             stringResource(R.string.delete),
         ){
             onEvent(MenuEvent.CloseDialog)
-            onEvent(MenuEvent.ActionDBMenu(ActionDBData.Delete(position)))
+            onEvent(MenuEvent.ActionDBMenu(ActionMenuDBData.Delete(position)))
         }
     }
 }

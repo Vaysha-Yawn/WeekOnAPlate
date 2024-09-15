@@ -17,7 +17,9 @@ fun BlockCalendar(days: MutableList<DayView>, today: LocalDate, activeDayInd: In
                 day.dayInWeek.shortName,
                 itToday = (day.date == today),
                 itPlanned = (day.selections.any { sel -> sel.positions.isNotEmpty() }),
-                (day == days[activeDayInd]),
+                if (days.size == 7){
+                    (day == days[activeDayInd])
+                }else false,
                 ind,
                 changeDay
             )

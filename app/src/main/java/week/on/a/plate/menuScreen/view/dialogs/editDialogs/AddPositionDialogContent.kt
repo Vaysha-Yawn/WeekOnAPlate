@@ -20,9 +20,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
-import week.on.a.plate.core.data.week.Position
 import week.on.a.plate.core.uitools.TextBody
-import week.on.a.plate.menuScreen.logic.eventData.DialogMenuData
+import week.on.a.plate.menuScreen.logic.eventData.DialogData
 import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
 import week.on.a.plate.menuScreen.logic.eventData.NavFromMenuData
 import week.on.a.plate.ui.theme.WeekOnAPlateTheme
@@ -47,7 +46,7 @@ fun AddPositionDialogContent(selId: Long?, onEvent: (MenuEvent) -> Unit) {
             stringResource(R.string.add_ingredient),
         ) {
             eventWrapper(selId, onEvent, state){ id->
-                onEvent(MenuEvent.OpenDialog(DialogMenuData.AddIngredient(id, stateBottom)))
+                onEvent(MenuEvent.OpenDialog(DialogData.AddIngredient(id, stateBottom, onEvent)))
             }
         }
 
@@ -65,7 +64,7 @@ fun AddPositionDialogContent(selId: Long?, onEvent: (MenuEvent) -> Unit) {
             stringResource(R.string.add_note),
         ) {
             eventWrapper(selId, onEvent, state){ id->
-                onEvent(MenuEvent.OpenDialog(DialogMenuData.AddNote(id, stateBottom)))
+                onEvent(MenuEvent.OpenDialog(DialogData.AddNote(id, stateBottom, onEvent)))
             }
         }
     }
@@ -82,7 +81,7 @@ private fun eventWrapper(
     if (selId != null) {
         event(selId)
     } else {
-        onEvent(MenuEvent.OpenDialog(DialogMenuData.SpecifyDate(state) { newId ->
+        onEvent(MenuEvent.OpenDialog(DialogData.SpecifyDate(state, onEvent) { newId ->
             event(newId)
         }))
     }

@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import week.on.a.plate.core.data.example.WeekDataExample
 import week.on.a.plate.core.data.week.Position
 import week.on.a.plate.core.uitools.buttons.MoreButton
-import week.on.a.plate.menuScreen.logic.eventData.DialogMenuData
+import week.on.a.plate.menuScreen.logic.eventData.DialogData
 import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
 import week.on.a.plate.menuScreen.logic.stateData.MenuIUState
 import week.on.a.plate.menuScreen.view.day.BlockSelection
@@ -67,7 +67,7 @@ fun CardPosition(
                 }
             }
             MoreButton {
-                onEvent(MenuEvent.OpenDialog(DialogMenuData.EditPosition(position)))
+                onEvent(MenuEvent.OpenDialog(DialogData.EditPosition(position, onEvent)))
             }
         }
     }

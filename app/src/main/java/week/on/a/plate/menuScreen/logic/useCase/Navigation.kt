@@ -1,13 +1,17 @@
 package week.on.a.plate.menuScreen.logic.useCase
 
+import androidx.navigation.NavHostController
 import week.on.a.plate.core.data.week.Position
 import week.on.a.plate.core.data.week.RecipeShortView
 import javax.inject.Inject
 
 class Navigation @Inject constructor() {
 
-    fun actionNavToFullRecipe(rec: RecipeShortView){
+    lateinit var navController: NavHostController
 
+    fun actionNavToFullRecipe(rec: RecipeShortView){
+       // navController.navigate()
+        //navController.popBackStack()
     }
 
     fun actionShowEditDialog(id: Position){

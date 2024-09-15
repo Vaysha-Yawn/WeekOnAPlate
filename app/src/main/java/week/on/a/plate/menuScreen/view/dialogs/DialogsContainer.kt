@@ -4,21 +4,17 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import week.on.a.plate.core.data.week.Position
 import week.on.a.plate.core.uitools.dialogs.BaseDialogContainer
-import week.on.a.plate.menuScreen.logic.eventData.DialogMenuData
+import week.on.a.plate.core.uitools.dialogs.BottomDialogContainer
+import week.on.a.plate.fullScreenDialogs.dialogFullScreen.DatePickerMy
+import week.on.a.plate.core.tools.dateToLocalDate
+import week.on.a.plate.menuScreen.logic.eventData.DialogData
 import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
 import week.on.a.plate.menuScreen.logic.stateData.MenuIUState
 import week.on.a.plate.menuScreen.view.dialogs.bottomSheets.AddIngredientBottomDialogContent
 import week.on.a.plate.menuScreen.view.dialogs.bottomSheets.AddNoteBottomDialogContent
-import week.on.a.plate.core.uitools.dialogs.BottomDialogContainer
-import week.on.a.plate.menuScreen.view.dialogs.bottomSheets.ChangePortionsPanel
+import week.on.a.plate.menuScreen.view.dialogs.bottomSheets.ChangePortionsPanelDialogWrapper
 import week.on.a.plate.menuScreen.view.dialogs.bottomSheets.EditIngredientBottomDialogContent
 import week.on.a.plate.menuScreen.view.dialogs.bottomSheets.EditNoteBottomDialogContent
-import week.on.a.plate.menuScreen.view.dialogs.dialogFullScreen.AddRecipeDialogContent
-import week.on.a.plate.menuScreen.view.dialogs.dialogFullScreen.DatePickerMy
-import week.on.a.plate.menuScreen.view.dialogs.dialogFullScreen.DoublePositionDialogContent
-import week.on.a.plate.menuScreen.view.dialogs.dialogFullScreen.MovePositionDialogContent
-import week.on.a.plate.menuScreen.view.dialogs.dialogFullScreen.SpecifyDatePositionDialogContent
-import week.on.a.plate.menuScreen.view.dialogs.dialogFullScreen.dateToLocalDate
 import week.on.a.plate.menuScreen.view.dialogs.editDialogs.AddPositionDialogContent
 import week.on.a.plate.menuScreen.view.dialogs.editDialogs.EditOtherPositionDialogContent
 import week.on.a.plate.menuScreen.view.dialogs.editDialogs.EditRecipePositionDialogContent
@@ -29,67 +25,50 @@ fun DialogsContainer(uiState: MenuIUState, onEvent: (event: MenuEvent) -> Unit) 
     val data = uiState.dialogState.value
 
     when (data) {
-        is DialogMenuData.AddIngredient -> {
+        is DialogData.AddIngredient -> {
             BottomDialogContainer(data.sheetState, { onEvent(MenuEvent.CloseDialog) }) {
                 AddIngredientBottomDialogContent(data, onEvent)
             }
         }
 
-        is DialogMenuData.AddNote -> {
+        is DialogData.AddNote -> {
             BottomDialogContainer(data.sheetState, { onEvent(MenuEvent.CloseDialog) }) {
-                AddNoteBottomDialogContent(data, onEvent)
+                AddNoteBottomDialogContent(data)
             }
         }
 
-        is DialogMenuData.EditIngredient -> {
+        is DialogData.EditIngredient -> {
             BottomDialogContainer(data.sheetState, { onEvent(MenuEvent.CloseDialog) }) {
                 EditIngredientBottomDialogContent(data, onEvent)
             }
         }
 
-        is DialogMenuData.EditNote -> {
+        is DialogData.EditNote -> {
             BottomDialogContainer(data.sheetState, { onEvent(MenuEvent.CloseDialog) }) {
                 EditNoteBottomDialogContent(data, onEvent)
             }
         }
 
-        is DialogMenuData.AddPosition -> {
+        is DialogData.AddPosition -> {
             BaseDialogContainer(data.show, { onEvent(MenuEvent.CloseDialog) }) {
                 AddPositionDialogContent(data.selectionId, onEvent)
             }
         }
 
-        is DialogMenuData.AddPositionNeedSelId -> {
+        is DialogData.AddPositionNeedSelId -> {
             BaseDialogContainer(data.show, { onEvent(MenuEvent.CloseDialog) }) {
                 AddPositionDialogContent(null, onEvent)
             }
         }
 
-        is DialogMenuData.ChangePortionsCount -> {
+        is DialogData.ChangePortionsCount -> {
             BottomDialogContainer(data.sheetState, { onEvent(MenuEvent.CloseDialog) }) {
-                ChangePortionsPanel(data, onEvent)
+                ChangePortionsPanelDialogWrapper(data)
             }
         }
 
-        is DialogMenuData.AddPositionToMenu -> {
-            BaseDialogContainer(data.show, { onEvent(MenuEvent.CloseDialog) }) {
-                AddRecipeDialogContent(data = data, onEvent)
-            }
-        }
 
-        is DialogMenuData.DoublePositionToMenu -> {
-            BaseDialogContainer(data.show, { onEvent(MenuEvent.CloseDialog) }) {
-                DoublePositionDialogContent(data = data, onEvent)
-            }
-        }
-
-        is DialogMenuData.MovePositionToMenu -> {
-            BaseDialogContainer(data.show, { onEvent(MenuEvent.CloseDialog) }) {
-                MovePositionDialogContent(data = data, onEvent)
-            }
-        }
-
-        is DialogMenuData.EditPosition -> {
+        is DialogData.EditPosition -> {
             BaseDialogContainer(data.show, { onEvent(MenuEvent.CloseDialog) }) {
                 if (data.position is Position.PositionRecipeView) {
                     EditRecipePositionDialogContent(data.position, onEvent)
@@ -99,15 +78,15 @@ fun DialogsContainer(uiState: MenuIUState, onEvent: (event: MenuEvent) -> Unit) 
             }
         }
 
-        is DialogMenuData.SelectedToShopList -> {
+        is DialogData.SelectedToShopList -> {
             //
         }
 
-        is DialogMenuData.ToShopList -> {
+        is DialogData.ToShopList -> {
             //
         }
 
-        is DialogMenuData.ChooseDay -> {
+        is DialogData.ChooseDay -> {
             DatePickerMy(
                 data.state,
                 data.show,
@@ -116,7 +95,7 @@ fun DialogsContainer(uiState: MenuIUState, onEvent: (event: MenuEvent) -> Unit) 
                     data.show.value = false
                 }) {
                 val date = data.state.selectedDateMillis
-                if (date!=null){
+                if (date != null) {
                     onEvent(MenuEvent.ChangeWeek(date.dateToLocalDate()))
                 }
                 onEvent(MenuEvent.CloseDialog)
@@ -124,12 +103,13 @@ fun DialogsContainer(uiState: MenuIUState, onEvent: (event: MenuEvent) -> Unit) 
             }
         }
 
-        null -> {}
 
-        is DialogMenuData.SpecifyDate -> {
-            BaseDialogContainer(data.show, { onEvent(MenuEvent.CloseDialog) }) {
-                SpecifyDatePositionDialogContent(data, onEvent)
-            }
-        }
+        is DialogData.CreateCategoryIngredient -> TODO()
+        is DialogData.CreateIngredient -> TODO()
+        is DialogData.FindIngredient -> TODO()
+        is DialogData.SelectCategoryIngredient -> TODO()
+        is DialogData.SelectIngredients -> TODO()
+
+        null -> {}
     }
 }

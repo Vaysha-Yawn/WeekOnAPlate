@@ -23,7 +23,7 @@ import week.on.a.plate.R
 import week.on.a.plate.core.data.week.Position
 import week.on.a.plate.core.uitools.TextSmall
 import week.on.a.plate.core.uitools.buttons.MoreButtonWithBackg
-import week.on.a.plate.menuScreen.logic.eventData.DialogMenuData
+import week.on.a.plate.menuScreen.logic.eventData.DialogData
 import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -51,7 +51,7 @@ fun WeekNotePosition(
                     .size(24.dp),
             )
             MoreButtonWithBackg {
-                onEvent(MenuEvent.OpenDialog(DialogMenuData.EditPosition(note)))
+                onEvent(MenuEvent.OpenDialog(DialogData.EditPosition(note, onEvent)))
             }
         }
         Spacer(modifier = Modifier.size(12.dp))

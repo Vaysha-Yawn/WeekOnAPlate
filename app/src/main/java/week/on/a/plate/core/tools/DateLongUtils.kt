@@ -1,4 +1,4 @@
-package week.on.a.plate.menuScreen.view.dialogs.dialogFullScreen
+package week.on.a.plate.core.tools
 
 import java.text.SimpleDateFormat
 import java.time.LocalDate

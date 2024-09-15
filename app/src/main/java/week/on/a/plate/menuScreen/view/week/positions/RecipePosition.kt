@@ -27,7 +27,7 @@ import week.on.a.plate.core.uitools.SubText
 import week.on.a.plate.core.uitools.TextSmall
 import week.on.a.plate.core.uitools.buttons.CheckButton
 import week.on.a.plate.core.uitools.buttons.MoreButtonWithBackg
-import week.on.a.plate.menuScreen.logic.eventData.DialogMenuData
+import week.on.a.plate.menuScreen.logic.eventData.DialogData
 import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
 import week.on.a.plate.menuScreen.logic.stateData.MenuIUState
 import week.on.a.plate.menuScreen.logic.eventData.NavFromMenuData
@@ -77,7 +77,7 @@ fun WeekRecipePosition(
                     Spacer(modifier = Modifier.height(20.dp))
                 }
                 MoreButtonWithBackg {
-                    onEvent(MenuEvent.OpenDialog(DialogMenuData.EditPosition(recipe)))
+                    onEvent(MenuEvent.OpenDialog(DialogData.EditPosition(recipe, onEvent)))
                 }
             }
         }

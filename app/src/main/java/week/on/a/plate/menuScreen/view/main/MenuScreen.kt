@@ -15,8 +15,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import week.on.a.plate.core.data.example.WeekDataExample
 import week.on.a.plate.core.data.week.WeekView
+import week.on.a.plate.core.navigation.destiations.FullScreenDialogRoute
 import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
 import week.on.a.plate.menuScreen.logic.stateData.MenuIUState
 import week.on.a.plate.menuScreen.logic.MenuViewModel
@@ -32,9 +34,14 @@ import java.time.LocalDate
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun MenuScreen(viewModel: MenuViewModel = hiltViewModel(), snackbarHostState: SnackbarHostState) {
+fun MenuScreen(
+    viewModel: MenuViewModel = hiltViewModel(),
+    snackbarHostState: SnackbarHostState,
+    navController: NavHostController,
+) {
 
     viewModel.snackbarHostState = snackbarHostState
+    viewModel.setNavController(navController)
 
     val uiState = viewModel.weekState.collectAsStateWithLifecycle().value
     when (uiState) {

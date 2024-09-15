@@ -24,7 +24,7 @@ import week.on.a.plate.core.data.week.WeekView
 import week.on.a.plate.core.uitools.SubText
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.PlusButtonTitle
-import week.on.a.plate.menuScreen.logic.eventData.DialogMenuData
+import week.on.a.plate.menuScreen.logic.eventData.DialogData
 import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
 import week.on.a.plate.menuScreen.logic.stateData.MenuIUState
 import week.on.a.plate.menuScreen.view.day.calendar.CalendarDayCard
@@ -42,6 +42,7 @@ fun WeekMenu(
             Spacer(modifier = Modifier.height(24.dp))
             Row {
                 TextTitle(text = stringResource(R.string.for_week))
+                Spacer(modifier = Modifier.width(24.dp))
                 LazyRow {
                     items(week.selection.positions.size) {
                         WeekCardPosition(
@@ -83,7 +84,7 @@ fun WeekMenu(
                                     modifier = Modifier.width(120.dp),
                                 )
                                 PlusButtonTitle {
-                                    onEvent(MenuEvent.OpenDialog(DialogMenuData.AddPosition( sel.id)))
+                                    onEvent(MenuEvent.OpenDialog(DialogData.AddPosition( sel.id, onEvent)))
                                 }
                             }
                             sel.positions.forEach { pos ->

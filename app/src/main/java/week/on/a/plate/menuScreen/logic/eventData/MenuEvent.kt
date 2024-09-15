@@ -7,9 +7,9 @@ sealed class MenuEvent {
     data object SwitchEditMode : MenuEvent()
     data object SwitchWeekOrDayView : MenuEvent()
     data object CloseDialog : MenuEvent()
-    class OpenDialog(val dialog: DialogMenuData) : MenuEvent()
+    class OpenDialog(val dialog: DialogData) : MenuEvent()
     class NavigateFromMenu(val navData: NavFromMenuData) : MenuEvent()
-    class ActionDBMenu(val actionDBData: ActionDBData) : MenuEvent()
+    class ActionDBMenu(val actionMenuDBData: ActionMenuDBData) : MenuEvent()
     class ActionSelect(val selectedData: SelectedData) : MenuEvent()
     data class GetSelIdAndCreate(
         val action: (Long) -> Unit,

@@ -1,17 +1,11 @@
 package week.on.a.plate.repository.repositoriesForFeatures.menu
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.transform
+import week.on.a.plate.core.data.example.emptyDay
 import week.on.a.plate.core.data.recipe.IngredientView
 import week.on.a.plate.core.data.recipe.RecipeTagView
 import week.on.a.plate.core.data.week.CategoriesSelection
 import week.on.a.plate.core.data.week.DayInWeekData
-import week.on.a.plate.core.data.week.DayView
 import week.on.a.plate.core.data.week.Position
-import week.on.a.plate.core.data.week.RecipeShortView
-import week.on.a.plate.core.data.week.SelectionView
 import week.on.a.plate.core.data.week.WeekView
 import week.on.a.plate.repository.tables.recipe.ingredient.IngredientMapper
 import week.on.a.plate.repository.tables.recipe.ingredientInRecipe.IngredientInRecipeDAO
@@ -28,13 +22,13 @@ import week.on.a.plate.repository.tables.weekOrg.position.positionIngredient.Pos
 import week.on.a.plate.repository.tables.weekOrg.position.positionIngredient.PositionIngredientRepository
 import week.on.a.plate.repository.tables.weekOrg.position.positionNote.PositionNoteRepository
 import week.on.a.plate.repository.tables.weekOrg.position.recipeInMenu.PositionRecipeRepository
-import week.on.a.plate.repository.tables.weekOrg.selectionInDay.SelectionAndRecipesInMenu
 import week.on.a.plate.repository.tables.weekOrg.selectionInDay.SelectionDAO
 import week.on.a.plate.repository.tables.weekOrg.selectionInDay.SelectionMapper
 import week.on.a.plate.repository.tables.weekOrg.selectionInDay.SelectionRoom
 import week.on.a.plate.repository.tables.weekOrg.week.WeekDAO
 import week.on.a.plate.repository.tables.weekOrg.week.WeekMapper
 import week.on.a.plate.repository.tables.weekOrg.week.WeekRoom
+import java.time.DayOfWeek
 import java.time.LocalDate
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -61,14 +55,30 @@ class MenuRepository @Inject constructor(
     val fetWeekFun: GetWeekFun,
 ) {
 
-    suspend fun addEmptyDay(date: LocalDate): Long {
-        //todo мб неделя есть но не для этого дня...
-        val selWeekId =
-            selectionDAO.insert(SelectionRoom(0, CategoriesSelection.ForWeek.fullName))
-        val weekId = weekDAO.insert(WeekRoom(selWeekId))
+    suspend fun addEmptyDay(date: LocalDate) {
+        var weekId : Long? = null
+        DayOfWeek.entries.forEach {
+            val day = date.plusDays( (it.value - date.dayOfWeek.value).toLong() )
+            val dayInRoom = dayDAO.findDay(day)
+            if (dayInRoom!=null ){
+                weekId = dayInRoom.weekId
+            }
+        }
+
+        if (weekId == null){
+            val selWeekId =
+                selectionDAO.insert(SelectionRoom(0, CategoriesSelection.ForWeek.fullName))
+            weekId = weekDAO.insert(WeekRoom(selWeekId))
+        }
+
         val dayId =
-            dayDAO.insert(DayRoom(date, DayInWeekData.localeDateToDayInWeekData(date), weekId))
-        return dayId
+            dayDAO.insert(DayRoom(date, DayInWeekData.localeDateToDayInWeekData(date), weekId!!))
+        emptyDay.forEach {
+            val sel = with(SelectionMapper()){
+                it.viewToRoom(dayId)
+            }
+            selectionDAO.insert(sel)
+        }
     }
 
     suspend fun insertNewWeek(week: WeekView) {
