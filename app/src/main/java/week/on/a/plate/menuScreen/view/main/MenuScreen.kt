@@ -18,6 +18,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import week.on.a.plate.core.data.example.WeekDataExample
 import week.on.a.plate.core.data.week.WeekView
+import week.on.a.plate.fullScreenDialogs.navigation.FullScreenDialogRoute
+import week.on.a.plate.menuScreen.data.eventData.DialogData
 import week.on.a.plate.menuScreen.data.eventData.MenuEvent
 import week.on.a.plate.menuScreen.data.stateData.MenuIUState
 import week.on.a.plate.menuScreen.logic.MenuViewModel
@@ -41,6 +43,7 @@ fun MenuScreen(
 
     viewModel.snackbarHostState = snackbarHostState
     viewModel.setNavController(navController)
+    viewModel.updateWeek()
 
     val uiState = viewModel.weekState.collectAsStateWithLifecycle().value
     when (uiState) {
@@ -48,16 +51,36 @@ fun MenuScreen(
         is WeekState.Error -> {}
         WeekState.Loading -> {}
         is WeekState.Success -> {
-            if (uiState.week!=null && uiState.week.days.isNotEmpty()){
+            if (uiState.week != null && uiState.week.days.isNotEmpty()) {
                 MenuScreenSuccess(viewModel.menuUIState, uiState.week) { event: MenuEvent ->
                     viewModel.onEvent(event)
                 }
-            }else{
+            } else {
                 viewModel.weekState.value = WeekState.EmptyWeek
             }
         }
     }
+
+    getOptionArgFromSpecifyDate(navController){ event: MenuEvent ->
+        viewModel.onEvent(event)
+    }
+
 }
+
+fun getOptionArgFromSpecifyDate(navController: NavHostController, onEvent: (MenuEvent) -> Unit) {
+    val noResultData =
+        navController.currentBackStackEntry?.savedStateHandle?.getStateFlow<Long>("selId", 0)
+
+    if (noResultData?.value!=null && noResultData.value!=0L){
+        onEvent(MenuEvent.OpenDialog(DialogData.AddPosition(noResultData.value) { event: MenuEvent ->
+            onEvent(event)
+        }))
+        navController.currentBackStackEntry?.savedStateHandle?.remove<Long>("selId")
+
+        navController.popBackStack(FullScreenDialogRoute.SpecifyDateDialog, false)
+    }
+}
+
 
 @Composable
 fun MenuScreenSuccess(
@@ -82,9 +105,9 @@ fun MenuScreenSuccess(
         }
 
         if (uiState.itsDayMenu.value) {
-            if (week.days[uiState.activeDayInd.value].selections.isEmpty()){
+            if (week.days[uiState.activeDayInd.value].selections.isEmpty()) {
                 NoDay(week.days[uiState.activeDayInd.value].date, onEvent)
-            }else{
+            } else {
                 DayView(week.days[uiState.activeDayInd.value], uiState, onEvent)
             }
         } else {

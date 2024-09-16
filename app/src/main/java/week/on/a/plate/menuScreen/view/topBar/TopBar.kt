@@ -24,6 +24,7 @@ import week.on.a.plate.core.uitools.TextBodyDisActive
 import week.on.a.plate.menuScreen.data.eventData.ActionMenuDBData
 import week.on.a.plate.menuScreen.data.eventData.DialogData
 import week.on.a.plate.menuScreen.data.eventData.MenuEvent
+import week.on.a.plate.menuScreen.data.eventData.NavFromMenuData
 import week.on.a.plate.menuScreen.data.eventData.SelectedData
 import week.on.a.plate.menuScreen.data.stateData.MenuIUState
 import week.on.a.plate.ui.theme.ColorButtonNegativeGrey
@@ -78,11 +79,7 @@ fun TopBar(
                         .size(24.dp)
                 )
                 TitleMenuSmall(title) {
-                    onEvent(
-                        MenuEvent.OpenDialog(
-                            DialogData.AddPositionNeedSelId(onEvent)
-                        )
-                    )
+                    onEvent(MenuEvent.NavigateFromMenu(NavFromMenuData.SpecifyDate))
                 }
             }
         }

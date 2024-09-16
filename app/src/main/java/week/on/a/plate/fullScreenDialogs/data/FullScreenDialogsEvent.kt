@@ -6,15 +6,15 @@ import week.on.a.plate.menuScreen.data.eventData.DialogData
 import java.time.LocalDate
 
 sealed class FullScreenDialogsEvent {
-    data object Navigate : FullScreenDialogsEvent()
+    data class NavigateToMenuForCreate( val dateToLocalDate: LocalDate, val categoriesSelection: CategoriesSelection) : FullScreenDialogsEvent()
     data object NavigateBack : FullScreenDialogsEvent()
     data class ActionMenuBD(val data: ActionMenuDBData) : FullScreenDialogsEvent()
     data object CloseDialog : FullScreenDialogsEvent()
-    class OpenDialog(val dialog: DialogData) : FullScreenDialogsEvent()
-    class GetSelIdAndCreate(
-        val action: (Long) -> Unit,
+    data class OpenDialog(val dialog: DialogData) : FullScreenDialogsEvent()
+    data class ShowSnackBar(val messageError: String) : FullScreenDialogsEvent()
+    data class GetSelIdAndCreate(
+        val eventAfter: (Long) -> Unit,
         val dateToLocalDate: LocalDate,
         val categoriesSelection: CategoriesSelection
     ) : FullScreenDialogsEvent()
-    class ShowSnackBar(val messageError: String) : FullScreenDialogsEvent()
 }

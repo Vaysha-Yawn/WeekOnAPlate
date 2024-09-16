@@ -1,4 +1,4 @@
-package week.on.a.plate.core.navigation.destiations
+package week.on.a.plate.core.navigation.bottomBar
 
 import kotlinx.serialization.Serializable
 import week.on.a.plate.R

@@ -1,4 +1,4 @@
-package week.on.a.plate.core.navigation
+package week.on.a.plate.core.navigation.bottomBar
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -24,7 +24,6 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import week.on.a.plate.core.navigation.destiations.bottomScreens
 import week.on.a.plate.ui.theme.ColorTextBlack
 import week.on.a.plate.ui.theme.ColorTransparent
 
@@ -45,7 +44,7 @@ fun BottomBar(navController: NavHostController, isActiveBaseScreen: Boolean) {
                     mutableStateOf(false)
                 }
                 val isSelected =
-                    currentDestination?.hierarchy?.any { it.route == topLevelRoute.route::class.qualifiedName } == true
+                    currentDestination?.hierarchy?.any { it.route?.substringBefore("?") == topLevelRoute.route::class.qualifiedName } == true
                 sel.value = isSelected
                 val radius by animateFloatAsState(
                     if (isSelected) 10.0f else 0.0f,

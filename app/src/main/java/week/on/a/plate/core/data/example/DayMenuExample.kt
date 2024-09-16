@@ -28,7 +28,7 @@ val positionDraftExample = Position.PositionDraftView(
 
 val dayMenuExample = mutableListOf(
     SelectionView(
-        0, "Нераспределенное",
+        0, CategoriesSelection.NonPosed.fullName,
         mutableListOf(
             positionRecipeExample,
             positionNoteExample,
@@ -37,15 +37,15 @@ val dayMenuExample = mutableListOf(
         )
     ),
     SelectionView(
-        1, "Завтрак",
+        1, CategoriesSelection.Breakfast.fullName,
         mutableListOf(positionNoteExample)
     ),
     SelectionView(
-        2, "Обед",
+        2, CategoriesSelection.Lunch.fullName,
         mutableListOf(positionDraftExample)
     ),
     SelectionView(
-        3, "Ужин",
+        3, CategoriesSelection.Dinner.fullName,
         mutableListOf(positionIngredientExample)
     ),
 )

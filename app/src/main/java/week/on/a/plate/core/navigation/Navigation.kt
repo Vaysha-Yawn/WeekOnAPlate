@@ -10,14 +10,19 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import week.on.a.plate.core.navigation.destiations.FavoritesScreen
-import week.on.a.plate.core.navigation.destiations.FullScreenDialogRoute
-import week.on.a.plate.core.navigation.destiations.HomeScreen
-import week.on.a.plate.core.navigation.destiations.MenuScreen
-import week.on.a.plate.core.navigation.destiations.SettingsScreen
-import week.on.a.plate.core.navigation.destiations.ShoppingListScreen
+import week.on.a.plate.core.data.week.Position
+import week.on.a.plate.core.navigation.bottomBar.FavoritesScreen
+import week.on.a.plate.core.navigation.bottomBar.HomeScreen
+import week.on.a.plate.core.navigation.bottomBar.MenuScreen
+import week.on.a.plate.core.navigation.bottomBar.SettingsScreen
+import week.on.a.plate.core.navigation.bottomBar.ShoppingListScreen
+import week.on.a.plate.fullScreenDialogs.navigation.FullScreenDialogRoute
+import week.on.a.plate.fullScreenDialogs.navigation.CustomNavType
 import week.on.a.plate.fullScreenDialogs.view.FullScreenDialogMain
 import week.on.a.plate.menuScreen.view.main.MenuScreen
+import week.on.a.plate.search.navigation.Search
+import week.on.a.plate.search.view.main.SearchStart
+import kotlin.reflect.typeOf
 
 @Composable
 fun Navigation(
@@ -31,6 +36,7 @@ fun Navigation(
         startDestination = MenuScreen,
         Modifier.padding(innerPadding)
     ) {
+        //bottom bar
         composable<MenuScreen> {
             isActiveBaseScreen.value = true
             MenuScreen(snackbarHostState = snackbarHostState, navController = navController)
@@ -52,21 +58,23 @@ fun Navigation(
             isActiveBaseScreen.value = true
         }
 
-        // next false
+        // FullScreenDialogRoute
 
-        composable<FullScreenDialogRoute.AddPositionToMenuDialog> {
+        composable<FullScreenDialogRoute.AddPositionToMenuDialog>(
+            typeMap = mapOf(typeOf<Position.PositionRecipeView>() to CustomNavType.PositionRecipeView)
+        ) {
             isActiveBaseScreen.value = false
             val arguments = it.toRoute<FullScreenDialogRoute.AddPositionToMenuDialog>()
             FullScreenDialogMain(snackbarHostState, navController, arguments)
         }
 
-        composable<FullScreenDialogRoute.DoublePositionToMenuDialog> {
+        composable<FullScreenDialogRoute.DoublePositionToMenuDialog>(typeMap = mapOf(typeOf<Position>() to CustomNavType.Position)) {
             isActiveBaseScreen.value = false
             val arguments = it.toRoute<FullScreenDialogRoute.DoublePositionToMenuDialog>()
             FullScreenDialogMain(snackbarHostState, navController, arguments)
         }
 
-        composable<FullScreenDialogRoute.MovePositionToMenuDialog> {
+        composable<FullScreenDialogRoute.MovePositionToMenuDialog>(typeMap = mapOf(typeOf<Position>() to CustomNavType.Position)) {
             isActiveBaseScreen.value = false
             val arguments = it.toRoute<FullScreenDialogRoute.MovePositionToMenuDialog>()
             FullScreenDialogMain(snackbarHostState, navController, arguments)
@@ -74,10 +82,16 @@ fun Navigation(
 
         composable<FullScreenDialogRoute.SpecifyDateDialog> {
             isActiveBaseScreen.value = false
-            val arguments = it.toRoute<FullScreenDialogRoute.MovePositionToMenuDialog>()
+            val arguments = it.toRoute<FullScreenDialogRoute.SpecifyDateDialog>()
             FullScreenDialogMain(snackbarHostState, navController, arguments)
         }
 
+        // search
+        composable<Search> {
+            isActiveBaseScreen.value = true
+            val arguments = it.toRoute<Search>()
+            SearchStart(snackbarHostState, navController, isActiveBaseScreen, arguments)
+        }
 
     }
 }

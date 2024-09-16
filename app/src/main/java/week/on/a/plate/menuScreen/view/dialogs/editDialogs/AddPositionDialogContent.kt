@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,7 +26,7 @@ import week.on.a.plate.ui.theme.WeekOnAPlateTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddPositionDialogContent(selId: Long?, onEvent: (MenuEvent) -> Unit) {
+fun AddPositionDialogContent(selId: Long, onEvent: (MenuEvent) -> Unit) {
 
     Column(modifier = Modifier.padding(20.dp)) {
         val stateBottom = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -71,17 +70,12 @@ fun AddPositionDialogContent(selId: Long?, onEvent: (MenuEvent) -> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 private fun eventWrapper(
-    selId: Long?,
+    selId: Long,
     onEvent: (MenuEvent) -> Unit,
     event: (Long) -> Unit,
 ) {
     onEvent(MenuEvent.CloseDialog)
-    if (selId != null) {
-        event(selId)
-    } else {
-        // add event after
-        onEvent(MenuEvent.NavigateFromMenu(NavFromMenuData.SpecifyDate))
-    }
+    event(selId)
 }
 
 @Composable
@@ -107,6 +101,6 @@ fun ButtonRowPosition(imgRec: Int, text: String, event: () -> Unit) {
 @Composable
 fun PreviewAddPosition() {
     WeekOnAPlateTheme {
-        AddPositionDialogContent(null) {}
+        AddPositionDialogContent(0) {}
     }
 }

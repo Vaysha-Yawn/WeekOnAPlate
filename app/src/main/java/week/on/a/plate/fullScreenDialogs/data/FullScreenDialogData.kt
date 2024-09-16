@@ -7,11 +7,11 @@ import androidx.compose.runtime.mutableStateOf
 import week.on.a.plate.R
 import week.on.a.plate.core.data.week.CategoriesSelection
 import week.on.a.plate.core.data.week.Position
-import week.on.a.plate.menuScreen.data.eventData.ActionMenuDBData
 import week.on.a.plate.core.tools.dateToLocalDate
+import week.on.a.plate.menuScreen.data.eventData.ActionMenuDBData
 import java.time.LocalDate
 
-sealed class FullScreenDialogData(val onEvent: (FullScreenDialogsEvent) -> Unit,) {
+sealed class FullScreenDialogData(val onEvent: (FullScreenDialogsEvent) -> Unit) {
 
     val close = {
         onEvent(FullScreenDialogsEvent.NavigateBack)
@@ -58,7 +58,6 @@ sealed class FullScreenDialogData(val onEvent: (FullScreenDialogsEvent) -> Unit,
             state.selectedDateMillis = date.toEpochDay()
         }
 
-
         @OptIn(ExperimentalMaterial3Api::class)
         val done = {
             val eventAfter: (Long) -> Unit = { id ->
@@ -71,8 +70,6 @@ sealed class FullScreenDialogData(val onEvent: (FullScreenDialogsEvent) -> Unit,
                     )
                 )
             }
-            onEvent(FullScreenDialogsEvent.CloseDialog)
-            //nav to menu and
             onEvent(
                 FullScreenDialogsEvent.GetSelIdAndCreate(
                     eventAfter, this.state.selectedDateMillis!!.dateToLocalDate(),
@@ -83,11 +80,14 @@ sealed class FullScreenDialogData(val onEvent: (FullScreenDialogsEvent) -> Unit,
                     },
                 )
             )
+            onEvent(FullScreenDialogsEvent.NavigateBack)
         }
     }
 
     class MovePositionToMenu @OptIn(ExperimentalMaterial3Api::class) constructor(
-        val state: DatePickerState, val position: Position, onEvent: (FullScreenDialogsEvent) -> Unit,
+        val state: DatePickerState,
+        val position: Position,
+        onEvent: (FullScreenDialogsEvent) -> Unit,
     ) : FullScreenDialogData(onEvent) {
         val checkWeek = mutableStateOf<Boolean>(false)
         val checkDayCategory = mutableStateOf<CategoriesSelection?>(null)
@@ -109,12 +109,14 @@ sealed class FullScreenDialogData(val onEvent: (FullScreenDialogsEvent) -> Unit,
                     )
                 )
             )
-            onEvent(FullScreenDialogsEvent.CloseDialog)
+            onEvent(FullScreenDialogsEvent.NavigateBack)
         }
     }
 
     class DoublePositionToMenu @OptIn(ExperimentalMaterial3Api::class) constructor(
-        val state: DatePickerState, val position: Position, onEvent: (FullScreenDialogsEvent) -> Unit,
+        val state: DatePickerState,
+        val position: Position,
+        onEvent: (FullScreenDialogsEvent) -> Unit,
     ) : FullScreenDialogData(onEvent) {
         val checkWeek = mutableStateOf<Boolean>(false)
         val checkDayCategory = mutableStateOf<CategoriesSelection?>(null)
@@ -136,13 +138,12 @@ sealed class FullScreenDialogData(val onEvent: (FullScreenDialogsEvent) -> Unit,
                     )
                 )
             )
-            onEvent(FullScreenDialogsEvent.CloseDialog)
+            onEvent(FullScreenDialogsEvent.NavigateBack)
         }
     }
 
-    //todo eventAfter надо переделать по-другому, чтобы он просто передавал название действия
     class SpecifyDate @OptIn(ExperimentalMaterial3Api::class) constructor(
-        val state: DatePickerState, onEventVM: (FullScreenDialogsEvent) -> Unit, val eventAfter: (Long) -> Unit,
+        val state: DatePickerState, onEventVM: (FullScreenDialogsEvent) -> Unit
     ) : FullScreenDialogData(onEventVM) {
         val checkWeek = mutableStateOf<Boolean>(false)
         val checkDayCategory = mutableStateOf<CategoriesSelection?>(null)
@@ -151,8 +152,8 @@ sealed class FullScreenDialogData(val onEvent: (FullScreenDialogsEvent) -> Unit,
         @OptIn(ExperimentalMaterial3Api::class)
         val done = {
             onEvent(
-                FullScreenDialogsEvent.GetSelIdAndCreate(
-                    eventAfter, state.selectedDateMillis!!.dateToLocalDate(),
+                FullScreenDialogsEvent.NavigateToMenuForCreate(
+                    state.selectedDateMillis!!.dateToLocalDate(),
                     if (checkWeek.value) {
                         CategoriesSelection.ForWeek
                     } else {
@@ -160,7 +161,6 @@ sealed class FullScreenDialogData(val onEvent: (FullScreenDialogsEvent) -> Unit,
                     },
                 )
             )
-            onEvent(FullScreenDialogsEvent.CloseDialog)
         }
     }
 }

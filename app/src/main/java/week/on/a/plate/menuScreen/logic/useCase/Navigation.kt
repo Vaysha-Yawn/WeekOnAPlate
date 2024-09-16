@@ -1,7 +1,7 @@
 package week.on.a.plate.menuScreen.logic.useCase
 
 import androidx.navigation.NavHostController
-import week.on.a.plate.core.navigation.destiations.FullScreenDialogRoute
+import week.on.a.plate.fullScreenDialogs.navigation.FullScreenDialogRoute
 import week.on.a.plate.menuScreen.data.eventData.NavFromMenuData
 import javax.inject.Inject
 
@@ -15,7 +15,7 @@ class Navigation @Inject constructor() {
                 navController.navigate(
                     FullScreenDialogRoute.AddPositionToMenuDialog(
                         data.position,
-                        data.date,
+                        data.date.toEpochDay(),
                         data.category
                     )
                 )

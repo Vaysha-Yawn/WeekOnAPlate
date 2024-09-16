@@ -91,12 +91,9 @@ sealed class DialogData(val onEvent: (MenuEvent) -> Unit) {
 
     //
 
-
     class AddPosition(
         val selectionId: Long, onEvent: (MenuEvent) -> Unit,
     ) : DialogData(onEvent)
-
-    class AddPositionNeedSelId(onEvent: (MenuEvent) -> Unit) : DialogData(onEvent)
 
     // include recipe position
     class EditPosition(

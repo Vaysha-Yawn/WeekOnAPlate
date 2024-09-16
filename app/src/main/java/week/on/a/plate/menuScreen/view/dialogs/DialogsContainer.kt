@@ -55,12 +55,6 @@ fun DialogsContainer(uiState: MenuIUState, onEvent: (event: MenuEvent) -> Unit) 
             }
         }
 
-        is DialogData.AddPositionNeedSelId -> {
-            BaseDialogContainer(data.show, { onEvent(MenuEvent.CloseDialog) }) {
-                AddPositionDialogContent(null, onEvent)
-            }
-        }
-
         is DialogData.ChangePortionsCount -> {
             BottomDialogContainer(data.sheetState, { onEvent(MenuEvent.CloseDialog) }) {
                 ChangePortionsPanelDialogWrapper(data)

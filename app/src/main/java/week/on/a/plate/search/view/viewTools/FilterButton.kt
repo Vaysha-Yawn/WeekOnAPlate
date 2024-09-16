@@ -1,4 +1,4 @@
-package week.on.a.plate.search.viewTools
+package week.on.a.plate.search.view.viewTools
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border

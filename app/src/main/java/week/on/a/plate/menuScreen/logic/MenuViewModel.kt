@@ -7,6 +7,7 @@ import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import week.on.a.plate.core.data.example.WeekDataExample
 import week.on.a.plate.core.data.week.WeekView
 import week.on.a.plate.menuScreen.data.eventData.MenuEvent
 import week.on.a.plate.menuScreen.data.stateData.MenuIUState
@@ -38,7 +39,7 @@ class MenuViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-           // sCRUDRecipeInMenu.menuR.insertNewWeek(WeekDataExample)
+            //sCRUDRecipeInMenu.menuR.insertNewWeek(WeekDataExample)
             updateWeek()
         }
     }
@@ -47,7 +48,7 @@ class MenuViewModel @Inject constructor(
         navigation.navController = navController
     }
 
-    private fun updateWeek(){
+    fun updateWeek(){
         viewModelScope.launch {
             val week = sCRUDRecipeInMenu.menuR.fetWeekFun.getCurrentWeek(activeDay)
             if (week!=null){

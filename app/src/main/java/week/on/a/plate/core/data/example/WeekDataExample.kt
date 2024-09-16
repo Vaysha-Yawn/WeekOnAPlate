@@ -1,5 +1,6 @@
 package week.on.a.plate.core.data.example
 
+import week.on.a.plate.core.data.week.CategoriesSelection
 import week.on.a.plate.core.data.week.DayView
 import week.on.a.plate.core.data.week.DayInWeekData
 import week.on.a.plate.core.data.week.Position
@@ -37,7 +38,7 @@ val EmptyWeek = WeekView(
 
 val WeekDataExample = WeekView(0,
     SelectionView(7,
-        "Нераспределенное",
+        CategoriesSelection.ForWeek.fullName,
         mutableListOf(Position.PositionRecipeView(0, shortRecipe, 3, 0))
     ),
     mutableListOf(

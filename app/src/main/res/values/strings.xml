@@ -37,4 +37,5 @@
     <string name="amount">Количество</string>
     <string name="double_position">Дублировать позицию</string>
     <string name="add_position">Добавить позицию</string>
+    <string name="search_placeholder">Что ищем сегодня?</string>
 </resources>
