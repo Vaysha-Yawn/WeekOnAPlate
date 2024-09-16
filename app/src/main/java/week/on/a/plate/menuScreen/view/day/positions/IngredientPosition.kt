@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import week.on.a.plate.core.data.week.Position
 import week.on.a.plate.core.uitools.SubText
 import week.on.a.plate.core.uitools.TextBody
-import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
+import week.on.a.plate.menuScreen.data.eventData.MenuEvent
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

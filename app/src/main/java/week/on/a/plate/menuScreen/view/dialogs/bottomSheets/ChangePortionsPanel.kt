@@ -23,7 +23,7 @@ import week.on.a.plate.R
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.ButtonsCounter
 import week.on.a.plate.core.uitools.buttons.DoneButton
-import week.on.a.plate.menuScreen.logic.eventData.DialogData
+import week.on.a.plate.menuScreen.data.eventData.DialogData
 import week.on.a.plate.ui.theme.WeekOnAPlateTheme
 
 @Composable

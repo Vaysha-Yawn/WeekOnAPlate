@@ -13,9 +13,10 @@ import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.core.data.example.positionRecipeExample
 import week.on.a.plate.core.data.week.Position
-import week.on.a.plate.menuScreen.logic.eventData.ActionMenuDBData
-import week.on.a.plate.menuScreen.logic.eventData.DialogData
-import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
+import week.on.a.plate.menuScreen.data.eventData.ActionMenuDBData
+import week.on.a.plate.menuScreen.data.eventData.DialogData
+import week.on.a.plate.menuScreen.data.eventData.MenuEvent
+import week.on.a.plate.menuScreen.data.eventData.NavFromMenuData
 import week.on.a.plate.ui.theme.WeekOnAPlateTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -50,7 +51,7 @@ fun EditOtherPositionDialogContent(position:Position, onEvent: (MenuEvent) -> Un
             stringResource(R.string.move),
         ){
             onEvent(MenuEvent.CloseDialog)
-            onEvent(MenuEvent.OpenDialog(DialogData.MovePositionToMenu(state, position, onEvent)))
+            onEvent(MenuEvent.NavigateFromMenu(NavFromMenuData.MovePositionToMenu( position)))
         }
 
         ButtonRow(
@@ -58,7 +59,7 @@ fun EditOtherPositionDialogContent(position:Position, onEvent: (MenuEvent) -> Un
             stringResource(R.string.doubleR),
         ){
             onEvent(MenuEvent.CloseDialog)
-            onEvent(MenuEvent.OpenDialog(DialogData.DoublePositionToMenu(state, position, onEvent)))
+            onEvent(MenuEvent.NavigateFromMenu(NavFromMenuData.DoublePositionToMenu( position)))
         }
 
         ButtonRow(

@@ -1,8 +1,8 @@
-package week.on.a.plate.fullScreenDialogs
+package week.on.a.plate.fullScreenDialogs.data
 
 import week.on.a.plate.core.data.week.CategoriesSelection
-import week.on.a.plate.menuScreen.logic.eventData.ActionMenuDBData
-import week.on.a.plate.menuScreen.logic.eventData.DialogData
+import week.on.a.plate.menuScreen.data.eventData.ActionMenuDBData
+import week.on.a.plate.menuScreen.data.eventData.DialogData
 import java.time.LocalDate
 
 sealed class FullScreenDialogsEvent {

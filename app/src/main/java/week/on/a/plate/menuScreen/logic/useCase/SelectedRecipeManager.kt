@@ -3,8 +3,8 @@ package week.on.a.plate.menuScreen.logic.useCase
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import week.on.a.plate.core.data.week.Position
-import week.on.a.plate.menuScreen.logic.eventData.SelectedData
-import week.on.a.plate.menuScreen.logic.stateData.MenuIUState
+import week.on.a.plate.menuScreen.data.eventData.SelectedData
+import week.on.a.plate.menuScreen.data.stateData.MenuIUState
 import javax.inject.Inject
 
 class SelectedRecipeManager @Inject constructor() {

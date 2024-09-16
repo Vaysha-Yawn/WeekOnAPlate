@@ -1,4 +1,4 @@
-package week.on.a.plate.menuScreen.logic.eventData
+package week.on.a.plate.menuScreen.data.eventData
 
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api

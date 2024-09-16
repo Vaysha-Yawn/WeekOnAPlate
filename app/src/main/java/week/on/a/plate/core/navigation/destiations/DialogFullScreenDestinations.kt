@@ -26,8 +26,7 @@ sealed class FullScreenDialogRoute{
     ):FullScreenDialogRoute()
 
     @Serializable
-    data class SpecifyDateDialog(
-        val position: Position
-        //eventAfter
-    ):FullScreenDialogRoute()
+    data object SpecifyDateDialog : FullScreenDialogRoute()
+    //after return sell id long
+    //eventAfter
 }

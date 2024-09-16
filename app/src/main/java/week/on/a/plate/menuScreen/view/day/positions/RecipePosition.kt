@@ -20,10 +20,10 @@ import week.on.a.plate.core.data.week.Position
 import week.on.a.plate.core.uitools.SubText
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.buttons.CheckButton
-import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
-import week.on.a.plate.menuScreen.logic.stateData.MenuIUState
-import week.on.a.plate.menuScreen.logic.eventData.NavFromMenuData
-import week.on.a.plate.menuScreen.logic.eventData.SelectedData
+import week.on.a.plate.menuScreen.data.eventData.MenuEvent
+import week.on.a.plate.menuScreen.data.stateData.MenuIUState
+import week.on.a.plate.menuScreen.data.eventData.NavFromMenuData
+import week.on.a.plate.menuScreen.data.eventData.SelectedData
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

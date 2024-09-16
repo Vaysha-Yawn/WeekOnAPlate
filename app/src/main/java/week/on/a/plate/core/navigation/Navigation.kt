@@ -16,7 +16,7 @@ import week.on.a.plate.core.navigation.destiations.HomeScreen
 import week.on.a.plate.core.navigation.destiations.MenuScreen
 import week.on.a.plate.core.navigation.destiations.SettingsScreen
 import week.on.a.plate.core.navigation.destiations.ShoppingListScreen
-import week.on.a.plate.fullScreenDialogs.dialogFullScreen.FullScreenDialogMain
+import week.on.a.plate.fullScreenDialogs.view.FullScreenDialogMain
 import week.on.a.plate.menuScreen.view.main.MenuScreen
 
 @Composable

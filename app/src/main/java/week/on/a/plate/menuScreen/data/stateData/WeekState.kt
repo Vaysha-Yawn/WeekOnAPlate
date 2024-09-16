@@ -1,4 +1,4 @@
-package week.on.a.plate.menuScreen.logic.stateData
+package week.on.a.plate.menuScreen.data.stateData
 
 import week.on.a.plate.core.data.week.WeekView
 

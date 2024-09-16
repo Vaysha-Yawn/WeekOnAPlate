@@ -24,10 +24,10 @@ import week.on.a.plate.core.data.week.WeekView
 import week.on.a.plate.core.uitools.SubText
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.PlusButtonTitle
-import week.on.a.plate.menuScreen.logic.eventData.DialogData
-import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
-import week.on.a.plate.menuScreen.logic.stateData.MenuIUState
-import week.on.a.plate.menuScreen.view.day.calendar.CalendarDayCard
+import week.on.a.plate.menuScreen.data.eventData.DialogData
+import week.on.a.plate.menuScreen.data.eventData.MenuEvent
+import week.on.a.plate.menuScreen.data.stateData.MenuIUState
+import week.on.a.plate.menuScreen.view.calendar.CalendarDayCard
 import week.on.a.plate.menuScreen.view.week.positions.WeekCardPosition
 import java.time.LocalDate
 

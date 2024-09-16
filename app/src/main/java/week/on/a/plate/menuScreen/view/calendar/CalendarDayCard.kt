@@ -1,4 +1,4 @@
-package week.on.a.plate.menuScreen.view.day.calendar
+package week.on.a.plate.menuScreen.view.calendar
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

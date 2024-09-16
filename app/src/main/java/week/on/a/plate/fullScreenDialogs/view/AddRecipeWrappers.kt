@@ -1,14 +1,11 @@
-package week.on.a.plate.fullScreenDialogs.dialogFullScreen
+package week.on.a.plate.fullScreenDialogs.view
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import week.on.a.plate.R
-import week.on.a.plate.core.data.week.CategoriesSelection
-import week.on.a.plate.fullScreenDialogs.FullScreenDialogData
-import week.on.a.plate.fullScreenDialogs.FullScreenDialogsEvent
-import week.on.a.plate.menuScreen.logic.eventData.DialogData
-import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
+import week.on.a.plate.fullScreenDialogs.data.FullScreenDialogData
+import week.on.a.plate.fullScreenDialogs.data.FullScreenDialogsEvent
 
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -1,4 +1,4 @@
-package week.on.a.plate.menuScreen.view.uiTools
+package week.on.a.plate.menuScreen.view.topBar
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

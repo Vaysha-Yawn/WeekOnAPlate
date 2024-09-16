@@ -1,4 +1,4 @@
-package week.on.a.plate.fullScreenDialogs.dialogFullScreen
+package week.on.a.plate.fullScreenDialogs.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column

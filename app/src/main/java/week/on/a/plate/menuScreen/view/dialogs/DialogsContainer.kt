@@ -5,11 +5,11 @@ import androidx.compose.runtime.Composable
 import week.on.a.plate.core.data.week.Position
 import week.on.a.plate.core.uitools.dialogs.BaseDialogContainer
 import week.on.a.plate.core.uitools.dialogs.BottomDialogContainer
-import week.on.a.plate.fullScreenDialogs.dialogFullScreen.DatePickerMy
+import week.on.a.plate.fullScreenDialogs.view.DatePickerMy
 import week.on.a.plate.core.tools.dateToLocalDate
-import week.on.a.plate.menuScreen.logic.eventData.DialogData
-import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
-import week.on.a.plate.menuScreen.logic.stateData.MenuIUState
+import week.on.a.plate.menuScreen.data.eventData.DialogData
+import week.on.a.plate.menuScreen.data.eventData.MenuEvent
+import week.on.a.plate.menuScreen.data.stateData.MenuIUState
 import week.on.a.plate.menuScreen.view.dialogs.bottomSheets.AddIngredientBottomDialogContent
 import week.on.a.plate.menuScreen.view.dialogs.bottomSheets.AddNoteBottomDialogContent
 import week.on.a.plate.menuScreen.view.dialogs.bottomSheets.ChangePortionsPanelDialogWrapper

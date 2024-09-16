@@ -1,14 +1,13 @@
-package week.on.a.plate.fullScreenDialogs
+package week.on.a.plate.fullScreenDialogs.data
 
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.navigation.NavHostController
 import week.on.a.plate.R
 import week.on.a.plate.core.data.week.CategoriesSelection
 import week.on.a.plate.core.data.week.Position
-import week.on.a.plate.menuScreen.logic.eventData.ActionMenuDBData
+import week.on.a.plate.menuScreen.data.eventData.ActionMenuDBData
 import week.on.a.plate.core.tools.dateToLocalDate
 import java.time.LocalDate
 

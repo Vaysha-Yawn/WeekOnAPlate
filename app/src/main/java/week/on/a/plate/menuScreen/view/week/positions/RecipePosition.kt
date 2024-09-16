@@ -27,11 +27,11 @@ import week.on.a.plate.core.uitools.SubText
 import week.on.a.plate.core.uitools.TextSmall
 import week.on.a.plate.core.uitools.buttons.CheckButton
 import week.on.a.plate.core.uitools.buttons.MoreButtonWithBackg
-import week.on.a.plate.menuScreen.logic.eventData.DialogData
-import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
-import week.on.a.plate.menuScreen.logic.stateData.MenuIUState
-import week.on.a.plate.menuScreen.logic.eventData.NavFromMenuData
-import week.on.a.plate.menuScreen.logic.eventData.SelectedData
+import week.on.a.plate.menuScreen.data.eventData.DialogData
+import week.on.a.plate.menuScreen.data.eventData.MenuEvent
+import week.on.a.plate.menuScreen.data.stateData.MenuIUState
+import week.on.a.plate.menuScreen.data.eventData.NavFromMenuData
+import week.on.a.plate.menuScreen.data.eventData.SelectedData
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

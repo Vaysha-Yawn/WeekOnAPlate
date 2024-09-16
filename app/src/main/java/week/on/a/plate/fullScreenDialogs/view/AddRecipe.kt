@@ -1,4 +1,4 @@
-package week.on.a.plate.fullScreenDialogs.dialogFullScreen
+package week.on.a.plate.fullScreenDialogs.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -38,8 +38,8 @@ import week.on.a.plate.core.uitools.buttons.CheckButton
 import week.on.a.plate.core.uitools.buttons.CloseButton
 import week.on.a.plate.core.uitools.buttons.CommonButton
 import week.on.a.plate.core.uitools.buttons.DoneButton
-import week.on.a.plate.fullScreenDialogs.FullScreenDialogData
-import week.on.a.plate.fullScreenDialogs.FullScreenDialogsEvent
+import week.on.a.plate.fullScreenDialogs.data.FullScreenDialogData
+import week.on.a.plate.fullScreenDialogs.data.FullScreenDialogsEvent
 import week.on.a.plate.ui.theme.WeekOnAPlateTheme
 import java.time.LocalDate
 
@@ -161,11 +161,10 @@ fun AddMoveDoubleRecipeDialogContent(
 @Composable
 fun PreviewAddRecipe() {
     WeekOnAPlateTheme {
-        val nav = rememberNavController()
         AddRecipeDialogContent(
             FullScreenDialogData.AddPositionToMenu(
                 rememberDatePickerState(),
-                positionRecipeExample, LocalDate.now(), "", {}, nav
+                positionRecipeExample, LocalDate.now(), "", {}
             )
         ) {}
     }

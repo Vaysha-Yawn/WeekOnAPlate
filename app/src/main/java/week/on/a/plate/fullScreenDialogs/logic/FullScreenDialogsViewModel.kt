@@ -1,4 +1,4 @@
-package week.on.a.plate.fullScreenDialogs
+package week.on.a.plate.fullScreenDialogs.logic
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.lifecycle.ViewModel
@@ -6,26 +6,20 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
+import week.on.a.plate.fullScreenDialogs.data.FullScreenDialogsEvent
 import week.on.a.plate.menuScreen.logic.useCase.CRUDRecipeInMenu
 import week.on.a.plate.menuScreen.logic.useCase.DialogManager
 import week.on.a.plate.menuScreen.logic.useCase.Navigation
-import week.on.a.plate.menuScreen.logic.useCase.SelectedRecipeManager
 import javax.inject.Inject
 
 @HiltViewModel
 class FullScreenDialogsViewModel @Inject constructor(
     private val sCRUDRecipeInMenu: CRUDRecipeInMenu,
-    private val navigation: Navigation,
     private val dialogManager: DialogManager,
 ) : ViewModel() {
 
     lateinit var snackbarHostState: SnackbarHostState
     lateinit var navController: NavHostController
-
-    fun setNavController(navController: NavHostController){
-        this.navController = navController
-    }
 
     fun onEvent(event: FullScreenDialogsEvent) {
         when (event) {

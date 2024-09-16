@@ -28,8 +28,8 @@ import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.buttons.CommonButton
 import week.on.a.plate.core.uitools.buttons.DoneButton
 import week.on.a.plate.core.uitools.ingredientCard.CardIngredient
-import week.on.a.plate.menuScreen.logic.eventData.DialogData
-import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
+import week.on.a.plate.menuScreen.data.eventData.DialogData
+import week.on.a.plate.menuScreen.data.eventData.MenuEvent
 import week.on.a.plate.ui.theme.WeekOnAPlateTheme
 
 @Composable

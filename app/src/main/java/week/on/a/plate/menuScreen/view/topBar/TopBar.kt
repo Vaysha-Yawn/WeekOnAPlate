@@ -1,4 +1,4 @@
-package week.on.a.plate.menuScreen.view.uiTools
+package week.on.a.plate.menuScreen.view.topBar
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -21,11 +21,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.core.uitools.TextBodyDisActive
-import week.on.a.plate.menuScreen.logic.eventData.ActionMenuDBData
-import week.on.a.plate.menuScreen.logic.eventData.DialogData
-import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
-import week.on.a.plate.menuScreen.logic.eventData.SelectedData
-import week.on.a.plate.menuScreen.logic.stateData.MenuIUState
+import week.on.a.plate.menuScreen.data.eventData.ActionMenuDBData
+import week.on.a.plate.menuScreen.data.eventData.DialogData
+import week.on.a.plate.menuScreen.data.eventData.MenuEvent
+import week.on.a.plate.menuScreen.data.eventData.SelectedData
+import week.on.a.plate.menuScreen.data.stateData.MenuIUState
 import week.on.a.plate.ui.theme.ColorButtonNegativeGrey
 
 @OptIn(ExperimentalMaterial3Api::class)

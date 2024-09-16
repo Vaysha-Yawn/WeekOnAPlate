@@ -1,4 +1,4 @@
-package week.on.a.plate.menuScreen.logic.eventData
+package week.on.a.plate.menuScreen.data.eventData
 
 import week.on.a.plate.core.data.week.CategoriesSelection
 import java.time.LocalDate

@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import dagger.hilt.android.scopes.ActivityScoped
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import week.on.a.plate.menuScreen.logic.eventData.DialogData
+import week.on.a.plate.menuScreen.data.eventData.DialogData
 import java.util.Stack
 import javax.inject.Inject
 
@@ -14,7 +14,7 @@ class DialogManager @Inject constructor() {
     private val dialogStack = Stack<DialogData>()
     val activeDialog = mutableStateOf<DialogData?>(null)
 
-    private fun showTopDialogToUI(dialog:DialogData){
+    private fun showTopDialogToUI(dialog: DialogData){
         activeDialog.value = dialog
     }
 

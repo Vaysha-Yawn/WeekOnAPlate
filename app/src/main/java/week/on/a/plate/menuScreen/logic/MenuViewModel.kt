@@ -8,9 +8,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.data.week.WeekView
-import week.on.a.plate.menuScreen.logic.eventData.MenuEvent
-import week.on.a.plate.menuScreen.logic.stateData.MenuIUState
-import week.on.a.plate.menuScreen.logic.stateData.WeekState
+import week.on.a.plate.menuScreen.data.eventData.MenuEvent
+import week.on.a.plate.menuScreen.data.stateData.MenuIUState
+import week.on.a.plate.menuScreen.data.stateData.WeekState
 import week.on.a.plate.menuScreen.logic.useCase.CRUDRecipeInMenu
 import week.on.a.plate.menuScreen.logic.useCase.DialogManager
 import week.on.a.plate.menuScreen.logic.useCase.Navigation
@@ -87,7 +87,7 @@ class MenuViewModel @Inject constructor(
             is MenuEvent.SwitchEditMode -> switchEditMode()
             is MenuEvent.NavigateFromMenu -> {
                 selectedRecipeManager.clear(menuUIState)
-                //
+                navigation.onEvent(event.navData)
             }
             is MenuEvent.OpenDialog -> dialogManager.openDialog(event.dialog, viewModelScope)
             is MenuEvent.CloseDialog -> dialogManager.closeDialog()

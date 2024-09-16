@@ -1,4 +1,4 @@
-package week.on.a.plate.menuScreen.view.uiTools
+package week.on.a.plate.menuScreen.view.topBar
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,10 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import week.on.a.plate.ui.theme.Typography
-import week.on.a.plate.core.uitools.buttons.PlusButtonCard
 import week.on.a.plate.core.uitools.buttons.PlusButtonTitle
-import week.on.a.plate.core.uitools.TextInApp
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.TextTitleItalic
 import week.on.a.plate.ui.theme.WeekOnAPlateTheme

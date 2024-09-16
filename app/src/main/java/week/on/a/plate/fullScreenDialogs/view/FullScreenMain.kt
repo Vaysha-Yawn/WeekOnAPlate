@@ -1,4 +1,4 @@
-package week.on.a.plate.fullScreenDialogs.dialogFullScreen
+package week.on.a.plate.fullScreenDialogs.view
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SnackbarHostState
@@ -7,9 +7,9 @@ import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import week.on.a.plate.core.navigation.destiations.FullScreenDialogRoute
-import week.on.a.plate.fullScreenDialogs.FullScreenDialogData
-import week.on.a.plate.fullScreenDialogs.FullScreenDialogsEvent
-import week.on.a.plate.fullScreenDialogs.FullScreenDialogsViewModel
+import week.on.a.plate.fullScreenDialogs.data.FullScreenDialogData
+import week.on.a.plate.fullScreenDialogs.data.FullScreenDialogsEvent
+import week.on.a.plate.fullScreenDialogs.logic.FullScreenDialogsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -20,7 +20,7 @@ fun FullScreenDialogMain(
     viewModel: FullScreenDialogsViewModel = hiltViewModel(),
 ) {
     viewModel.snackbarHostState = snackbarHostState
-    viewModel.setNavController(navController)
+    viewModel.navController = navController
     val state = rememberDatePickerState()
     val onEvent = { eventData: FullScreenDialogsEvent ->
         viewModel.onEvent(eventData)
