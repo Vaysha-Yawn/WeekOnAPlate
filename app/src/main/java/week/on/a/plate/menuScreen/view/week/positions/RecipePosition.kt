@@ -27,7 +27,9 @@ import week.on.a.plate.core.uitools.SubText
 import week.on.a.plate.core.uitools.TextSmall
 import week.on.a.plate.core.uitools.buttons.CheckButton
 import week.on.a.plate.core.uitools.buttons.MoreButtonWithBackg
-import week.on.a.plate.menuScreen.data.eventData.DialogData
+import week.on.a.plate.core.dialogs.data.DialogData
+import week.on.a.plate.core.mainView.mainViewModelLogic.Event
+import week.on.a.plate.core.mainView.mainViewModelLogic.MainEvent
 import week.on.a.plate.menuScreen.data.eventData.MenuEvent
 import week.on.a.plate.menuScreen.data.stateData.MenuIUState
 import week.on.a.plate.menuScreen.data.eventData.NavFromMenuData
@@ -38,7 +40,7 @@ import week.on.a.plate.menuScreen.data.eventData.SelectedData
 fun WeekRecipePosition(
     recipe: Position.PositionRecipeView,
     menuIUState: MenuIUState,
-    onEvent: (event: MenuEvent) -> Unit,
+    onEvent: (event: Event) -> Unit,
 ) {
     Column(
         Modifier
@@ -77,7 +79,7 @@ fun WeekRecipePosition(
                     Spacer(modifier = Modifier.height(20.dp))
                 }
                 MoreButtonWithBackg {
-                    onEvent(MenuEvent.OpenDialog(DialogData.EditPosition(recipe, onEvent)))
+                    //onEvent(MainEvent.OpenDialog(DialogData.EditPosition(recipe, onEvent)))
                 }
             }
         }

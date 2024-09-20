@@ -17,8 +17,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import week.on.a.plate.core.mainView.mainViewModelLogic.MainViewModel
 import week.on.a.plate.core.navigation.bottomBar.BottomBar
 import week.on.a.plate.core.navigation.Navigation
+import week.on.a.plate.core.dialogs.view.base.DialogsContainer
 import week.on.a.plate.ui.theme.ColorBackgroundWhite
 import week.on.a.plate.ui.theme.WeekOnAPlateTheme
 
@@ -26,20 +28,18 @@ import week.on.a.plate.ui.theme.WeekOnAPlateTheme
 class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels<MainViewModel>()
-    private lateinit var navController: NavHostController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             WeekOnAPlateTheme {
-                navController = rememberNavController()
-
+                viewModel.nav = rememberNavController()
                 Scaffold(modifier = Modifier
                     .fillMaxSize()
                     .background(ColorBackgroundWhite),
                     bottomBar = {
-                        BottomBar(navController, viewModel.isActiveBaseScreen.value)
+                        BottomBar(viewModel.nav, viewModel.isActiveBaseScreen.value)
                     }, snackbarHost = {
                         SnackbarHost(hostState = viewModel.snackbarHostState) {
                             if (viewModel.snackbarHostState.currentSnackbarData != null) {
@@ -54,18 +54,14 @@ class MainActivity : ComponentActivity() {
                     }
                 ) { innerPadding ->
                     Navigation(
-                        navController,
+                        viewModel,
                         innerPadding,
-                        viewModel.snackbarHostState,
-                        viewModel.isActiveBaseScreen
                     )
+                   DialogsContainer(viewModel.dialogManager.activeDialog.value){event->
+                        viewModel.onEvent(event)
+                    }
                 }
             }
         }
     }
-    /*
-    override fun onBackPressed() {
-        super.onBackPressed()
-        navController.popBackStack()
-    }*/
 }

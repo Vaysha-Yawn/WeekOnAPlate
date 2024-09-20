@@ -4,6 +4,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import week.on.a.plate.R
+import week.on.a.plate.core.mainView.mainViewModelLogic.Event
 import week.on.a.plate.fullScreenDialogs.data.FullScreenDialogData
 import week.on.a.plate.fullScreenDialogs.data.FullScreenDialogsEvent
 
@@ -12,7 +13,7 @@ import week.on.a.plate.fullScreenDialogs.data.FullScreenDialogsEvent
 @Composable
 fun SpecifyDatePositionDialogContent(
     data: FullScreenDialogData.SpecifyDate,
-    onEvent: (FullScreenDialogsEvent) -> Unit
+    onEvent: (Event) -> Unit
 ) {
     AddMoveDoubleRecipeDialogContent(
         stringResource(R.string.add_position),
@@ -24,7 +25,7 @@ fun SpecifyDatePositionDialogContent(
 @Composable
 fun DoublePositionDialogContent(
     data: FullScreenDialogData.DoublePositionToMenu,
-    onEvent: (FullScreenDialogsEvent) -> Unit
+    onEvent: (Event) -> Unit
 ) {
     AddMoveDoubleRecipeDialogContent(
         stringResource(data.titleRes),
@@ -37,7 +38,7 @@ fun DoublePositionDialogContent(
 @Composable
 fun MovePositionDialogContent(
     data: FullScreenDialogData.MovePositionToMenu,
-    onEvent: (FullScreenDialogsEvent) -> Unit
+    onEvent: (Event) -> Unit
 ) {
     AddMoveDoubleRecipeDialogContent(
         stringResource(data.titleRes),
@@ -48,7 +49,7 @@ fun MovePositionDialogContent(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddRecipeDialogContent(data: FullScreenDialogData.AddPositionToMenu, onEvent: (FullScreenDialogsEvent) -> Unit) {
+fun AddRecipeDialogContent(data: FullScreenDialogData.AddPositionToMenu, onEvent: (Event) -> Unit) {
     data.setUpStartSettings
     AddMoveDoubleRecipeDialogContent(
         stringResource(data.titleRes),

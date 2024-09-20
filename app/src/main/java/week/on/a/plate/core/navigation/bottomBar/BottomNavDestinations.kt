@@ -34,7 +34,6 @@ val bottomScreens = listOf(
     BottomScreens.Settings,
 )
 
-
 // destinations
 
 @Serializable

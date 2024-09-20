@@ -1,11 +1,11 @@
 package week.on.a.plate.fullScreenDialogs.view
 
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
+import week.on.a.plate.core.mainView.mainViewModelLogic.Event
+import week.on.a.plate.core.mainView.mainViewModelLogic.MainViewModel
 import week.on.a.plate.fullScreenDialogs.navigation.FullScreenDialogRoute
 import week.on.a.plate.fullScreenDialogs.data.FullScreenDialogData
 import week.on.a.plate.fullScreenDialogs.data.FullScreenDialogsEvent
@@ -15,15 +15,14 @@ import java.time.LocalDate
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FullScreenDialogMain(
-    snackbarHostState: SnackbarHostState,
-    navController: NavHostController,
     arguments: FullScreenDialogRoute,
+    mainViewModel: MainViewModel,
     viewModel: FullScreenDialogsViewModel = hiltViewModel(),
 ) {
-    viewModel.snackbarHostState = snackbarHostState
-    viewModel.navController = navController
+    viewModel.mainViewModel = mainViewModel
+
     val state = rememberDatePickerState()
-    val onEvent = { eventData: FullScreenDialogsEvent ->
+    val onEvent = { eventData: Event ->
         viewModel.onEvent(eventData)
     }
     when (arguments) {
@@ -54,6 +53,10 @@ fun FullScreenDialogMain(
                 state, onEvent
             )
             SpecifyDatePositionDialogContent(data, onEvent)
+        }
+
+        is FullScreenDialogRoute.SpecifyDateAndAddRecipeDialog -> {
+            //todo
         }
     }
 }

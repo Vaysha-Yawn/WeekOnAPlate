@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -46,7 +47,7 @@ fun CalendarDayCard(
                 }, RoundedCornerShape(10.dp)
             )
             .clickable(onClick = {change(currentInd)})
-            .padding(horizontal = 5.dp, vertical = 5.dp), verticalArrangement = Arrangement.Center
+            .padding(horizontal = 5.dp, vertical = 5.dp), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally
     ) {
         TextInApp(
             text = dayInWeek,

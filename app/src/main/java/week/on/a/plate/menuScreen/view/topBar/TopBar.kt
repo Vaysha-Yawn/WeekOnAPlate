@@ -21,8 +21,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.core.uitools.TextBodyDisActive
-import week.on.a.plate.menuScreen.data.eventData.ActionMenuDBData
-import week.on.a.plate.menuScreen.data.eventData.DialogData
+import week.on.a.plate.menuScreen.data.eventData.ActionWeekMenuDB
+import week.on.a.plate.core.dialogs.data.DialogData
+import week.on.a.plate.core.mainView.mainViewModelLogic.Event
+import week.on.a.plate.core.mainView.mainViewModelLogic.MainEvent
 import week.on.a.plate.menuScreen.data.eventData.MenuEvent
 import week.on.a.plate.menuScreen.data.eventData.NavFromMenuData
 import week.on.a.plate.menuScreen.data.eventData.SelectedData
@@ -34,7 +36,7 @@ import week.on.a.plate.ui.theme.ColorButtonNegativeGrey
 fun TopBar(
     title: String,
     menuIUState: MenuIUState,
-    onEvent: (event: MenuEvent) -> Unit
+    onEvent: (event: Event) -> Unit
 ) {
     val dateState = rememberDatePickerState()
     Column {
@@ -50,9 +52,9 @@ fun TopBar(
                 EditingRow(actionChooseAll = {
                     onEvent(MenuEvent.ActionSelect(SelectedData.ChooseAll))
                 }, actionDeleteSelected = {
-                    onEvent(MenuEvent.ActionDBMenu(ActionMenuDBData.DeleteSelected))
+                    onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.DeleteSelected))
                 }, actionSelectedToShopList = {
-                    onEvent(MenuEvent.OpenDialog(DialogData.SelectedToShopList( onEvent)))
+                   // onEvent(MainEvent.OpenDialog(DialogData.SelectedToShopList( onEvent)))
                 }, menuIUState.isAllSelected.value)
             } else {
                 TextBodyDisActive(
@@ -73,7 +75,7 @@ fun TopBar(
                     contentDescription = "",
                     modifier = Modifier
                         .clickable {
-                            onEvent(MenuEvent.OpenDialog(DialogData.ChooseDay(dateState, onEvent)))
+                           onEvent(MenuEvent.ChooseWeek)
                         }
                         .padding(6.dp)
                         .size(24.dp)

@@ -30,6 +30,8 @@ import androidx.navigation.compose.rememberNavController
 import week.on.a.plate.R
 import week.on.a.plate.core.data.example.positionRecipeExample
 import week.on.a.plate.core.data.week.CategoriesSelection
+import week.on.a.plate.core.mainView.mainViewModelLogic.Event
+import week.on.a.plate.core.mainView.mainViewModelLogic.MainEvent
 import week.on.a.plate.core.tools.dateToLocalDate
 import week.on.a.plate.core.tools.dateToString
 import week.on.a.plate.core.uitools.TextBody
@@ -52,7 +54,7 @@ fun AddMoveDoubleRecipeDialogContent(
     checkWeek: MutableState<Boolean>,
     checkDayCategory: MutableState<CategoriesSelection?>,
     showDatePicker: MutableState<Boolean>,
-    event: (FullScreenDialogsEvent) -> Unit,
+    event: (Event) -> Unit,
     done: () -> Unit,
     close: () -> Unit,
 ) {
@@ -145,7 +147,7 @@ fun AddMoveDoubleRecipeDialogContent(
             if (state.selectedDateMillis?.dateToLocalDate() != null && (checkWeek.value || checkDayCategory.value != null)) {
                 done()
             } else {
-                event(FullScreenDialogsEvent.ShowSnackBar(messageError))
+                event(MainEvent.ShowSnackBar(messageError))
             }
         }
     }

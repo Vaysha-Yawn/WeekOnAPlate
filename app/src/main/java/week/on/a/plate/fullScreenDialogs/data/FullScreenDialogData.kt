@@ -7,19 +7,21 @@ import androidx.compose.runtime.mutableStateOf
 import week.on.a.plate.R
 import week.on.a.plate.core.data.week.CategoriesSelection
 import week.on.a.plate.core.data.week.Position
+import week.on.a.plate.core.mainView.mainViewModelLogic.Event
+import week.on.a.plate.core.mainView.mainViewModelLogic.MainEvent
 import week.on.a.plate.core.tools.dateToLocalDate
-import week.on.a.plate.menuScreen.data.eventData.ActionMenuDBData
+import week.on.a.plate.menuScreen.data.eventData.ActionWeekMenuDB
 import java.time.LocalDate
 
-sealed class FullScreenDialogData(val onEvent: (FullScreenDialogsEvent) -> Unit) {
+sealed class FullScreenDialogData(val onEvent: (Event) -> Unit) {
 
     val close = {
-        onEvent(FullScreenDialogsEvent.NavigateBack)
+        onEvent(MainEvent.NavigateBack)
     }
 
     class AddPositionToMenu @OptIn(ExperimentalMaterial3Api::class) constructor(
         val state: DatePickerState, val recipe: Position.PositionRecipeView,
-        val date: LocalDate, val category: String, onEvent: (FullScreenDialogsEvent) -> Unit
+        val date: LocalDate, val category: String, onEvent: (Event) -> Unit
     ) : FullScreenDialogData(onEvent) {
         val checkWeek = mutableStateOf<Boolean>(false)
         val checkDayCategory = mutableStateOf<CategoriesSelection?>(null)
@@ -63,7 +65,7 @@ sealed class FullScreenDialogData(val onEvent: (FullScreenDialogsEvent) -> Unit)
             val eventAfter: (Long) -> Unit = { id ->
                 onEvent(
                     FullScreenDialogsEvent.ActionMenuBD(
-                        ActionMenuDBData.AddRecipePositionInMenuDB(
+                        ActionWeekMenuDB.AddRecipePositionInMenuDB(
                             id,
                             this.recipe
                         )
@@ -80,14 +82,14 @@ sealed class FullScreenDialogData(val onEvent: (FullScreenDialogsEvent) -> Unit)
                     },
                 )
             )
-            onEvent(FullScreenDialogsEvent.NavigateBack)
+            onEvent(MainEvent.NavigateBack)
         }
     }
 
     class MovePositionToMenu @OptIn(ExperimentalMaterial3Api::class) constructor(
         val state: DatePickerState,
         val position: Position,
-        onEvent: (FullScreenDialogsEvent) -> Unit,
+        onEvent: (Event) -> Unit,
     ) : FullScreenDialogData(onEvent) {
         val checkWeek = mutableStateOf<Boolean>(false)
         val checkDayCategory = mutableStateOf<CategoriesSelection?>(null)
@@ -98,7 +100,7 @@ sealed class FullScreenDialogData(val onEvent: (FullScreenDialogsEvent) -> Unit)
         val done = {
             onEvent(
                 FullScreenDialogsEvent.ActionMenuBD(
-                    ActionMenuDBData.MovePositionInMenuDB(
+                    ActionWeekMenuDB.MovePositionInMenuDB(
                         state.selectedDateMillis!!.dateToLocalDate(),
                         if (checkWeek.value) {
                             CategoriesSelection.ForWeek
@@ -109,14 +111,14 @@ sealed class FullScreenDialogData(val onEvent: (FullScreenDialogsEvent) -> Unit)
                     )
                 )
             )
-            onEvent(FullScreenDialogsEvent.NavigateBack)
+            onEvent(MainEvent.NavigateBack)
         }
     }
 
     class DoublePositionToMenu @OptIn(ExperimentalMaterial3Api::class) constructor(
         val state: DatePickerState,
         val position: Position,
-        onEvent: (FullScreenDialogsEvent) -> Unit,
+        onEvent: (Event) -> Unit,
     ) : FullScreenDialogData(onEvent) {
         val checkWeek = mutableStateOf<Boolean>(false)
         val checkDayCategory = mutableStateOf<CategoriesSelection?>(null)
@@ -127,7 +129,7 @@ sealed class FullScreenDialogData(val onEvent: (FullScreenDialogsEvent) -> Unit)
         val done = {
             onEvent(
                 FullScreenDialogsEvent.ActionMenuBD(
-                    ActionMenuDBData.DoublePositionInMenuDB(
+                    ActionWeekMenuDB.DoublePositionInMenuDB(
                         state.selectedDateMillis!!.dateToLocalDate(),
                         if (checkWeek.value) {
                             CategoriesSelection.ForWeek
@@ -138,12 +140,12 @@ sealed class FullScreenDialogData(val onEvent: (FullScreenDialogsEvent) -> Unit)
                     )
                 )
             )
-            onEvent(FullScreenDialogsEvent.NavigateBack)
+            onEvent(MainEvent.NavigateBack)
         }
     }
 
     class SpecifyDate @OptIn(ExperimentalMaterial3Api::class) constructor(
-        val state: DatePickerState, onEventVM: (FullScreenDialogsEvent) -> Unit
+        val state: DatePickerState, onEventVM: (Event) -> Unit
     ) : FullScreenDialogData(onEventVM) {
         val checkWeek = mutableStateOf<Boolean>(false)
         val checkDayCategory = mutableStateOf<CategoriesSelection?>(null)

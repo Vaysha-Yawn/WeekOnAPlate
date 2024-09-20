@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -57,7 +58,7 @@ fun CommonButton(
             .padding(10.dp)
             .clickable {
                 click()
-            }, horizontalArrangement = Arrangement.SpaceBetween
+            }, horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically
     ) {
         Spacer(modifier = Modifier)
         TextInApp(text = text, textStyle = titleMediumItalic, color = ColorTextBlack)

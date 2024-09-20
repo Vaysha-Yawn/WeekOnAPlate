@@ -18,10 +18,13 @@ sealed class FullScreenDialogRoute {
     ) : FullScreenDialogRoute()
 
     @Serializable
-    data class DoublePositionToMenuDialog(
+    data class DoublePositionToMenuDialog (
         val position: Position
     ) : FullScreenDialogRoute()
 
     @Serializable
     data object SpecifyDateDialog : FullScreenDialogRoute()
+
+    @Serializable
+    data class SpecifyDateAndAddRecipeDialog (val idRecipe: Long) : FullScreenDialogRoute()
 }

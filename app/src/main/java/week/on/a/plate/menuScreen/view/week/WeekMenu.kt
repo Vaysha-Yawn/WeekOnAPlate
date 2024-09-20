@@ -24,7 +24,9 @@ import week.on.a.plate.core.data.week.WeekView
 import week.on.a.plate.core.uitools.SubText
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.PlusButtonTitle
-import week.on.a.plate.menuScreen.data.eventData.DialogData
+import week.on.a.plate.core.dialogs.data.DialogData
+import week.on.a.plate.core.mainView.mainViewModelLogic.Event
+import week.on.a.plate.core.mainView.mainViewModelLogic.MainEvent
 import week.on.a.plate.menuScreen.data.eventData.MenuEvent
 import week.on.a.plate.menuScreen.data.stateData.MenuIUState
 import week.on.a.plate.menuScreen.view.calendar.CalendarDayCard
@@ -34,7 +36,7 @@ import java.time.LocalDate
 @Composable
 fun WeekMenu(
     menuIUState: MenuIUState,
-    onEvent: (event: MenuEvent) -> Unit,
+    onEvent: (event: Event) -> Unit,
     week: WeekView
 ) {
     LazyColumn(Modifier.padding(horizontal = 12.dp)) {
@@ -84,7 +86,7 @@ fun WeekMenu(
                                     modifier = Modifier.width(120.dp),
                                 )
                                 PlusButtonTitle {
-                                    onEvent(MenuEvent.OpenDialog(DialogData.AddPosition( sel.id, onEvent)))
+                                   // onEvent(MainEvent.OpenDialog(DialogData.AddPosition( sel.id, onEvent)))
                                 }
                             }
                             sel.positions.forEach { pos ->

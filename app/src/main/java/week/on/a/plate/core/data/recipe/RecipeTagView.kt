@@ -7,5 +7,4 @@ import kotlinx.serialization.Serializable
 data class RecipeTagView(
     val id: Long = 0,
     var tagName: String,
-    var isTypeOfMeal:Boolean,
 )

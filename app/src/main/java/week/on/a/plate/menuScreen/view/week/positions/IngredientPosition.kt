@@ -21,14 +21,16 @@ import week.on.a.plate.core.data.week.Position
 import week.on.a.plate.core.uitools.SubText
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.buttons.MoreButtonWithBackg
-import week.on.a.plate.menuScreen.data.eventData.DialogData
+import week.on.a.plate.core.dialogs.data.DialogData
+import week.on.a.plate.core.mainView.mainViewModelLogic.Event
+import week.on.a.plate.core.mainView.mainViewModelLogic.MainEvent
 import week.on.a.plate.menuScreen.data.eventData.MenuEvent
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun WeekIngredientPosition(
     ingredient: Position.PositionIngredientView,
-    onEvent: (event: MenuEvent) -> Unit
+    onEvent: (event: Event) -> Unit
 ) {
     Column(
         Modifier
@@ -46,7 +48,7 @@ fun WeekIngredientPosition(
             Spacer(modifier = Modifier.size(5.dp))
             Column {
                 MoreButtonWithBackg {
-                   onEvent(MenuEvent.OpenDialog(DialogData.EditPosition(ingredient, onEvent)))
+                  // onEvent(MainEvent.OpenDialog(DialogData.EditPosition(ingredient, onEvent)))
                 }
                 Spacer(modifier = Modifier.size(10.dp))
 

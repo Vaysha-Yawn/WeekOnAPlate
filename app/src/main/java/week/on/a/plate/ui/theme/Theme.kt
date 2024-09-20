@@ -26,7 +26,7 @@ private val DarkColorScheme = darkColorScheme(
     surfaceVariant = ColorTextBlack,
 )
 
-private val LightColorScheme = lightColorScheme(
+val LightColorScheme = lightColorScheme(
     primary = ColorButtonYellow,
     secondary = ColorButtonGreen,
     tertiary = ColorPanelLightGrey,

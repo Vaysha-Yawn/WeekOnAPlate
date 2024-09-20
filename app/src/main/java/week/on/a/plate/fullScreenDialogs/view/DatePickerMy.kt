@@ -29,7 +29,9 @@ fun DatePickerMy(
     done: () -> Unit
 ) {
     if (showState.value) {
-        Dialog(onDismissRequest = { onClose() }) {
+        Dialog(onDismissRequest = {
+            onClose()
+        }) {
             Column(
                 Modifier
                     .background(

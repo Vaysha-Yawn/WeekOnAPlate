@@ -2,60 +2,63 @@ package week.on.a.plate.core.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import week.on.a.plate.core.data.recipe.IngredientView
+import week.on.a.plate.core.data.recipe.RecipeTagView
 import week.on.a.plate.core.data.week.Position
+import week.on.a.plate.core.mainView.mainViewModelLogic.MainViewModel
 import week.on.a.plate.core.navigation.bottomBar.FavoritesScreen
 import week.on.a.plate.core.navigation.bottomBar.HomeScreen
 import week.on.a.plate.core.navigation.bottomBar.MenuScreen
 import week.on.a.plate.core.navigation.bottomBar.SettingsScreen
 import week.on.a.plate.core.navigation.bottomBar.ShoppingListScreen
-import week.on.a.plate.fullScreenDialogs.navigation.FullScreenDialogRoute
+import week.on.a.plate.filters.FilterStart
+import week.on.a.plate.filters.navigation.FilterCustomNavType
+import week.on.a.plate.filters.navigation.FilterRoute
 import week.on.a.plate.fullScreenDialogs.navigation.CustomNavType
+import week.on.a.plate.fullScreenDialogs.navigation.FullScreenDialogRoute
 import week.on.a.plate.fullScreenDialogs.view.FullScreenDialogMain
 import week.on.a.plate.menuScreen.view.main.MenuScreen
-import week.on.a.plate.search.navigation.Search
+import week.on.a.plate.search.navigation.SearchRoute
 import week.on.a.plate.search.view.main.SearchStart
 import kotlin.reflect.typeOf
 
 @Composable
 fun Navigation(
-    navController: NavHostController,
+    viewModel: MainViewModel,
     innerPadding: PaddingValues,
-    snackbarHostState: SnackbarHostState,
-    isActiveBaseScreen: MutableState<Boolean>
 ) {
     NavHost(
-        navController = navController,
+        navController = viewModel.nav,
         startDestination = MenuScreen,
         Modifier.padding(innerPadding)
     ) {
         //bottom bar
         composable<MenuScreen> {
-            isActiveBaseScreen.value = true
-            MenuScreen(snackbarHostState = snackbarHostState, navController = navController)
+            viewModel.isActiveBaseScreen.value = true
+            MenuScreen(
+                viewModel
+            )
         }
         composable<HomeScreen> {
-            isActiveBaseScreen.value = true
+            viewModel.isActiveBaseScreen.value = true
         }
         composable<ShoppingListScreen> {
-            isActiveBaseScreen.value = true
+            viewModel.isActiveBaseScreen.value = true
         }
         composable<SettingsScreen> {
-            isActiveBaseScreen.value = true
+            viewModel.isActiveBaseScreen.value = true
         }
         composable<FavoritesScreen> {
-            isActiveBaseScreen.value = true
+            viewModel.isActiveBaseScreen.value = true
         }
 
         composable<SettingsScreen> {
-            isActiveBaseScreen.value = true
+            viewModel.isActiveBaseScreen.value = true
         }
 
         // FullScreenDialogRoute
@@ -63,34 +66,57 @@ fun Navigation(
         composable<FullScreenDialogRoute.AddPositionToMenuDialog>(
             typeMap = mapOf(typeOf<Position.PositionRecipeView>() to CustomNavType.PositionRecipeView)
         ) {
-            isActiveBaseScreen.value = false
+            viewModel.isActiveBaseScreen.value = false
             val arguments = it.toRoute<FullScreenDialogRoute.AddPositionToMenuDialog>()
-            FullScreenDialogMain(snackbarHostState, navController, arguments)
+            FullScreenDialogMain(arguments, viewModel)
         }
 
         composable<FullScreenDialogRoute.DoublePositionToMenuDialog>(typeMap = mapOf(typeOf<Position>() to CustomNavType.Position)) {
-            isActiveBaseScreen.value = false
+            viewModel.isActiveBaseScreen.value = false
             val arguments = it.toRoute<FullScreenDialogRoute.DoublePositionToMenuDialog>()
-            FullScreenDialogMain(snackbarHostState, navController, arguments)
+            FullScreenDialogMain(arguments, viewModel)
         }
 
         composable<FullScreenDialogRoute.MovePositionToMenuDialog>(typeMap = mapOf(typeOf<Position>() to CustomNavType.Position)) {
-            isActiveBaseScreen.value = false
+            viewModel.isActiveBaseScreen.value = false
             val arguments = it.toRoute<FullScreenDialogRoute.MovePositionToMenuDialog>()
-            FullScreenDialogMain(snackbarHostState, navController, arguments)
+            FullScreenDialogMain(arguments, viewModel)
         }
 
         composable<FullScreenDialogRoute.SpecifyDateDialog> {
-            isActiveBaseScreen.value = false
+            viewModel.isActiveBaseScreen.value = false
             val arguments = it.toRoute<FullScreenDialogRoute.SpecifyDateDialog>()
-            FullScreenDialogMain(snackbarHostState, navController, arguments)
+            FullScreenDialogMain(arguments, viewModel)
         }
 
         // search
-        composable<Search> {
-            isActiveBaseScreen.value = true
-            val arguments = it.toRoute<Search>()
-            SearchStart(snackbarHostState, navController, isActiveBaseScreen, arguments)
+        composable<SearchRoute.SearchDestination> {
+            viewModel.isActiveBaseScreen.value = true
+            val arguments = it.toRoute<SearchRoute.SearchDestination>()
+            SearchStart(arguments, viewModel)
+        }
+
+        composable<SearchRoute.SearchWithSelId> {
+            viewModel.isActiveBaseScreen.value = true
+            val arguments = it.toRoute<SearchRoute.SearchWithSelId>()
+            SearchStart(arguments, viewModel)
+        }
+
+        composable<FilterRoute.FilterDestination>(
+            typeMap = mapOf(
+                typeOf<List<RecipeTagView>>() to FilterCustomNavType.RecipeTagView,
+                typeOf<List<IngredientView>>() to FilterCustomNavType.IngredientView,
+            )
+        ) {
+            viewModel.isActiveBaseScreen.value = false
+            val arguments = it.toRoute<FilterRoute.FilterDestination>()
+            FilterStart(arguments = arguments, mainVM = viewModel)
+        }
+
+        composable<FilterRoute.FilterToCreateDraftWithSelIdDestination> {
+            viewModel.isActiveBaseScreen.value = false
+            val arguments = it.toRoute<FilterRoute.FilterToCreateDraftWithSelIdDestination>()
+            FilterStart(arguments = arguments, mainVM = viewModel)
         }
 
     }

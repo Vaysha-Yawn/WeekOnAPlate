@@ -1,6 +1,7 @@
 package week.on.a.plate.core.uitools.buttons
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -22,17 +23,20 @@ fun ButtonText(
     text: String,
     modifier: Modifier = Modifier,
     maxLines: Int? = null,
-    textStyle: TextStyle = Typography.titleLarge,
-    color: Color = Typography.titleLarge.color,
+    textStyle: TextStyle = Typography.bodySmall,
+    color: Color = Typography.bodyMedium.color,
     textAlign: TextAlign = TextAlign.Center,
     colorBackground: Color = ColorButtonNegativeGrey,
+    click:()->Unit
 ) {
     TextInApp(
         text, modifier = modifier
             .background(
                 colorBackground, RoundedCornerShape(30.dp)
             )
-            .padding(horizontal = 20.dp), textStyle = textStyle,
+            .padding(horizontal = 6.dp, vertical = 3.dp).clickable {
+                click()
+            }, textStyle = textStyle,
         maxLines = maxLines, color = color,
         textAlign = textAlign
     )
@@ -42,6 +46,6 @@ fun ButtonText(
 @Composable
 fun PreviewButtonText() {
     WeekOnAPlateTheme {
-        ButtonText("Button", colorBackground = ColorPanelGreen)
+        ButtonText("Button", colorBackground = ColorPanelGreen, click = {})
     }
 }

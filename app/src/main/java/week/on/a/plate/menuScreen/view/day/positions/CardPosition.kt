@@ -19,7 +19,9 @@ import androidx.compose.ui.unit.dp
 import week.on.a.plate.core.data.example.WeekDataExample
 import week.on.a.plate.core.data.week.Position
 import week.on.a.plate.core.uitools.buttons.MoreButton
-import week.on.a.plate.menuScreen.data.eventData.DialogData
+import week.on.a.plate.core.dialogs.data.DialogData
+import week.on.a.plate.core.mainView.mainViewModelLogic.Event
+import week.on.a.plate.core.mainView.mainViewModelLogic.MainEvent
 import week.on.a.plate.menuScreen.data.eventData.MenuEvent
 import week.on.a.plate.menuScreen.data.stateData.MenuIUState
 import week.on.a.plate.menuScreen.view.day.BlockSelection
@@ -30,7 +32,7 @@ import week.on.a.plate.ui.theme.WeekOnAPlateTheme
 fun CardPosition(
     position: Position,
     menuIUState: MenuIUState,
-    onEvent: (event: MenuEvent) -> Unit
+    onEvent: (event: Event) -> Unit
 ) {
     Card(
         Modifier
@@ -67,7 +69,7 @@ fun CardPosition(
                 }
             }
             MoreButton {
-                onEvent(MenuEvent.OpenDialog(DialogData.EditPosition(position, onEvent)))
+               onEvent(MenuEvent.EditPosition(position))
             }
         }
     }
@@ -80,8 +82,9 @@ fun PreviewRecipePosition() {
         val menuIUState = MenuIUState.MenuIUStateExample
         val week = WeekDataExample
         Column {
-            BlockSelection(week.days[0].selections[0], week.days[0].date,
-                menuIUState, {})
+            BlockSelection(
+                week.days[0].selections[0], menuIUState
+            ) {}
         }
     }
 }

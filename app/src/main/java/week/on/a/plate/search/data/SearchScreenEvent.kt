@@ -1,18 +1,12 @@
 package week.on.a.plate.search.data
 
-import week.on.a.plate.menuScreen.data.eventData.DialogData
+import week.on.a.plate.core.data.recipe.IngredientView
+import week.on.a.plate.core.data.recipe.RecipeTagView
+import week.on.a.plate.core.mainView.mainViewModelLogic.Event
 
-sealed class SearchScreenEvent {
-    class ShowSnackBar(val message: String) : SearchScreenEvent()
-    data object CloseDialog : SearchScreenEvent()
-    data object NavigateBack : SearchScreenEvent()
-    class OpenDialog(val dialog: DialogData) : SearchScreenEvent()
-    class Navigate(val navData: NavFromSearchData) : SearchScreenEvent()
-    class Search(val s: String) : SearchScreenEvent()
-    class SearchFilters(s: String) : SearchScreenEvent()
+sealed class SearchScreenEvent : Event(){
+    class Search(val text: String = "", val filters:List<RecipeTagView> = listOf(), val ingredients:List<IngredientView> = listOf()) : SearchScreenEvent()
+    class FlipFavorite(val id: Long, val inFavorite: Boolean) : SearchScreenEvent()
     data object VoiceSearch : SearchScreenEvent()
-    data object OpenFilter : SearchScreenEvent()
-    data object VoiceSearchFilters : SearchScreenEvent()
-    data object CloseFilters : SearchScreenEvent()
     data object ClearResultSearch : SearchScreenEvent()
 }

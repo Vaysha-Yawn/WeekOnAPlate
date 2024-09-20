@@ -18,6 +18,7 @@ import week.on.a.plate.core.data.recipe.IngredientView
 import week.on.a.plate.core.data.recipe.RecipeTagView
 import week.on.a.plate.ui.theme.ColorBluePanel
 import week.on.a.plate.ui.theme.ColorButtonGreen
+import week.on.a.plate.ui.theme.ColorButtonNegativeGrey
 import week.on.a.plate.ui.theme.ColorPanelGreen
 import week.on.a.plate.ui.theme.ColorPanelYellow
 import week.on.a.plate.ui.theme.ColorSubTextGrey
@@ -165,12 +166,37 @@ fun TextBody(text: String, modifier: Modifier = Modifier, textAlign:TextAlign = 
 }
 
 @Composable
+fun TagBig(tag: RecipeTagView, isActive: Boolean) {
+    TagBig(tag.tagName, if (isActive)ColorPanelGreen else ColorButtonNegativeGrey)
+}
+
+@Composable
+fun CreateTagOrIngredient(name: String, eventCreate:()->Unit) {
+    TagBig("+ Создать: " + name, ColorButtonNegativeGrey, eventCreate)
+}
+
+@Composable
+fun TagBig(ingredientView: IngredientView, isActive: Boolean) {
+    TagBig(ingredientView.name, if (isActive)ColorPanelYellow else ColorButtonNegativeGrey)
+}
+
+@Composable
+fun TagBig(text: String, color: Color, clickable:()->Unit = {}) {
+    TextInApp(
+        text, modifier = Modifier
+            .background(
+                color, RoundedCornerShape(30.dp)
+            )
+            .padding(horizontal = 24.dp, vertical = 6.dp), textStyle = Typography.bodyMedium,
+        maxLines = 1, color = ColorTextBlack,
+        textAlign = TextAlign.Start
+    )
+}
+
+@Composable
 fun TagSmall(tag: RecipeTagView) {
-    val backg = if (tag.isTypeOfMeal) {
-        ColorBluePanel
-    } else {
+    val backg =
         ColorPanelGreen
-    }
     TagSmall(tag.tagName, backg)
 }
 
@@ -183,7 +209,7 @@ fun TagSmall(ingredientView: IngredientView) {
 @Composable
 private fun TagSmall(text: String, color: Color) {
     TextInApp(
-        text, modifier = Modifier
+        text, modifier = Modifier.padding(end = 6.dp, bottom = 6.dp)
             .background(
                 color, RoundedCornerShape(10.dp)
             )

@@ -7,7 +7,7 @@ import week.on.a.plate.core.data.week.DayView
 import week.on.a.plate.core.data.week.Position
 import week.on.a.plate.core.data.week.SelectionView
 import week.on.a.plate.core.data.week.WeekView
-import week.on.a.plate.menuScreen.data.eventData.ActionMenuDBData
+import week.on.a.plate.menuScreen.data.eventData.ActionWeekMenuDB
 import week.on.a.plate.repository.repositoriesForFeatures.menu.MenuRepository
 import week.on.a.plate.repository.tables.weekOrg.position.positionDraft.PositionDraftRepository
 import week.on.a.plate.repository.tables.weekOrg.position.positionIngredient.PositionIngredientRepository
@@ -24,13 +24,13 @@ class CRUDRecipeInMenu @Inject constructor(
     private val recipeRepository: PositionRecipeRepository,
     private val draftRepository: PositionDraftRepository,
 ) {
-    suspend fun onEvent(event: ActionMenuDBData, selected: List<Position>) {
+    suspend fun onEvent(event: ActionWeekMenuDB, selected: List<Position>) {
         when (event) {
-            is ActionMenuDBData.AddEmptyDay -> {
+            is ActionWeekMenuDB.AddEmptyDay -> {
                 menuR.addEmptyDay(event.data)
             }
 
-            is ActionMenuDBData.AddIngredientDB -> {
+            is ActionWeekMenuDB.AddIngredientDB -> {
                 val ingredient = Position.PositionIngredientView(
                     0, IngredientInRecipeView(
                         0,
@@ -42,18 +42,18 @@ class CRUDRecipeInMenu @Inject constructor(
                 positionIngredientRepository.insert(ingredient, event.data.selectionId)
             }
 
-            is ActionMenuDBData.AddNoteDB -> {
+            is ActionWeekMenuDB.AddNoteDB -> {
                 noteRepository.insert(
                     Position.PositionNoteView(0, event.text, event.selectionId),
                     event.selectionId
                 )
             }
 
-            is ActionMenuDBData.AddRecipePositionInMenuDB -> {
+            is ActionWeekMenuDB.AddRecipePositionInMenuDB -> {
                 recipeRepository.insert(event.recipe, event.selId)
             }
 
-            is ActionMenuDBData.ChangePortionsCountDB -> {
+            is ActionWeekMenuDB.ChangePortionsCountDB -> {
                 recipeRepository.update(
                     event.data.recipe.id,
                     event.data.recipe.recipe,
@@ -62,7 +62,7 @@ class CRUDRecipeInMenu @Inject constructor(
                 )
             }
 
-            is ActionMenuDBData.Delete -> {
+            is ActionWeekMenuDB.Delete -> {
                 when (event.position) {
                     is Position.PositionDraftView -> draftRepository.delete(event.position.idPos)
                     is Position.PositionIngredientView -> positionIngredientRepository.delete(event.position.idPos)
@@ -71,13 +71,13 @@ class CRUDRecipeInMenu @Inject constructor(
                 }
             }
 
-            ActionMenuDBData.DeleteSelected -> {
+            ActionWeekMenuDB.DeleteSelected -> {
                 selected.forEach {
-                    onEvent(ActionMenuDBData.Delete(it), listOf())
+                    onEvent(ActionWeekMenuDB.Delete(it), listOf())
                 }
             }
 
-            is ActionMenuDBData.DoublePositionInMenuDB -> {
+            is ActionWeekMenuDB.DoublePositionInMenuDB -> {
                 val selId: Long = menuR.getSelIdOrCreate(event.dateToLocalDate, event.selection)
                 when (event.position) {
                     is Position.PositionDraftView -> draftRepository.insert(event.position, selId)
@@ -91,7 +91,7 @@ class CRUDRecipeInMenu @Inject constructor(
                 }
             }
 
-            is ActionMenuDBData.EditIngredientDB -> {
+            is ActionWeekMenuDB.EditIngredientDB -> {
                 val data = event.data
                 positionIngredientRepository.update(
                     data.ingredient!!.idPos,
@@ -103,7 +103,7 @@ class CRUDRecipeInMenu @Inject constructor(
                 )
             }
 
-            is ActionMenuDBData.EditNoteDB -> {
+            is ActionWeekMenuDB.EditNoteDB -> {
                 val note = event.data.note
                 noteRepository.update(
                     note.idPos,
@@ -111,26 +111,26 @@ class CRUDRecipeInMenu @Inject constructor(
                 )
             }
 
-            is ActionMenuDBData.MovePositionInMenuDB -> {
+            is ActionWeekMenuDB.MovePositionInMenuDB -> {
                 val selId: Long = menuR.getSelIdOrCreate(event.dateToLocalDate, event.selection)
                 when (event.position) {
                     is Position.PositionDraftView -> {
-                        onEvent(ActionMenuDBData.Delete(event.position), listOf())
+                        onEvent(ActionWeekMenuDB.Delete(event.position), listOf())
                         draftRepository.insert(event.position, selId)
                     }
 
                     is Position.PositionIngredientView -> {
-                        onEvent(ActionMenuDBData.Delete(event.position), listOf())
+                        onEvent(ActionWeekMenuDB.Delete(event.position), listOf())
                         positionIngredientRepository.insert(event.position, selId)
                     }
 
                     is Position.PositionNoteView -> {
-                        onEvent(ActionMenuDBData.Delete(event.position), listOf())
+                        onEvent(ActionWeekMenuDB.Delete(event.position), listOf())
                         noteRepository.insert(event.position, selId)
                     }
 
                     is Position.PositionRecipeView -> {
-                        onEvent(ActionMenuDBData.Delete(event.position), listOf())
+                        onEvent(ActionWeekMenuDB.Delete(event.position), listOf())
                         recipeRepository.insert(event.position, selId)
                     }
                 }

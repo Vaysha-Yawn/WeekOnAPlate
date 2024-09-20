@@ -3,6 +3,7 @@ package week.on.a.plate.menuScreen.view.day.positions
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -19,6 +20,7 @@ import week.on.a.plate.core.data.week.Position
 import week.on.a.plate.core.uitools.TagSmall
 import week.on.a.plate.menuScreen.data.eventData.MenuEvent
 import week.on.a.plate.menuScreen.data.eventData.NavFromMenuData
+import week.on.a.plate.search.view.resultScreen.TagList
 
 @Composable
 fun DraftPosition(
@@ -28,23 +30,13 @@ fun DraftPosition(
 ) {
     with(rowScope) {
         Spacer(modifier = Modifier.width(20.dp))
-        LazyRow(
-            Modifier
-                .weight(3f)
-                .padding(vertical = 5.dp),
+        Row(Modifier
+            .weight(3f)
+            .padding(vertical = 5.dp),
             horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            items(draft.tags.size) {
-                TagSmall(tag = draft.tags[it])
-                Spacer(modifier = Modifier.width(5.dp))
-            }
-            items(draft.ingredients.size) {
-                TagSmall(ingredientView = draft.ingredients[it])
-                Spacer(modifier = Modifier.width(5.dp))
-            }
+            verticalAlignment = Alignment.CenterVertically) {
+            TagList(draft.tags, draft.ingredients)
         }
-        Spacer(modifier = Modifier.width(10.dp))
         Image(
             painter = painterResource(id = R.drawable.search),
             contentDescription = "",

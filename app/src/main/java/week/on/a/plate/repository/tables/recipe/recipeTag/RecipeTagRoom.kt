@@ -7,7 +7,6 @@ import androidx.room.PrimaryKey
 data class RecipeTagRoom(
     val recipeTagCategoryId: Long,
     val tagName: String,
-    val isTypeOfMeal:Boolean,
 ){
     @PrimaryKey(autoGenerate = true)
     var recipeTagId: Long = 0

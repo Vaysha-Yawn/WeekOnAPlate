@@ -13,6 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.core.data.example.WeekDataExample
 import week.on.a.plate.core.data.week.Position
+import week.on.a.plate.core.mainView.mainViewModelLogic.Event
 import week.on.a.plate.menuScreen.data.eventData.MenuEvent
 import week.on.a.plate.menuScreen.data.stateData.MenuIUState
 import week.on.a.plate.ui.theme.WeekOnAPlateTheme
@@ -22,7 +23,7 @@ import week.on.a.plate.ui.theme.WeekOnAPlateTheme
 fun WeekCardPosition(
     position: Position,
     menuIUState: MenuIUState,
-    onEvent: (event: MenuEvent) -> Unit
+    onEvent: (event: Event) -> Unit
 ) {
     Card(
         Modifier.border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(20.dp)),

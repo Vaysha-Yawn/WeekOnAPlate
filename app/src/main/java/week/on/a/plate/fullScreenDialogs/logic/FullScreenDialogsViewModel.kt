@@ -9,36 +9,42 @@ import kotlinx.coroutines.launch
 import week.on.a.plate.core.navigation.bottomBar.MenuScreen
 import week.on.a.plate.fullScreenDialogs.data.FullScreenDialogsEvent
 import week.on.a.plate.menuScreen.logic.useCase.CRUDRecipeInMenu
-import week.on.a.plate.menuScreen.logic.useCase.DialogManager
+import week.on.a.plate.core.dialogs.logic.DialogManager
+import week.on.a.plate.core.mainView.mainViewModelLogic.Event
+import week.on.a.plate.core.mainView.mainViewModelLogic.MainEvent
+import week.on.a.plate.core.mainView.mainViewModelLogic.MainViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class FullScreenDialogsViewModel @Inject constructor(
     private val sCRUDRecipeInMenu: CRUDRecipeInMenu,
-    private val dialogManager: DialogManager,
 ) : ViewModel() {
 
-    lateinit var snackbarHostState: SnackbarHostState
-    lateinit var navController: NavHostController
+    lateinit var mainViewModel: MainViewModel
+
+    fun onEvent(event: Event){
+        when(event){
+            is MainEvent->{mainViewModel.onEvent(event)}
+            is FullScreenDialogsEvent->{onEvent(event)}
+        }
+    }
+
 
     fun onEvent(event: FullScreenDialogsEvent) {
         when (event) {
             is FullScreenDialogsEvent.NavigateToMenuForCreate -> {
                 viewModelScope.launch {
                     val selId = sCRUDRecipeInMenu.menuR.getSelIdOrCreate(event.dateToLocalDate, event.categoriesSelection)
-                    navController.previousBackStackEntry?.savedStateHandle?.set(
+                    mainViewModel.nav.previousBackStackEntry?.savedStateHandle?.set(
                         "selId",
                         selId
                     )
-                    navController.popBackStack(
+                    mainViewModel.nav.popBackStack(
                         route = MenuScreen,
                         inclusive = false, saveState = false
                     )
                 }
             }
-
-            is FullScreenDialogsEvent.OpenDialog -> dialogManager.openDialog(event.dialog, viewModelScope)
-            is FullScreenDialogsEvent.CloseDialog -> dialogManager.closeDialog()
 
             is FullScreenDialogsEvent.ActionMenuBD -> {
                 viewModelScope.launch {
@@ -46,16 +52,6 @@ class FullScreenDialogsViewModel @Inject constructor(
                         event.data, mutableListOf()
                     )
                 }
-            }
-
-            is FullScreenDialogsEvent.ShowSnackBar -> {
-                viewModelScope.launch {
-                    snackbarHostState.showSnackbar(event.messageError)
-                }
-            }
-
-            is FullScreenDialogsEvent.NavigateBack -> {
-                navController.popBackStack()
             }
 
             is FullScreenDialogsEvent.GetSelIdAndCreate -> {

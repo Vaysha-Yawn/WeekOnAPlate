@@ -19,7 +19,10 @@ import androidx.navigation.NavHostController
 import week.on.a.plate.core.data.example.WeekDataExample
 import week.on.a.plate.core.data.week.WeekView
 import week.on.a.plate.fullScreenDialogs.navigation.FullScreenDialogRoute
-import week.on.a.plate.menuScreen.data.eventData.DialogData
+import week.on.a.plate.core.dialogs.data.DialogData
+import week.on.a.plate.core.mainView.mainViewModelLogic.Event
+import week.on.a.plate.core.mainView.mainViewModelLogic.MainEvent
+import week.on.a.plate.core.mainView.mainViewModelLogic.MainViewModel
 import week.on.a.plate.menuScreen.data.eventData.MenuEvent
 import week.on.a.plate.menuScreen.data.stateData.MenuIUState
 import week.on.a.plate.menuScreen.logic.MenuViewModel
@@ -27,7 +30,6 @@ import week.on.a.plate.menuScreen.data.stateData.WeekState
 import week.on.a.plate.menuScreen.view.calendar.BlockCalendar
 import week.on.a.plate.menuScreen.view.day.DayView
 import week.on.a.plate.menuScreen.view.day.NoDay
-import week.on.a.plate.menuScreen.view.dialogs.DialogsContainer
 import week.on.a.plate.menuScreen.view.week.WeekMenu
 import week.on.a.plate.menuScreen.view.topBar.TopBar
 import week.on.a.plate.ui.theme.WeekOnAPlateTheme
@@ -36,13 +38,10 @@ import java.time.LocalDate
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun MenuScreen(
+    mainVM: MainViewModel,
     viewModel: MenuViewModel = hiltViewModel(),
-    snackbarHostState: SnackbarHostState,
-    navController: NavHostController,
 ) {
-
-    viewModel.snackbarHostState = snackbarHostState
-    viewModel.setNavController(navController)
+    viewModel.mainViewModel = mainVM
     viewModel.updateWeek()
 
     val uiState = viewModel.weekState.collectAsStateWithLifecycle().value
@@ -52,7 +51,7 @@ fun MenuScreen(
         WeekState.Loading -> {}
         is WeekState.Success -> {
             if (uiState.week != null && uiState.week.days.isNotEmpty()) {
-                MenuScreenSuccess(viewModel.menuUIState, uiState.week) { event: MenuEvent ->
+                MenuScreenSuccess(viewModel.menuUIState, uiState.week) { event: Event ->
                     viewModel.onEvent(event)
                 }
             } else {
@@ -61,20 +60,20 @@ fun MenuScreen(
         }
     }
 
-    getOptionArgFromSpecifyDate(navController){ event: MenuEvent ->
+   /* getOptionArgFromSpecifyDate(mainVM.nav){ event: MainEvent ->
         viewModel.onEvent(event)
-    }
+    }*/
 
 }
 
-fun getOptionArgFromSpecifyDate(navController: NavHostController, onEvent: (MenuEvent) -> Unit) {
+fun getOptionArgFromSpecifyDate(navController: NavHostController, onEvent: (MainEvent) -> Unit) {
     val noResultData =
         navController.currentBackStackEntry?.savedStateHandle?.getStateFlow<Long>("selId", 0)
 
     if (noResultData?.value!=null && noResultData.value!=0L){
-        onEvent(MenuEvent.OpenDialog(DialogData.AddPosition(noResultData.value) { event: MenuEvent ->
+       /* onEvent(MainEvent.OpenDialog(DialogData.AddPosition(noResultData.value) { event: MainEvent ->
             onEvent(event)
-        }))
+        }))*/
         navController.currentBackStackEntry?.savedStateHandle?.remove<Long>("selId")
 
         navController.popBackStack(FullScreenDialogRoute.SpecifyDateDialog, false)
@@ -86,7 +85,7 @@ fun getOptionArgFromSpecifyDate(navController: NavHostController, onEvent: (Menu
 fun MenuScreenSuccess(
     uiState: MenuIUState,
     week: WeekView,
-    onEvent: (event: MenuEvent) -> Unit
+    onEvent: (event: Event) -> Unit
 ) {
     Column(
         Modifier
@@ -114,7 +113,6 @@ fun MenuScreenSuccess(
             WeekMenu(uiState, onEvent, week)
         }
     }
-    DialogsContainer(uiState, onEvent)
 }
 
 

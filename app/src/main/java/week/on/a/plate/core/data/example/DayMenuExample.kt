@@ -20,8 +20,8 @@ val positionNoteExample = Position.PositionNoteView(0, "Завтракаю на 
 
 val positionDraftExample = Position.PositionDraftView(
     0, listOf(
-        RecipeTagView(0, "Без тепловой обработки", false),
-        RecipeTagView(0, "Салаты", true),
+        RecipeTagView(0, "Без тепловой обработки"),
+        RecipeTagView(0, "Салаты"),
     ),
     listOf(ingredientTomato), 0
 )
