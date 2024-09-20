@@ -22,11 +22,8 @@ import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.core.uitools.TextBodyDisActive
 import week.on.a.plate.menuScreen.data.eventData.ActionWeekMenuDB
-import week.on.a.plate.core.dialogs.data.DialogData
 import week.on.a.plate.core.mainView.mainViewModelLogic.Event
-import week.on.a.plate.core.mainView.mainViewModelLogic.MainEvent
 import week.on.a.plate.menuScreen.data.eventData.MenuEvent
-import week.on.a.plate.menuScreen.data.eventData.NavFromMenuData
 import week.on.a.plate.menuScreen.data.eventData.SelectedData
 import week.on.a.plate.menuScreen.data.stateData.MenuIUState
 import week.on.a.plate.ui.theme.ColorButtonNegativeGrey
@@ -81,7 +78,7 @@ fun TopBar(
                         .size(24.dp)
                 )
                 TitleMenuSmall(title) {
-                    onEvent(MenuEvent.NavigateFromMenu(NavFromMenuData.SpecifyDate))
+                    onEvent(MenuEvent.GetSelIdAndCreate)
                 }
             }
         }

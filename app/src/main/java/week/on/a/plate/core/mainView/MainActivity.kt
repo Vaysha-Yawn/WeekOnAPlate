@@ -14,13 +14,12 @@ import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import week.on.a.plate.core.mainView.mainViewModelLogic.MainViewModel
 import week.on.a.plate.core.navigation.bottomBar.BottomBar
 import week.on.a.plate.core.navigation.Navigation
-import week.on.a.plate.core.dialogs.view.base.DialogsContainer
+import week.on.a.plate.core.dialogs.DialogsContainer
 import week.on.a.plate.ui.theme.ColorBackgroundWhite
 import week.on.a.plate.ui.theme.WeekOnAPlateTheme
 

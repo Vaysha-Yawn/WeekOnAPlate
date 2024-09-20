@@ -2,7 +2,6 @@ package week.on.a.plate.fullScreenDialogs.data
 
 import week.on.a.plate.core.data.week.CategoriesSelection
 import week.on.a.plate.menuScreen.data.eventData.ActionWeekMenuDB
-import week.on.a.plate.core.dialogs.data.DialogData
 import week.on.a.plate.core.mainView.mainViewModelLogic.Event
 import java.time.LocalDate
 

@@ -1,15 +1,12 @@
 package week.on.a.plate.fullScreenDialogs.logic
 
-import androidx.compose.material3.SnackbarHostState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.navigation.bottomBar.MenuScreen
 import week.on.a.plate.fullScreenDialogs.data.FullScreenDialogsEvent
 import week.on.a.plate.menuScreen.logic.useCase.CRUDRecipeInMenu
-import week.on.a.plate.core.dialogs.logic.DialogManager
 import week.on.a.plate.core.mainView.mainViewModelLogic.Event
 import week.on.a.plate.core.mainView.mainViewModelLogic.MainEvent
 import week.on.a.plate.core.mainView.mainViewModelLogic.MainViewModel

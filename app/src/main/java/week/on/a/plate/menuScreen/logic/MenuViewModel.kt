@@ -1,6 +1,5 @@
 package week.on.a.plate.menuScreen.logic
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -8,12 +7,20 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.data.week.Position
 import week.on.a.plate.core.data.week.WeekView
-import week.on.a.plate.core.dialogs.chooseWeekInMenu.logic.ChooseWeekViewModel
-import week.on.a.plate.core.dialogs.editRecipePosition.event.EditRecipePositionEvent
-import week.on.a.plate.core.dialogs.editRecipePosition.logic.EditRecipePositionViewModel
+import week.on.a.plate.core.dialogs.menu.addPosition.event.AddPositionEvent
+import week.on.a.plate.core.dialogs.menu.addPosition.logic.AddPositionViewModel
+import week.on.a.plate.core.dialogs.menu.changePositionCount.logic.ChangePortionsCountViewModel
+import week.on.a.plate.core.dialogs.menu.chooseWeekInMenu.logic.ChooseWeekViewModel
+import week.on.a.plate.core.dialogs.menu.editNote.logic.EditNoteViewModel
+import week.on.a.plate.core.dialogs.menu.editOtherPosition.event.EditOtherPositionEvent
+import week.on.a.plate.core.dialogs.menu.editOtherPosition.logic.EditOtherPositionViewModel
+import week.on.a.plate.core.dialogs.menu.editPositionIngredient.logic.EditPositionIngredientViewModel
+import week.on.a.plate.core.dialogs.menu.editRecipePosition.event.EditRecipePositionEvent
+import week.on.a.plate.core.dialogs.menu.editRecipePosition.logic.EditRecipePositionViewModel
 import week.on.a.plate.core.mainView.mainViewModelLogic.Event
 import week.on.a.plate.core.mainView.mainViewModelLogic.MainEvent
 import week.on.a.plate.core.mainView.mainViewModelLogic.MainViewModel
+import week.on.a.plate.menuScreen.data.eventData.ActionWeekMenuDB
 import week.on.a.plate.menuScreen.data.eventData.MenuEvent
 import week.on.a.plate.menuScreen.data.stateData.MenuIUState
 import week.on.a.plate.menuScreen.data.stateData.WeekState
@@ -67,20 +74,6 @@ class MenuViewModel @Inject constructor(
         }
     }
 
-    private fun getTitle(weekView: WeekView): String {
-        val formatterMonth = DateTimeFormatter.ofPattern("MMMM")
-        val formatterDay = DateTimeFormatter.ofPattern("d")
-
-        val start = weekView.days[0].date
-        val end = weekView.days[6].date
-
-        val month = start.format(formatterMonth).capitalize(Locale("ru"))
-        val startDay = start.format(formatterDay)
-        val endDay = end.format(formatterDay)
-
-        return "$month $startDay-$endDay"
-    }
-
     fun onEvent(event: Event) {
         when (event) {
             is MainEvent -> onEvent(event)
@@ -96,7 +89,6 @@ class MenuViewModel @Inject constructor(
                 selectedRecipeManager.clear(menuUIState)
                 navigationMenu.onEvent(event.navData)
             }
-
             is MenuEvent.ActionDBMenu -> {
                 viewModelScope.launch {
                     sCRUDRecipeInMenu.onEvent(
@@ -106,48 +98,133 @@ class MenuViewModel @Inject constructor(
                     updateWeek()
                 }
             }
-
             is MenuEvent.ActionSelect -> selectedRecipeManager.onEvent(
                 event.selectedData,
                 menuUIState
             )
-
             is MenuEvent.GetSelIdAndCreate -> {
-                viewModelScope.launch {
+                //get sel id from fullscreen dialog add
+                // and prompt addPosition(selId)
+                /*viewModelScope.launch {
                     val selId = sCRUDRecipeInMenu.menuR.getSelIdOrCreate(
                         event.dateToLocalDate,
                         event.categoriesSelection
                     )
                     event.action(selId)
-                }
+                }*/
             }
-
             is MenuEvent.ChangeWeek -> {
                 activeDay = event.date
                 updateWeek()
             }
-
-            is MenuEvent.ChangePortionsCount -> TODO()
             MenuEvent.ChooseWeek -> chooseWeek()
-            is MenuEvent.CreateDraft -> TODO()
-            is MenuEvent.CreateIngredientPosition -> TODO()
-            is MenuEvent.CreateNote -> TODO()
-            is MenuEvent.CreatePosition -> TODO()
-            is MenuEvent.EditDraft -> TODO()
-            is MenuEvent.EditIngredientPosition -> TODO()
-            is MenuEvent.EditNote -> TODO()
+            is MenuEvent.CreatePosition -> addPosition(event.selId)
             is MenuEvent.EditPosition -> {
                 when(event.position){
                     is Position.PositionRecipeView -> {
                         editPositionRecipe(event.position)
                     }
                     else->{
-
+                        editOtherPosition(event.position)
                     }
                 }
             }
             is MenuEvent.RecipeToShopList -> TODO()
             MenuEvent.SelectedToShopList -> TODO()
+        }
+    }
+    private fun addIngredientPosition( selId: Long) {
+        viewModelScope.launch {
+            val vm =  EditPositionIngredientViewModel()
+            vm.mainViewModel = mainViewModel
+            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
+            vm.launchAndGet(null) { updatedIngredient->
+                onEvent( MenuEvent.ActionDBMenu(ActionWeekMenuDB.AddIngredientPositionDB(updatedIngredient, selId)))
+            }
+        }
+    }
+    private fun editIngredientPosition(ingredientPos: Position.PositionIngredientView) {
+        viewModelScope.launch {
+            val vm =  EditPositionIngredientViewModel()
+            vm.mainViewModel = mainViewModel
+            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
+            vm.launchAndGet(ingredientPos) { updatedIngredient->
+                onEvent( MenuEvent.ActionDBMenu(ActionWeekMenuDB.EditIngredientPositionDB(updatedIngredient)))
+            }
+        }
+    }
+
+    private fun changePortionsCount(recipe: Position.PositionRecipeView) {
+        viewModelScope.launch {
+            val vm =  ChangePortionsCountViewModel()
+            vm.mainViewModel = mainViewModel
+            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
+            vm.launchAndGet(recipe.portionsCount) { portionsCount->
+                onEvent( MenuEvent.ActionDBMenu(ActionWeekMenuDB.ChangePortionsCountDB(recipe, portionsCount)))
+            }
+        }
+    }
+
+    private fun editNote(note: Position.PositionNoteView) {
+        viewModelScope.launch {
+            val vm =  EditNoteViewModel()
+            vm.mainViewModel = mainViewModel
+            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
+            vm.launchAndGet(note) { updatedNote->
+                onEvent( MenuEvent.ActionDBMenu(ActionWeekMenuDB.EditNoteDB(updatedNote)))
+            }
+        }
+    }
+
+    private fun addNote(selId: Long) {
+        viewModelScope.launch {
+            val vm =  EditNoteViewModel()
+            vm.mainViewModel = mainViewModel
+            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
+            vm.launchAndGet(null) { updatedNote->
+                onEvent( MenuEvent.ActionDBMenu(ActionWeekMenuDB.AddNoteDB(updatedNote.note, selId)))
+            }
+        }
+    }
+
+    private fun addPosition(selId:Long){
+        viewModelScope.launch {
+            val vm =  AddPositionViewModel()
+            vm.mainViewModel = mainViewModel
+            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
+            vm.launchAndGet() { event->
+                when(event){
+                    AddPositionEvent.AddDraft -> TODO()
+                    AddPositionEvent.AddIngredient -> addIngredientPosition(selId)
+                    AddPositionEvent.AddNote -> addNote(selId)
+                    AddPositionEvent.AddRecipe -> TODO()
+                    AddPositionEvent.Close -> {}
+                }
+            }
+        }
+    }
+
+    private fun editOtherPosition(position: Position) {
+        viewModelScope.launch {
+            val vm =  EditOtherPositionViewModel()
+            vm.mainViewModel = mainViewModel
+            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
+            vm.launchAndGet() { event->
+                when(event){
+                    EditOtherPositionEvent.Close -> {}
+                    EditOtherPositionEvent.Delete -> TODO()
+                    EditOtherPositionEvent.Double -> TODO()
+                    EditOtherPositionEvent.Edit -> {
+                        when(position){
+                            is Position.PositionDraftView -> TODO()
+                            is Position.PositionIngredientView -> editIngredientPosition(position)
+                            is Position.PositionNoteView -> editNote(position)
+                            is Position.PositionRecipeView -> TODO()
+                        }
+                    }
+                    EditOtherPositionEvent.Move -> TODO()
+                }
+            }
         }
     }
 
@@ -159,13 +236,11 @@ class MenuViewModel @Inject constructor(
             vm.launchAndGet() { event->
                 when(event){
                     EditRecipePositionEvent.AddToCart -> TODO()
-                    EditRecipePositionEvent.ChangePotionsCount -> TODO()
+                    EditRecipePositionEvent.ChangePotionsCount -> changePortionsCount(position)
                     EditRecipePositionEvent.Delete -> TODO()
                     EditRecipePositionEvent.Double -> TODO()
                     EditRecipePositionEvent.FindReplace -> TODO()
-                    EditRecipePositionEvent.Move -> {
-                        Log.e("","")
-                    }
+                    EditRecipePositionEvent.Move -> TODO()
                     EditRecipePositionEvent.Close -> {}
                 }
             }
@@ -194,5 +269,19 @@ class MenuViewModel @Inject constructor(
 
     private fun switchEditMode() {
         menuUIState.editing.value = !menuUIState.editing.value
+    }
+
+    private fun getTitle(weekView: WeekView): String {
+        val formatterMonth = DateTimeFormatter.ofPattern("MMMM")
+        val formatterDay = DateTimeFormatter.ofPattern("d")
+
+        val start = weekView.days[0].date
+        val end = weekView.days[6].date
+
+        val month = start.format(formatterMonth).capitalize(Locale("ru"))
+        val startDay = start.format(formatterDay)
+        val endDay = end.format(formatterDay)
+
+        return "$month $startDay-$endDay"
     }
 }

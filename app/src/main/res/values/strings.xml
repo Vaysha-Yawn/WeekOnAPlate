@@ -12,7 +12,7 @@
     <string name="message_non_validate_place_position_in_menu">Пожалуйста, выберите дату и прием пищи или выберите категорию На неделю</string>
     <string name="message_select_ingredient">Пожалуйста, выберите ингредиент</string>
     <string name="add_note">Добавить заметку</string>
-    <string name="edit_note">Редактировать заметку</string>
+    <string name="title_edit_note">Текст заметки</string>
     <string name="enter_text_note">Введите текст заметки</string>
     <string name="select_day">Выберите день</string>
     <string name="title_in_generally">В общем</string>

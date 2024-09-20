@@ -21,9 +21,7 @@ import week.on.a.plate.core.data.week.Position
 import week.on.a.plate.core.uitools.SubText
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.buttons.MoreButtonWithBackg
-import week.on.a.plate.core.dialogs.data.DialogData
 import week.on.a.plate.core.mainView.mainViewModelLogic.Event
-import week.on.a.plate.core.mainView.mainViewModelLogic.MainEvent
 import week.on.a.plate.menuScreen.data.eventData.MenuEvent
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -48,7 +46,7 @@ fun WeekIngredientPosition(
             Spacer(modifier = Modifier.size(5.dp))
             Column {
                 MoreButtonWithBackg {
-                  // onEvent(MainEvent.OpenDialog(DialogData.EditPosition(ingredient, onEvent)))
+                    onEvent(MenuEvent.EditPosition(ingredient))
                 }
                 Spacer(modifier = Modifier.size(10.dp))
 

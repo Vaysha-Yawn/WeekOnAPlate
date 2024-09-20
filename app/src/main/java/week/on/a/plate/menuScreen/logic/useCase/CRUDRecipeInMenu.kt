@@ -30,16 +30,9 @@ class CRUDRecipeInMenu @Inject constructor(
                 menuR.addEmptyDay(event.data)
             }
 
-            is ActionWeekMenuDB.AddIngredientDB -> {
-                val ingredient = Position.PositionIngredientView(
-                    0, IngredientInRecipeView(
-                        0,
-                        event.data.ingredientState.value!!,
-                        event.data.text.value,
-                        event.data.count.doubleValue
-                    ), event.data.selectionId
-                )
-                positionIngredientRepository.insert(ingredient, event.data.selectionId)
+            is ActionWeekMenuDB.AddIngredientPositionDB -> {
+                val ingredient = event.updatedPosition
+                positionIngredientRepository.insert(ingredient, event.selectionId)
             }
 
             is ActionWeekMenuDB.AddNoteDB -> {
@@ -55,10 +48,10 @@ class CRUDRecipeInMenu @Inject constructor(
 
             is ActionWeekMenuDB.ChangePortionsCountDB -> {
                 recipeRepository.update(
-                    event.data.recipe.id,
-                    event.data.recipe.recipe,
-                    event.data.portionsCount.intValue,
-                    event.data.recipe.selectionId
+                    event.recipe.id,
+                    event.recipe.recipe,
+                    event.count,
+                    event.recipe.selectionId
                 )
             }
 
@@ -91,23 +84,23 @@ class CRUDRecipeInMenu @Inject constructor(
                 }
             }
 
-            is ActionWeekMenuDB.EditIngredientDB -> {
-                val data = event.data
+            is ActionWeekMenuDB.EditIngredientPositionDB -> {
+                val data = event.updatedPosition
                 positionIngredientRepository.update(
-                    data.ingredient!!.idPos,
-                    data.ingredient.ingredient.id,
-                    data.ingredientState.value!!.ingredientId,
-                    data.ingredient.selectionId,
-                    event.data.text.value,
-                    event.data.count.doubleValue
+                    data.id,
+                    data.ingredient.id,
+                    data.ingredient.ingredientView.ingredientId,
+                    data.selectionId,
+                    data.ingredient.description,
+                    data.ingredient.count,
                 )
             }
 
             is ActionWeekMenuDB.EditNoteDB -> {
-                val note = event.data.note
+                val note = event.data
                 noteRepository.update(
                     note.idPos,
-                    event.data.text.value, note.selectionId
+                    note.note, note.selectionId
                 )
             }
 

@@ -42,7 +42,7 @@ fun AddIngredient(
             text = "Добавить ингредиент",
             modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center
         )
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(36.dp))
         TextTitleItalic(
             text = "Название ингредиента",
             modifier = Modifier.padding(start = 24.dp).padding(bottom = 12.dp), textAlign = TextAlign.Start
