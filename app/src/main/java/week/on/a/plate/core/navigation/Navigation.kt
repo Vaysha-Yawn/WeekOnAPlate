@@ -9,7 +9,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import week.on.a.plate.core.data.recipe.IngredientView
 import week.on.a.plate.core.data.recipe.RecipeTagView
-import week.on.a.plate.core.data.week.Position
 import week.on.a.plate.core.mainView.mainViewModelLogic.MainViewModel
 import week.on.a.plate.core.navigation.bottomBar.FavoritesScreen
 import week.on.a.plate.core.navigation.bottomBar.HomeScreen
@@ -19,9 +18,8 @@ import week.on.a.plate.core.navigation.bottomBar.ShoppingListScreen
 import week.on.a.plate.filters.FilterStart
 import week.on.a.plate.filters.navigation.FilterCustomNavType
 import week.on.a.plate.filters.navigation.FilterRoute
-import week.on.a.plate.fullScreenDialogs.navigation.CustomNavType
-import week.on.a.plate.fullScreenDialogs.navigation.FullScreenDialogRoute
-import week.on.a.plate.fullScreenDialogs.view.FullScreenDialogMain
+import week.on.a.plate.SpecifySelection.navigation.SpecifySelection
+import week.on.a.plate.SpecifySelection.view.SpecifySelectionMain
 import week.on.a.plate.menuScreen.view.main.MenuScreen
 import week.on.a.plate.search.navigation.SearchRoute
 import week.on.a.plate.search.view.main.SearchStart
@@ -41,7 +39,7 @@ fun Navigation(
         composable<MenuScreen> {
             viewModel.isActiveBaseScreen.value = true
             MenuScreen(
-                viewModel
+                viewModel, viewModel.nav
             )
         }
         composable<HomeScreen> {
@@ -61,32 +59,9 @@ fun Navigation(
             viewModel.isActiveBaseScreen.value = true
         }
 
-        // FullScreenDialogRoute
-
-        composable<FullScreenDialogRoute.AddPositionToMenuDialog>(
-            typeMap = mapOf(typeOf<Position.PositionRecipeView>() to CustomNavType.PositionRecipeView)
-        ) {
+        composable<SpecifySelection>{
             viewModel.isActiveBaseScreen.value = false
-            val arguments = it.toRoute<FullScreenDialogRoute.AddPositionToMenuDialog>()
-            FullScreenDialogMain(arguments, viewModel)
-        }
-
-        composable<FullScreenDialogRoute.DoublePositionToMenuDialog>(typeMap = mapOf(typeOf<Position>() to CustomNavType.Position)) {
-            viewModel.isActiveBaseScreen.value = false
-            val arguments = it.toRoute<FullScreenDialogRoute.DoublePositionToMenuDialog>()
-            FullScreenDialogMain(arguments, viewModel)
-        }
-
-        composable<FullScreenDialogRoute.MovePositionToMenuDialog>(typeMap = mapOf(typeOf<Position>() to CustomNavType.Position)) {
-            viewModel.isActiveBaseScreen.value = false
-            val arguments = it.toRoute<FullScreenDialogRoute.MovePositionToMenuDialog>()
-            FullScreenDialogMain(arguments, viewModel)
-        }
-
-        composable<FullScreenDialogRoute.SpecifyDateDialog> {
-            viewModel.isActiveBaseScreen.value = false
-            val arguments = it.toRoute<FullScreenDialogRoute.SpecifyDateDialog>()
-            FullScreenDialogMain(arguments, viewModel)
+            SpecifySelectionMain(viewModel, viewModel.specifySelectionViewModel)
         }
 
         // search

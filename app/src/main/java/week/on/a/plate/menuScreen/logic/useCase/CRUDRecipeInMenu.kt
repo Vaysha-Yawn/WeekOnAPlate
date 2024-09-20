@@ -71,7 +71,7 @@ class CRUDRecipeInMenu @Inject constructor(
             }
 
             is ActionWeekMenuDB.DoublePositionInMenuDB -> {
-                val selId: Long = menuR.getSelIdOrCreate(event.dateToLocalDate, event.selection)
+                val selId: Long = event.selId
                 when (event.position) {
                     is Position.PositionDraftView -> draftRepository.insert(event.position, selId)
                     is Position.PositionIngredientView -> positionIngredientRepository.insert(
@@ -105,7 +105,7 @@ class CRUDRecipeInMenu @Inject constructor(
             }
 
             is ActionWeekMenuDB.MovePositionInMenuDB -> {
-                val selId: Long = menuR.getSelIdOrCreate(event.dateToLocalDate, event.selection)
+                val selId: Long = event.selId
                 when (event.position) {
                     is Position.PositionDraftView -> {
                         onEvent(ActionWeekMenuDB.Delete(event.position), listOf())

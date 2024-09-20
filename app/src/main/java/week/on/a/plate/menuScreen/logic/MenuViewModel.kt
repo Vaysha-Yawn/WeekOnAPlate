@@ -22,6 +22,7 @@ import week.on.a.plate.core.mainView.mainViewModelLogic.MainEvent
 import week.on.a.plate.core.mainView.mainViewModelLogic.MainViewModel
 import week.on.a.plate.menuScreen.data.eventData.ActionWeekMenuDB
 import week.on.a.plate.menuScreen.data.eventData.MenuEvent
+import week.on.a.plate.menuScreen.data.eventData.NavFromMenuData
 import week.on.a.plate.menuScreen.data.stateData.MenuIUState
 import week.on.a.plate.menuScreen.data.stateData.WeekState
 import week.on.a.plate.menuScreen.logic.useCase.CRUDRecipeInMenu
@@ -36,7 +37,7 @@ import javax.inject.Inject
 class MenuViewModel @Inject constructor(
     private val sCRUDRecipeInMenu: CRUDRecipeInMenu,
     private val selectedRecipeManager: SelectedRecipeManager,
-    private val navigationMenu: NavigationMenu,
+    val navigationMenu: NavigationMenu,
 ) : ViewModel() {
 
     private var activeDay = LocalDate.of(2024, 8, 28)
@@ -102,17 +103,7 @@ class MenuViewModel @Inject constructor(
                 event.selectedData,
                 menuUIState
             )
-            is MenuEvent.GetSelIdAndCreate -> {
-                //get sel id from fullscreen dialog add
-                // and prompt addPosition(selId)
-                /*viewModelScope.launch {
-                    val selId = sCRUDRecipeInMenu.menuR.getSelIdOrCreate(
-                        event.dateToLocalDate,
-                        event.categoriesSelection
-                    )
-                    event.action(selId)
-                }*/
-            }
+            is MenuEvent.GetSelIdAndCreate -> getSelAndCreate()
             is MenuEvent.ChangeWeek -> {
                 activeDay = event.date
                 updateWeek()
@@ -133,6 +124,92 @@ class MenuViewModel @Inject constructor(
             MenuEvent.SelectedToShopList -> TODO()
         }
     }
+
+    private fun getSelAndCreate(){
+        specifyDate{long->
+            addPosition(long)
+        }
+    }
+
+    private fun specifyDate(use:(Long)->Unit){
+        viewModelScope.launch {
+            val vm =  mainViewModel.specifySelectionViewModel
+            navigationMenu.onEvent(NavFromMenuData.SpecifySelection)
+            vm.launchAndGet(use)
+        }
+    }
+
+    private fun addPosition(selId:Long){
+        viewModelScope.launch {
+            val vm =  AddPositionViewModel()
+            vm.mainViewModel = mainViewModel
+            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
+            vm.launchAndGet() { event->
+                when(event){
+                    AddPositionEvent.AddDraft -> TODO()
+                    AddPositionEvent.AddIngredient -> addIngredientPosition(selId)
+                    AddPositionEvent.AddNote -> addNote(selId)
+                    AddPositionEvent.AddRecipe -> TODO()
+                    AddPositionEvent.Close -> {}
+                }
+            }
+        }
+    }
+
+    private fun editOtherPosition(position: Position) {
+        viewModelScope.launch {
+            val vm =  EditOtherPositionViewModel()
+            vm.mainViewModel = mainViewModel
+            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
+            vm.launchAndGet() { event->
+                when(event){
+                    EditOtherPositionEvent.Close -> {}
+                    EditOtherPositionEvent.Delete -> TODO()
+                    EditOtherPositionEvent.Double -> getSelAndDouble(position)
+                    EditOtherPositionEvent.Edit -> {
+                        when(position){
+                            is Position.PositionDraftView -> TODO()
+                            is Position.PositionIngredientView -> editIngredientPosition(position)
+                            is Position.PositionNoteView -> editNote(position)
+                            is Position.PositionRecipeView -> TODO()
+                        }
+                    }
+                    EditOtherPositionEvent.Move -> getSelAndMove(position)
+                }
+            }
+        }
+    }
+
+    private fun getSelAndMove(position: Position){
+        specifyDate{selId->
+            onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.MovePositionInMenuDB(selId, position)))
+        }
+    }
+    private fun getSelAndDouble(position: Position){
+        specifyDate{selId->
+            onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.DoublePositionInMenuDB(selId, position)))
+        }
+    }
+
+    private fun editPositionRecipe(position: Position.PositionRecipeView) {
+        viewModelScope.launch {
+            val vm =  EditRecipePositionViewModel()
+            vm.mainViewModel = mainViewModel
+            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
+            vm.launchAndGet() { event->
+                when(event){
+                    EditRecipePositionEvent.AddToCart -> TODO()
+                    EditRecipePositionEvent.ChangePotionsCount -> changePortionsCount(position)
+                    EditRecipePositionEvent.Delete -> TODO()
+                    EditRecipePositionEvent.Double -> getSelAndDouble(position)
+                    EditRecipePositionEvent.FindReplace -> TODO()
+                    EditRecipePositionEvent.Move -> getSelAndMove(position)
+                    EditRecipePositionEvent.Close -> {}
+                }
+            }
+        }
+    }
+
     private fun addIngredientPosition( selId: Long) {
         viewModelScope.launch {
             val vm =  EditPositionIngredientViewModel()
@@ -183,66 +260,6 @@ class MenuViewModel @Inject constructor(
             mainViewModel.onEvent(MainEvent.OpenDialog(vm))
             vm.launchAndGet(null) { updatedNote->
                 onEvent( MenuEvent.ActionDBMenu(ActionWeekMenuDB.AddNoteDB(updatedNote.note, selId)))
-            }
-        }
-    }
-
-    private fun addPosition(selId:Long){
-        viewModelScope.launch {
-            val vm =  AddPositionViewModel()
-            vm.mainViewModel = mainViewModel
-            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-            vm.launchAndGet() { event->
-                when(event){
-                    AddPositionEvent.AddDraft -> TODO()
-                    AddPositionEvent.AddIngredient -> addIngredientPosition(selId)
-                    AddPositionEvent.AddNote -> addNote(selId)
-                    AddPositionEvent.AddRecipe -> TODO()
-                    AddPositionEvent.Close -> {}
-                }
-            }
-        }
-    }
-
-    private fun editOtherPosition(position: Position) {
-        viewModelScope.launch {
-            val vm =  EditOtherPositionViewModel()
-            vm.mainViewModel = mainViewModel
-            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-            vm.launchAndGet() { event->
-                when(event){
-                    EditOtherPositionEvent.Close -> {}
-                    EditOtherPositionEvent.Delete -> TODO()
-                    EditOtherPositionEvent.Double -> TODO()
-                    EditOtherPositionEvent.Edit -> {
-                        when(position){
-                            is Position.PositionDraftView -> TODO()
-                            is Position.PositionIngredientView -> editIngredientPosition(position)
-                            is Position.PositionNoteView -> editNote(position)
-                            is Position.PositionRecipeView -> TODO()
-                        }
-                    }
-                    EditOtherPositionEvent.Move -> TODO()
-                }
-            }
-        }
-    }
-
-    private fun editPositionRecipe(position: Position.PositionRecipeView) {
-        viewModelScope.launch {
-            val vm =  EditRecipePositionViewModel()
-            vm.mainViewModel = mainViewModel
-            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-            vm.launchAndGet() { event->
-                when(event){
-                    EditRecipePositionEvent.AddToCart -> TODO()
-                    EditRecipePositionEvent.ChangePotionsCount -> changePortionsCount(position)
-                    EditRecipePositionEvent.Delete -> TODO()
-                    EditRecipePositionEvent.Double -> TODO()
-                    EditRecipePositionEvent.FindReplace -> TODO()
-                    EditRecipePositionEvent.Move -> TODO()
-                    EditRecipePositionEvent.Close -> {}
-                }
             }
         }
     }

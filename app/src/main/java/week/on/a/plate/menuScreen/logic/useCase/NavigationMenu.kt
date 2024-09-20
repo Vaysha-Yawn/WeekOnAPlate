@@ -1,7 +1,7 @@
 package week.on.a.plate.menuScreen.logic.useCase
 
 import androidx.navigation.NavHostController
-import week.on.a.plate.fullScreenDialogs.navigation.FullScreenDialogRoute
+import week.on.a.plate.SpecifySelection.navigation.SpecifySelection
 import week.on.a.plate.menuScreen.data.eventData.NavFromMenuData
 import javax.inject.Inject
 
@@ -11,39 +11,7 @@ class NavigationMenu @Inject constructor() {
 
     fun onEvent(data: NavFromMenuData) {
         when (data) {
-            is NavFromMenuData.AddPositionToMenuDialog -> {
-                navController.navigate(
-                    FullScreenDialogRoute.AddPositionToMenuDialog(
-                        data.position,
-                        data.date.toEpochDay(),
-                        data.category
-                    )
-                )
-            }
-
-            is NavFromMenuData.DoublePositionToMenu -> {
-                navController.navigate(
-                    FullScreenDialogRoute.DoublePositionToMenuDialog(
-                        data.position,
-                    )
-                )
-            }
-
-            is NavFromMenuData.MovePositionToMenu -> {
-                navController.navigate(
-                    FullScreenDialogRoute.MovePositionToMenuDialog(
-                        data.position,
-                    )
-                )
-            }
-
-            is NavFromMenuData.SpecifyDate -> {
-                navController.navigate(
-                    FullScreenDialogRoute.SpecifyDateDialog
-                )
-            }
-
-            //
+            is NavFromMenuData.SpecifySelection -> { navController.navigate(SpecifySelection) }
             is NavFromMenuData.FindReplaceRecipe -> TODO()
             is NavFromMenuData.NavToAddRecipe -> TODO()
             is NavFromMenuData.NavToChooseIngredient -> TODO()

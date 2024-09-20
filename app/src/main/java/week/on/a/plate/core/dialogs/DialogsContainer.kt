@@ -16,7 +16,10 @@ import week.on.a.plate.core.dialogs.menu.changePositionCount.view.ChangePortions
 import week.on.a.plate.core.dialogs.menu.chooseWeekInMenu.event.ChooseWeekDialogEvent
 import week.on.a.plate.core.dialogs.menu.chooseWeekInMenu.logic.ChooseWeekViewModel
 import week.on.a.plate.core.dialogs.menu.chooseWeekInMenu.state.ChooseWeekUIState
-import week.on.a.plate.core.dialogs.menu.chooseWeekInMenu.view.ChooseDate
+import week.on.a.plate.core.dialogs.menu.datePicker.event.DatePickerEvent
+import week.on.a.plate.core.dialogs.menu.datePicker.logic.DatePickerViewModel
+import week.on.a.plate.core.dialogs.menu.datePicker.state.DatePickerUIState
+import week.on.a.plate.core.dialogs.menu.datePicker.view.DatePickerMy
 import week.on.a.plate.core.dialogs.menu.editNote.event.EditNoteEvent
 import week.on.a.plate.core.dialogs.menu.editNote.logic.EditNoteViewModel
 import week.on.a.plate.core.dialogs.menu.editNote.state.EditNoteUIState
@@ -47,12 +50,12 @@ fun DialogsContainer(data: DialogViewModel?, onEvent: (event: Event) -> Unit) {
             val datePickerState = rememberDatePickerState()
             val state = ChooseWeekUIState(datePickerState)
             data.state = state
-
-            ChooseDate(state, {
-                onEvent(ChooseWeekDialogEvent.Close)
-            }, {
+            DatePickerMy(
+                state = data.state.state,
+                showState = data.state.show,
+                onClose = { onEvent(ChooseWeekDialogEvent.Close) }) {
                 onEvent(ChooseWeekDialogEvent.Done)
-            })
+            }
         }
 
         is EditRecipePositionViewModel -> {
@@ -108,7 +111,9 @@ fun DialogsContainer(data: DialogViewModel?, onEvent: (event: Event) -> Unit) {
         is EditPositionIngredientViewModel -> {
             val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
             data.state = EditPositionIngredientUIState(data.oldPositionIngredient, sheetState)
-            BottomDialogContainer(data.state.sheetState, { onEvent(EditPositionIngredientEvent.Close) }) {
+            BottomDialogContainer(
+                data.state.sheetState,
+                { onEvent(EditPositionIngredientEvent.Close) }) {
                 EditOrAddIngredientBottomDialogContent(data.state,
                     { event: EditPositionIngredientEvent -> onEvent(event) }) { event: MainEvent ->
                     onEvent(
@@ -118,6 +123,18 @@ fun DialogsContainer(data: DialogViewModel?, onEvent: (event: Event) -> Unit) {
             }
             LaunchedEffect(true) {
                 sheetState.show()
+            }
+        }
+
+        is DatePickerViewModel -> {
+            val datePickerState = rememberDatePickerState()
+            val state = DatePickerUIState(datePickerState)
+            data.state = state
+            DatePickerMy(
+                state = data.state.state,
+                showState = data.state.show,
+                onClose = { onEvent(DatePickerEvent.Close) }) {
+                onEvent(DatePickerEvent.Done)
             }
         }
 
@@ -142,4 +159,9 @@ fun DialogsContainer(data: DialogViewModel?, onEvent: (event: Event) -> Unit) {
         DialogType.VoiceFiltersApply -> TODO()
         null -> {}*/
     }
+}
+
+@Composable
+fun ChooseDate(state: ChooseWeekUIState, close: () -> Unit, done: () -> Unit) {
+
 }

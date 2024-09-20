@@ -41,4 +41,5 @@
     <string name="selected_positions">Выбранные позиции</string>
     <string name="add_positions_voice_apply">Добавить позиции</string>
     <string name="selected_tags"><![CDATA[Выбранные >]]></string>
+    <string name="specify_selection">Уточните раздел</string>
 </resources>

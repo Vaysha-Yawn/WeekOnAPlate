@@ -7,6 +7,8 @@ import week.on.a.plate.core.dialogs.menu.changePositionCount.event.ChangePortion
 import week.on.a.plate.core.dialogs.menu.changePositionCount.logic.ChangePortionsCountViewModel
 import week.on.a.plate.core.dialogs.menu.chooseWeekInMenu.event.ChooseWeekDialogEvent
 import week.on.a.plate.core.dialogs.menu.chooseWeekInMenu.logic.ChooseWeekViewModel
+import week.on.a.plate.core.dialogs.menu.datePicker.event.DatePickerEvent
+import week.on.a.plate.core.dialogs.menu.datePicker.logic.DatePickerViewModel
 import week.on.a.plate.core.dialogs.menu.editNote.event.EditNoteEvent
 import week.on.a.plate.core.dialogs.menu.editNote.logic.EditNoteViewModel
 import week.on.a.plate.core.dialogs.menu.editOtherPosition.event.EditOtherPositionEvent
@@ -72,6 +74,9 @@ class DialogManager @Inject constructor() {
             }
             is EditPositionIngredientEvent -> if (activeDialog.value is EditPositionIngredientViewModel) {
                 (activeDialog.value as EditPositionIngredientViewModel).onEvent(event)
+            }
+            is DatePickerEvent -> if (activeDialog.value is DatePickerViewModel) {
+                (activeDialog.value as DatePickerViewModel).onEvent(event)
             }
         }
     }

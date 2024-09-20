@@ -30,17 +30,13 @@ import week.on.a.plate.core.data.recipe.IngredientCategoryView
 import week.on.a.plate.core.data.recipe.IngredientView
 import week.on.a.plate.core.data.recipe.RecipeTagView
 import week.on.a.plate.core.data.recipe.TagCategoryView
-import week.on.a.plate.core.dialogs.DialogType
+import week.on.a.plate.core.mainView.mainViewModelLogic.Event
 import week.on.a.plate.core.uitools.CreateTagOrIngredient
 import week.on.a.plate.core.uitools.TagBig
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.DoneButton
-import week.on.a.plate.core.mainView.mainViewModelLogic.Event
-import week.on.a.plate.core.mainView.mainViewModelLogic.MainEvent
 import week.on.a.plate.filters.FilterUIState
-import week.on.a.plate.search.data.SearchScreenEvent
-import week.on.a.plate.search.data.SearchUIState
 import week.on.a.plate.ui.theme.WeekOnAPlateTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -54,26 +50,33 @@ fun FilterScreen(stateUI: FilterUIState, onEvent: (Event) -> Unit) {
                 .padding(horizontal = 20.dp)
                 .offset(x = 15.dp)
         ) {
-           /* onEvent(
-                MainEvent.OpenDialog(DialogType.SelectedFilters)
-            )*/
+            /* onEvent(
+                 MainEvent.OpenDialog(DialogType.SelectedFilters)
+             )*/
         }
     }) { innerPadding ->
         Column {
             TabRowFilter(stateUI)
-            LazyColumn(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surface).padding(24.dp)) {
+            LazyColumn(
+                Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.surface)
+                    .padding(24.dp)
+            ) {
                 when (stateUI.activeFilterTabIndex.intValue) {
                     0 -> {
                         if (stateUI.filtersSearchText.value != "") {
                             item {
-                                CreateTagOrIngredient(stateUI.filtersSearchText.value, ){
+                                CreateTagOrIngredient(stateUI.filtersSearchText.value) {
                                     //onEvent(MainEvent.OpenDialog(DialogType.CreateTag))
                                 }
                                 Spacer(modifier = Modifier.height(24.dp))
                             }
                             items(stateUI.resultSearchFilterTags.value.size) {
-                                TagBig(tag = stateUI.resultSearchFilterTags.value[it], isActive =
-                                stateUI.selectedTags.value.contains(stateUI.resultSearchFilterTags.value[it]))
+                                TagBig(
+                                    tag = stateUI.resultSearchFilterTags.value[it], isActive =
+                                    stateUI.selectedTags.value.contains(stateUI.resultSearchFilterTags.value[it])
+                                )
                                 Spacer(modifier = Modifier.height(24.dp))
                             }
                         } else {
@@ -90,14 +93,17 @@ fun FilterScreen(stateUI: FilterUIState, onEvent: (Event) -> Unit) {
                     1 -> {
                         if (stateUI.filtersSearchText.value != "") {
                             item {
-                                CreateTagOrIngredient(stateUI.filtersSearchText.value, ){
+                                CreateTagOrIngredient(stateUI.filtersSearchText.value) {
                                     //onEvent(MainEvent.OpenDialog(DialogType.CreateTag))
                                 }
                                 Spacer(modifier = Modifier.height(24.dp))
                             }
                             items(stateUI.resultSearchFilterIngredients.value.size) {
-                                TagBig(ingredientView = stateUI.resultSearchFilterIngredients.value[it], isActive =
-                                stateUI.selectedIngredients.value.contains(stateUI.resultSearchFilterIngredients.value[it]))
+                                TagBig(
+                                    ingredientView = stateUI.resultSearchFilterIngredients.value[it],
+                                    isActive =
+                                    stateUI.selectedIngredients.value.contains(stateUI.resultSearchFilterIngredients.value[it])
+                                )
                                 Spacer(modifier = Modifier.height(24.dp))
                             }
                         } else {

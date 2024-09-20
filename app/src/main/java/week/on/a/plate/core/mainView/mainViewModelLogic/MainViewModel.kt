@@ -8,6 +8,7 @@ import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.dialogs.DialogManager
+import week.on.a.plate.SpecifySelection.logic.SpecifySelectionViewModel
 import week.on.a.plate.menuScreen.logic.useCase.CRUDRecipeInMenu
 import javax.inject.Inject
 
@@ -20,6 +21,11 @@ class MainViewModel @Inject constructor(
     val snackbarHostState = SnackbarHostState()
     lateinit var nav: NavHostController
     val isActiveBaseScreen = mutableStateOf(true)
+    val specifySelectionViewModel = SpecifySelectionViewModel(sCRUDRecipeInMenu)
+
+    init {
+        specifySelectionViewModel.mainViewModel = this
+    }
 
     fun onEvent(event: Event) {
         when (event) {

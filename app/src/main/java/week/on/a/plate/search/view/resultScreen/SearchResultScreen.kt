@@ -42,7 +42,7 @@ import week.on.a.plate.core.uitools.TagSmall
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.buttons.ButtonText
 import week.on.a.plate.core.uitools.buttons.PlusButtonCard
-import week.on.a.plate.fullScreenDialogs.navigation.FullScreenDialogRoute
+import week.on.a.plate.SpecifySelection.navigation.SpecifySelection
 import week.on.a.plate.search.data.SearchScreenEvent
 import week.on.a.plate.ui.theme.ColorButtonNegativeGrey
 import week.on.a.plate.ui.theme.WeekOnAPlateTheme
@@ -117,11 +117,7 @@ fun RowRecipeResultCard(
                 Spacer(modifier = Modifier.height(24.dp))
                 PlusButtonCard {
                     onEvent(
-                        MainEvent.Navigate(
-                            FullScreenDialogRoute.SpecifyDateAndAddRecipeDialog(
-                                recipeView.id,
-                            )
-                        )
+                        MainEvent.Navigate(SpecifySelection)
                     )
                 }
             }
@@ -159,7 +155,7 @@ fun CustomGridTags(sizeList: Int, content: @Composable (Int) -> Unit) {
         overflow = ContextualFlowRowOverflow.expandOrCollapseIndicator(
             expandIndicator = {
                 ButtonText(
-                    text = "+ ${this.totalItemCount - this.shownItemCount+1} показать ",
+                    text = "+ ${this.totalItemCount - this.shownItemCount + 1} показать ",
                     colorBackground = MaterialTheme.colorScheme.outline,
                     color = MaterialTheme.colorScheme.onBackground
                 ) {

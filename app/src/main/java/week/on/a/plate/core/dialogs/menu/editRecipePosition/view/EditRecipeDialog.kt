@@ -6,11 +6,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.rememberDatePickerState
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -18,18 +15,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
-import week.on.a.plate.core.data.example.positionRecipeExample
-import week.on.a.plate.core.data.week.Position
 import week.on.a.plate.core.dialogs.menu.editRecipePosition.event.EditRecipePositionEvent
 import week.on.a.plate.core.uitools.TextBody
-import week.on.a.plate.menuScreen.data.eventData.ActionWeekMenuDB
-import week.on.a.plate.core.mainView.mainViewModelLogic.MainEvent
-import week.on.a.plate.fullScreenDialogs.navigation.FullScreenDialogRoute
-import week.on.a.plate.search.navigation.SearchRoute
 import week.on.a.plate.ui.theme.WeekOnAPlateTheme
 
 @Composable
-fun EditRecipePositionDialogContent( onEvent: (EditRecipePositionEvent) -> Unit) {
+fun EditRecipePositionDialogContent(onEvent: (EditRecipePositionEvent) -> Unit) {
     Column(modifier = Modifier.padding(20.dp)) {
         ButtonRow(
             R.drawable.add_shopping_cart,
@@ -96,6 +87,6 @@ fun ButtonRow(imgRec: Int, text: String, event: () -> Unit) {
 @Composable
 fun PreviewEditRecipePanel() {
     WeekOnAPlateTheme {
-        EditRecipePositionDialogContent(){}
+        EditRecipePositionDialogContent() {}
     }
 }

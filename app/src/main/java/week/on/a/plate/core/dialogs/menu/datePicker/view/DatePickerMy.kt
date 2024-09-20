@@ -1,4 +1,4 @@
-package week.on.a.plate.fullScreenDialogs.view
+package week.on.a.plate.core.dialogs.menu.datePicker.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column

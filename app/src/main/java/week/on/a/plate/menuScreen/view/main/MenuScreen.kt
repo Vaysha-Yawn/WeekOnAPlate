@@ -17,7 +17,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import week.on.a.plate.core.data.example.WeekDataExample
 import week.on.a.plate.core.data.week.WeekView
-import week.on.a.plate.fullScreenDialogs.navigation.FullScreenDialogRoute
 import week.on.a.plate.core.mainView.mainViewModelLogic.Event
 import week.on.a.plate.core.mainView.mainViewModelLogic.MainEvent
 import week.on.a.plate.core.mainView.mainViewModelLogic.MainViewModel
@@ -35,10 +34,11 @@ import java.time.LocalDate
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun MenuScreen(
-    mainVM: MainViewModel,
+    mainVM: MainViewModel, nav: NavHostController,
     viewModel: MenuViewModel = hiltViewModel(),
 ) {
     viewModel.mainViewModel = mainVM
+    viewModel.navigationMenu.navController = nav
     viewModel.updateWeek()
 
     val uiState = viewModel.weekState.collectAsStateWithLifecycle().value
@@ -47,7 +47,7 @@ fun MenuScreen(
         is WeekState.Error -> {}
         WeekState.Loading -> {}
         is WeekState.Success -> {
-            if (uiState.week != null && uiState.week.days.isNotEmpty()) {
+            if (uiState.week.days.isNotEmpty()) {
                 MenuScreenSuccess(viewModel.menuUIState, uiState.week) { event: Event ->
                     viewModel.onEvent(event)
                 }
@@ -64,17 +64,17 @@ fun MenuScreen(
 }
 
 fun getOptionArgFromSpecifyDate(navController: NavHostController, onEvent: (MainEvent) -> Unit) {
-    val noResultData =
+  /*  val noResultData =
         navController.currentBackStackEntry?.savedStateHandle?.getStateFlow<Long>("selId", 0)
 
     if (noResultData?.value!=null && noResultData.value!=0L){
-       /* onEvent(MainEvent.OpenDialog(DialogData.AddPosition(noResultData.value) { event: MainEvent ->
+       *//* onEvent(MainEvent.OpenDialog(DialogData.AddPosition(noResultData.value) { event: MainEvent ->
             onEvent(event)
-        }))*/
+        }))*//*
         navController.currentBackStackEntry?.savedStateHandle?.remove<Long>("selId")
 
         navController.popBackStack(FullScreenDialogRoute.SpecifyDateDialog, false)
-    }
+    }*/
 }
 
 
