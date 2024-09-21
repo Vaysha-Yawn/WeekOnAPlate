@@ -42,4 +42,7 @@
     <string name="add_positions_voice_apply">Добавить позиции</string>
     <string name="selected_tags"><![CDATA[Выбранные >]]></string>
     <string name="specify_selection">Уточните раздел</string>
+    <string name="add_category">Добавить категорию</string>
+    <string name="enter_category_name">Введите название категории здесь</string>
+    <string name="error_enter_title">Пожалуйста введите название</string>
 </resources>

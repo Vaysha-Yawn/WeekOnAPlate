@@ -1,6 +1,14 @@
 package week.on.a.plate.core.dialogs
 
 import androidx.compose.runtime.mutableStateOf
+import week.on.a.plate.core.dialogs.addCategory.event.AddCategoryEvent
+import week.on.a.plate.core.dialogs.addCategory.logic.AddCategoryViewModel
+import week.on.a.plate.core.dialogs.addIngrdient.event.AddIngredientEvent
+import week.on.a.plate.core.dialogs.addIngrdient.logic.AddIngredientViewModel
+import week.on.a.plate.core.dialogs.addTag.event.AddTagEvent
+import week.on.a.plate.core.dialogs.addTag.logic.AddTagViewModel
+import week.on.a.plate.core.dialogs.filterVoiceApply.event.FilterVoiceApplyEvent
+import week.on.a.plate.core.dialogs.filterVoiceApply.logic.FilterVoiceApplyViewModel
 import week.on.a.plate.core.dialogs.menu.addPosition.event.AddPositionEvent
 import week.on.a.plate.core.dialogs.menu.addPosition.logic.AddPositionViewModel
 import week.on.a.plate.core.dialogs.menu.changePositionCount.event.ChangePortionsCountEvent
@@ -17,6 +25,8 @@ import week.on.a.plate.core.dialogs.menu.editPositionIngredient.event.EditPositi
 import week.on.a.plate.core.dialogs.menu.editPositionIngredient.logic.EditPositionIngredientViewModel
 import week.on.a.plate.core.dialogs.menu.editRecipePosition.event.EditRecipePositionEvent
 import week.on.a.plate.core.dialogs.menu.editRecipePosition.logic.EditRecipePositionViewModel
+import week.on.a.plate.core.dialogs.selectedFilters.event.SelectedFiltersEvent
+import week.on.a.plate.core.dialogs.selectedFilters.logic.SelectedFiltersViewModel
 import week.on.a.plate.core.mainView.mainViewModelLogic.Event
 import java.util.Stack
 import javax.inject.Inject
@@ -77,6 +87,21 @@ class DialogManager @Inject constructor() {
             }
             is DatePickerEvent -> if (activeDialog.value is DatePickerViewModel) {
                 (activeDialog.value as DatePickerViewModel).onEvent(event)
+            }
+            is AddCategoryEvent -> if (activeDialog.value is AddCategoryViewModel) {
+                (activeDialog.value as AddCategoryViewModel).onEvent(event)
+            }
+            is AddTagEvent -> if (activeDialog.value is AddTagViewModel) {
+                (activeDialog.value as AddTagViewModel).onEvent(event)
+            }
+            is AddIngredientEvent -> if (activeDialog.value is AddIngredientViewModel) {
+                (activeDialog.value as AddIngredientViewModel).onEvent(event)
+            }
+            is SelectedFiltersEvent -> if (activeDialog.value is SelectedFiltersViewModel) {
+                (activeDialog.value as SelectedFiltersViewModel).onEvent(event)
+            }
+            is FilterVoiceApplyEvent -> if (activeDialog.value is FilterVoiceApplyViewModel) {
+                (activeDialog.value as FilterVoiceApplyViewModel).onEvent(event)
             }
         }
     }

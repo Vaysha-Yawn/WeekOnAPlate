@@ -18,8 +18,8 @@ import week.on.a.plate.core.navigation.bottomBar.ShoppingListScreen
 import week.on.a.plate.filters.FilterStart
 import week.on.a.plate.filters.navigation.FilterCustomNavType
 import week.on.a.plate.filters.navigation.FilterRoute
-import week.on.a.plate.SpecifySelection.navigation.SpecifySelection
-import week.on.a.plate.SpecifySelection.view.SpecifySelectionMain
+import week.on.a.plate.core.dialogs.SpecifySelection.navigation.SpecifySelection
+import week.on.a.plate.core.dialogs.SpecifySelection.view.SpecifySelectionMain
 import week.on.a.plate.menuScreen.view.main.MenuScreen
 import week.on.a.plate.search.navigation.SearchRoute
 import week.on.a.plate.search.view.main.SearchStart

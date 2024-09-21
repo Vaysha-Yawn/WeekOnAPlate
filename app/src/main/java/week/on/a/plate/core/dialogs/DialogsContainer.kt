@@ -6,6 +6,20 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import week.on.a.plate.core.dialogs.addCategory.event.AddCategoryEvent
+import week.on.a.plate.core.dialogs.addCategory.logic.AddCategoryViewModel
+import week.on.a.plate.core.dialogs.addCategory.state.AddCategoryUIState
+import week.on.a.plate.core.dialogs.addCategory.view.AddCategory
+import week.on.a.plate.core.dialogs.addIngrdient.event.AddIngredientEvent
+import week.on.a.plate.core.dialogs.addIngrdient.logic.AddIngredientViewModel
+import week.on.a.plate.core.dialogs.addIngrdient.view.AddIngredient
+import week.on.a.plate.core.dialogs.addTag.event.AddTagEvent
+import week.on.a.plate.core.dialogs.addTag.logic.AddTagViewModel
+import week.on.a.plate.core.dialogs.addTag.state.AddTagUIState
+import week.on.a.plate.core.dialogs.addTag.view.AddTag
+import week.on.a.plate.core.dialogs.filterVoiceApply.event.FilterVoiceApplyEvent
+import week.on.a.plate.core.dialogs.filterVoiceApply.logic.FilterVoiceApplyViewModel
+import week.on.a.plate.core.dialogs.filterVoiceApply.view.DialogVoiceApplyTags
 import week.on.a.plate.core.dialogs.menu.addPosition.event.AddPositionEvent
 import week.on.a.plate.core.dialogs.menu.addPosition.logic.AddPositionViewModel
 import week.on.a.plate.core.dialogs.menu.addPosition.view.AddPositionDialogContent
@@ -34,13 +48,15 @@ import week.on.a.plate.core.dialogs.menu.editPositionIngredient.view.EditOrAddIn
 import week.on.a.plate.core.dialogs.menu.editRecipePosition.event.EditRecipePositionEvent
 import week.on.a.plate.core.dialogs.menu.editRecipePosition.logic.EditRecipePositionViewModel
 import week.on.a.plate.core.dialogs.menu.editRecipePosition.view.EditRecipePositionDialogContent
+import week.on.a.plate.core.dialogs.selectedFilters.event.SelectedFiltersEvent
+import week.on.a.plate.core.dialogs.selectedFilters.logic.SelectedFiltersViewModel
+import week.on.a.plate.core.dialogs.selectedFilters.view.DialogSelectedTags
 import week.on.a.plate.core.mainView.mainViewModelLogic.Event
 import week.on.a.plate.core.mainView.mainViewModelLogic.MainEvent
 import week.on.a.plate.core.uitools.dialogs.BaseDialogContainer
 import week.on.a.plate.core.uitools.dialogs.BottomDialogContainer
 
 
-@SuppressLint("SuspiciousIndentation")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DialogsContainer(data: DialogViewModel?, onEvent: (event: Event) -> Unit) {
@@ -138,6 +154,82 @@ fun DialogsContainer(data: DialogViewModel?, onEvent: (event: Event) -> Unit) {
             }
         }
 
+        is AddCategoryViewModel -> {
+            val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+            data.state = AddCategoryUIState(sheetState, data.oldName)
+            BottomDialogContainer(
+                data.state.sheetState,
+                { onEvent(AddCategoryEvent.Close) }) {
+                AddCategory(
+                    data.state,
+                    { mainEvent: MainEvent -> onEvent(mainEvent) },
+                    { onEvent(AddTagEvent.Done) },
+                )
+            }
+            LaunchedEffect(true) {
+                sheetState.show()
+            }
+        }
+
+        is AddTagViewModel -> {
+            val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+            data.state = AddTagUIState(sheetState, data.startName, data.startCategory)
+            BottomDialogContainer(
+                data.state.sheetState,
+                { onEvent(AddCategoryEvent.Close) }) {
+                AddTag(
+                    state = data.state,
+                    { mainEvent: MainEvent -> onEvent(mainEvent) },
+                    { addTagEvent: AddTagEvent -> onEvent(addTagEvent) })
+            }
+            LaunchedEffect(true) {
+                sheetState.show()
+            }
+        }
+
+        is AddIngredientViewModel -> {
+            val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+            BottomDialogContainer(
+                sheetState,
+                { onEvent(AddIngredientEvent.Close) }) {
+                AddIngredient(
+                    state = data.state,
+                    { mainEvent: MainEvent -> onEvent(mainEvent) },
+                    { addIngredientEvent: AddIngredientEvent -> onEvent(addIngredientEvent) })
+            }
+            LaunchedEffect(true) {
+                sheetState.show()
+            }
+        }
+
+        is SelectedFiltersViewModel -> {
+            val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+            BottomDialogContainer(
+                sheetState,
+                { onEvent(SelectedFiltersEvent.Close) }) {
+                DialogSelectedTags(
+                    data.state
+                ) { event: SelectedFiltersEvent -> onEvent(event) }
+            }
+            LaunchedEffect(true) {
+                sheetState.show()
+            }
+        }
+
+        is FilterVoiceApplyViewModel -> {
+            val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+            BottomDialogContainer(
+                sheetState,
+                { onEvent(FilterVoiceApplyEvent.Close) }) {
+                DialogVoiceApplyTags(
+                    data.state
+                ) { event: FilterVoiceApplyEvent -> onEvent(event) }
+            }
+            LaunchedEffect(true) {
+                sheetState.show()
+            }
+        }
+
         null -> {}
         /*
         is DialogType.RegisterToShopList -> {
@@ -159,9 +251,4 @@ fun DialogsContainer(data: DialogViewModel?, onEvent: (event: Event) -> Unit) {
         DialogType.VoiceFiltersApply -> TODO()
         null -> {}*/
     }
-}
-
-@Composable
-fun ChooseDate(state: ChooseWeekUIState, close: () -> Unit, done: () -> Unit) {
-
 }

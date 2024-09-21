@@ -17,6 +17,7 @@ import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,7 +57,11 @@ fun FilterScreen(stateUI: FilterUIState, onEvent: (Event) -> Unit) {
         }
     }) { innerPadding ->
         Column {
-            TabRowFilter(stateUI)
+            TabRowFilter(
+                stateUI.activeFilterTabIndex,
+                stateUI.selectedTags.value.size,
+                stateUI.selectedIngredients.value.size
+            )
             LazyColumn(
                 Modifier
                     .fillMaxSize()
@@ -125,13 +130,17 @@ fun FilterScreen(stateUI: FilterUIState, onEvent: (Event) -> Unit) {
 }
 
 @Composable
-fun TabRowFilter(stateUI: FilterUIState) {
+fun TabRowFilter(
+    activeFilterTabIndex: MutableIntState,
+    selectedTagsSize: Int,
+    selectedIngredientsSize: Int
+) {
     val tabTitles = listOf("Тэги", "Ингредиенты")
     TabRow(
-        selectedTabIndex = stateUI.activeFilterTabIndex.intValue,
+        selectedTabIndex = activeFilterTabIndex.intValue,
         indicator = { tabPositions ->
             TabRowDefaults.Indicator(
-                modifier = Modifier.tabIndicatorOffset(tabPositions[stateUI.activeFilterTabIndex.intValue]),
+                modifier = Modifier.tabIndicatorOffset(tabPositions[activeFilterTabIndex.intValue]),
                 color = MaterialTheme.colorScheme.onBackground,
                 height = 2.dp
             )
@@ -142,14 +151,14 @@ fun TabRowFilter(stateUI: FilterUIState) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         TextBody(
                             text =
-                            if (title == "Тэги") stateUI.selectedTags.value.size.toString()
-                            else stateUI.selectedIngredients.value.size.toString()
+                            if (title == "Тэги") selectedTagsSize.toString()
+                            else selectedIngredientsSize.toString()
                         )
                         TextBody(text = title)
                     }
                 },
-                selected = stateUI.activeFilterTabIndex.intValue == index,
-                onClick = { stateUI.activeFilterTabIndex.intValue = index }
+                selected = activeFilterTabIndex.intValue == index,
+                onClick = { activeFilterTabIndex.intValue = index }
             )
         }
     }

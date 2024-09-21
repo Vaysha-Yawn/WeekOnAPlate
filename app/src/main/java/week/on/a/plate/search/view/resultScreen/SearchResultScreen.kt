@@ -42,7 +42,7 @@ import week.on.a.plate.core.uitools.TagSmall
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.buttons.ButtonText
 import week.on.a.plate.core.uitools.buttons.PlusButtonCard
-import week.on.a.plate.SpecifySelection.navigation.SpecifySelection
+import week.on.a.plate.core.dialogs.SpecifySelection.navigation.SpecifySelection
 import week.on.a.plate.search.data.SearchScreenEvent
 import week.on.a.plate.ui.theme.ColorButtonNegativeGrey
 import week.on.a.plate.ui.theme.WeekOnAPlateTheme

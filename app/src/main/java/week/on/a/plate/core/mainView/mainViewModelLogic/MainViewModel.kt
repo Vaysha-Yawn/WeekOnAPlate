@@ -8,7 +8,7 @@ import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.dialogs.DialogManager
-import week.on.a.plate.SpecifySelection.logic.SpecifySelectionViewModel
+import week.on.a.plate.core.dialogs.SpecifySelection.logic.SpecifySelectionViewModel
 import week.on.a.plate.menuScreen.logic.useCase.CRUDRecipeInMenu
 import javax.inject.Inject
 

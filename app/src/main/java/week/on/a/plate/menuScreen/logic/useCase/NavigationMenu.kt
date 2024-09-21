@@ -1,7 +1,7 @@
 package week.on.a.plate.menuScreen.logic.useCase
 
 import androidx.navigation.NavHostController
-import week.on.a.plate.SpecifySelection.navigation.SpecifySelection
+import week.on.a.plate.core.dialogs.SpecifySelection.navigation.SpecifySelection
 import week.on.a.plate.menuScreen.data.eventData.NavFromMenuData
 import javax.inject.Inject
 
