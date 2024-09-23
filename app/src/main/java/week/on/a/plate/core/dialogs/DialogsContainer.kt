@@ -1,6 +1,5 @@
 package week.on.a.plate.core.dialogs
 
-import android.annotation.SuppressLint
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -15,17 +14,15 @@ import week.on.a.plate.core.dialogs.addIngrdient.logic.AddIngredientViewModel
 import week.on.a.plate.core.dialogs.addIngrdient.view.AddIngredient
 import week.on.a.plate.core.dialogs.addTag.event.AddTagEvent
 import week.on.a.plate.core.dialogs.addTag.logic.AddTagViewModel
-import week.on.a.plate.core.dialogs.addTag.state.AddTagUIState
 import week.on.a.plate.core.dialogs.addTag.view.AddTag
-import week.on.a.plate.core.dialogs.filterVoiceApply.event.FilterVoiceApplyEvent
-import week.on.a.plate.core.dialogs.filterVoiceApply.logic.FilterVoiceApplyViewModel
-import week.on.a.plate.core.dialogs.filterVoiceApply.view.DialogVoiceApplyTags
+import week.on.a.plate.core.dialogs.filter.filterVoiceApply.event.FilterVoiceApplyEvent
+import week.on.a.plate.core.dialogs.filter.filterVoiceApply.logic.FilterVoiceApplyViewModel
+import week.on.a.plate.core.dialogs.filter.filterVoiceApply.view.DialogVoiceApplyTags
 import week.on.a.plate.core.dialogs.menu.addPosition.event.AddPositionEvent
 import week.on.a.plate.core.dialogs.menu.addPosition.logic.AddPositionViewModel
 import week.on.a.plate.core.dialogs.menu.addPosition.view.AddPositionDialogContent
 import week.on.a.plate.core.dialogs.menu.changePositionCount.event.ChangePortionsCountEvent
 import week.on.a.plate.core.dialogs.menu.changePositionCount.logic.ChangePortionsCountViewModel
-import week.on.a.plate.core.dialogs.menu.changePositionCount.state.ChangePortionsCountUIState
 import week.on.a.plate.core.dialogs.menu.changePositionCount.view.ChangePortionsPanel
 import week.on.a.plate.core.dialogs.menu.chooseWeekInMenu.event.ChooseWeekDialogEvent
 import week.on.a.plate.core.dialogs.menu.chooseWeekInMenu.logic.ChooseWeekViewModel
@@ -36,7 +33,6 @@ import week.on.a.plate.core.dialogs.menu.datePicker.state.DatePickerUIState
 import week.on.a.plate.core.dialogs.menu.datePicker.view.DatePickerMy
 import week.on.a.plate.core.dialogs.menu.editNote.event.EditNoteEvent
 import week.on.a.plate.core.dialogs.menu.editNote.logic.EditNoteViewModel
-import week.on.a.plate.core.dialogs.menu.editNote.state.EditNoteUIState
 import week.on.a.plate.core.dialogs.menu.editNote.view.EditNoteBottomDialogContent
 import week.on.a.plate.core.dialogs.menu.editOtherPosition.event.EditOtherPositionEvent
 import week.on.a.plate.core.dialogs.menu.editOtherPosition.logic.EditOtherPositionViewModel
@@ -48,11 +44,11 @@ import week.on.a.plate.core.dialogs.menu.editPositionIngredient.view.EditOrAddIn
 import week.on.a.plate.core.dialogs.menu.editRecipePosition.event.EditRecipePositionEvent
 import week.on.a.plate.core.dialogs.menu.editRecipePosition.logic.EditRecipePositionViewModel
 import week.on.a.plate.core.dialogs.menu.editRecipePosition.view.EditRecipePositionDialogContent
-import week.on.a.plate.core.dialogs.selectedFilters.event.SelectedFiltersEvent
-import week.on.a.plate.core.dialogs.selectedFilters.logic.SelectedFiltersViewModel
-import week.on.a.plate.core.dialogs.selectedFilters.view.DialogSelectedTags
-import week.on.a.plate.core.mainView.mainViewModelLogic.Event
-import week.on.a.plate.core.mainView.mainViewModelLogic.MainEvent
+import week.on.a.plate.core.dialogs.filter.selectedFilters.event.SelectedFiltersEvent
+import week.on.a.plate.core.dialogs.filter.selectedFilters.logic.SelectedFiltersViewModel
+import week.on.a.plate.core.dialogs.filter.selectedFilters.view.DialogSelectedTags
+import week.on.a.plate.core.Event
+import week.on.a.plate.core.MainEvent
 import week.on.a.plate.core.uitools.dialogs.BaseDialogContainer
 import week.on.a.plate.core.uitools.dialogs.BottomDialogContainer
 
@@ -100,8 +96,7 @@ fun DialogsContainer(data: DialogViewModel?, onEvent: (event: Event) -> Unit) {
 
         is EditNoteViewModel -> {
             val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-            data.state = EditNoteUIState(sheetState, data.position)
-            BottomDialogContainer(data.state.sheetState, { onEvent(EditNoteEvent.Close) }) {
+            BottomDialogContainer(sheetState, { onEvent(EditNoteEvent.Close) }) {
                 EditNoteBottomDialogContent(data.state.text) {
                     onEvent(EditNoteEvent.Done)
                 }
@@ -113,9 +108,8 @@ fun DialogsContainer(data: DialogViewModel?, onEvent: (event: Event) -> Unit) {
 
         is ChangePortionsCountViewModel -> {
             val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-            data.state = ChangePortionsCountUIState(sheetState, data.startValue)
             BottomDialogContainer(
-                data.state.sheetState,
+                sheetState,
                 { onEvent(ChangePortionsCountEvent.Close) }) {
                 ChangePortionsPanel(data.state.portionsCount) { onEvent(ChangePortionsCountEvent.Done) }
             }
@@ -126,9 +120,8 @@ fun DialogsContainer(data: DialogViewModel?, onEvent: (event: Event) -> Unit) {
 
         is EditPositionIngredientViewModel -> {
             val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-            data.state = EditPositionIngredientUIState(data.oldPositionIngredient, sheetState)
             BottomDialogContainer(
-                data.state.sheetState,
+                sheetState,
                 { onEvent(EditPositionIngredientEvent.Close) }) {
                 EditOrAddIngredientBottomDialogContent(data.state,
                     { event: EditPositionIngredientEvent -> onEvent(event) }) { event: MainEvent ->
@@ -156,14 +149,13 @@ fun DialogsContainer(data: DialogViewModel?, onEvent: (event: Event) -> Unit) {
 
         is AddCategoryViewModel -> {
             val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-            data.state = AddCategoryUIState(sheetState, data.oldName)
             BottomDialogContainer(
-                data.state.sheetState,
+                sheetState,
                 { onEvent(AddCategoryEvent.Close) }) {
                 AddCategory(
                     data.state,
                     { mainEvent: MainEvent -> onEvent(mainEvent) },
-                    { onEvent(AddTagEvent.Done) },
+                    { onEvent(AddCategoryEvent.Done) },
                 )
             }
             LaunchedEffect(true) {
@@ -173,10 +165,9 @@ fun DialogsContainer(data: DialogViewModel?, onEvent: (event: Event) -> Unit) {
 
         is AddTagViewModel -> {
             val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-            data.state = AddTagUIState(sheetState, data.startName, data.startCategory)
             BottomDialogContainer(
-                data.state.sheetState,
-                { onEvent(AddCategoryEvent.Close) }) {
+                sheetState,
+                { onEvent(AddTagEvent.Close) }) {
                 AddTag(
                     state = data.state,
                     { mainEvent: MainEvent -> onEvent(mainEvent) },
@@ -231,24 +222,5 @@ fun DialogsContainer(data: DialogViewModel?, onEvent: (event: Event) -> Unit) {
         }
 
         null -> {}
-        /*
-        is DialogType.RegisterToShopList -> {
-            //
-        }
-        is DialogType.CreateCategoryIngredient -> TODO()
-        is DialogType.CreateIngredient -> TODO()
-        is DialogType.FindIngredient -> TODO()
-        is DialogType.FindCategoryIngredient -> TODO()
-        is DialogType.FindIngredients -> TODO()
-        is DialogType.SelectedFilters -> TODO()
-        is DialogType.CreateTag -> TODO()
-        DialogType.DeleteAsk -> TODO()
-        DialogType.EditRecipePosition -> TODO()
-        DialogType.FindTags -> TODO()
-        DialogType.RecipeToShopList -> TODO()
-        DialogType.SelectedToShopList -> TODO()
-        DialogType.SpecifyDate -> TODO()
-        DialogType.VoiceFiltersApply -> TODO()
-        null -> {}*/
     }
 }

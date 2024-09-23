@@ -1,9 +1,9 @@
 package week.on.a.plate.core.dialogs.addCategory.event
 
 
-import week.on.a.plate.core.mainView.mainViewModelLogic.Event
+import week.on.a.plate.core.Event
 
-sealed class AddCategoryEvent:Event() {
+sealed class AddCategoryEvent: Event() {
     data object Done: AddCategoryEvent()
     data object Close: AddCategoryEvent()
 }

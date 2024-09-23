@@ -6,11 +6,8 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 
-class ChangePortionsCountUIState @OptIn(ExperimentalMaterial3Api::class) constructor(
-    val sheetState: SheetState,
-    private val startPortionsCount:Int
-){
-    val portionsCount = mutableIntStateOf(startPortionsCount)
+class ChangePortionsCountUIState{
+    val portionsCount = mutableIntStateOf(0)
     val show: MutableState<Boolean> = mutableStateOf(true)
 }
 

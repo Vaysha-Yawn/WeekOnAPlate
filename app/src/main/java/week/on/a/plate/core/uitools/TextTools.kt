@@ -1,6 +1,7 @@
 package week.on.a.plate.core.uitools
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -16,7 +17,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.core.data.recipe.IngredientView
 import week.on.a.plate.core.data.recipe.RecipeTagView
-import week.on.a.plate.ui.theme.ColorBluePanel
 import week.on.a.plate.ui.theme.ColorButtonGreen
 import week.on.a.plate.ui.theme.ColorButtonNegativeGrey
 import week.on.a.plate.ui.theme.ColorPanelGreen
@@ -98,7 +98,11 @@ fun TextTitleLarge(
 
 
 @Composable
-fun TextTitleItalic(text: String, modifier: Modifier = Modifier,  textAlign: TextAlign = TextAlign.Start) {
+fun TextTitleItalic(
+    text: String,
+    modifier: Modifier = Modifier,
+    textAlign: TextAlign = TextAlign.Start
+) {
     TextInApp(
         text,
         modifier,
@@ -154,7 +158,12 @@ fun TextSmall(text: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun TextBody(text: String, modifier: Modifier = Modifier, textAlign:TextAlign = TextAlign.Start, maxLines:Int? = null) {
+fun TextBody(
+    text: String,
+    modifier: Modifier = Modifier,
+    textAlign: TextAlign = TextAlign.Start,
+    maxLines: Int? = null
+) {
     TextInApp(
         text,
         modifier,
@@ -166,24 +175,27 @@ fun TextBody(text: String, modifier: Modifier = Modifier, textAlign:TextAlign = 
 }
 
 @Composable
-fun TagBig(tag: RecipeTagView, isActive: Boolean) {
-    TagBig(tag.tagName, if (isActive)ColorPanelGreen else ColorButtonNegativeGrey)
+fun TagBig(tag: RecipeTagView, isActive: Boolean, clickable: () -> Unit = {}) {
+    TagBig(tag.tagName, if (isActive) ColorPanelGreen else ColorButtonNegativeGrey, clickable)
 }
 
 @Composable
-fun CreateTagOrIngredient(name: String, eventCreate:()->Unit) {
+fun CreateTagOrIngredient(name: String, eventCreate: () -> Unit)
+{
     TagBig("+ Создать: " + name, ColorButtonNegativeGrey, eventCreate)
 }
-
 @Composable
-fun TagBig(ingredientView: IngredientView, isActive: Boolean) {
-    TagBig(ingredientView.name, if (isActive)ColorPanelYellow else ColorButtonNegativeGrey)
+fun TagBig(ingredientView: IngredientView, isActive: Boolean, clickable: () -> Unit = {}) {
+    TagBig(ingredientView.name, if (isActive) ColorPanelYellow else ColorButtonNegativeGrey, clickable)
 }
 
 @Composable
-fun TagBig(text: String, color: Color, clickable:()->Unit = {}) {
+fun TagBig(text: String, color: Color, clickable: () -> Unit = {}) {
     TextInApp(
         text, modifier = Modifier
+            .clickable {
+                clickable()
+            }
             .background(
                 color, RoundedCornerShape(30.dp)
             )
@@ -209,7 +221,8 @@ fun TagSmall(ingredientView: IngredientView) {
 @Composable
 private fun TagSmall(text: String, color: Color) {
     TextInApp(
-        text, modifier = Modifier.padding(end = 6.dp, bottom = 6.dp)
+        text, modifier = Modifier
+            .padding(end = 6.dp, bottom = 6.dp)
             .background(
                 color, RoundedCornerShape(10.dp)
             )

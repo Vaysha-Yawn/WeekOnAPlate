@@ -13,8 +13,8 @@ import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.DoneButton
-import week.on.a.plate.menuScreen.data.eventData.ActionWeekMenuDB
-import week.on.a.plate.menuScreen.data.eventData.MenuEvent
+import week.on.a.plate.menuScreen.event.ActionWeekMenuDB
+import week.on.a.plate.menuScreen.event.MenuEvent
 import java.time.LocalDate
 
 @Composable

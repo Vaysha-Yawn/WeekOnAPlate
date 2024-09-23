@@ -6,13 +6,12 @@ import week.on.a.plate.core.data.week.Position
 import week.on.a.plate.core.dialogs.DialogViewModel
 import week.on.a.plate.core.dialogs.menu.editNote.event.EditNoteEvent
 import week.on.a.plate.core.dialogs.menu.editNote.state.EditNoteUIState
-import week.on.a.plate.core.mainView.mainViewModelLogic.MainEvent
-import week.on.a.plate.core.mainView.mainViewModelLogic.MainViewModel
+import week.on.a.plate.core.MainEvent
+import week.on.a.plate.core.MainViewModel
 
 
 class EditNoteViewModel() : DialogViewModel() {
 
-    var position: Position.PositionNoteView? = null
     lateinit var mainViewModel: MainViewModel
     lateinit var state: EditNoteUIState
     private lateinit var resultFlow: MutableStateFlow<Position.PositionNoteView?>
@@ -26,7 +25,7 @@ class EditNoteViewModel() : DialogViewModel() {
     fun done() {
         close()
         val changedNote =
-            Position.PositionNoteView(position?.id?:0, state.text.value, position?.selectionId?:0)
+            Position.PositionNoteView(state.note?.id?:0, state.text.value, state.note?.selectionId?:0)
         resultFlow.value = changedNote
     }
 
@@ -45,8 +44,7 @@ class EditNoteViewModel() : DialogViewModel() {
         positiond: Position.PositionNoteView?,
         use: (Position.PositionNoteView) -> Unit,
     ) {
-        position = positiond
-
+        EditNoteUIState(positiond)
         val flow = start()
         flow.collect { value ->
             if (value != null) {

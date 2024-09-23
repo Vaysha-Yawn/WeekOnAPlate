@@ -15,7 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.core.dialogs.addCategory.state.AddCategoryUIState
-import week.on.a.plate.core.mainView.mainViewModelLogic.MainEvent
+import week.on.a.plate.core.MainEvent
 import week.on.a.plate.core.uitools.EditTextLine
 import week.on.a.plate.core.uitools.TextTitleItalic
 import week.on.a.plate.core.uitools.buttons.DoneButton

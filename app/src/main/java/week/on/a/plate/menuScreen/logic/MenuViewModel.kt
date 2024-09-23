@@ -17,14 +17,14 @@ import week.on.a.plate.core.dialogs.menu.editOtherPosition.logic.EditOtherPositi
 import week.on.a.plate.core.dialogs.menu.editPositionIngredient.logic.EditPositionIngredientViewModel
 import week.on.a.plate.core.dialogs.menu.editRecipePosition.event.EditRecipePositionEvent
 import week.on.a.plate.core.dialogs.menu.editRecipePosition.logic.EditRecipePositionViewModel
-import week.on.a.plate.core.mainView.mainViewModelLogic.Event
-import week.on.a.plate.core.mainView.mainViewModelLogic.MainEvent
-import week.on.a.plate.core.mainView.mainViewModelLogic.MainViewModel
-import week.on.a.plate.menuScreen.data.eventData.ActionWeekMenuDB
-import week.on.a.plate.menuScreen.data.eventData.MenuEvent
-import week.on.a.plate.menuScreen.data.eventData.NavFromMenuData
-import week.on.a.plate.menuScreen.data.stateData.MenuIUState
-import week.on.a.plate.menuScreen.data.stateData.WeekState
+import week.on.a.plate.core.Event
+import week.on.a.plate.core.MainEvent
+import week.on.a.plate.core.MainViewModel
+import week.on.a.plate.menuScreen.event.ActionWeekMenuDB
+import week.on.a.plate.menuScreen.event.MenuEvent
+import week.on.a.plate.menuScreen.event.NavFromMenuData
+import week.on.a.plate.menuScreen.state.MenuIUState
+import week.on.a.plate.menuScreen.state.WeekState
 import week.on.a.plate.menuScreen.logic.useCase.CRUDRecipeInMenu
 import week.on.a.plate.menuScreen.logic.useCase.NavigationMenu
 import week.on.a.plate.menuScreen.logic.useCase.SelectedRecipeManager
@@ -100,7 +100,7 @@ class MenuViewModel @Inject constructor(
                 }
             }
             is MenuEvent.ActionSelect -> selectedRecipeManager.onEvent(
-                event.selectedData,
+                event.selectedEvent,
                 menuUIState
             )
             is MenuEvent.GetSelIdAndCreate -> getSelAndCreate()

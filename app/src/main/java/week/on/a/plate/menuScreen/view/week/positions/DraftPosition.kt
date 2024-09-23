@@ -24,9 +24,9 @@ import week.on.a.plate.R
 import week.on.a.plate.core.data.week.Position
 import week.on.a.plate.core.uitools.TagSmall
 import week.on.a.plate.core.uitools.buttons.MoreButtonWithBackg
-import week.on.a.plate.core.mainView.mainViewModelLogic.Event
-import week.on.a.plate.menuScreen.data.eventData.MenuEvent
-import week.on.a.plate.menuScreen.data.eventData.NavFromMenuData
+import week.on.a.plate.core.Event
+import week.on.a.plate.menuScreen.event.MenuEvent
+import week.on.a.plate.menuScreen.event.NavFromMenuData
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

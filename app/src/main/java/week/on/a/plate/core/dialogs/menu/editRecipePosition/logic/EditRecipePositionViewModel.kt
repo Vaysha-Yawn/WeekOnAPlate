@@ -5,8 +5,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import week.on.a.plate.core.dialogs.DialogViewModel
 import week.on.a.plate.core.dialogs.menu.editRecipePosition.event.EditRecipePositionEvent
 import week.on.a.plate.core.dialogs.menu.editRecipePosition.state.EditRecipePositionUIState
-import week.on.a.plate.core.mainView.mainViewModelLogic.MainEvent
-import week.on.a.plate.core.mainView.mainViewModelLogic.MainViewModel
+import week.on.a.plate.core.MainEvent
+import week.on.a.plate.core.MainViewModel
 
 class EditRecipePositionViewModel() : DialogViewModel() {
 

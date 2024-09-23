@@ -5,16 +5,15 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import week.on.a.plate.core.dialogs.DialogViewModel
 import week.on.a.plate.core.dialogs.menu.changePositionCount.event.ChangePortionsCountEvent
 import week.on.a.plate.core.dialogs.menu.changePositionCount.state.ChangePortionsCountUIState
-import week.on.a.plate.core.mainView.mainViewModelLogic.MainEvent
-import week.on.a.plate.core.mainView.mainViewModelLogic.MainViewModel
+import week.on.a.plate.core.MainEvent
+import week.on.a.plate.core.MainViewModel
 
 
 class ChangePortionsCountViewModel() : DialogViewModel() {
 
     lateinit var mainViewModel: MainViewModel
-    lateinit var state: ChangePortionsCountUIState
+    val state = ChangePortionsCountUIState()
     private lateinit var resultFlow: MutableStateFlow<Int?>
-    var startValue = 0
 
     fun start(): Flow<Int?> {
         val flow = MutableStateFlow<Int?>(null)
@@ -40,7 +39,8 @@ class ChangePortionsCountViewModel() : DialogViewModel() {
     }
 
     suspend fun launchAndGet(startValued: Int, use: (Int) -> Unit) {
-        startValue = startValued
+        state.portionsCount.intValue = startValued
+
         val flow = start()
         flow.collect { value ->
             if (value != null) {

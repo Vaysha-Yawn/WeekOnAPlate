@@ -17,12 +17,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import week.on.a.plate.core.data.example.WeekDataExample
 import week.on.a.plate.core.data.week.WeekView
-import week.on.a.plate.core.mainView.mainViewModelLogic.Event
-import week.on.a.plate.core.mainView.mainViewModelLogic.MainEvent
-import week.on.a.plate.core.mainView.mainViewModelLogic.MainViewModel
-import week.on.a.plate.menuScreen.data.stateData.MenuIUState
+import week.on.a.plate.core.Event
+import week.on.a.plate.core.MainEvent
+import week.on.a.plate.core.MainViewModel
+import week.on.a.plate.menuScreen.state.MenuIUState
 import week.on.a.plate.menuScreen.logic.MenuViewModel
-import week.on.a.plate.menuScreen.data.stateData.WeekState
+import week.on.a.plate.menuScreen.state.WeekState
 import week.on.a.plate.menuScreen.view.calendar.BlockCalendar
 import week.on.a.plate.menuScreen.view.day.DayView
 import week.on.a.plate.menuScreen.view.day.NoDay

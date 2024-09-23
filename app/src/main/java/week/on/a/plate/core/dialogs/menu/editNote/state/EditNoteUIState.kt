@@ -7,8 +7,7 @@ import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import week.on.a.plate.core.data.week.Position
 
-class EditNoteUIState @OptIn(ExperimentalMaterial3Api::class) constructor(
-    val sheetState: SheetState,
+class EditNoteUIState (
     val note: Position.PositionNoteView?,
 ){
     val text = mutableStateOf(note?.note?:"")

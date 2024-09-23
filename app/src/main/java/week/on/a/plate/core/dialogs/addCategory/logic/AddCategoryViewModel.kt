@@ -5,16 +5,15 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import week.on.a.plate.core.dialogs.DialogViewModel
 import week.on.a.plate.core.dialogs.addCategory.event.AddCategoryEvent
 import week.on.a.plate.core.dialogs.addCategory.state.AddCategoryUIState
-import week.on.a.plate.core.mainView.mainViewModelLogic.MainEvent
-import week.on.a.plate.core.mainView.mainViewModelLogic.MainViewModel
+import week.on.a.plate.core.MainEvent
+import week.on.a.plate.core.MainViewModel
 
 
 class AddCategoryViewModel() : DialogViewModel() {
 
     lateinit var mainViewModel: MainViewModel
-    lateinit var state: AddCategoryUIState
+    val state =  AddCategoryUIState()
     private lateinit var resultFlow: MutableStateFlow<String?>
-    var oldName:String? = null
 
     fun start(): Flow<String?> {
         val flow = MutableStateFlow<String?>(null)
@@ -40,7 +39,7 @@ class AddCategoryViewModel() : DialogViewModel() {
     }
 
     suspend fun launchAndGet(startValue:String?, use: (String) -> Unit) {
-        oldName = startValue
+        state.text.value = startValue?:""
         val flow = start()
         flow.collect { value ->
             if (value != null) {

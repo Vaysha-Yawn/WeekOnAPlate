@@ -15,11 +15,7 @@ sealed class BottomScreens<T>(val icon: Int, val route: T) {
     data object Menu : BottomScreens<MenuScreen>(icon = R.drawable.menu, route = MenuScreen)
 
     @Serializable
-    data object Home : BottomScreens<HomeScreen>(icon = R.drawable.home, route = HomeScreen)
-
-    @Serializable
-    data object Favorites :
-        BottomScreens<FavoritesScreen>(icon = R.drawable.bookmark, route = FavoritesScreen)
+    data object Search : BottomScreens<SearchScreen>(icon = R.drawable.search, route = SearchScreen)
 
     @Serializable
     data object Settings :
@@ -29,8 +25,7 @@ sealed class BottomScreens<T>(val icon: Int, val route: T) {
 val bottomScreens = listOf(
     BottomScreens.ShoppingList,
     BottomScreens.Menu,
-    BottomScreens.Home,
-    BottomScreens.Favorites,
+    BottomScreens.Search,
     BottomScreens.Settings,
 )
 
@@ -43,10 +38,7 @@ object ShoppingListScreen
 object MenuScreen
 
 @Serializable
-object HomeScreen
-
-@Serializable
-object FavoritesScreen
+object SearchScreen
 
 @Serializable
 object SettingsScreen

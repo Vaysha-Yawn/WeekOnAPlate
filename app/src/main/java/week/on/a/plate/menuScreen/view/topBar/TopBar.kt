@@ -21,11 +21,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.core.uitools.TextBodyDisActive
-import week.on.a.plate.menuScreen.data.eventData.ActionWeekMenuDB
-import week.on.a.plate.core.mainView.mainViewModelLogic.Event
-import week.on.a.plate.menuScreen.data.eventData.MenuEvent
-import week.on.a.plate.menuScreen.data.eventData.SelectedData
-import week.on.a.plate.menuScreen.data.stateData.MenuIUState
+import week.on.a.plate.menuScreen.event.ActionWeekMenuDB
+import week.on.a.plate.core.Event
+import week.on.a.plate.menuScreen.event.MenuEvent
+import week.on.a.plate.menuScreen.event.SelectedEvent
+import week.on.a.plate.menuScreen.state.MenuIUState
 import week.on.a.plate.ui.theme.ColorButtonNegativeGrey
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,7 +47,7 @@ fun TopBar(
         ) {
             if (menuIUState.editing.value) {
                 EditingRow(actionChooseAll = {
-                    onEvent(MenuEvent.ActionSelect(SelectedData.ChooseAll))
+                    onEvent(MenuEvent.ActionSelect(SelectedEvent.ChooseAll))
                 }, actionDeleteSelected = {
                     onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.DeleteSelected))
                 }, actionSelectedToShopList = {

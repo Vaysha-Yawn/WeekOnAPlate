@@ -5,11 +5,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import week.on.a.plate.core.data.recipe.IngredientInRecipeView
 import week.on.a.plate.core.data.week.Position
 import week.on.a.plate.core.dialogs.DialogViewModel
-import week.on.a.plate.core.dialogs.dialogAbstract.event.DialogEvent
 import week.on.a.plate.core.dialogs.menu.editPositionIngredient.event.EditPositionIngredientEvent
 import week.on.a.plate.core.dialogs.menu.editPositionIngredient.state.EditPositionIngredientUIState
-import week.on.a.plate.core.mainView.mainViewModelLogic.MainEvent
-import week.on.a.plate.core.mainView.mainViewModelLogic.MainViewModel
+import week.on.a.plate.core.MainEvent
+import week.on.a.plate.core.MainViewModel
 
 
 class EditPositionIngredientViewModel() : DialogViewModel() {
@@ -17,7 +16,6 @@ class EditPositionIngredientViewModel() : DialogViewModel() {
     lateinit var mainViewModel: MainViewModel
     lateinit var state: EditPositionIngredientUIState
     private lateinit var resultFlow: MutableStateFlow<Position.PositionIngredientView?>
-    var oldPositionIngredient: Position.PositionIngredientView? = null
 
     fun start(): Flow<Position.PositionIngredientView?> {
         val flow = MutableStateFlow<Position.PositionIngredientView?>(null)
@@ -28,13 +26,13 @@ class EditPositionIngredientViewModel() : DialogViewModel() {
     fun done() {
         close()
         val newIngredientPosition = Position.PositionIngredientView(
-            oldPositionIngredient?.id?:0,
+            state.positionIngredientView?.id?:0,
             IngredientInRecipeView(
-                oldPositionIngredient?.id?:0,
+                state.positionIngredientView?.id?:0,
                 state.ingredientState.value!!,
                 state.description.value,
                 state.count.doubleValue
-            ), oldPositionIngredient?.selectionId?:0
+            ), state.positionIngredientView?.selectionId?:0
         )
         resultFlow.value = newIngredientPosition
     }
@@ -56,7 +54,7 @@ class EditPositionIngredientViewModel() : DialogViewModel() {
         positionIngredient: Position.PositionIngredientView?,
         use: (Position.PositionIngredientView) -> Unit
     ) {
-        oldPositionIngredient = positionIngredient
+        state = EditPositionIngredientUIState(positionIngredient)
         val flow = start()
         flow.collect { value ->
             if (value != null) {

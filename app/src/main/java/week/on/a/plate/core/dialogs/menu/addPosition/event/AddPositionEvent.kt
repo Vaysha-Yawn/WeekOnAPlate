@@ -1,8 +1,8 @@
 package week.on.a.plate.core.dialogs.menu.addPosition.event
 
-import week.on.a.plate.core.mainView.mainViewModelLogic.Event
+import week.on.a.plate.core.Event
 
-sealed class AddPositionEvent:Event() {
+sealed class AddPositionEvent: Event() {
     data object AddRecipe: AddPositionEvent()
     data object AddIngredient: AddPositionEvent()
     data object AddDraft: AddPositionEvent()

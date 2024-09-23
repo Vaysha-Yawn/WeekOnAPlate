@@ -7,10 +7,8 @@ import week.on.a.plate.core.data.recipe.IngredientView
 import week.on.a.plate.core.dialogs.DialogViewModel
 import week.on.a.plate.core.dialogs.addIngrdient.event.AddIngredientEvent
 import week.on.a.plate.core.dialogs.addIngrdient.state.AddIngredientUIState
-import week.on.a.plate.core.dialogs.dialogAbstract.event.DialogEvent
-import week.on.a.plate.core.dialogs.dialogAbstract.state.UIState
-import week.on.a.plate.core.mainView.mainViewModelLogic.MainEvent
-import week.on.a.plate.core.mainView.mainViewModelLogic.MainViewModel
+import week.on.a.plate.core.MainEvent
+import week.on.a.plate.core.MainViewModel
 
 
 class AddIngredientViewModel() : DialogViewModel() {

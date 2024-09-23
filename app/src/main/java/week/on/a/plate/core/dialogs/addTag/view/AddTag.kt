@@ -19,7 +19,7 @@ import week.on.a.plate.R
 import week.on.a.plate.core.data.example.tags
 import week.on.a.plate.core.dialogs.addTag.event.AddTagEvent
 import week.on.a.plate.core.dialogs.addTag.state.AddTagUIState
-import week.on.a.plate.core.mainView.mainViewModelLogic.MainEvent
+import week.on.a.plate.core.MainEvent
 import week.on.a.plate.core.uitools.EditTextLine
 import week.on.a.plate.core.uitools.TextTitleItalic
 import week.on.a.plate.core.uitools.buttons.CommonButton
@@ -61,7 +61,7 @@ fun AddTag(
             textAlign = TextAlign.Start
         )
         CommonButton(
-            if (state.category.value == null) "Выбрать категорию" else state.category.value!!.name,
+            if (state.categoryName.value == "") "Выбрать категорию" else state.categoryName.value!!,
             R.drawable.search,
         ) {
             onEvent(AddTagEvent.ChooseCategory)
@@ -87,10 +87,7 @@ fun AddTag(
 @Composable
 fun PreviewAddTag() {
     WeekOnAPlateTheme {
-        val name = remember { mutableStateOf("") }
-        val category = tags[0]
-        val rem = rememberModalBottomSheetState()
-        val state = AddTagUIState(rem, null, category)
+        val state = AddTagUIState()
         AddTag(state, {}, {})
 
     }

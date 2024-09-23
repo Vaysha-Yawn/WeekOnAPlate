@@ -36,21 +36,21 @@ import week.on.a.plate.core.data.example.recipeTom
 import week.on.a.plate.core.data.recipe.IngredientView
 import week.on.a.plate.core.data.recipe.RecipeTagView
 import week.on.a.plate.core.data.recipe.RecipeView
-import week.on.a.plate.core.mainView.mainViewModelLogic.Event
-import week.on.a.plate.core.mainView.mainViewModelLogic.MainEvent
+import week.on.a.plate.core.Event
+import week.on.a.plate.core.MainEvent
 import week.on.a.plate.core.uitools.TagSmall
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.buttons.ButtonText
 import week.on.a.plate.core.uitools.buttons.PlusButtonCard
-import week.on.a.plate.core.dialogs.SpecifySelection.navigation.SpecifySelection
-import week.on.a.plate.search.data.SearchScreenEvent
+import week.on.a.plate.core.fullScereenDialog.specifySelection.navigation.SpecifySelection
+import week.on.a.plate.search.event.SearchScreenEvent
 import week.on.a.plate.ui.theme.ColorButtonNegativeGrey
 import week.on.a.plate.ui.theme.WeekOnAPlateTheme
 
 @Composable
 fun SearchResultScreen(
     result: List<RecipeView>,
-    onEvent: (Event) -> Unit
+    onEvent: (SearchScreenEvent) -> Unit
 ) {
     LazyColumn {
         items(result.size) {
@@ -62,15 +62,16 @@ fun SearchResultScreen(
 @Composable
 fun RowRecipeResultCard(
     recipeView: RecipeView,
-    onEvent: (Event) -> Unit
+    onEvent: (SearchScreenEvent) -> Unit
 ) {
     Card(
         Modifier
             .fillMaxWidth()
             .padding(bottom = 10.dp)
             .clickable {
-                //todo
-                //onEvent(MainEvent.Navigate(NavFromSearchData.NavToFullRecipe(recipeView.id)))
+                onEvent(
+                    SearchScreenEvent.NavigateToFullRecipe(recipeView)
+                )
             },
         elevation = CardDefaults.elevatedCardElevation(5.dp),
         shape = RectangleShape,
@@ -117,7 +118,7 @@ fun RowRecipeResultCard(
                 Spacer(modifier = Modifier.height(24.dp))
                 PlusButtonCard {
                     onEvent(
-                        MainEvent.Navigate(SpecifySelection)
+                        SearchScreenEvent.AddToMenu(recipeView)
                     )
                 }
             }
@@ -133,7 +134,6 @@ fun TagList(tags: List<RecipeTagView>, ingredients: List<IngredientView>) {
             TagSmall(tag = tags[index])
             Spacer(modifier = Modifier.width(6.dp))
         }
-        Spacer(modifier = Modifier.height(6.dp))
         CustomGridTags(ingredients.size) { index ->
             TagSmall(ingredientView = ingredients[index])
         }

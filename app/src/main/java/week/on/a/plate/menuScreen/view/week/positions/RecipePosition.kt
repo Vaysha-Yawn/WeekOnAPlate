@@ -27,11 +27,11 @@ import week.on.a.plate.core.uitools.SubText
 import week.on.a.plate.core.uitools.TextSmall
 import week.on.a.plate.core.uitools.buttons.CheckButton
 import week.on.a.plate.core.uitools.buttons.MoreButtonWithBackg
-import week.on.a.plate.core.mainView.mainViewModelLogic.Event
-import week.on.a.plate.menuScreen.data.eventData.MenuEvent
-import week.on.a.plate.menuScreen.data.stateData.MenuIUState
-import week.on.a.plate.menuScreen.data.eventData.NavFromMenuData
-import week.on.a.plate.menuScreen.data.eventData.SelectedData
+import week.on.a.plate.core.Event
+import week.on.a.plate.menuScreen.event.MenuEvent
+import week.on.a.plate.menuScreen.state.MenuIUState
+import week.on.a.plate.menuScreen.event.NavFromMenuData
+import week.on.a.plate.menuScreen.event.SelectedEvent
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -70,7 +70,7 @@ fun WeekRecipePosition(
                         menuIUState.chosenRecipes[recipe] = state
                     }
                     CheckButton(state) {
-                        onEvent(MenuEvent.ActionSelect(SelectedData.CheckRecipe(recipe)))
+                        onEvent(MenuEvent.ActionSelect(SelectedEvent.CheckRecipe(recipe)))
                     }
                     Spacer(modifier = Modifier.size(10.dp))
                 } else {

@@ -1,8 +1,8 @@
 package week.on.a.plate.core.dialogs.menu.editRecipePosition.event
 
-import week.on.a.plate.core.mainView.mainViewModelLogic.Event
+import week.on.a.plate.core.Event
 
-sealed class EditRecipePositionEvent:Event() {
+sealed class EditRecipePositionEvent: Event() {
     data object AddToCart: EditRecipePositionEvent()
     data object Double: EditRecipePositionEvent()
     data object Delete: EditRecipePositionEvent()

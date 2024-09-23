@@ -1,8 +1,8 @@
 package week.on.a.plate.core.dialogs.menu.editNote.event
 
-import week.on.a.plate.core.mainView.mainViewModelLogic.Event
+import week.on.a.plate.core.Event
 
-sealed class EditNoteEvent:Event() {
+sealed class EditNoteEvent: Event() {
     data object Done: EditNoteEvent()
     data object Close: EditNoteEvent()
 }

@@ -21,8 +21,8 @@ import week.on.a.plate.core.data.week.Position
 import week.on.a.plate.core.uitools.SubText
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.buttons.MoreButtonWithBackg
-import week.on.a.plate.core.mainView.mainViewModelLogic.Event
-import week.on.a.plate.menuScreen.data.eventData.MenuEvent
+import week.on.a.plate.core.Event
+import week.on.a.plate.menuScreen.event.MenuEvent
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

@@ -24,8 +24,8 @@ import week.on.a.plate.core.data.week.WeekView
 import week.on.a.plate.core.uitools.SubText
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.PlusButtonTitle
-import week.on.a.plate.core.mainView.mainViewModelLogic.Event
-import week.on.a.plate.menuScreen.data.stateData.MenuIUState
+import week.on.a.plate.core.Event
+import week.on.a.plate.menuScreen.state.MenuIUState
 import week.on.a.plate.menuScreen.view.calendar.CalendarDayCard
 import week.on.a.plate.menuScreen.view.week.positions.WeekCardPosition
 import java.time.LocalDate

@@ -3,8 +3,8 @@ package week.on.a.plate.menuScreen.logic.useCase
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import week.on.a.plate.core.data.week.Position
-import week.on.a.plate.menuScreen.data.eventData.SelectedData
-import week.on.a.plate.menuScreen.data.stateData.MenuIUState
+import week.on.a.plate.menuScreen.event.SelectedEvent
+import week.on.a.plate.menuScreen.state.MenuIUState
 import javax.inject.Inject
 
 class SelectedRecipeManager @Inject constructor() {
@@ -49,11 +49,11 @@ class SelectedRecipeManager @Inject constructor() {
         return list
     }
 
-    fun onEvent(selectedData: SelectedData, menuUIState: MenuIUState) {
-        when (selectedData) {
-            is SelectedData.AddCheckState -> addNewState(menuUIState, selectedData.recipe)
-            is SelectedData.CheckRecipe -> actionCheckRecipe(menuUIState, selectedData.recipe)
-            SelectedData.ChooseAll -> actionChooseAll(menuUIState)
+    fun onEvent(selectedEvent: SelectedEvent, menuUIState: MenuIUState) {
+        when (selectedEvent) {
+            is SelectedEvent.AddCheckState -> addNewState(menuUIState, selectedEvent.recipe)
+            is SelectedEvent.CheckRecipe -> actionCheckRecipe(menuUIState, selectedEvent.recipe)
+            SelectedEvent.ChooseAll -> actionChooseAll(menuUIState)
         }
     }
 

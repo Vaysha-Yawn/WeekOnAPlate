@@ -1,13 +1,12 @@
 package week.on.a.plate.menuScreen.logic.useCase
 
 import week.on.a.plate.core.data.example.emptyDayWithoutSel
-import week.on.a.plate.core.data.recipe.IngredientInRecipeView
 import week.on.a.plate.core.data.week.DayInWeekData
 import week.on.a.plate.core.data.week.DayView
 import week.on.a.plate.core.data.week.Position
 import week.on.a.plate.core.data.week.SelectionView
 import week.on.a.plate.core.data.week.WeekView
-import week.on.a.plate.menuScreen.data.eventData.ActionWeekMenuDB
+import week.on.a.plate.menuScreen.event.ActionWeekMenuDB
 import week.on.a.plate.repository.repositoriesForFeatures.menu.MenuRepository
 import week.on.a.plate.repository.tables.weekOrg.position.positionDraft.PositionDraftRepository
 import week.on.a.plate.repository.tables.weekOrg.position.positionIngredient.PositionIngredientRepository

@@ -27,7 +27,7 @@ import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.buttons.CommonButton
 import week.on.a.plate.core.uitools.buttons.DoneButton
 import week.on.a.plate.core.uitools.ingredientCard.CardIngredient
-import week.on.a.plate.core.mainView.mainViewModelLogic.MainEvent
+import week.on.a.plate.core.MainEvent
 import week.on.a.plate.ui.theme.WeekOnAPlateTheme
 
 @Composable
@@ -101,7 +101,7 @@ fun PreviewEditIngredientBottomDialog() {
     WeekOnAPlateTheme {
         val state = rememberModalBottomSheetState(true)
         EditOrAddIngredientBottomDialogContent(
-         EditPositionIngredientUIState(positionIngredientExample, state), {}
+         EditPositionIngredientUIState(positionIngredientExample), {}
         ){}
     }
 }

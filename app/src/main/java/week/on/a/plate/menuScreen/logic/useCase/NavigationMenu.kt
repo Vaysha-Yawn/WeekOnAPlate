@@ -1,8 +1,8 @@
 package week.on.a.plate.menuScreen.logic.useCase
 
 import androidx.navigation.NavHostController
-import week.on.a.plate.core.dialogs.SpecifySelection.navigation.SpecifySelection
-import week.on.a.plate.menuScreen.data.eventData.NavFromMenuData
+import week.on.a.plate.core.fullScereenDialog.specifySelection.navigation.SpecifySelection
+import week.on.a.plate.menuScreen.event.NavFromMenuData
 import javax.inject.Inject
 
 class NavigationMenu @Inject constructor() {
