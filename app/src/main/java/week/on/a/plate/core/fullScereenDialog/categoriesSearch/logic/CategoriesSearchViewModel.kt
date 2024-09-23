@@ -1,5 +1,6 @@
 package week.on.a.plate.core.fullScereenDialog.categoriesSearch.logic
 
+import androidx.compose.animation.fadeIn
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,7 +12,9 @@ import week.on.a.plate.core.fullScereenDialog.categoriesSearch.event.CategoriesS
 import week.on.a.plate.core.fullScereenDialog.categoriesSearch.state.CategoriesSearchUIState
 import week.on.a.plate.core.MainEvent
 import week.on.a.plate.core.MainViewModel
+import week.on.a.plate.core.data.example.ingredients
 import week.on.a.plate.core.data.example.tags
+import week.on.a.plate.core.data.recipe.IngredientCategoryView
 import week.on.a.plate.core.data.recipe.TagCategoryView
 import javax.inject.Inject
 
@@ -21,19 +24,35 @@ class CategoriesSearchViewModel @Inject constructor() : ViewModel() {
     lateinit var mainViewModel: MainViewModel
     val state = CategoriesSearchUIState()
     private lateinit var resultFlow: MutableStateFlow<TagCategoryView?>
+    private lateinit var resultFlowIngredient: MutableStateFlow<IngredientCategoryView?>
+    var isTag = false
 
-    init {
-        //searchFromBd
-        state.allNames.value = tags.map { it->it.name }
+    private fun startIngredient(): Flow<IngredientCategoryView?> {
+        val flow = MutableStateFlow<IngredientCategoryView?>(null)
+        resultFlowIngredient = flow
+        return flow
     }
 
-    fun start(): Flow<TagCategoryView?> {
+    suspend fun launchAndGetIngredient(use: (IngredientCategoryView) -> Unit) {
+        isTag = false
+        state.allNames.value = ingredients.map { it->it.name }
+        val flow = startIngredient()
+        flow.collect { value ->
+            if (value != null) {
+                use(value)
+            }
+        }
+    }
+
+    private fun start(): Flow<TagCategoryView?> {
         val flow = MutableStateFlow<TagCategoryView?>(null)
         resultFlow = flow
         return flow
     }
 
-    suspend fun launchAndGet(use: (TagCategoryView) -> Unit) {
+    suspend fun launchAndGetTag(use: (TagCategoryView) -> Unit) {
+        isTag = true
+        state.allNames.value = tags.map { it->it.name }
         val flow = start()
         flow.collect { value ->
             if (value != null) {
@@ -67,6 +86,7 @@ class CategoriesSearchViewModel @Inject constructor() : ViewModel() {
             vm.mainViewModel = mainViewModel
             mainViewModel.onEvent(MainEvent.OpenDialog(vm))
             vm.launchAndGet(text) { name->
+                if (isTag){}
                 //todo create category
                 // and add
             }
@@ -75,7 +95,12 @@ class CategoriesSearchViewModel @Inject constructor() : ViewModel() {
 
     fun done(text: String) {
         close()
-        resultFlow.value = tags.find { it->it.name == text }
+        if (isTag) {
+            resultFlow.value = tags.find { it->it.name == text }
+        }else{
+            resultFlowIngredient.value = ingredients.find { it->it.name == text }
+        }
+
     }
 
     fun close() {

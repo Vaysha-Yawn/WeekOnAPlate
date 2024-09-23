@@ -27,22 +27,23 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.vector.VectorPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import week.on.a.plate.R
 import week.on.a.plate.core.data.example.recipeTom
 import week.on.a.plate.core.data.recipe.IngredientView
 import week.on.a.plate.core.data.recipe.RecipeTagView
 import week.on.a.plate.core.data.recipe.RecipeView
-import week.on.a.plate.core.Event
-import week.on.a.plate.core.MainEvent
 import week.on.a.plate.core.uitools.TagSmall
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.buttons.ButtonText
 import week.on.a.plate.core.uitools.buttons.PlusButtonCard
-import week.on.a.plate.core.fullScereenDialog.specifySelection.navigation.SpecifySelection
 import week.on.a.plate.search.event.SearchScreenEvent
 import week.on.a.plate.ui.theme.ColorButtonNegativeGrey
 import week.on.a.plate.ui.theme.WeekOnAPlateTheme
@@ -82,12 +83,19 @@ fun RowRecipeResultCard(
                 .background(MaterialTheme.colorScheme.surface)
                 .padding(12.dp), verticalAlignment = Alignment.CenterVertically
         ) {
-            // todo image
-            Spacer(
-                modifier = Modifier
-                    .background(ColorButtonNegativeGrey, CircleShape)
-                    .size(85.dp)
-            )
+            if (recipeView.img.startsWith("http")) {
+                AsyncImage( modifier = Modifier
+                    .size(85.dp).clip(CircleShape).background(ColorButtonNegativeGrey, CircleShape).scale(1.5f),
+                    model = recipeView.img,
+                    contentDescription = null,
+                )
+            } else {
+                Spacer(
+                    modifier = Modifier
+                        .background(ColorButtonNegativeGrey, CircleShape)
+                        .size(85.dp)
+                )
+            }
             Spacer(modifier = Modifier.width(12.dp))
             Column(Modifier.weight(2f)) {
                 TextBody(text = recipeView.name)
@@ -130,12 +138,18 @@ fun RowRecipeResultCard(
 @Composable
 fun TagList(tags: List<RecipeTagView>, ingredients: List<IngredientView>) {
     Column {
-        CustomGridTags(tags.size) { index ->
-            TagSmall(tag = tags[index])
-            Spacer(modifier = Modifier.width(6.dp))
+        if (tags.isNotEmpty()) {
+            CustomGridTags(tags.size) { index ->
+                if (tags.size < index+1) return@CustomGridTags
+                TagSmall(tag = tags[index])
+                Spacer(modifier = Modifier.width(6.dp))
+            }
         }
-        CustomGridTags(ingredients.size) { index ->
-            TagSmall(ingredientView = ingredients[index])
+        if (ingredients.isNotEmpty()) {
+            CustomGridTags(ingredients.size) { index ->
+                if (ingredients.size < index+1) return@CustomGridTags
+                TagSmall(ingredientView = ingredients[index])
+            }
         }
     }
 }

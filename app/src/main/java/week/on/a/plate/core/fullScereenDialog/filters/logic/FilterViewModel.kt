@@ -12,6 +12,7 @@ import week.on.a.plate.core.data.example.ingredients
 import week.on.a.plate.core.data.example.tags
 import week.on.a.plate.core.data.recipe.IngredientView
 import week.on.a.plate.core.data.recipe.RecipeTagView
+import week.on.a.plate.core.dialogs.addIngrdient.logic.AddIngredientViewModel
 import week.on.a.plate.core.dialogs.addTag.logic.AddTagViewModel
 import week.on.a.plate.core.dialogs.filter.selectedFilters.logic.SelectedFiltersViewModel
 import week.on.a.plate.core.fullScereenDialog.filters.event.FilterEvent
@@ -56,7 +57,7 @@ class FilterViewModel @Inject constructor() : ViewModel() {
     fun onEvent(event: FilterEvent) {
         when (event) {
             FilterEvent.Back -> close()
-            is FilterEvent.CreateIngredient -> TODO()
+            is FilterEvent.CreateIngredient -> toCreateIngredient()
             is FilterEvent.CreateTag -> toCreateTag()
             is FilterEvent.SearchFilter -> search(event.text)
             FilterEvent.SelectedFilters -> toSelectedFilters()
@@ -72,6 +73,17 @@ class FilterViewModel @Inject constructor() : ViewModel() {
             vm.mainViewModel = mainViewModel
             mainViewModel.onEvent(MainEvent.OpenDialog(vm))
             vm.launchAndGet(state.filtersSearchText.value, null ) { tagData->
+                //todo add bd and refresh state
+            }
+        }
+    }
+
+    private fun toCreateIngredient() {
+        viewModelScope.launch {
+            val vm = AddIngredientViewModel()
+            vm.mainViewModel = mainViewModel
+            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
+            vm.launchAndGet(null, null ) { ingredientData->
                 //todo add bd and refresh state
             }
         }

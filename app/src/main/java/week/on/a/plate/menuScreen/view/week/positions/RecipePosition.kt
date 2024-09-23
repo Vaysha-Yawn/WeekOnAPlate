@@ -60,7 +60,6 @@ fun WeekRecipePosition(
         horizontalAlignment = Alignment.Start,
     ) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            //image
             Spacer(modifier = Modifier.width(10.dp))
             Column {
                 if (menuIUState.editing.value) {

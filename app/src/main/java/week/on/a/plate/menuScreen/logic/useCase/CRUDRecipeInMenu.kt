@@ -1,6 +1,8 @@
 package week.on.a.plate.menuScreen.logic.useCase
 
 import week.on.a.plate.core.data.example.emptyDayWithoutSel
+import week.on.a.plate.core.data.recipe.IngredientView
+import week.on.a.plate.core.data.recipe.RecipeTagView
 import week.on.a.plate.core.data.week.DayInWeekData
 import week.on.a.plate.core.data.week.DayView
 import week.on.a.plate.core.data.week.Position
@@ -8,6 +10,12 @@ import week.on.a.plate.core.data.week.SelectionView
 import week.on.a.plate.core.data.week.WeekView
 import week.on.a.plate.menuScreen.event.ActionWeekMenuDB
 import week.on.a.plate.repository.repositoriesForFeatures.menu.MenuRepository
+import week.on.a.plate.repository.tables.recipe.ingredient.IngredientDAO
+import week.on.a.plate.repository.tables.recipe.ingredient.IngredientMapper
+import week.on.a.plate.repository.tables.recipe.recipeTag.RecipeTagDAO
+import week.on.a.plate.repository.tables.recipe.recipeTag.RecipeTagMapper
+import week.on.a.plate.repository.tables.weekOrg.position.positionDraft.PositionDraftDAO
+import week.on.a.plate.repository.tables.weekOrg.position.positionDraft.PositionDraftMapper
 import week.on.a.plate.repository.tables.weekOrg.position.positionDraft.PositionDraftRepository
 import week.on.a.plate.repository.tables.weekOrg.position.positionIngredient.PositionIngredientRepository
 import week.on.a.plate.repository.tables.weekOrg.position.positionNote.PositionNoteRepository
@@ -21,7 +29,10 @@ class CRUDRecipeInMenu @Inject constructor(
     private val noteRepository: PositionNoteRepository,
     private val positionIngredientRepository: PositionIngredientRepository,
     private val recipeRepository: PositionRecipeRepository,
+    private val tagDAO: RecipeTagDAO,
     private val draftRepository: PositionDraftRepository,
+    private val positionDraftDAO: PositionDraftDAO,
+    private val ingredientDAO: IngredientDAO,
 ) {
     suspend fun onEvent(event: ActionWeekMenuDB, selected: List<Position>) {
         when (event) {
@@ -127,7 +138,100 @@ class CRUDRecipeInMenu @Inject constructor(
                     }
                 }
             }
+
+            is ActionWeekMenuDB.AddDraft -> {
+                val draftView = event.draft
+                val newId = draftRepository.insert(draftView, event.draft.selectionId)
+
+                //todo move to recipe module
+                draftView.tags.forEach { recipeTagView ->
+                    val tagId = findOrCreateTag(recipeTagView)
+                    val tagRefs = with(PositionDraftMapper()) {
+                        genTagCrossRef(newId, tagId)
+                    }
+                    positionDraftDAO.insertDraftAndTagCrossRef(tagRefs)
+                }
+
+                //todo move to recipe module
+                draftView.ingredients.forEach { ingredientView ->
+                    val ingredientId = findOrCreateIngredient(ingredientView)
+                    val ingredientRefs = with(PositionDraftMapper()) {
+                        genIngredientCrossRef(newId, ingredientId)
+                    }
+                    positionDraftDAO.insertDraftAndIngredientCrossRef(ingredientRefs)
+                }
+            }
+
+            is ActionWeekMenuDB.EditDraft -> {
+                val oldDraft = event.oldDraft
+                val tags = event.filters.first
+                val ingredients = event.filters.second
+
+                val listTagsRemove = oldDraft.tags.toMutableList().apply {
+                    this.removeAll(tags)
+                }
+                val listIngredientRemove = oldDraft.ingredients.toMutableList().apply {
+                    this.removeAll(ingredients)
+                }
+                val listTagsAdd = tags.toMutableList().apply {
+                    this.removeAll(oldDraft.tags)
+                }
+                val listIngredientAdd = ingredients.toMutableList().apply {
+                    this.removeAll(oldDraft.ingredients)
+                }
+                listTagsRemove.forEach {
+                    positionDraftDAO.deleteByIdTag(it.id)
+                }
+                listIngredientRemove.forEach {
+                    positionDraftDAO.deleteByIdIngredient(it.ingredientId)
+                }
+                listTagsAdd.forEach {
+                    val tagRefs = with(PositionDraftMapper()) {
+                        genTagCrossRef(oldDraft.id, it.id)
+                    }
+                    positionDraftDAO.insertDraftAndTagCrossRef(tagRefs)
+                }
+                listIngredientAdd.forEach {
+                    val ingredientRefs = with(PositionDraftMapper()) {
+                        genIngredientCrossRef(oldDraft.id, it.ingredientId)
+                    }
+                    positionDraftDAO.insertDraftAndIngredientCrossRef(ingredientRefs)
+                }
+            }
         }
+    }
+
+    private suspend fun findOrCreateIngredient(ingredientView: IngredientView): Long {
+        val ingredientLast = ingredientDAO.findByName(ingredientView.name)
+        val ingredientId = if (ingredientLast != null) {
+            val tagView = with(IngredientMapper()) {
+                ingredientLast.roomToView()
+            }
+            tagView.ingredientId
+        } else {
+            val ingredientRoom = with(IngredientMapper()) {
+                ingredientView.viewToRoom(0)
+            }
+            ingredientDAO.insert(ingredientRoom)
+        }
+        return ingredientId
+    }
+
+    private suspend fun findOrCreateTag(recipeTagView: RecipeTagView):Long{
+        val tagLast = tagDAO.findByName(recipeTagView.tagName)
+
+        val tagId = if (tagLast != null) {
+            val tagView = with(RecipeTagMapper()) {
+                tagLast.roomToView()
+            }
+            tagView.id
+        } else {
+            val recipeTagRoom = with(RecipeTagMapper()) {
+                recipeTagView.viewToRoom(0)
+            }
+            tagDAO.insert(recipeTagRoom)
+        }
+        return tagId
     }
 
     private fun getRelatedDate(dateStart: LocalDate, d: DayOfWeek): LocalDate {
@@ -145,7 +249,7 @@ class CRUDRecipeInMenu @Inject constructor(
 
     fun getWeekParted(week: WeekView): WeekView {
         val newList = getDayParted(week.days)
-        newList.sortBy { it-> it.date }
+        newList.sortBy { it -> it.date }
         week.days = newList
         return week
     }
@@ -157,10 +261,10 @@ class CRUDRecipeInMenu @Inject constructor(
         }
         val listAll = mutableListOf<DayView>()
         val started = listHave[0].date
-        DayOfWeek.entries.forEach { dayOfWeek->
-            if (list.contains(dayOfWeek)){
-                listAll.add(listHave.find { day-> day.dayInWeek.dayOfWeekMapper() == dayOfWeek }!!)
-            }else{
+        DayOfWeek.entries.forEach { dayOfWeek ->
+            if (list.contains(dayOfWeek)) {
+                listAll.add(listHave.find { day -> day.dayInWeek.dayOfWeekMapper() == dayOfWeek }!!)
+            } else {
                 val rel = getRelatedDate(started, dayOfWeek)
                 listAll.add(getDayView(rel))
             }
@@ -168,8 +272,8 @@ class CRUDRecipeInMenu @Inject constructor(
         return listAll
     }
 
-    private fun DayInWeekData.dayOfWeekMapper():DayOfWeek{
-        return when(this){
+    private fun DayInWeekData.dayOfWeekMapper(): DayOfWeek {
+        return when (this) {
             DayInWeekData.Mon -> DayOfWeek.MONDAY
             DayInWeekData.Tues -> DayOfWeek.TUESDAY
             DayInWeekData.Wed -> DayOfWeek.WEDNESDAY

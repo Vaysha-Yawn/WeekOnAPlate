@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import week.on.a.plate.core.data.example.tags
 import week.on.a.plate.core.data.recipe.RecipeTagView
 import week.on.a.plate.core.data.recipe.TagCategoryView
+import week.on.a.plate.core.fullScereenDialog.filters.event.FilterEvent
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.search.event.SearchScreenEvent
@@ -55,9 +56,12 @@ fun CategorySelection(tagCategoryView: TagCategoryView, onEvent: (SearchScreenEv
 @Composable
 fun CardTag(recipeTagView: RecipeTagView, onEvent: (SearchScreenEvent) -> Unit) {
     Card(
-        Modifier.padding(end = 24.dp)
-            .width(130.dp).height(130.dp)
-            .clickable { onEvent(SearchScreenEvent.Search(filters = listOf(recipeTagView))) }, ) {
+        Modifier.clickable {
+            onEvent(SearchScreenEvent.SelectTag(recipeTagView))
+            onEvent(SearchScreenEvent.Search)
+        }
+            .padding(end = 24.dp)
+            .width(130.dp).height(130.dp), ) {
         Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.outline).padding(bottom = 12.dp), verticalArrangement = Arrangement.Bottom, horizontalAlignment = Alignment.CenterHorizontally) {
             TextBody(text = recipeTagView.tagName)
         }

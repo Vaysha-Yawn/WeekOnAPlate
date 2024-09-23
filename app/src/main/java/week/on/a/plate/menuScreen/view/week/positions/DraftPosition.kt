@@ -51,7 +51,7 @@ fun WeekDraftPosition(
                 contentDescription = "",
                 modifier = Modifier
                     .size(24.dp)
-                    .clickable { onEvent(MenuEvent.NavigateFromMenu(NavFromMenuData.SearchByDraft(draft))) },
+                    .clickable { onEvent(MenuEvent.SearchByDraft(draft)) },
             )
             MoreButtonWithBackg {
               onEvent(MenuEvent.EditPosition(draft))

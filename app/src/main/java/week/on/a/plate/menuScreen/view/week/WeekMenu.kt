@@ -1,5 +1,6 @@
 package week.on.a.plate.menuScreen.view.week
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -72,7 +73,7 @@ fun WeekMenu(
                     0
                 ) {}
                 Spacer(modifier = Modifier.size(3.dp))
-                LazyRow() {
+                LazyRow(Modifier.animateContentSize()) {
                     items(day.selections.size) { selId ->
                         val sel = day.selections[selId]
                         Spacer(modifier = Modifier.width(10.dp))

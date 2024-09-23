@@ -17,6 +17,9 @@ sealed class MenuEvent : Event() {
     data class EditPosition(val position: Position) : MenuEvent()
     data object SelectedToShopList : MenuEvent()
     data class RecipeToShopList(val recipe: Position.PositionRecipeView) : MenuEvent()
+    class SearchByDraft(val draft: Position.PositionDraftView) : MenuEvent()
+    class FindReplaceRecipe(val recipe: Position.PositionRecipeView) : MenuEvent()
+    class NavToAddRecipe(val selId: Long?) : MenuEvent()
     //  data class DeleteAsk(): MenuEvent()
 }
 

@@ -40,7 +40,7 @@ fun DraftPosition(
             contentDescription = "",
             modifier = Modifier
                 .size(24.dp)
-                .clickable { onEvent(MenuEvent.NavigateFromMenu(NavFromMenuData.SearchByDraft(draft))) },
+                .clickable { onEvent(MenuEvent.SearchByDraft(draft)) },
         )
         Spacer(modifier = Modifier.width(10.dp))
     }

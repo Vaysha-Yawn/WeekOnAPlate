@@ -50,7 +50,7 @@ class AddTagViewModel() : DialogViewModel() {
             val vm = mainViewModel.categoriesSearchViewModel
             mainViewModel.onEvent(MainEvent.HideDialog)
             mainViewModel.nav.navigate(CategoriesSearchDestination)
-            vm.launchAndGet( ) { categoryName->
+            vm.launchAndGetTag( ) { categoryName->
                 state.category.value = categoryName
                 state.categoryName.value = categoryName.name
                 mainViewModel.onEvent(MainEvent.ShowDialog(this@AddTagViewModel))

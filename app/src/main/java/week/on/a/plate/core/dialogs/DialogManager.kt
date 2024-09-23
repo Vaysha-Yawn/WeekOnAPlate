@@ -51,6 +51,8 @@ class DialogManager @Inject constructor() {
                 val next = dialogsVMMap.peek()
                 if (next != hiddenDialog){
                     showTopDialog(next)
+                }else{
+                    hideAllDialogs()
                 }
             } else {
                 hideAllDialogs()

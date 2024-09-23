@@ -1,5 +1,7 @@
 package week.on.a.plate.menuScreen.event
 
+import week.on.a.plate.core.data.recipe.IngredientView
+import week.on.a.plate.core.data.recipe.RecipeTagView
 import week.on.a.plate.core.data.week.Position
 import java.time.LocalDate
 
@@ -36,4 +38,9 @@ sealed class ActionWeekMenuDB {
     data object DeleteSelected : ActionWeekMenuDB()
     class Delete(val position: Position) : ActionWeekMenuDB()
     class AddEmptyDay(val data: LocalDate) : ActionWeekMenuDB()
+    class AddDraft(val draft: Position.PositionDraftView) : ActionWeekMenuDB()
+    class EditDraft(
+        val oldDraft: Position.PositionDraftView,
+        val filters: Pair<List<RecipeTagView>, List<IngredientView>>
+    ) : ActionWeekMenuDB()
 }

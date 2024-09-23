@@ -12,6 +12,7 @@ import week.on.a.plate.core.fullScereenDialog.categoriesSearch.logic.CategoriesS
 import week.on.a.plate.core.fullScereenDialog.filters.logic.FilterViewModel
 import week.on.a.plate.core.fullScereenDialog.specifySelection.logic.SpecifySelectionViewModel
 import week.on.a.plate.menuScreen.logic.useCase.CRUDRecipeInMenu
+import week.on.a.plate.search.logic.SearchViewModel
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,11 +27,14 @@ class MainViewModel @Inject constructor(
     val specifySelectionViewModel = SpecifySelectionViewModel(sCRUDRecipeInMenu)
     val categoriesSearchViewModel = CategoriesSearchViewModel()
     val filterViewModel = FilterViewModel()
+    val searchViewModel = SearchViewModel(sCRUDRecipeInMenu)
+
 
     init {
         specifySelectionViewModel.mainViewModel = this
         categoriesSearchViewModel.mainViewModel = this
         filterViewModel.mainViewModel = this
+        searchViewModel.mainViewModel = this
     }
 
     fun onEvent(event: Event) {

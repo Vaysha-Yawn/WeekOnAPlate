@@ -13,19 +13,19 @@ import week.on.a.plate.search.view.resultScreen.SearchResultScreen
 @Composable
 fun SearchStart(
     mainViewModel: MainViewModel,
-    viewModel: SearchViewModel = hiltViewModel(),
 ) {
-    viewModel.mainViewModel = mainViewModel
-
+    val viewModel = mainViewModel.searchViewModel
     val onEvent = { eventData: Event ->
-        viewModel.onEvent(eventData)
+        mainViewModel.searchViewModel.onEvent(eventData)
     }
 
     Column {
         TopSearchPanel(viewModel.state, onEvent)
-        if (viewModel.state.resultSearch.value.isNotEmpty()) {
+        if (viewModel.state.resultSearch.value.isNotEmpty() ) {
             SearchResultScreen(viewModel.state.resultSearch.value, onEvent)
-        } else {
+        } else if(viewModel.state.searchText.value!="" || viewModel.state.selectedTags.value.isNotEmpty() ||viewModel.state.selectedIngredients.value.isNotEmpty() ){
+            SearchNothingFound(viewModel.state, onEvent)
+        }else{
             SearchCategoriesScreen(viewModel.state, onEvent)
         }
     }

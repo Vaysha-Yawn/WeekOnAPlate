@@ -44,7 +44,7 @@ class EditNoteViewModel() : DialogViewModel() {
         positiond: Position.PositionNoteView?,
         use: (Position.PositionNoteView) -> Unit,
     ) {
-        EditNoteUIState(positiond)
+        state = EditNoteUIState(positiond)
         val flow = start()
         flow.collect { value ->
             if (value != null) {

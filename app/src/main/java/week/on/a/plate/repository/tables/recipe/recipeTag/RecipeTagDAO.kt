@@ -15,6 +15,9 @@ interface RecipeTagDAO {
     @Query("SELECT * FROM RecipeTagRoom")
     fun getAll(): Flow<List<RecipeTagRoom>>
 
+    @Query("SELECT * FROM RecipeTagRoom WHERE tagName=:name")
+    suspend fun findByName(name:String): RecipeTagRoom?
+
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(recipeTagRoom: RecipeTagRoom):Long
 

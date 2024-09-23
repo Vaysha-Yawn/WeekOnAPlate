@@ -39,6 +39,12 @@ interface PositionDraftDAO {
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertDraftAndIngredientCrossRef(draftAndIngredientCrossRefs: DraftAndIngredientCrossRef)
 
+    @Query("DELETE FROM DraftAndIngredientCrossRef WHERE ingredientId = :id")
+    suspend fun deleteByIdIngredient(id: Long)
+
+    @Query("DELETE FROM DraftAndTagCrossRef WHERE recipeTagId = :id")
+    suspend fun deleteByIdTag(id: Long)
+
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertDraftAndTagCrossRef(draftAndTagCrossRefs: DraftAndTagCrossRef)
 

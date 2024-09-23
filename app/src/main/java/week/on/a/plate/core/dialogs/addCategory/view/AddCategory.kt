@@ -56,13 +56,11 @@ fun AddCategory(
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun PreviewAddCategory() {
     WeekOnAPlateTheme {
-        val rem = rememberModalBottomSheetState()
-        val state = AddCategoryUIState(rem, null)
+        val state = AddCategoryUIState()
         AddCategory(state, {}) {}
 
     }

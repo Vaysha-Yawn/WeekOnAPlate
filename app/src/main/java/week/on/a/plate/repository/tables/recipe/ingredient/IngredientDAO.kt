@@ -8,6 +8,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
+import week.on.a.plate.repository.tables.recipe.recipeTag.RecipeTagRoom
 
 
 @Dao
@@ -18,8 +19,11 @@ interface IngredientDAO {
     @Query("SELECT * FROM IngredientRoom WHERE ingredientId = :ingredientId")
     fun getCurrent(ingredientId: Long): Flow<IngredientRoom>
 
+    @Query("SELECT * FROM IngredientRoom WHERE name=:namew")
+    suspend fun findByName(namew:String): IngredientRoom?
+
     @Insert (onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(ingredientRoom: IngredientRoom)
+    suspend fun insert(ingredientRoom: IngredientRoom):Long
 
     @Update
     suspend fun update(ingredientRoom: IngredientRoom)

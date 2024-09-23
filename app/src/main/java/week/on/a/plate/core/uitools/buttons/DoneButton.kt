@@ -46,6 +46,25 @@ fun DoneButton(
 }
 
 @Composable
+fun DoneButtonSmall(
+    text: String,
+    modifier: Modifier = Modifier,
+    click: () -> Unit
+) {
+    Row(
+        modifier
+            .fillMaxWidth()
+            .background(ColorButtonGreen, RoundedCornerShape(20.dp))
+            .padding(10.dp)
+            .clickable {
+                click()
+            }, horizontalArrangement = Arrangement.Center
+    ) {
+        TextInApp(text = text, textStyle = Typography.bodyMedium, color = ColorTextBlack)
+    }
+}
+
+@Composable
 fun CommonButton(
     text: String,
     image:Int? = null,

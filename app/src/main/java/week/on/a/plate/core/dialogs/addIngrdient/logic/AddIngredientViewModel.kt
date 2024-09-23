@@ -1,7 +1,9 @@
 package week.on.a.plate.core.dialogs.addIngrdient.logic
 
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import week.on.a.plate.core.data.recipe.IngredientCategoryView
 import week.on.a.plate.core.data.recipe.IngredientView
 import week.on.a.plate.core.dialogs.DialogViewModel
@@ -9,6 +11,7 @@ import week.on.a.plate.core.dialogs.addIngrdient.event.AddIngredientEvent
 import week.on.a.plate.core.dialogs.addIngrdient.state.AddIngredientUIState
 import week.on.a.plate.core.MainEvent
 import week.on.a.plate.core.MainViewModel
+import week.on.a.plate.core.fullScereenDialog.categoriesSearch.navigation.CategoriesSearchDestination
 
 
 class AddIngredientViewModel() : DialogViewModel() {
@@ -23,10 +26,9 @@ class AddIngredientViewModel() : DialogViewModel() {
         return flow
     }
 
-    fun done(event: AddIngredientEvent) {
+    fun done() {
         close()
-        //todo
-       // resultFlow.value =
+        resultFlow.value = Pair(IngredientView(0, state.photoUri.value, state.name.value, state.measure.value), state.category.value!!)
     }
 
     fun close() {
@@ -37,8 +39,20 @@ class AddIngredientViewModel() : DialogViewModel() {
     fun onEvent(event: AddIngredientEvent) {
         when (event) {
             AddIngredientEvent.Close -> close()
-            AddIngredientEvent.Done -> done(event)
-            AddIngredientEvent.ChooseCategory -> TODO()
+            AddIngredientEvent.Done -> done()
+            AddIngredientEvent.ChooseCategory -> toSearchCategory()
+        }
+    }
+
+    private fun toSearchCategory() {
+        mainViewModel.viewModelScope.launch {
+            val vm = mainViewModel.categoriesSearchViewModel
+            mainViewModel.onEvent(MainEvent.HideDialog)
+            mainViewModel.nav.navigate(CategoriesSearchDestination)
+            vm.launchAndGetIngredient( ) { categoryName->
+                state.category.value = categoryName
+                mainViewModel.onEvent(MainEvent.ShowDialog(this@AddIngredientViewModel))
+            }
         }
     }
 
