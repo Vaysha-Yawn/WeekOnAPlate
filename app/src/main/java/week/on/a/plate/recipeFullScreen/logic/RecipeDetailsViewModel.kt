@@ -21,7 +21,6 @@ class RecipeDetailsViewModel @Inject constructor():ViewModel() {
             RecipeDetailsEvent.AddToCart -> TODO()
             RecipeDetailsEvent.AddToMenu -> TODO()
             RecipeDetailsEvent.Back -> mainViewModel.nav.popBackStack()
-            is RecipeDetailsEvent.ChangeTab -> TODO()
             RecipeDetailsEvent.Edit -> TODO()
             RecipeDetailsEvent.MinusPortionsView -> TODO()
             RecipeDetailsEvent.PlusPortionsView -> TODO()

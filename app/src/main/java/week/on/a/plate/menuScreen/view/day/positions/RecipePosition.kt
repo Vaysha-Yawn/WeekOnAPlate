@@ -71,7 +71,7 @@ fun RecipePosition(
                 horizontalAlignment = Alignment.Start,
             ) {
                 SubText(
-                    "${recipe.portionsCount}" + stringResource(R.string.Portions)
+                    "${recipe.portionsCount} " + stringResource(R.string.Portions)
                 )
                 TextBody(
                     recipe.recipe.name

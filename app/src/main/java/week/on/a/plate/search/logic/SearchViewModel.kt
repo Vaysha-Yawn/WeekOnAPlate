@@ -3,8 +3,6 @@ package week.on.a.plate.search.logic
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.MainEvent
@@ -18,10 +16,10 @@ import week.on.a.plate.core.data.week.Position
 import week.on.a.plate.core.data.week.RecipeShortView
 import week.on.a.plate.core.fullScereenDialog.filters.navigation.FilterDestination
 import week.on.a.plate.core.fullScereenDialog.specifySelection.navigation.SpecifySelection
-import week.on.a.plate.core.navigation.bottomBar.BottomScreens
 import week.on.a.plate.core.navigation.bottomBar.MenuScreen
 import week.on.a.plate.menuScreen.event.ActionWeekMenuDB
 import week.on.a.plate.menuScreen.logic.useCase.CRUDRecipeInMenu
+import week.on.a.plate.recipeFullScreen.navigation.RecipeDetailsDestination
 import week.on.a.plate.search.event.SearchScreenEvent
 import week.on.a.plate.search.state.SearchUIState
 import javax.inject.Inject
@@ -56,18 +54,24 @@ class SearchViewModel @Inject constructor(
     fun onEvent(event: SearchScreenEvent) {
         when (event) {
             is SearchScreenEvent.Search -> search()
-            SearchScreenEvent.VoiceSearch -> onEvent(MainEvent.VoiceToText(){
-                state.searchText.value = it?.joinToString()?:""
+            SearchScreenEvent.VoiceSearch -> onEvent(MainEvent.VoiceToText() {
+                state.searchText.value = it?.joinToString() ?: ""
                 search()
             })
+
             SearchScreenEvent.Back -> close()
             is SearchScreenEvent.FlipFavorite -> flipFavorite(event.id, event.inFavorite)
             is SearchScreenEvent.AddToMenu -> addToMenu(event.recipeView)
-            is SearchScreenEvent.NavigateToFullRecipe -> TODO()
+            is SearchScreenEvent.NavigateToFullRecipe -> {
+                mainViewModel.nav.navigate(RecipeDetailsDestination)
+            }
+
             SearchScreenEvent.ToFilter -> toFilter()
             is SearchScreenEvent.SelectTag -> selectTag(event.recipeTagView)
             SearchScreenEvent.CreateRecipe -> TODO()
-            SearchScreenEvent.SearchInWeb -> TODO()
+            SearchScreenEvent.SearchInWeb -> {
+                state.isSearchInWeb.value = true
+            }
             SearchScreenEvent.Clear -> searchClear()
         }
     }
@@ -145,9 +149,9 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    fun launchAndGet(selIde: Long?, filters:Pair<List<RecipeTagView>, List<IngredientView>>?) {
+    fun launchAndGet(selIde: Long?, filters: Pair<List<RecipeTagView>, List<IngredientView>>?) {
         selId = selIde
-        if (filters!=null){
+        if (filters != null) {
             state.selectedTags.value = filters.first
             state.selectedIngredients.value = filters.second
         }
@@ -155,7 +159,10 @@ class SearchViewModel @Inject constructor(
     }
 
     fun close() {
-        if (state.resultSearch.value.isNotEmpty()) {
+        if (state.resultSearch.value.isNotEmpty() || state.selectedTags.value.isNotEmpty() ||
+            state.selectedIngredients.value.isNotEmpty() ||
+            state.searchText.value != ""
+        ) {
             state.resultSearch.value = listOf()
             state.selectedTags.value = listOf()
             state.selectedIngredients.value = listOf()

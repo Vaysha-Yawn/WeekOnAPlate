@@ -67,6 +67,7 @@ fun Navigation(
 
         composable<RecipeDetailsDestination> {
             viewModel.isActiveBaseScreen.value = false
+            viewModel.recipeDetailsViewModel.launch(0)
             RecipeDetailsStart(viewModel.recipeDetailsViewModel)
         }
     }

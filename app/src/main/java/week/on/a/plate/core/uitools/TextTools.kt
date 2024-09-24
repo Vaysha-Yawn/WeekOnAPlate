@@ -120,7 +120,6 @@ fun TextTitle(text: String, modifier: Modifier = Modifier, textAlign: TextAlign 
         textStyle = Typography.titleMedium,
         color = MaterialTheme.colorScheme.onBackground,
         textAlign = textAlign,
-        maxLines = 1
     )
 }
 

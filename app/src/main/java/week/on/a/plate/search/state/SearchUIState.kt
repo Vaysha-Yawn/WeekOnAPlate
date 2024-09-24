@@ -13,5 +13,6 @@ class SearchUIState {
     val searchText = mutableStateOf("")
     val selectedTags = mutableStateOf<List<RecipeTagView>>(listOf())
     val selectedIngredients = mutableStateOf<List<IngredientView>>(listOf())
+    val isSearchInWeb = mutableStateOf(false)
 }
 

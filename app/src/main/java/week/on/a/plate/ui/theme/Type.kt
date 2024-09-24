@@ -34,7 +34,7 @@ val Typography = Typography(
         fontWeight = FontWeight.Normal,
         fontStyle = FontStyle.Normal,
         fontSize = 18.sp,
-        lineHeight = 18.sp,
+        lineHeight = 20.sp,
     ),
     bodySmall = TextStyle(
         fontFamily = FontFamily.Default,

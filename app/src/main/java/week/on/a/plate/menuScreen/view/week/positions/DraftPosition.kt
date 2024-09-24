@@ -36,7 +36,7 @@ fun WeekDraftPosition(
 ) {
     Column(
         Modifier
-            .width(150.dp)
+            .width(200.dp)
             .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(20.dp))
             .padding(20.dp)
             .combinedClickable(

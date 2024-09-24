@@ -42,7 +42,7 @@ fun WeekRecipePosition(
 ) {
     Column(
         Modifier
-            .width(150.dp)
+            .width(200.dp)
             .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(20.dp))
             .padding(20.dp)
             .combinedClickable(
@@ -72,8 +72,6 @@ fun WeekRecipePosition(
                         onEvent(MenuEvent.ActionSelect(SelectedEvent.CheckRecipe(recipe)))
                     }
                     Spacer(modifier = Modifier.size(10.dp))
-                } else {
-                    Spacer(modifier = Modifier.height(20.dp))
                 }
                 MoreButtonWithBackg {
                     onEvent(MenuEvent.EditPosition(recipe))
@@ -81,7 +79,7 @@ fun WeekRecipePosition(
             }
         }
         SubText(
-            "${recipe.portionsCount}"+ stringResource(id = R.string.Portions)
+            "${recipe.portionsCount} "+ stringResource(id = R.string.Portions)
         )
         TextSmall(
             recipe.recipe.name

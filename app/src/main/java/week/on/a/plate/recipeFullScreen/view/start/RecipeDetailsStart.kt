@@ -3,10 +3,12 @@ package week.on.a.plate.recipeFullScreen.view.start
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import week.on.a.plate.core.data.example.recipeTom
 import week.on.a.plate.recipeFullScreen.event.RecipeDetailsEvent
 import week.on.a.plate.recipeFullScreen.logic.RecipeDetailsViewModel
 import week.on.a.plate.recipeFullScreen.state.RecipeDetailsState
@@ -27,19 +29,31 @@ fun RecipeDetailsStart(vm: RecipeDetailsViewModel) {
 
 @Composable
 fun RecipeDetailsStart(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) -> Unit) {
-    Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surface)) {
+    Column(
+        Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
+    ) {
         TopPanelRecipeDetail(state, onEvent)
-        RecipeBase(state, onEvent)
-        RecipeDetailsTabs(state, onEvent)
-        when(state.activeTabIndex.intValue){
-            1->{
-                RecipeDetailsSteps(state, onEvent)
+        LazyColumn {
+            item {
+                RecipeBase(state, onEvent)
+                RecipeDetailsTabs(state, onEvent)
             }
-            2->{
-                RecipeDetailsIngredients(state, onEvent)
-            }
-            3->{
-                RecipeDetailsSource(state, onEvent)
+            item {
+                when (state.activeTabIndex.intValue) {
+                    0 -> {
+                        RecipeDetailsSteps(state, onEvent)
+                    }
+
+                    1 -> {
+                        RecipeDetailsIngredients(state, onEvent)
+                    }
+
+                    2 -> {
+                        RecipeDetailsSource(state, onEvent)
+                    }
+                }
             }
         }
     }
@@ -50,6 +64,8 @@ fun RecipeDetailsStart(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) 
 @Composable
 fun PreviewRecipeDetailsStart() {
     WeekOnAPlateTheme {
-        RecipeDetailsStart(RecipeDetailsState()) {}
+        RecipeDetailsStart(RecipeDetailsState().apply {
+            recipe.value = recipeTom
+        }) {}
     }
 }

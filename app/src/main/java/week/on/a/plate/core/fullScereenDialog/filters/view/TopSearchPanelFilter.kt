@@ -51,9 +51,12 @@ fun TopSearchPanelFilter(stateUI: FilterUIState, onEvent: (FilterEvent) -> Unit)
             actionClear = {}
         )
         Spacer(modifier = Modifier.width(12.dp))
-        BackButtonOutlined {
-            onEvent(FilterEvent.Back)
-        }
+        ImageButton(
+            res = R.drawable.check,
+            Modifier
+                .border(1.dp, ColorStrokeGrey, RoundedCornerShape(10.dp))
+                .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(10.dp))
+        ) {  onEvent(FilterEvent.Back) }
         Spacer(modifier = Modifier.width(12.dp))
     }
 }

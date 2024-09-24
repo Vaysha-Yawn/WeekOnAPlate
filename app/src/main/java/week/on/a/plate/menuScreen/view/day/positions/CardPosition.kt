@@ -35,7 +35,6 @@ fun CardPosition(
     Card(
         Modifier
             .padding(bottom = 10.dp),
-        elevation = CardDefaults.elevatedCardElevation(5.dp),
         shape = RectangleShape,
     ) {
         Row(

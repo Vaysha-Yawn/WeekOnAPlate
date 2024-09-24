@@ -26,6 +26,7 @@ import week.on.a.plate.core.uitools.SubText
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.PlusButtonTitle
 import week.on.a.plate.core.Event
+import week.on.a.plate.menuScreen.event.MenuEvent
 import week.on.a.plate.menuScreen.state.MenuIUState
 import week.on.a.plate.menuScreen.view.calendar.CalendarDayCard
 import week.on.a.plate.menuScreen.view.week.positions.WeekCardPosition
@@ -64,31 +65,26 @@ fun WeekMenu(
             )
             Spacer(modifier = Modifier.size(12.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
-                CalendarDayCard(
-                    day.date,
-                    day.dayInWeek.shortName,
-                    day.date == LocalDate.now(),
-                    day.selections.isNotEmpty(),
-                    false,
-                    0
-                ) {}
-                Spacer(modifier = Modifier.size(3.dp))
-                LazyRow(Modifier.animateContentSize()) {
-                    items(day.selections.size) { selId ->
-                        val sel = day.selections[selId]
-                        Spacer(modifier = Modifier.width(10.dp))
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    TextTitle(text = day.dayInWeek.shortName)
+                    TextTitle(text = day.date.dayOfMonth.toString())
+                }
+                Spacer(modifier = Modifier.size(12.dp))
+                Column(Modifier.animateContentSize()) {
+                    for (sel in day.selections){
+                        Spacer(modifier = Modifier.size(10.dp))
                         Column {
                             Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.background(MaterialTheme.colorScheme.surface, RoundedCornerShape(10.dp))) {
                                 SubText(
                                     text = sel.category,
-                                    modifier = Modifier.width(120.dp),
+                                    modifier = Modifier.width(170.dp),
                                 )
                                 PlusButtonTitle {
-                                   // onEvent(MainEvent.OpenDialog(DialogData.AddPosition( sel.id, onEvent)))
+                                    onEvent(MenuEvent.CreatePosition(sel.id))
                                 }
                             }
                             sel.positions.forEach { pos ->
-                                Spacer(modifier = Modifier.height(12.dp))
+                                Spacer(modifier = Modifier.size(12.dp))
                                 WeekCardPosition(
                                     position = pos,
                                     menuIUState = menuIUState,

@@ -11,7 +11,7 @@ val recipeTom =
     RecipeView(
         0,
         "Салат из помидоров с огурцом и луком",
-        description = "",
+        description = "Этот рецепт передавался веками в моей семье из поколения в поколение, а все для того, чтобы его однажды опубликовали в этом приложении. Мы готовим его каждое воскресенье и с радостью едим всей семьёй. Надеюсь, что эта традиция будет теперь жить и в вашем доме!",
         img = "https://static.1000.menu/res/640/img/content-v2/dc/1d/36406/salat-iz-pomidorov-s-ogurcom-i-lukom_1613988871_7_max.jpg",
         tags = listOf(RecipeTagView(0, "салат"), RecipeTagView(0, "салат")),
         prepTime = 15,
@@ -110,7 +110,7 @@ val recipeTom =
                 0
             ),
         ),
-        link = "https://1000.menu/cooking/36406-salat-iz-pomidorov-s-ogurcom-i-lukom"
+        link = "https://eda.ru/media/vopros/zagotovki-tri-prostyh-pravila"
     )
 
 
@@ -122,13 +122,13 @@ val emptyRecipe = RecipeView(
     0, 0, 0, listOf(), listOf(), ""
 )
 
-fun getSimpleRecipe(names: String, inFavorite:Boolean = false, image:String=""): RecipeView {
+fun getSimpleRecipe(names: String, inFavorite: Boolean = false, image: String = ""): RecipeView {
     return RecipeView(
-        0, names, "description", image, if(inFavorite) {
+        0, names, "description", image, if (inFavorite) {
             listOf<RecipeTagView>(
                 RecipeTagView(0, "Избранное")
             )
-        }else listOf(),
+        } else listOf(),
         0, 0, 0, listOf(), listOf(), ""
     )
 }
@@ -139,14 +139,30 @@ val recipes = listOf(
     getSimpleRecipe("Пучеро", true),
     getSimpleRecipe("Корн-дог"),
     getSimpleRecipe("Сдобные булочки"),
-    getSimpleRecipe("Тонкацу", image = "https://eda.ru/images/RecipeStep/434x295/tonkacu_151131_step_11.webp"),
+    getSimpleRecipe(
+        "Тонкацу",
+        image = "https://eda.ru/images/RecipeStep/434x295/tonkacu_151131_step_11.webp"
+    ),
     getSimpleRecipe("Бифштекс"),
     getSimpleRecipe("Винартерта", true),
     getSimpleRecipe("Торт Сантьго"),
-    getSimpleRecipe("Миллионбеф", true, image = "https://eda.ru/images/RecipeStep/434x295/millionbef_151073_step_10.webp"),
-    getSimpleRecipe("Гречанки", image = "https://eda.ru/images/RecipeStep/434x295/grechaniki_150986_step_10.webp"),
-    getSimpleRecipe("Картофельный салат", image = "https://eda.ru/images/RecipeStep/434x295/kartofelnyy-salat_150955_step_10.webp"),
-    getSimpleRecipe("Кекс с изюмом", image = "https://eda.ru/images/RecipeStep/434x295/keks-s-izyumom_140792_step_11.webp"),
+    getSimpleRecipe(
+        "Миллионбеф",
+        true,
+        image = "https://eda.ru/images/RecipeStep/434x295/millionbef_151073_step_10.webp"
+    ),
+    getSimpleRecipe(
+        "Гречанки",
+        image = "https://eda.ru/images/RecipeStep/434x295/grechaniki_150986_step_10.webp"
+    ),
+    getSimpleRecipe(
+        "Картофельный салат",
+        image = "https://eda.ru/images/RecipeStep/434x295/kartofelnyy-salat_150955_step_10.webp"
+    ),
+    getSimpleRecipe(
+        "Кекс с изюмом",
+        image = "https://eda.ru/images/RecipeStep/434x295/keks-s-izyumom_140792_step_11.webp"
+    ),
     getSimpleRecipe("Панеттоне"),
     getSimpleRecipe("Пахлава"),
 )

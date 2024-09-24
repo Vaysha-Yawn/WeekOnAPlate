@@ -32,7 +32,7 @@ fun WeekIngredientPosition(
 ) {
     Column(
         Modifier
-            .width(150.dp)
+            .width(200.dp)
             .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(20.dp))
             .padding(20.dp)
             .combinedClickable(
@@ -42,8 +42,6 @@ fun WeekIngredientPosition(
         horizontalAlignment = Alignment.Start,
     ) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            //image
-            Spacer(modifier = Modifier.size(5.dp))
             Column {
                 MoreButtonWithBackg {
                     onEvent(MenuEvent.EditPosition(ingredient))

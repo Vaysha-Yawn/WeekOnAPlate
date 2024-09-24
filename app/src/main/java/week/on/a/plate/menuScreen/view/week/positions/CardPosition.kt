@@ -26,7 +26,6 @@ fun WeekCardPosition(
 ) {
     Card(
         Modifier.border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(20.dp)),
-        elevation = CardDefaults.elevatedCardElevation(5.dp),
         shape = RoundedCornerShape(20.dp),
     ) {
         when (position) {

@@ -42,9 +42,7 @@ class MenuViewModel @Inject constructor(
     val navigationMenu: NavigationMenu,
 ) : ViewModel() {
 
-    private var activeDay = LocalDate.of(2024, 8, 28)
-
-    //LocalDate.now()
+    private var activeDay = LocalDate.now()
     lateinit var mainViewModel: MainViewModel
 
 

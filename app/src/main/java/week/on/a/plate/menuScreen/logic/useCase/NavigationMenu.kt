@@ -3,6 +3,7 @@ package week.on.a.plate.menuScreen.logic.useCase
 import androidx.navigation.NavHostController
 import week.on.a.plate.core.fullScereenDialog.specifySelection.navigation.SpecifySelection
 import week.on.a.plate.menuScreen.event.NavFromMenuData
+import week.on.a.plate.recipeFullScreen.navigation.RecipeDetailsDestination
 import javax.inject.Inject
 
 class NavigationMenu @Inject constructor() {
@@ -14,7 +15,9 @@ class NavigationMenu @Inject constructor() {
             is NavFromMenuData.SpecifySelection -> { navController.navigate(SpecifySelection) }
             is NavFromMenuData.NavToChooseIngredient -> TODO()
             is NavFromMenuData.NavToCreateDraft -> TODO()
-            is NavFromMenuData.NavToFullRecipe -> TODO()
+            is NavFromMenuData.NavToFullRecipe -> {
+                navController.navigate(RecipeDetailsDestination)
+            }
         }
     }
 }
