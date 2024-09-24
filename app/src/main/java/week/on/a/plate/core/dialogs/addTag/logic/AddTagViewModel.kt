@@ -10,6 +10,7 @@ import week.on.a.plate.core.dialogs.addTag.event.AddTagEvent
 import week.on.a.plate.core.dialogs.addTag.state.AddTagUIState
 import week.on.a.plate.core.MainEvent
 import week.on.a.plate.core.MainViewModel
+import week.on.a.plate.core.fullScereenDialog.categoriesSearch.event.CategoriesSearchEvent
 import week.on.a.plate.core.fullScereenDialog.categoriesSearch.navigation.CategoriesSearchDestination
 
 
@@ -50,10 +51,14 @@ class AddTagViewModel() : DialogViewModel() {
             val vm = mainViewModel.categoriesSearchViewModel
             mainViewModel.onEvent(MainEvent.HideDialog)
             mainViewModel.nav.navigate(CategoriesSearchDestination)
-            vm.launchAndGetTag( ) { categoryName->
-                state.category.value = categoryName
-                state.categoryName.value = categoryName.name
-                mainViewModel.onEvent(MainEvent.ShowDialog(this@AddTagViewModel))
+            vm.launchAndGetTag( ) { pair->
+                if (pair.first !is CategoriesSearchEvent.Close){
+                    state.category.value = pair.second
+                    state.categoryName.value = pair.second!!.name
+                    mainViewModel.onEvent(MainEvent.ShowDialog(this@AddTagViewModel))
+                }else{
+                    mainViewModel.onEvent(MainEvent.ShowDialog(this@AddTagViewModel))
+                }
             }
         }
     }

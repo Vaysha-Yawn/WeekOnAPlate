@@ -23,6 +23,7 @@ sealed class MainEvent : Event() {
     data object NavigateBack : MainEvent()
     data object HideDialog : MainEvent()
     class ShowDialog(val dialog: DialogViewModel) : MainEvent()
+    class VoiceToText(val use:(ArrayList<String>?)->Unit) : MainEvent()
 }
 
 

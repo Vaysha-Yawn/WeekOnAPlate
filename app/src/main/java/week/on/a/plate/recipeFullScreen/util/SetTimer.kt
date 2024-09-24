@@ -1,4 +1,4 @@
-package week.on.a.plate.recipeFullScreen.actions
+package week.on.a.plate.recipeFullScreen.util
 
 import android.app.Activity
 import android.content.Intent

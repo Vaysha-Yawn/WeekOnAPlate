@@ -13,12 +13,12 @@ import week.on.a.plate.core.MainEvent
 import week.on.a.plate.core.MainViewModel
 import week.on.a.plate.core.fullScereenDialog.specifySelection.event.SpecifySelectionEvent
 import week.on.a.plate.core.fullScereenDialog.specifySelection.state.SpecifySelectionUIState
-import week.on.a.plate.menuScreen.logic.useCase.CRUDRecipeInMenu
+import week.on.a.plate.repository.repositoriesForFeatures.menu.MenuRepository
 import javax.inject.Inject
 
 @HiltViewModel
 class SpecifySelectionViewModel @Inject constructor(
-    private val sCRUDRecipeInMenu: CRUDRecipeInMenu,
+    private val menuRepository: MenuRepository,
 ) : ViewModel() {
     lateinit var mainViewModel: MainViewModel
     val state: SpecifySelectionUIState = SpecifySelectionUIState()
@@ -84,7 +84,7 @@ class SpecifySelectionViewModel @Inject constructor(
         }
     }
 
-    fun getCategory(): CategoriesSelection? {
+    private fun getCategory(): CategoriesSelection? {
         if (!state.checkWeek.value && state.checkDayCategory.value == null) return null
         if (state.checkWeek.value) return CategoriesSelection.ForWeek
         return state.checkDayCategory.value
@@ -95,7 +95,7 @@ class SpecifySelectionViewModel @Inject constructor(
         val category =  getCategory() ?: return
         state.date.value?:return
         mainViewModel.viewModelScope.launch {
-            val selId = sCRUDRecipeInMenu.menuR.getSelIdOrCreate(state.date.value!!,category)
+            val selId = menuRepository.getSelIdOrCreate(state.date.value!!,category)
             resultFlow.value = selId
         }
     }

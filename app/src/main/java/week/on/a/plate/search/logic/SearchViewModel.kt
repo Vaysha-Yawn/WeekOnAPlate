@@ -56,7 +56,10 @@ class SearchViewModel @Inject constructor(
     fun onEvent(event: SearchScreenEvent) {
         when (event) {
             is SearchScreenEvent.Search -> search()
-            SearchScreenEvent.VoiceSearch -> TODO()
+            SearchScreenEvent.VoiceSearch -> onEvent(MainEvent.VoiceToText(){
+                state.searchText.value = it?.joinToString()?:""
+                search()
+            })
             SearchScreenEvent.Back -> close()
             is SearchScreenEvent.FlipFavorite -> flipFavorite(event.id, event.inFavorite)
             is SearchScreenEvent.AddToMenu -> addToMenu(event.recipeView)
@@ -65,7 +68,14 @@ class SearchViewModel @Inject constructor(
             is SearchScreenEvent.SelectTag -> selectTag(event.recipeTagView)
             SearchScreenEvent.CreateRecipe -> TODO()
             SearchScreenEvent.SearchInWeb -> TODO()
+            SearchScreenEvent.Clear -> searchClear()
         }
+    }
+
+    private fun searchClear() {
+        state.searchText.value = ""
+        state.selectedTags.value = listOf()
+        state.selectedIngredients.value = listOf()
     }
 
     private fun addToMenu(recipeView: RecipeView) {

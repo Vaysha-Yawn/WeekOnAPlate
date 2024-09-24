@@ -3,14 +3,11 @@ package week.on.a.plate.core.dialogs.filter.filterVoiceApply.view
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -31,49 +28,42 @@ fun DialogVoiceApplyTags(
     state: FilterVoiceApplyUIState,
     event: (FilterVoiceApplyEvent) -> Unit
 ) {
-    Scaffold(
-        Modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surface), floatingActionButton = {
-            DoneButton(
-                text = stringResource(R.string.apply),
-                Modifier
-                    .padding(horizontal = 20.dp)
-                    .offset(x = 15.dp)
-            ) {
-                event(FilterVoiceApplyEvent.Done)
+    Column(Modifier.background(MaterialTheme.colorScheme.surface)) {
+        TextTitleItalic(
+            text = stringResource(R.string.add_positions_voice_apply),
+            Modifier
+                .background(MaterialTheme.colorScheme.surface)
+                .fillMaxWidth()
+                .padding(vertical = 24.dp),
+            textAlign = TextAlign.Center
+        )
+        LazyColumn(Modifier.padding(horizontal = 24.dp)) {
+            items(state.selectedTags.value.size) {
+                TagSelected(state.selectedTags.value[it]) {
+                    event(FilterVoiceApplyEvent.RemoveSelectedTag(state.selectedTags.value[it]))
+                }
+                Spacer(modifier = Modifier.height(6.dp))
             }
-        }) { innerPadding ->
-        Column(Modifier.background(MaterialTheme.colorScheme.surface)) {
-            TextTitleItalic(
-                text = stringResource(R.string.add_positions_voice_apply),
-                Modifier
-                    .background(MaterialTheme.colorScheme.surface)
-                    .fillMaxWidth()
-                    .padding(vertical = 24.dp),
-                textAlign = TextAlign.Center
-            )
-            LazyColumn(Modifier.padding(horizontal = 24.dp)) {
-                items(state.selectedTags.value.size) {
-                    TagSelected(state.selectedTags.value[it]) {
-                        event(FilterVoiceApplyEvent.RemoveSelectedTag(state.selectedTags.value[it]))
-                    }
-                    Spacer(modifier = Modifier.height(6.dp))
-                }
-                items(state.selectedIngredients.value.size) {
-                    IngredientSelected(state.selectedIngredients.value[it]) {
-                        event(
-                            FilterVoiceApplyEvent.RemoveSelectedIngredient(
-                                state.selectedIngredients.value[it]
-                            )
+            items(state.selectedIngredients.value.size) {
+                IngredientSelected(state.selectedIngredients.value[it]) {
+                    event(
+                        FilterVoiceApplyEvent.RemoveSelectedIngredient(
+                            state.selectedIngredients.value[it]
                         )
-                    }
-                    Spacer(modifier = Modifier.height(6.dp))
+                    )
                 }
+                Spacer(modifier = Modifier.height(6.dp))
             }
         }
-        innerPadding
+        DoneButton(
+            text = stringResource(R.string.apply),
+            Modifier
+                .padding(horizontal = 20.dp, vertical = 10.dp)
+        ) {
+            event(FilterVoiceApplyEvent.Done)
+        }
     }
+
 }
 
 @Preview(showBackground = true)

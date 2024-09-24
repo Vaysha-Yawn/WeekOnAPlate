@@ -14,9 +14,9 @@ import week.on.a.plate.core.data.recipe.IngredientView
 import week.on.a.plate.core.data.recipe.RecipeTagView
 import week.on.a.plate.core.dialogs.addIngrdient.logic.AddIngredientViewModel
 import week.on.a.plate.core.dialogs.addTag.logic.AddTagViewModel
+import week.on.a.plate.core.dialogs.filter.filterVoiceApply.logic.FilterVoiceApplyViewModel
 import week.on.a.plate.core.dialogs.filter.selectedFilters.logic.SelectedFiltersViewModel
 import week.on.a.plate.core.fullScereenDialog.filters.event.FilterEvent
-import week.on.a.plate.core.fullScereenDialog.filters.navigation.FilterDestination
 import week.on.a.plate.core.fullScereenDialog.filters.state.FilterUIState
 import javax.inject.Inject
 
@@ -61,10 +61,69 @@ class FilterViewModel @Inject constructor() : ViewModel() {
             is FilterEvent.CreateTag -> toCreateTag()
             is FilterEvent.SearchFilter -> search(event.text)
             FilterEvent.SelectedFilters -> toSelectedFilters()
-            FilterEvent.VoiceSearchFilters -> TODO()
+            FilterEvent.VoiceSearchFilters -> voiceSearch()
             is FilterEvent.SelectIngredient -> selectIngredient(event.ingredient)
             is FilterEvent.SelectTag -> selectTag(event.tag)
+            FilterEvent.ClearSearch -> clearSearch()
         }
+    }
+
+    private fun clearSearch() {
+        state.filtersSearchText.value = ""
+        state.selectedTags.value = listOf()
+        state.selectedIngredients.value = listOf()
+    }
+
+    private fun voiceSearch() {
+        mainViewModel.onEvent(MainEvent.VoiceToText() { strings: ArrayList<String>? ->
+            if (strings == null) return@VoiceToText
+            val searchedList = strings.getOrNull(0)?.split(" ")?:return@VoiceToText
+            viewModelScope.launch {
+                val listIngredientView = mutableListOf<IngredientView>()
+                val listTags = mutableListOf<RecipeTagView>()
+                searchedList.forEach {
+                    val res = searchTagOrIngredientByName(it)
+                    if (res.first != null) listTags.add(res.first!!)
+                    if (res.second != null) listIngredientView.add(res.second!!)
+                }
+                if (listIngredientView.isEmpty() && listTags.isEmpty()){
+                    state.filtersSearchText.value = strings.joinToString()
+                    return@launch
+                }
+
+                val vm = FilterVoiceApplyViewModel()
+                vm.mainViewModel = mainViewModel
+                mainViewModel.onEvent(MainEvent.OpenDialog(vm))
+                vm.launchAndGet(listTags, listIngredientView) { stateApply ->
+                    stateApply.selectedTags.value.forEach { tag ->
+                        if (!state.selectedTags.value.contains(tag)) {
+                            state.selectedTags.value =
+                                state.selectedTags.value.toMutableList().apply {
+                                    this.add(tag)
+                                }.toList()
+                        }
+                    }
+                    stateApply.selectedIngredients.value.forEach { ingredient ->
+                        if (!state.selectedIngredients.value.contains(ingredient)) {
+                            state.selectedIngredients.value =
+                                state.selectedIngredients.value.toMutableList().apply {
+                                    this.add(ingredient)
+                                }.toList()
+                        }
+                    }
+                }
+            }
+        })
+    }
+
+    private suspend fun searchTagOrIngredientByName(name: String): Pair<RecipeTagView?, IngredientView?> {
+        val tag = state.allTagsCategories.value.map { it -> it.tags }
+            .find { it.find { it.tagName.contains(name, true) } != null }
+            ?.find { it.tagName.contains(name, true) }
+        val ingredient = state.allIngredientsCategories.value.map { it -> it.ingredientViews }
+            .find { it.find { it.name.contains(name, true) } != null }
+            ?.find { it.name.contains(name, true) }
+        return Pair(tag, ingredient)
     }
 
     private fun toCreateTag() {
@@ -72,7 +131,7 @@ class FilterViewModel @Inject constructor() : ViewModel() {
             val vm = AddTagViewModel()
             vm.mainViewModel = mainViewModel
             mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-            vm.launchAndGet(state.filtersSearchText.value, null ) { tagData->
+            vm.launchAndGet(state.filtersSearchText.value, null) { tagData ->
                 //todo add bd and refresh state
             }
         }
@@ -83,7 +142,7 @@ class FilterViewModel @Inject constructor() : ViewModel() {
             val vm = AddIngredientViewModel()
             vm.mainViewModel = mainViewModel
             mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-            vm.launchAndGet(null, null ) { ingredientData->
+            vm.launchAndGet(null, null) { ingredientData ->
                 //todo add bd and refresh state
             }
         }
@@ -94,7 +153,11 @@ class FilterViewModel @Inject constructor() : ViewModel() {
             val vm = SelectedFiltersViewModel()
             vm.mainViewModel = mainViewModel
             mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-            vm.launchAndGet( state.activeFilterTabIndex.intValue, state.selectedTags.value, state.selectedIngredients.value) { stateSelected->
+            vm.launchAndGet(
+                state.activeFilterTabIndex.intValue,
+                state.selectedTags.value,
+                state.selectedIngredients.value
+            ) { stateSelected ->
                 state.selectedTags.value = stateSelected.first
                 state.selectedIngredients.value = stateSelected.second
             }
@@ -111,7 +174,7 @@ class FilterViewModel @Inject constructor() : ViewModel() {
     private fun searchTags(text: String) {
         val resultTags = mutableListOf<RecipeTagView>()
         state.allTagsCategories.value.forEach { tagCategory ->
-            val tagsRes = tagCategory.tags.filter { it-> it.tagName.contains(text, true) }
+            val tagsRes = tagCategory.tags.filter { it -> it.tagName.contains(text, true) }
             resultTags.addAll(tagsRes)
         }
         state.resultSearchFilterTags.value = resultTags
@@ -120,7 +183,8 @@ class FilterViewModel @Inject constructor() : ViewModel() {
     private fun searchIngredients(text: String) {
         val resultIngredient = mutableListOf<IngredientView>()
         state.allIngredientsCategories.value.forEach { ingredientCategory ->
-            val ingredientRes = ingredientCategory.ingredientViews.filter { it-> it.name.contains(text, true) }
+            val ingredientRes =
+                ingredientCategory.ingredientViews.filter { it -> it.name.contains(text, true) }
             resultIngredient.addAll(ingredientRes)
         }
         state.resultSearchFilterIngredients.value = resultIngredient
@@ -128,9 +192,9 @@ class FilterViewModel @Inject constructor() : ViewModel() {
 
     private fun selectIngredient(ingredient: IngredientView) {
         state.selectedIngredients.value = state.selectedIngredients.value.toMutableList().apply {
-            if (this.contains(ingredient)){
+            if (this.contains(ingredient)) {
                 this.remove(ingredient)
-            }else{
+            } else {
                 this.add(ingredient)
             }
         }.toList()
@@ -138,9 +202,9 @@ class FilterViewModel @Inject constructor() : ViewModel() {
 
     private fun selectTag(tag: RecipeTagView) {
         state.selectedTags.value = state.selectedTags.value.toMutableList().apply {
-            if (this.contains(tag)){
+            if (this.contains(tag)) {
                 this.remove(tag)
-            }else{
+            } else {
                 this.add(tag)
             }
         }.toList()

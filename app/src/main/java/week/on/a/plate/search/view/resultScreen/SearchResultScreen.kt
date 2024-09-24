@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ContextualFlowRow
 import androidx.compose.foundation.layout.ContextualFlowRowOverflow
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -30,7 +31,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.vector.VectorPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -84,8 +84,12 @@ fun RowRecipeResultCard(
                 .padding(12.dp), verticalAlignment = Alignment.CenterVertically
         ) {
             if (recipeView.img.startsWith("http")) {
-                AsyncImage( modifier = Modifier
-                    .size(85.dp).clip(CircleShape).background(ColorButtonNegativeGrey, CircleShape).scale(1.5f),
+                AsyncImage(
+                    modifier = Modifier
+                        .size(85.dp)
+                        .clip(CircleShape)
+                        .background(ColorButtonNegativeGrey, CircleShape)
+                        .scale(1.5f),
                     model = recipeView.img,
                     contentDescription = null,
                 )
@@ -139,15 +143,13 @@ fun RowRecipeResultCard(
 fun TagList(tags: List<RecipeTagView>, ingredients: List<IngredientView>) {
     Column {
         if (tags.isNotEmpty()) {
-            CustomGridTags(tags.size) { index ->
-                if (tags.size < index+1) return@CustomGridTags
+            CustomGridTagsFlow(sizeList = tags.size) { index ->
                 TagSmall(tag = tags[index])
                 Spacer(modifier = Modifier.width(6.dp))
             }
         }
         if (ingredients.isNotEmpty()) {
-            CustomGridTags(ingredients.size) { index ->
-                if (ingredients.size < index+1) return@CustomGridTags
+            CustomGridTagsFlow(ingredients.size) { index ->
                 TagSmall(ingredientView = ingredients[index])
             }
         }
@@ -156,40 +158,11 @@ fun TagList(tags: List<RecipeTagView>, ingredients: List<IngredientView>) {
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun CustomGridTags(sizeList: Int, content: @Composable (Int) -> Unit) {
-    val startMaxLines = 1
-    val maxLines = remember {
-        mutableIntStateOf(startMaxLines)
-    }
-    ContextualFlowRow(
-        modifier = Modifier
-            .animateContentSize(),
-        itemCount = sizeList,
-        maxLines = maxLines.intValue,
-        overflow = ContextualFlowRowOverflow.expandOrCollapseIndicator(
-            expandIndicator = {
-                ButtonText(
-                    text = "+ ${this.totalItemCount - this.shownItemCount + 1} показать ",
-                    colorBackground = MaterialTheme.colorScheme.outline,
-                    color = MaterialTheme.colorScheme.onBackground
-                ) {
-                    maxLines.intValue += 1
-                }
-            },
-            collapseIndicator = {
-                if (startMaxLines != maxLines.intValue) {
-                    ButtonText(
-                        text = "Скрыть",
-                        colorBackground = MaterialTheme.colorScheme.outline,
-                        color = MaterialTheme.colorScheme.onBackground
-                    ) {
-                        maxLines.intValue = startMaxLines
-                    }
-                }
-            }
-        )
-    ) { index ->
-        content(index)
+fun CustomGridTagsFlow(sizeList: Int, content: @Composable (Int) -> Unit) {
+    FlowRow(Modifier.fillMaxWidth()) {
+        for (i in 0 until sizeList) {
+            content(i)
+        }
     }
 }
 

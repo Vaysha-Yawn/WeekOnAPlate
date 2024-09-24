@@ -23,34 +23,34 @@ class CategoriesSearchViewModel @Inject constructor() : ViewModel() {
 
     lateinit var mainViewModel: MainViewModel
     val state = CategoriesSearchUIState()
-    private lateinit var resultFlow: MutableStateFlow<TagCategoryView?>
-    private lateinit var resultFlowIngredient: MutableStateFlow<IngredientCategoryView?>
-    var isTag = false
+    private lateinit var resultFlow: MutableStateFlow<Pair<CategoriesSearchEvent, TagCategoryView?>?>
+    private lateinit var resultFlowIngredient: MutableStateFlow<Pair<CategoriesSearchEvent, IngredientCategoryView?>?>
+    private var isTag = false
 
-    private fun startIngredient(): Flow<IngredientCategoryView?> {
-        val flow = MutableStateFlow<IngredientCategoryView?>(null)
+    private fun startIngredient(): Flow<Pair<CategoriesSearchEvent, IngredientCategoryView?>?> {
+        val flow = MutableStateFlow<Pair<CategoriesSearchEvent, IngredientCategoryView?>?>(null)
         resultFlowIngredient = flow
         return flow
     }
 
-    suspend fun launchAndGetIngredient(use: (IngredientCategoryView) -> Unit) {
+    suspend fun launchAndGetIngredient(use: (Pair<CategoriesSearchEvent, IngredientCategoryView?>) -> Unit) {
         isTag = false
         state.allNames.value = ingredients.map { it->it.name }
         val flow = startIngredient()
         flow.collect { value ->
-            if (value != null) {
+            if (value != null){
                 use(value)
             }
         }
     }
 
-    private fun start(): Flow<TagCategoryView?> {
-        val flow = MutableStateFlow<TagCategoryView?>(null)
+    private fun start(): Flow<Pair<CategoriesSearchEvent, TagCategoryView?>?> {
+        val flow = MutableStateFlow<Pair<CategoriesSearchEvent, TagCategoryView?>?>(null)
         resultFlow = flow
         return flow
     }
 
-    suspend fun launchAndGetTag(use: (TagCategoryView) -> Unit) {
+    suspend fun launchAndGetTag(use: (Pair<CategoriesSearchEvent, TagCategoryView?>) -> Unit) {
         isTag = true
         state.allNames.value = tags.map { it->it.name }
         val flow = start()
@@ -63,7 +63,9 @@ class CategoriesSearchViewModel @Inject constructor() : ViewModel() {
 
     fun onEvent(event: CategoriesSearchEvent) {
         when (event) {
-            CategoriesSearchEvent.Close -> close()
+            CategoriesSearchEvent.Close -> {
+                done(null)
+            }
             is CategoriesSearchEvent.Select -> done(event.text)
             is CategoriesSearchEvent.Create -> create(event.text)
             CategoriesSearchEvent.Search -> search()
@@ -72,12 +74,15 @@ class CategoriesSearchViewModel @Inject constructor() : ViewModel() {
     }
 
     private fun search() {
-        val listResult = state.allNames.value.filter { it->it.contains(state.searchText.value) }
+        val listResult = state.allNames.value.filter { it->it.contains(state.searchText.value, true) }
         state.resultSearch.value = listResult
     }
 
     private fun voiceSearch() {
-        //todo
+        mainViewModel.onEvent(MainEvent.VoiceToText(){
+            state.searchText.value = it?.joinToString()?:""
+            search()
+        })
     }
 
     private fun create(text: String) {
@@ -93,14 +98,23 @@ class CategoriesSearchViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun done(text: String) {
+    fun done(text: String?) {
         close()
-        if (isTag) {
-            resultFlow.value = tags.find { it->it.name == text }
+        if (text!=null) {
+            if (isTag) {
+                val tag = tags.find { it -> it.name.contains(text, true) }
+                resultFlow.value = Pair(CategoriesSearchEvent.Select(tag!!.name), tag)
+            } else {
+                val ingredient = ingredients.find { it -> it.name.contains(text, true) }
+                resultFlowIngredient.value = Pair(CategoriesSearchEvent.Select(ingredient!!.name), ingredient)
+            }
         }else{
-            resultFlowIngredient.value = ingredients.find { it->it.name == text }
+            if (isTag) {
+                resultFlow.value = Pair(CategoriesSearchEvent.Close, null)
+            }else{
+                resultFlowIngredient.value = Pair(CategoriesSearchEvent.Close, null)
+            }
         }
-
     }
 
     fun close() {

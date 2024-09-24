@@ -11,6 +11,7 @@ import week.on.a.plate.core.dialogs.addIngrdient.event.AddIngredientEvent
 import week.on.a.plate.core.dialogs.addIngrdient.state.AddIngredientUIState
 import week.on.a.plate.core.MainEvent
 import week.on.a.plate.core.MainViewModel
+import week.on.a.plate.core.fullScereenDialog.categoriesSearch.event.CategoriesSearchEvent
 import week.on.a.plate.core.fullScereenDialog.categoriesSearch.navigation.CategoriesSearchDestination
 
 
@@ -49,9 +50,13 @@ class AddIngredientViewModel() : DialogViewModel() {
             val vm = mainViewModel.categoriesSearchViewModel
             mainViewModel.onEvent(MainEvent.HideDialog)
             mainViewModel.nav.navigate(CategoriesSearchDestination)
-            vm.launchAndGetIngredient( ) { categoryName->
-                state.category.value = categoryName
-                mainViewModel.onEvent(MainEvent.ShowDialog(this@AddIngredientViewModel))
+            vm.launchAndGetIngredient( ) { pair->
+                if (pair.first !is CategoriesSearchEvent.Close){
+                    state.category.value = pair.second
+                    mainViewModel.onEvent(MainEvent.ShowDialog(this@AddIngredientViewModel))
+                }else{
+                    mainViewModel.onEvent(MainEvent.ShowDialog(this@AddIngredientViewModel))
+                }
             }
         }
     }

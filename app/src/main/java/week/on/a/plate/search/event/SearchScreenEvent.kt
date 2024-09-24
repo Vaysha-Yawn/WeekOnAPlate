@@ -15,4 +15,5 @@ sealed class SearchScreenEvent : Event(){
     data object ToFilter : SearchScreenEvent()
     data object CreateRecipe : SearchScreenEvent()
     data object SearchInWeb : SearchScreenEvent()
+    data object Clear : SearchScreenEvent()
 }

@@ -27,8 +27,10 @@ import week.on.a.plate.ui.theme.WeekOnAPlateTheme
 @Composable
 fun SearchLine(
     textSearch: MutableState<String>,
-    modifier: Modifier = Modifier, actionSearch: (s: String) -> Unit,
+    modifier: Modifier = Modifier,
+    actionSearch: (s: String) -> Unit,
     actionSearchVoice: () -> Unit,
+    actionClear: () -> Unit,
 ) {
 
     OutlinedTextField(
@@ -39,13 +41,6 @@ fun SearchLine(
             actionSearch(value)},
         leadingIcon = {
             Image(
-                painter = painterResource(id = R.drawable.search),
-                contentDescription = "",
-                modifier = Modifier.size(24.dp)
-            )
-        },
-        trailingIcon = {
-            Image(
                 painter = painterResource(id = R.drawable.mic),
                 contentDescription = "",
                 modifier = Modifier
@@ -54,6 +49,19 @@ fun SearchLine(
                         actionSearchVoice()
                     }
             )
+
+        },
+        trailingIcon = {
+            if (textSearch.value!= ""){
+                Image(
+                    painter = painterResource(id = R.drawable.close),
+                    contentDescription = "",
+                    modifier = Modifier.size(24.dp).clickable {
+                        textSearch.value = ""
+                        actionClear()
+                    }
+                )
+            }
         },
         placeholder = {
             TextBodyDisActive(text = stringResource(id = R.string.search_placeholder))
@@ -80,7 +88,7 @@ fun PreviewSearchLine() {
             mutableStateOf("Tercn")
         }
         Column {
-            SearchLine(text, actionSearchVoice = {}, actionSearch = {})
+            SearchLine(text, actionSearchVoice = {}, actionSearch = {}){}
         }
 
     }

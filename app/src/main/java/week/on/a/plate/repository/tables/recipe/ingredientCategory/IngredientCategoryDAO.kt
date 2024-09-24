@@ -14,18 +14,18 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface IngredientCategoryDAO {
     @Query("SELECT * FROM IngredientCategoryRoom")
-    fun getAll(): Flow<List<IngredientCategoryRoom>>
+    suspend fun getAll(): List<IngredientCategoryRoom>
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(ingredientCategoryRoom: IngredientCategoryRoom)
+    suspend fun insert(ingredientCategoryRoom: IngredientCategoryRoom):Long
 
     @Transaction
     @Query("SELECT * FROM IngredientCategoryRoom WHERE ingredientCategoryId=:ingredientCategoryId")
-    fun getIngredientCategoryAndIngredients(ingredientCategoryId:Long): Flow<IngredientCategoryAndIngredients>
+    suspend fun getIngredientCategoryAndIngredients(ingredientCategoryId:Long): IngredientCategoryAndIngredients
 
     @Update
     suspend fun update(ingredientCategoryRoom: IngredientCategoryRoom)
 
-    @Delete
-    suspend fun delete(ingredientCategoryRoom: IngredientCategoryRoom)
+    @Query("DELETE FROM IngredientCategoryRoom WHERE ingredientCategoryId = :id")
+    suspend fun deleteById(id: Long)
 }

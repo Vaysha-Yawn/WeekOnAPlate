@@ -16,11 +16,11 @@ interface RecipeStepDAO {
     fun getAll(): Flow<List<RecipeStepRoom>>
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(recipeStepRoom: RecipeStepRoom)
+    suspend fun insert(recipeStepRoom: RecipeStepRoom):Long
 
     @Update
     suspend fun update(recipeStepRoom: RecipeStepRoom)
 
-    @Delete
-    suspend fun delete(recipeStepRoom: RecipeStepRoom)
+    @Query("DELETE FROM RecipeStepRoom WHERE id = :id")
+    suspend fun deleteById(id: Long)
 }

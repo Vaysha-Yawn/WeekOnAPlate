@@ -30,7 +30,7 @@ fun TopSearchPanel(stateUI: SearchUIState, onEvent: (Event) -> Unit) {
                 onEvent(
                     SearchScreenEvent.VoiceSearch
                 )
-            })
+            }, {onEvent(SearchScreenEvent.Clear)})
         Spacer(modifier = Modifier.width(12.dp))
         FilterButton(stateUI.selectedTags.value.size + stateUI.selectedIngredients.value.size) { onEvent(SearchScreenEvent.ToFilter)}
     }

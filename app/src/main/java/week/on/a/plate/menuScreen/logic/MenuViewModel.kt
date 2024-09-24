@@ -53,7 +53,6 @@ class MenuViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            //sCRUDRecipeInMenu.menuR.insertNewWeek(WeekDataExample)
             updateWeek()
         }
     }

@@ -1,12 +1,14 @@
 package week.on.a.plate.core.uitools.buttons
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -34,10 +36,11 @@ fun CloseOutlined(actionClose: () -> Unit) {
         painter = painterResource(id = R.drawable.close),
         contentDescription = "",
         modifier = Modifier
+            .clickable { actionClose() }
             .border(1.dp, ColorStrokeGrey, RoundedCornerShape(10.dp))
+            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(10.dp ))
             .padding(12.dp)
-            .size(24.dp)
-            .clickable { actionClose() },
+            .size(24.dp),
     )
 }
 

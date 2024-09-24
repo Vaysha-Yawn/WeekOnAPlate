@@ -18,6 +18,8 @@ import week.on.a.plate.core.navigation.bottomBar.ShoppingListScreen
 import week.on.a.plate.core.fullScereenDialog.filters.navigation.FilterDestination
 import week.on.a.plate.core.fullScereenDialog.filters.view.FilterStart
 import week.on.a.plate.menuScreen.view.main.MenuScreen
+import week.on.a.plate.recipeFullScreen.navigation.RecipeDetailsDestination
+import week.on.a.plate.recipeFullScreen.view.start.RecipeDetailsStart
 import week.on.a.plate.search.view.main.SearchStart
 
 @Composable
@@ -63,6 +65,9 @@ fun Navigation(
             CategoriesSearchMain(viewModel.categoriesSearchViewModel)
         }
 
-
+        composable<RecipeDetailsDestination> {
+            viewModel.isActiveBaseScreen.value = false
+            RecipeDetailsStart(viewModel.recipeDetailsViewModel)
+        }
     }
 }

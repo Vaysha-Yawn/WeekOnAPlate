@@ -36,6 +36,6 @@ interface IngredientInRecipeDAO {
     @Update
     suspend fun update(recipe: IngredientInRecipeRoom)
 
-    @Delete
-    suspend fun delete(recipe: IngredientInRecipeRoom)
+    @Query("DELETE FROM IngredientInRecipeRoom WHERE id = :id")
+    suspend fun deleteById(id: Long)
 }

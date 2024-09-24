@@ -35,32 +35,6 @@ class PositionIngredientRepository @Inject constructor(
         return list
     }
 
-
-    /* fun getAllInSel(selectionId: Long): Flow<List<Position>> {
-         return positionIngredientDAO.getAllInSel(selectionId)
-             .transform<List<PositionIngredientRoom>, List<Position>> {
-                 val list = mutableListOf<Position>()
-                 it.forEach { position ->
-                     val ingredient =
-                         ingredientInRecipeDAO.getIngredientAndIngredientInRecipe(position.positionIngredientId)
-                     val ingredientInMenu = ingredient.ingredientInRecipeRoom
-                     val ingredientRoom = ingredient.ingredientRoom
-                     val ingredientView =
-                         with(IngredientMapper()) { ingredientRoom.roomToView() }
-                     val ingredientInMenuView = with(IngredientInRecipeMapper()) {
-                         ingredientInMenu.roomToView(ingredientView)
-                     }
-                     with(PositionIngredientMapper()) {
-                         val positionIngredientView =
-                             position.roomToView(ingredientInRecipe = ingredientInMenuView)
-                         list.add(positionIngredientView)
-                     }
-                 }
-
-                 emit(list)
-             }
-     }*/
-
     suspend fun insert(position: Position.PositionIngredientView, selectionId: Long): Long {
         val positionRoom = with(PositionIngredientMapper()) {
             position.viewToRoom(selectionId)

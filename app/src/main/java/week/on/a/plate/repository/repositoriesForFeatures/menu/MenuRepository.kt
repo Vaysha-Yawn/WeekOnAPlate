@@ -187,7 +187,6 @@ class MenuRepository @Inject constructor(
                             return it.selectionId
                         }
                     }
-                    //
                     return selectionDAO.insert(SelectionRoom(day.dayId, category.fullName))
                 }
             }

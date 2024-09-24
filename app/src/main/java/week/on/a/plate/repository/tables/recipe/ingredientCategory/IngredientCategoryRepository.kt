@@ -7,7 +7,7 @@ import javax.inject.Singleton
 @Singleton
 class IngredientCategoryRepository(val dao: IngredientCategoryDAO) {
 
-    fun read(): Flow<List<IngredientCategoryRoom>> = dao.getAll()
+    suspend fun read(): List<IngredientCategoryRoom> = dao.getAll()
 
     suspend fun create(ingredientCategoryRoom: IngredientCategoryRoom) {
         dao.insert(ingredientCategoryRoom)
@@ -18,7 +18,7 @@ class IngredientCategoryRepository(val dao: IngredientCategoryDAO) {
     }
 
     suspend fun delete(ingredientCategoryRoom: IngredientCategoryRoom) {
-        dao.delete(ingredientCategoryRoom)
+        dao.deleteById(ingredientCategoryRoom.ingredientCategoryId)
     }
 }
 

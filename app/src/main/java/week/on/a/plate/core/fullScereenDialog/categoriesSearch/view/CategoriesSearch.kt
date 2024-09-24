@@ -102,15 +102,16 @@ fun TopSearchPanelCategory(
 ) {
     Row(
         Modifier
-            .padding(24.dp),
+            .padding(vertical = 24.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
+        Spacer(modifier = Modifier.width(24.dp))
         BackButtonOutlined { close() }
         Spacer(modifier = Modifier.width(12.dp))
         SearchLine(
             textSearch = searchText,
             actionSearch = { s -> searchEvent() },
-            actionSearchVoice = { voiceSearchEvent() })
+            actionSearchVoice = { voiceSearchEvent() }, actionClear = {searchEvent()})
     }
 }
 

@@ -18,12 +18,15 @@ interface RecipeTagDAO {
     @Query("SELECT * FROM RecipeTagRoom WHERE tagName=:name")
     suspend fun findByName(name:String): RecipeTagRoom?
 
+    @Query("SELECT * FROM RecipeTagRoom WHERE recipeTagId=:id")
+    suspend fun findByID(id:Long): RecipeTagRoom?
+
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(recipeTagRoom: RecipeTagRoom):Long
 
     @Update
     suspend fun update(recipeTagRoom: RecipeTagRoom)
 
-    @Delete
-    suspend fun delete(recipeTagRoom: RecipeTagRoom)
+    @Query("DELETE FROM RecipeTagRoom WHERE recipeTagId = :id")
+    suspend fun deleteById(id: Long)
 }
