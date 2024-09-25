@@ -24,10 +24,10 @@ import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.core.uitools.TextDisplayItalic
 import week.on.a.plate.core.uitools.TextInApp
-import week.on.a.plate.ui.theme.ColorButtonNegativeGrey
-import week.on.a.plate.ui.theme.Typography
-import week.on.a.plate.ui.theme.WeekOnAPlateTheme
-import week.on.a.plate.ui.theme.paddingCommon
+import week.on.a.plate.core.theme.ColorButtonNegativeGrey
+import week.on.a.plate.core.theme.Typography
+import week.on.a.plate.core.theme.WeekOnAPlateTheme
+import week.on.a.plate.core.theme.paddingCommon
 
 @Composable
 fun ButtonsCounter(
@@ -63,6 +63,41 @@ fun ButtonsCounter(
                 .background(ColorButtonNegativeGrey, CircleShape)
                 .padding(12.dp)
                 .size(24.dp)
+                .clickable { plus() },
+        )
+    }
+}
+
+@Composable
+fun ButtonsCounterSmall(
+    value: State<Int>,
+    minus: () -> Unit,
+    plus: () -> Unit,
+) {
+    Row(
+        horizontalArrangement = Arrangement.Absolute.Center, modifier = Modifier, verticalAlignment = Alignment.CenterVertically
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.remove),
+            contentDescription = "",
+            modifier = Modifier
+                .background(ColorButtonNegativeGrey, CircleShape)
+                .padding(6.dp)
+                .size(20.dp)
+                .clickable { minus() },
+        )
+        TextInApp(
+            value.value.toString(),
+            textStyle = Typography.titleMedium,
+            modifier = Modifier.padding(horizontal = 12.dp)
+        )
+        Image(
+            painter = painterResource(id = R.drawable.plus),
+            contentDescription = "",
+            modifier = Modifier
+                .background(ColorButtonNegativeGrey, CircleShape)
+                .padding(6.dp)
+                .size(20.dp)
                 .clickable { plus() },
         )
     }

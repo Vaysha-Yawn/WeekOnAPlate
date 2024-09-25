@@ -15,9 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import week.on.a.plate.ui.theme.ColorPanelLightGrey
-import week.on.a.plate.ui.theme.ColorTextBlack
-import week.on.a.plate.ui.theme.Typography
+import week.on.a.plate.core.theme.ColorPanelLightGrey
+import week.on.a.plate.core.theme.ColorTextBlack
+import week.on.a.plate.core.theme.Typography
 
 @Composable
 fun EditTextLine(

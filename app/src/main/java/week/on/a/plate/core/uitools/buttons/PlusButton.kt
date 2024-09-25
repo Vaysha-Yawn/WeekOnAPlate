@@ -16,9 +16,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
-import week.on.a.plate.ui.theme.ColorButtonGreen
-import week.on.a.plate.ui.theme.ColorStrokeGrey
-import week.on.a.plate.ui.theme.WeekOnAPlateTheme
+import week.on.a.plate.core.theme.ColorButtonGreen
+import week.on.a.plate.core.theme.ColorStrokeGrey
+import week.on.a.plate.core.theme.WeekOnAPlateTheme
 
 @Composable
 fun ActionPlusButton(actionAdd: () -> Unit) {
@@ -26,7 +26,7 @@ fun ActionPlusButton(actionAdd: () -> Unit) {
         painter = painterResource(id = R.drawable.add),
         contentDescription = "",
         modifier = Modifier
-            .background(ColorButtonGreen, CircleShape)
+            .background(MaterialTheme.colorScheme.secondary, CircleShape)
             .padding(6.dp)
             .size(36.dp)
             .clickable { actionAdd() },
@@ -39,7 +39,7 @@ fun PlusButtonCard(actionAdd: () -> Unit) {
         painter = painterResource(id = R.drawable.add),
         contentDescription = "",
         modifier = Modifier
-            .background(ColorButtonGreen, RoundedCornerShape(5.dp))
+            .background(MaterialTheme.colorScheme.secondary, RoundedCornerShape(5.dp))
             .size(24.dp)
             .clickable { actionAdd() },
     )

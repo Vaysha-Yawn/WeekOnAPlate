@@ -15,19 +15,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import week.on.a.plate.core.data.recipe.IngredientView
-import week.on.a.plate.core.data.recipe.RecipeTagView
-import week.on.a.plate.ui.theme.ColorButtonGreen
-import week.on.a.plate.ui.theme.ColorButtonNegativeGrey
-import week.on.a.plate.ui.theme.ColorPanelGreen
-import week.on.a.plate.ui.theme.ColorPanelYellow
-import week.on.a.plate.ui.theme.ColorSubTextGrey
-import week.on.a.plate.ui.theme.ColorTextBlack
-import week.on.a.plate.ui.theme.Typography
-import week.on.a.plate.ui.theme.WeekOnAPlateTheme
-import week.on.a.plate.ui.theme.bodyGrey
-import week.on.a.plate.ui.theme.titleLargeNonItalic
-import week.on.a.plate.ui.theme.titleMediumItalic
+import week.on.a.plate.data.dataView.recipe.IngredientView
+import week.on.a.plate.data.dataView.recipe.RecipeTagView
+import week.on.a.plate.core.theme.ColorButtonGreen
+import week.on.a.plate.core.theme.ColorButtonNegativeGrey
+import week.on.a.plate.core.theme.ColorPanelGreen
+import week.on.a.plate.core.theme.ColorPanelYellow
+import week.on.a.plate.core.theme.ColorSubTextGrey
+import week.on.a.plate.core.theme.ColorTextBlack
+import week.on.a.plate.core.theme.Typography
+import week.on.a.plate.core.theme.WeekOnAPlateTheme
+import week.on.a.plate.core.theme.bodyGrey
+import week.on.a.plate.core.theme.titleLargeNonItalic
+import week.on.a.plate.core.theme.titleMediumItalic
 
 
 @Composable
@@ -146,12 +146,13 @@ fun SubText(text: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun TextSmall(text: String, modifier: Modifier = Modifier) {
+fun TextSmall(text: String, modifier: Modifier = Modifier,
+              color: Color = MaterialTheme.colorScheme.onBackground) {
     TextInApp(
         text,
         modifier,
         textStyle = Typography.bodySmall,
-        color = MaterialTheme.colorScheme.onBackground,
+        color = color,
         textAlign = TextAlign.Start
     )
 }
@@ -161,13 +162,14 @@ fun TextBody(
     text: String,
     modifier: Modifier = Modifier,
     textAlign: TextAlign = TextAlign.Start,
-    maxLines: Int? = null
+    maxLines: Int? = null,
+    color: Color = MaterialTheme.colorScheme.onBackground
 ) {
     TextInApp(
         text,
         modifier,
         textStyle = Typography.bodyMedium,
-        color = MaterialTheme.colorScheme.onBackground,
+        color = color,
         textAlign = textAlign,
         maxLines = maxLines
     )

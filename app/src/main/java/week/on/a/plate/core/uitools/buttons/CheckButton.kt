@@ -11,8 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import week.on.a.plate.ui.theme.ColorStrokeBlue
-import week.on.a.plate.ui.theme.WeekOnAPlateTheme
+import week.on.a.plate.core.theme.ColorStrokeBlue
+import week.on.a.plate.core.theme.WeekOnAPlateTheme
 
 @Composable
 fun CheckButton(checked: State<Boolean>, actionCheck: () -> Unit) {
