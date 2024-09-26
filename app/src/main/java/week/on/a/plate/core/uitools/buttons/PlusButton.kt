@@ -28,7 +28,7 @@ fun ActionPlusButton(actionAdd: () -> Unit) {
         modifier = Modifier
             .background(MaterialTheme.colorScheme.secondary, CircleShape)
             .padding(6.dp)
-            .size(36.dp)
+            .size(48.dp)
             .clickable { actionAdd() },
     )
 }

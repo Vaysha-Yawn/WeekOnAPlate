@@ -21,6 +21,7 @@ import week.on.a.plate.screenMenu.view.main.MenuScreen
 import week.on.a.plate.screenRecipeDetails.navigation.RecipeDetailsDestination
 import week.on.a.plate.screenRecipeDetails.view.start.RecipeDetailsStart
 import week.on.a.plate.screenSearchRecipes.view.main.SearchStart
+import week.on.a.plate.screenShoppingList.view.ShoppingListStart
 
 @Composable
 fun Navigation(
@@ -45,6 +46,7 @@ fun Navigation(
         }
         composable<ShoppingListScreen> {
             viewModel.isActiveBaseScreen.value = true
+            ShoppingListStart(viewModel.shoppingListViewModel)
         }
         composable<SettingsScreen> {
             viewModel.isActiveBaseScreen.value = true

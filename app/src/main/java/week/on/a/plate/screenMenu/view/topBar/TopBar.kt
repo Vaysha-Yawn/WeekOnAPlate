@@ -35,7 +35,6 @@ fun TopBar(
     menuIUState: MenuIUState,
     onEvent: (event: Event) -> Unit
 ) {
-    val dateState = rememberDatePickerState()
     Column {
         Row(
             Modifier

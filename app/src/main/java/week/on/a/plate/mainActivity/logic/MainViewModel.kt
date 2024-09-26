@@ -16,6 +16,7 @@ import week.on.a.plate.screenMenu.logic.useCase.CRUDRecipeInMenu
 import week.on.a.plate.screenRecipeDetails.logic.RecipeDetailsViewModel
 import week.on.a.plate.screenSearchRecipes.logic.SearchViewModel
 import week.on.a.plate.screenSearchRecipes.logic.voice.VoiceInputUseCase
+import week.on.a.plate.screenShoppingList.logic.ShoppingListViewModel
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,6 +36,7 @@ class MainViewModel @Inject constructor(
     val filterViewModel = FilterViewModel()
     val searchViewModel = SearchViewModel(sCRUDRecipeInMenu)
     val recipeDetailsViewModel = RecipeDetailsViewModel()
+    val shoppingListViewModel = ShoppingListViewModel()
 
     init {
         specifySelectionViewModel.mainViewModel = this
@@ -42,6 +44,7 @@ class MainViewModel @Inject constructor(
         filterViewModel.mainViewModel = this
         searchViewModel.mainViewModel = this
         recipeDetailsViewModel.mainViewModel = this
+        shoppingListViewModel.mainViewModel = this
     }
 
     fun onEvent(event: Event) {

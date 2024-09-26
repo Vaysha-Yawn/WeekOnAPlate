@@ -15,16 +15,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
+import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.screenRecipeDetails.event.RecipeDetailsEvent
 import week.on.a.plate.screenRecipeDetails.state.RecipeDetailsState
-import week.on.a.plate.core.theme.WeekOnAPlateTheme
 
 @Composable
 fun TopPanelRecipeDetail(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) -> Unit) {
     Row(
         Modifier
             .fillMaxWidth()
-            .padding(6.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+            .padding(6.dp), horizontalArrangement = Arrangement.SpaceBetween
+    ) {
         ImageButton(R.drawable.back) {
             onEvent(RecipeDetailsEvent.Back)
         }
@@ -35,7 +36,10 @@ fun TopPanelRecipeDetail(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent
             ImageButton(R.drawable.add_shopping_cart) {
                 onEvent(RecipeDetailsEvent.AddToCart)
             }
-            ImageButton(R.drawable.bookmark) {
+            ImageButton(
+                if (state.recipe.value?.tags?.find { it -> it.tagName == "Избранное" } != null)
+                    R.drawable.bookmark_full else R.drawable.bookmark
+            ) {
                 onEvent(RecipeDetailsEvent.SwitchFavorite)
             }
             ImageButton(R.drawable.add) {
@@ -47,7 +51,7 @@ fun TopPanelRecipeDetail(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent
 }
 
 @Composable
-fun ImageButton(res:Int, modifier: Modifier = Modifier, action:()->Unit){
+fun ImageButton(res: Int, modifier: Modifier = Modifier, action: () -> Unit) {
     Image(
         painter = painterResource(id = res),
         contentDescription = "",

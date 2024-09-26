@@ -12,6 +12,7 @@ import week.on.a.plate.core.uitools.buttons.PlusButtonTitle
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.TextTitleItalic
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
+import week.on.a.plate.core.uitools.TextBody
 
 @Composable
 fun TitleMenu(name:String, actionAdd:()->Unit){
@@ -24,7 +25,7 @@ fun TitleMenu(name:String, actionAdd:()->Unit){
 @Composable
 fun TitleMenuSmall(name:String, actionAdd:()->Unit){
     Row(Modifier, verticalAlignment = Alignment.CenterVertically) {
-        TextTitleItalic(text = name, modifier = Modifier.padding(end = 24.dp))
+        TextBody(text = name, modifier = Modifier.padding(end = 24.dp))
         PlusButtonTitle(actionAdd)
     }
 }
