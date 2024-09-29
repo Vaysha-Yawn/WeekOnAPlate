@@ -1,5 +1,6 @@
 package week.on.a.plate.mainActivity.view
 
+import android.app.TimePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -50,6 +51,9 @@ import week.on.a.plate.core.dialogExampleStructure.DialogViewModel
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.core.uitools.dialogs.BaseDialogContainer
 import week.on.a.plate.core.uitools.dialogs.BottomDialogContainer
+import week.on.a.plate.screenCreateRecipe.timePickDialog.event.TimePickEvent
+import week.on.a.plate.screenCreateRecipe.timePickDialog.logic.TimePickViewModel
+import week.on.a.plate.screenCreateRecipe.timePickDialog.view.TimePickDialog
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -217,6 +221,12 @@ fun DialogsContainer(data: DialogViewModel?, onEvent: (event: Event) -> Unit) {
             }
             LaunchedEffect(true) {
                 sheetState.show()
+            }
+        }
+
+        is TimePickViewModel -> {
+            TimePickDialog(data.state ){event:TimePickEvent->
+                data.onEvent(event)
             }
         }
 

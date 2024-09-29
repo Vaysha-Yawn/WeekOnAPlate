@@ -39,6 +39,7 @@ import week.on.a.plate.screenFilters.event.FilterEvent
 import week.on.a.plate.screenFilters.state.FilterUIState
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.buttons.CommonButton
+import week.on.a.plate.screenFilters.state.FilterMode
 
 @Composable
 fun FilterScreen(stateUI: FilterUIState, onEvent: (FilterEvent) -> Unit) {
@@ -50,11 +51,17 @@ fun FilterScreen(stateUI: FilterUIState, onEvent: (FilterEvent) -> Unit) {
         }
     }, floatingActionButtonPosition = FabPosition.Center) { innerPadding ->
         Column {
-            TabRowFilter(
-                stateUI.activeFilterTabIndex,
-                stateUI.selectedTags.value.size,
-                stateUI.selectedIngredients.value.size
-            )
+            when(stateUI.filterMode.value){
+                FilterMode.All -> {
+                    TabRowFilter(
+                        stateUI.activeFilterTabIndex,
+                        stateUI.selectedTags.value.size,
+                        stateUI.selectedIngredients.value.size
+                    )
+                }
+                FilterMode.OneIngredient -> {stateUI.activeFilterTabIndex.intValue = 1}
+                FilterMode.TagList -> {stateUI.activeFilterTabIndex.intValue = 0}
+            }
             LazyColumn(
                 Modifier.fillMaxSize()
                     .background(MaterialTheme.colorScheme.surface)

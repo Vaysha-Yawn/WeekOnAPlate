@@ -20,6 +20,7 @@ import week.on.a.plate.core.uitools.TextTitleItalic
 import week.on.a.plate.core.uitools.buttons.CommonButton
 import week.on.a.plate.core.uitools.buttons.DoneButton
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
+import week.on.a.plate.core.uitools.TextBody
 
 @Composable
 fun AddIngredient(
@@ -34,40 +35,40 @@ fun AddIngredient(
                 modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center
             )
             Spacer(modifier = Modifier.height(36.dp))
-            TextTitleItalic(
+            TextBody(
                 text = "Название ингредиента",
                 modifier = Modifier
-                    .padding(start = 24.dp)
+                    .padding(start = 12.dp)
                     .padding(bottom = 12.dp), textAlign = TextAlign.Start
             )
             EditTextLine(
                 state.name,
                 "Введите название ингредиента",
-                "Введите название ингредиента", modifier = Modifier
+                modifier = Modifier
             ) { value ->
                 state.name.value = value
             }
             Spacer(modifier = Modifier.height(24.dp))
 
-            TextTitleItalic(
+            TextBody(
                 text = "Мера измерения",
                 modifier = Modifier
-                    .padding(start = 24.dp)
+                    .padding(start = 12.dp)
                     .padding(bottom = 12.dp), textAlign = TextAlign.Start
             )
             EditTextLine(
                 state.measure,
                 "Введите меру измерения",
-                "Введите меру измерения", modifier = Modifier
+                modifier = Modifier
             ) { value ->
                 state.measure.value = value
             }
             Spacer(modifier = Modifier.height(24.dp))
 
-            TextTitleItalic(
+            TextBody(
                 text = "Категория",
                 modifier = Modifier
-                    .padding(start = 24.dp)
+                    .padding(start = 12.dp)
                     .padding(bottom = 12.dp), textAlign = TextAlign.Start
             )
             CommonButton(
@@ -77,30 +78,21 @@ fun AddIngredient(
                 onEvent(AddIngredientEvent.ChooseCategory)
             }
             Spacer(modifier = Modifier.height(24.dp))
-            TextTitleItalic(
+            TextBody(
                 text = "Фото",
                 modifier = Modifier
-                    .padding(start = 24.dp)
+                    .padding(start = 12.dp)
                     .padding(bottom = 12.dp), textAlign = TextAlign.Start
             )
-            /* CommonButton(
-                 if (photoFromGalleryUri.value == "") "Выбрать фото из галлереи" else photoFromGalleryUri.value,
-                 R.drawable.search,
-             ) {
-                 setPhotoUrlFromGallery()
-             }
-             Spacer(modifier = Modifier.height(24.dp))*/
             EditTextLine(
                 state.photoUri,
                 "Введите ссылку на изображение",
-                "Введите ссылку на изображение", modifier = Modifier
+                modifier = Modifier
             ) { value ->
                 state.photoUri.value = value
             }
-            Spacer(modifier = Modifier.height(24.dp))
-
             val messageError = "Пожалуйста введите название, меру и выберите категорию"
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(36.dp))
             DoneButton(
                 text = stringResource(id = R.string.add),
                 modifier = Modifier

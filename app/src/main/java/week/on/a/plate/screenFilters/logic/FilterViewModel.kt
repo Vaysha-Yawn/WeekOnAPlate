@@ -17,6 +17,7 @@ import week.on.a.plate.dialogsAddFilters.addTag.logic.AddTagViewModel
 import week.on.a.plate.screenFilters.dialogs.filterVoiceApply.logic.FilterVoiceApplyViewModel
 import week.on.a.plate.screenFilters.dialogs.selectedFilters.logic.SelectedFiltersViewModel
 import week.on.a.plate.screenFilters.event.FilterEvent
+import week.on.a.plate.screenFilters.state.FilterMode
 import week.on.a.plate.screenFilters.state.FilterUIState
 import javax.inject.Inject
 
@@ -41,11 +42,13 @@ class FilterViewModel @Inject constructor() : ViewModel() {
     }
 
     suspend fun launchAndGet(
+        mode:FilterMode,
         lastFilters: Pair<List<RecipeTagView>, List<IngredientView>>?,
         use: (Pair<List<RecipeTagView>, List<IngredientView>>) -> Unit
     ) {
         state.selectedTags.value = lastFilters?.first ?: listOf()
         state.selectedIngredients.value = lastFilters?.second ?: listOf()
+        state.filterMode.value = mode
         val flow = start()
         flow.collect { value ->
             if (value != null) {
@@ -65,6 +68,7 @@ class FilterViewModel @Inject constructor() : ViewModel() {
             is FilterEvent.SelectIngredient -> selectIngredient(event.ingredient)
             is FilterEvent.SelectTag -> selectTag(event.tag)
             FilterEvent.ClearSearch -> clearSearch()
+            FilterEvent.Done -> done()
         }
     }
 
@@ -192,10 +196,15 @@ class FilterViewModel @Inject constructor() : ViewModel() {
 
     private fun selectIngredient(ingredient: IngredientView) {
         state.selectedIngredients.value = state.selectedIngredients.value.toMutableList().apply {
-            if (this.contains(ingredient)) {
-                this.remove(ingredient)
-            } else {
+            if (state.filterMode.value == FilterMode.OneIngredient){
+                this.clear()
                 this.add(ingredient)
+            }else{
+                if (this.contains(ingredient)) {
+                    this.remove(ingredient)
+                } else {
+                    this.add(ingredient)
+                }
             }
         }.toList()
     }
@@ -211,6 +220,11 @@ class FilterViewModel @Inject constructor() : ViewModel() {
     }
 
 
+    fun done(){
+        resultFlow.value = Pair(state.selectedTags.value, state.selectedIngredients.value)
+        mainViewModel.onEvent(MainEvent.NavigateBack)
+    }
+
     fun close() {
         if (state.activeFilterTabIndex.intValue == 0 && state.resultSearchFilterTags.value.isNotEmpty()) {
             state.resultSearchFilterTags.value = listOf()
@@ -218,7 +232,6 @@ class FilterViewModel @Inject constructor() : ViewModel() {
             state.resultSearchFilterIngredients.value = listOf()
         } else {
             resultFlow.value = Pair(state.selectedTags.value, state.selectedIngredients.value)
-
             mainViewModel.onEvent(MainEvent.NavigateBack)
         }
     }

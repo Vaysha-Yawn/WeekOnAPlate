@@ -29,18 +29,18 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import week.on.a.plate.R
+import week.on.a.plate.core.theme.ColorButtonNegativeGrey
+import week.on.a.plate.core.theme.WeekOnAPlateTheme
+import week.on.a.plate.core.uitools.ImageLoad
+import week.on.a.plate.core.uitools.TagSmall
+import week.on.a.plate.core.uitools.TextBody
+import week.on.a.plate.core.uitools.buttons.PlusButtonCard
 import week.on.a.plate.data.dataView.example.recipeTom
 import week.on.a.plate.data.dataView.recipe.IngredientView
 import week.on.a.plate.data.dataView.recipe.RecipeTagView
 import week.on.a.plate.data.dataView.recipe.RecipeView
-import week.on.a.plate.core.uitools.TagSmall
-import week.on.a.plate.core.uitools.TextBody
-import week.on.a.plate.core.uitools.buttons.PlusButtonCard
 import week.on.a.plate.screenSearchRecipes.event.SearchScreenEvent
-import week.on.a.plate.core.theme.ColorButtonNegativeGrey
-import week.on.a.plate.core.theme.WeekOnAPlateTheme
 
 @Composable
 fun SearchResultScreen(
@@ -78,14 +78,12 @@ fun RowRecipeResultCard(
                 .padding(12.dp), verticalAlignment = Alignment.CenterVertically
         ) {
             if (recipeView.img.startsWith("http")) {
-                AsyncImage(
-                    modifier = Modifier
+                ImageLoad(
+                    recipeView.img, Modifier
                         .size(85.dp)
                         .clip(CircleShape)
                         .background(ColorButtonNegativeGrey, CircleShape)
-                        .scale(1.5f),
-                    model = recipeView.img,
-                    contentDescription = null,
+                        .scale(1.5f)
                 )
             } else {
                 Spacer(

@@ -1,0 +1,29 @@
+package week.on.a.plate.screenCreateRecipe.view
+
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
+import week.on.a.plate.core.theme.WeekOnAPlateTheme
+import week.on.a.plate.data.dataView.example.recipeTom
+import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
+import week.on.a.plate.screenCreateRecipe.event.RecipeCreateEvent
+import week.on.a.plate.screenCreateRecipe.state.RecipeCreateUIState
+import week.on.a.plate.screenRecipeDetails.view.ingredients.IngredientInRecipeCard
+
+@Composable
+fun IngredientRecipeEdit(
+    ingredient: IngredientInRecipeView,
+    state: RecipeCreateUIState,
+    onEvent: (RecipeCreateEvent) -> Unit
+) {
+    IngredientInRecipeCard(ingredient){
+        onEvent(RecipeCreateEvent.EditIngredient(ingredient))
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewIngredientsRecipeEdit() {
+    WeekOnAPlateTheme {
+        IngredientRecipeEdit(recipeTom.ingredients[0], RecipeCreateUIState()) {}
+    }
+}

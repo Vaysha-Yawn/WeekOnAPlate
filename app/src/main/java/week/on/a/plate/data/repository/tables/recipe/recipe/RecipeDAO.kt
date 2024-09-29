@@ -9,6 +9,8 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
+import week.on.a.plate.data.repository.tables.recipe.ingredientInRecipe.IngredientInRecipeRoom
+import week.on.a.plate.data.repository.tables.recipe.recipeStep.RecipeStepRoom
 
 
 @Dao
@@ -19,16 +21,8 @@ interface RecipeDAO {
     @Query("SELECT * FROM recipeRoom WHERE recipeId=:recipeId")
     suspend fun getRecipeById(recipeId:Long): RecipeRoom
 
-    @Transaction
-    @Query("SELECT * FROM recipeRoom WHERE recipeId=:recipeId")
-    suspend fun getRecipeAndRecipeSteps(recipeId:Long): RecipeAndRecipeSteps
-
-    @Transaction
-    @Query("SELECT * FROM recipeRoom WHERE recipeId=:recipeId")
-    suspend fun getRecipeAndIngredientInRecipe(recipeId:Long): RecipeAndIngredientInRecipe
-
     @Insert (onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(recipeRoom: RecipeRoom):Long
+    suspend fun insert(recipe: RecipeRoom):Long
 
     @Update
     suspend fun update(recipeRoom: RecipeRoom)

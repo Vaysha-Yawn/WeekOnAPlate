@@ -21,6 +21,7 @@ import week.on.a.plate.core.uitools.TextTitleItalic
 import week.on.a.plate.core.uitools.buttons.CommonButton
 import week.on.a.plate.core.uitools.buttons.DoneButton
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
+import week.on.a.plate.core.uitools.TextBody
 
 @Composable
 fun AddTag(
@@ -34,25 +35,25 @@ fun AddTag(
             modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(24.dp))
-        TextTitleItalic(
+        TextBody(
             text = "Название тэга",
             modifier = Modifier
-                .padding(start = 24.dp)
+                .padding(start = 12.dp)
                 .padding(bottom = 12.dp),
             textAlign = TextAlign.Start
         )
         EditTextLine(
             state.text,
             "Введите название тэга здесь",
-            "Введите название тэга здесь", modifier = Modifier
+            modifier = Modifier
         ) { value ->
             state.text.value = value
         }
         Spacer(modifier = Modifier.height(24.dp))
-        TextTitleItalic(
+        TextBody(
             text = "Категория",
             modifier = Modifier
-                .padding(start = 24.dp)
+                .padding(start = 12.dp)
                 .padding(bottom = 12.dp),
             textAlign = TextAlign.Start
         )
@@ -63,7 +64,7 @@ fun AddTag(
             onEvent(AddTagEvent.ChooseCategory)
         }
         val messageError = "Пожалуйста введите название и выберите категорию"
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(36.dp))
         DoneButton(
             text = stringResource(id = R.string.add),
             modifier = Modifier

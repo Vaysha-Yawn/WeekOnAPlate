@@ -9,11 +9,11 @@ import week.on.a.plate.data.dataView.week.DayView
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.data.dataView.week.SelectionView
 import week.on.a.plate.data.dataView.week.WeekView
-import week.on.a.plate.data.repository.tables.recipe.ingredient.IngredientMapper
+import week.on.a.plate.data.repository.tables.filters.ingredient.IngredientMapper
 import week.on.a.plate.data.repository.tables.recipe.ingredientInRecipe.IngredientInRecipeDAO
 import week.on.a.plate.data.repository.tables.recipe.ingredientInRecipe.IngredientInRecipeMapper
-import week.on.a.plate.data.repository.tables.recipe.recipeTag.RecipeTagDAO
-import week.on.a.plate.data.repository.tables.recipe.recipeTag.RecipeTagMapper
+import week.on.a.plate.data.repository.tables.filters.recipeTag.RecipeTagDAO
+import week.on.a.plate.data.repository.tables.filters.recipeTag.RecipeTagMapper
 import week.on.a.plate.data.repository.tables.menu.day.DayDAO
 import week.on.a.plate.data.repository.tables.menu.day.DayMapper
 import week.on.a.plate.data.repository.tables.menu.day.DayRoom

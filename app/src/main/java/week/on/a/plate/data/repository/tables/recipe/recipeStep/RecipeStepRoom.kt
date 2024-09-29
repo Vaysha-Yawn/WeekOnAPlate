@@ -6,7 +6,6 @@ import androidx.room.PrimaryKey
 @Entity
 data class RecipeStepRoom(
     val recipeId: Long = 0,
-    val title:String,
     val description: String,
     val image:String,
     val timer:Long

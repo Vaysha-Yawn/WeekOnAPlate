@@ -17,5 +17,6 @@ class FilterUIState {
     val activeFilterTabIndex = mutableIntStateOf(0)
     val resultSearchFilterTags = mutableStateOf<List<RecipeTagView>>(listOf())
     val resultSearchFilterIngredients = mutableStateOf<List<IngredientView>>(listOf())
+    val filterMode = mutableStateOf<FilterMode>(FilterMode.All)
 }
 

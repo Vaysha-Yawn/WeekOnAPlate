@@ -36,6 +36,8 @@ import week.on.a.plate.core.uitools.buttons.DoneButton
 import week.on.a.plate.screenSpecifySelection.event.SpecifySelectionEvent
 import week.on.a.plate.screenSpecifySelection.state.SpecifySelectionUIState
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
+import week.on.a.plate.core.uitools.buttons.ButtonsCounter
+import week.on.a.plate.core.uitools.buttons.ButtonsCounterSmall
 
 
 @Composable
@@ -50,16 +52,16 @@ fun SpecifyDateScreen(
             .padding(24.dp),
         horizontalAlignment = Alignment.Start
     ) {
-        CloseButton { onEvent(SpecifySelectionEvent.Back) }
-        Spacer(modifier = Modifier.height(12.dp))
-        TextTitleItalic(
-            text = stringResource(R.string.specify_selection),
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.End
-        )
-        Spacer(modifier = Modifier.height(48.dp))
-
-        TextTitleItalic(text = stringResource(R.string.title_in_generally), modifier = Modifier)
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+            CloseButton { onEvent(SpecifySelectionEvent.Back) }
+            TextTitleItalic(
+                text = stringResource(R.string.specify_selection),
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.End
+            )
+        }
+        Spacer(modifier = Modifier.height(24.dp))
+        TextTitleItalic(text = stringResource(R.string.title_in_generally), modifier = Modifier.padding(start = 12.dp))
         Spacer(modifier = Modifier.height(12.dp))
         Row(
             Modifier
@@ -87,7 +89,7 @@ fun SpecifyDateScreen(
             })
         }
         Spacer(modifier = Modifier.height(24.dp))
-        TextTitleItalic(text = stringResource(R.string.title_or_detailed), modifier = Modifier)
+        TextTitleItalic(text = stringResource(R.string.title_or_detailed), modifier = Modifier.padding(start = 12.dp))
         Spacer(modifier = Modifier.height(12.dp))
         Column(
             Modifier
@@ -142,6 +144,22 @@ fun SpecifyDateScreen(
                 }
                 Spacer(modifier = Modifier.height(24.dp))
             }
+        }
+        Spacer(modifier = Modifier.height(24.dp))
+        TextTitleItalic(text = "Количество порций", modifier = Modifier.padding(start = 12.dp))
+        Spacer(modifier = Modifier.height(12.dp))
+        Column(
+            Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.tertiary, RoundedCornerShape(20.dp))
+                .padding(horizontal = 12.dp, vertical = 12.dp), horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            ButtonsCounterSmall(value = state.portionsCount,
+                minus = { if (state.portionsCount.intValue>0){
+                    state.portionsCount.intValue = state.portionsCount.intValue.minus(1)}},
+                plus = {
+                    state.portionsCount.intValue = state.portionsCount.intValue.plus(1)
+                })
         }
         Spacer(modifier = Modifier.weight(1f))
         val messageError = stringResource(id = R.string.message_non_validate_place_position_in_menu)

@@ -10,6 +10,7 @@ sealed class FilterEvent : Event() {
     class CreateIngredient(val text: String) : FilterEvent()
     data object VoiceSearchFilters : FilterEvent()
     data object Back : FilterEvent()
+    data object Done : FilterEvent()
     data object SelectedFilters : FilterEvent()
     data class SelectTag(val tag: RecipeTagView) : FilterEvent()
     data class SelectIngredient(val ingredient: IngredientView) : FilterEvent()

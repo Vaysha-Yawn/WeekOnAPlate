@@ -22,7 +22,7 @@ class SpecifySelectionViewModel @Inject constructor(
 ) : ViewModel() {
     lateinit var mainViewModel: MainViewModel
     val state: SpecifySelectionUIState = SpecifySelectionUIState()
-    private lateinit var resultFlow: MutableStateFlow<Long?>
+    private lateinit var resultFlow: MutableStateFlow<Pair<Long,Int>?>
 
     fun onEvent(event: Event) {
         when (event) {
@@ -96,7 +96,7 @@ class SpecifySelectionViewModel @Inject constructor(
         state.date.value?:return
         mainViewModel.viewModelScope.launch {
             val selId = weekRepository.getSelIdOrCreate(state.date.value!!,category)
-            resultFlow.value = selId
+            resultFlow.value = Pair(selId, state.portionsCount.intValue)
         }
     }
 
@@ -104,17 +104,17 @@ class SpecifySelectionViewModel @Inject constructor(
         mainViewModel.onEvent(MainEvent.NavigateBack)
     }
 
-    fun start(): Flow<Long?> {
-        val flow = MutableStateFlow<Long?>(null)
+    fun start(): Flow<Pair<Long,Int>?> {
+        val flow = MutableStateFlow<Pair<Long,Int>?>(null)
         resultFlow = flow
         return flow
     }
 
-    suspend fun launchAndGet(use: (Long) -> Unit) {
+    suspend fun launchAndGet(use: (Long,Int) -> Unit) {
         val flow = start()
         flow.collect { value ->
             if (value != null) {
-                use(value)
+                use(value.first, value.second)
             }
         }
     }

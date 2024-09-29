@@ -10,7 +10,7 @@ class IngredientInRecipeMapper() {
             id = this.id,
             ingredientView = ingredientView,
             description = this.description,
-            count = this.count,
+            count = this.count.toInt(),
         )
 
     fun IngredientInRecipeView.viewToRoom(recipeId:Long, ingredientId:Long,): IngredientInRecipeRoom =
@@ -18,6 +18,6 @@ class IngredientInRecipeMapper() {
             recipeId = recipeId,
             ingredientId = ingredientId,
             description = this.description,
-            count = this.count
+            count = this.count.toDouble()
         )
 }

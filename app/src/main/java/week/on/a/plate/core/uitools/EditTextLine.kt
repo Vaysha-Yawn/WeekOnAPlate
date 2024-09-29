@@ -1,6 +1,5 @@
 package week.on.a.plate.core.uitools
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -22,34 +21,22 @@ import week.on.a.plate.core.theme.Typography
 @Composable
 fun EditTextLine(
     text: MutableState<String>,
-    title: String,
     placeholder: String,
     modifier : Modifier = Modifier,
     textChangeEvent: (String) -> Unit,
 ) {
+
     OutlinedTextField(
         value = text.value,
         onValueChange = { newValue ->
             textChangeEvent(newValue)
-            //text.value = newValue
         },
         modifier = modifier.fillMaxWidth(),
         textStyle = Typography.bodyMedium,
-        label = {
-            TextBody(
-                text = title,
-                modifier = Modifier
-                    .background(
-                        if (isSystemInDarkTheme()) ColorTextBlack else ColorPanelLightGrey,
-                        RoundedCornerShape(20.dp)
-                    )
-                    .padding(horizontal = 10.dp)
-            )
-        },
         placeholder = {
             TextBodyDisActive(text = placeholder)
         },
-        singleLine = true,
+        singleLine = false,
         shape = RoundedCornerShape(20.dp),
         colors = OutlinedTextFieldDefaults.colors(
             focusedTextColor = MaterialTheme.colorScheme.onBackground,
@@ -69,34 +56,21 @@ fun EditTextLine(
 
 @Composable
 fun EditNumberLine(
-    num: MutableState<Double>,
-    title: String,
+    num: MutableState<Int>,
     placeholder: String,
     modifier: Modifier = Modifier,
-    textChangeEvent: (Double) -> Unit,
+    textChangeEvent: (Int) -> Unit,
 ) {
     OutlinedTextField(
         value = num.value.toString(),
         onValueChange = { newValue ->
-            val d = newValue.toDoubleOrNull()
+            val d = newValue.toIntOrNull()
             if (d != null) {
                 textChangeEvent(d)
             }
-            //text.value = newValue
         },
         modifier = modifier,
         textStyle = Typography.bodyMedium,
-        label = {
-            TextBody(
-                text = title,
-                modifier = Modifier
-                    .background(
-                        if (isSystemInDarkTheme()) ColorTextBlack else ColorPanelLightGrey,
-                        RoundedCornerShape(20.dp)
-                    )
-                    .padding(horizontal = 10.dp)
-            )
-        },
         placeholder = {
             TextBodyDisActive(text = placeholder)
         },

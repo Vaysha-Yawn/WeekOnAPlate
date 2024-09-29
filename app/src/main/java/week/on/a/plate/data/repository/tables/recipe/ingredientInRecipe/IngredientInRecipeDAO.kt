@@ -9,7 +9,8 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
-import week.on.a.plate.data.repository.tables.recipe.ingredient.IngredientRoom
+import week.on.a.plate.data.repository.tables.filters.ingredient.IngredientRoom
+import week.on.a.plate.data.repository.tables.recipe.recipe.RecipeAndIngredientInRecipe
 
 
 @Dao
@@ -17,8 +18,9 @@ interface IngredientInRecipeDAO {
     @Query("SELECT * FROM IngredientInRecipeRoom")
     suspend fun getAll(): List<IngredientInRecipeRoom>
 
-    @Query("SELECT * FROM ingredientroom")
-    suspend fun getAllIngredients(): List<IngredientRoom>
+    @Transaction
+    @Query("SELECT * FROM reciperoom WHERE recipeId=:recipeId")
+    suspend fun getRecipeAndIngredientInRecipe(recipeId:Long): RecipeAndIngredientInRecipe
 
     @Transaction
     @Query("SELECT * FROM IngredientInRecipeRoom WHERE id=:id")
@@ -27,7 +29,7 @@ interface IngredientInRecipeDAO {
     @Query("SELECT * FROM IngredientRoom WHERE ingredientId = :ingredientId")
     suspend fun getCurrent(ingredientId: Long): IngredientRoom
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert (onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(ingredientInRecipe: IngredientInRecipeRoom):Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -38,4 +40,9 @@ interface IngredientInRecipeDAO {
 
     @Query("DELETE FROM IngredientInRecipeRoom WHERE id = :id")
     suspend fun deleteById(id: Long)
+
+    @Query("DELETE FROM IngredientInRecipeRoom WHERE recipeId = :recipeIdd")
+    suspend fun deleteByRecipeId(recipeIdd: Long)
+
+
 }

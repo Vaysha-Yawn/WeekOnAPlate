@@ -27,9 +27,5 @@ fun SearchNothingFound(state: SearchUIState, onEvent: (Event) -> Unit) {
         DoneButtonSmall(text = "Создать рецепт: ${state.searchText.value}") {
             onEvent(SearchScreenEvent.CreateRecipe)
         }
-        Spacer(modifier = Modifier.height(24.dp))
-        DoneButtonSmall(text = "Искать в интернете: ${state.searchText.value}") {
-            onEvent(SearchScreenEvent.SearchInWeb)
-        }
     }
 }

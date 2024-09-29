@@ -13,16 +13,10 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface RecipeRecipeTagCrossRefDAO {
-    @Query("SELECT * FROM reciperecipetagcrossref")
-    suspend fun getAll(): List<RecipeRecipeTagCrossRef>
 
     @Transaction
-    @Query("SELECT * FROM RecipeRoom")
-    suspend fun getRecipeAndRecipeTag(): List<RecipeAndRecipeTag>
-
-    @Transaction
-    @Query("SELECT * FROM RecipeTagRoom")
-    suspend fun getRecipeTagAndRecipe(): List<RecipeTagAndRecipe>
+    @Query("SELECT * FROM RecipeRoom WHERE recipeId=:recipeIdd")
+    suspend fun getRecipeAndRecipeTagByRecipeId(recipeIdd: Long): List<RecipeAndRecipeTag>
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(recipeRecipeTagCrossRef: RecipeRecipeTagCrossRef):Long
@@ -31,5 +25,8 @@ interface RecipeRecipeTagCrossRefDAO {
     suspend fun update(recipeRecipeTagCrossRef: RecipeRecipeTagCrossRef)
 
     @Query("DELETE FROM reciperecipetagcrossref WHERE recipeId = :recipeIdd")
-    suspend fun deleteById(recipeIdd: Long)
+    suspend fun deleteByRecipeId(recipeIdd: Long)
+
+    @Query("DELETE FROM reciperecipetagcrossref WHERE recipeId = :recipeIdd AND recipeTagId=:tagID")
+    suspend fun deleteByIdTag(recipeIdd: Long, tagID:Long)
 }

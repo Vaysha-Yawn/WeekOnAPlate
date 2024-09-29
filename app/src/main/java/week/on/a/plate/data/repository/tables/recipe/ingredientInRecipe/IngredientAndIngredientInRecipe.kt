@@ -2,7 +2,7 @@ package week.on.a.plate.data.repository.tables.recipe.ingredientInRecipe
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import week.on.a.plate.data.repository.tables.recipe.ingredient.IngredientRoom
+import week.on.a.plate.data.repository.tables.filters.ingredient.IngredientRoom
 
 
 data class IngredientAndIngredientInRecipe(

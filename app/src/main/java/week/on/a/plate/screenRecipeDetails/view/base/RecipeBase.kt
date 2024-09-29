@@ -10,21 +10,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import week.on.a.plate.data.dataView.example.recipeTom
+import week.on.a.plate.core.theme.WeekOnAPlateTheme
+import week.on.a.plate.core.uitools.ImageLoad
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextTitle
+import week.on.a.plate.data.dataView.example.recipeTom
 import week.on.a.plate.screenRecipeDetails.event.RecipeDetailsEvent
 import week.on.a.plate.screenRecipeDetails.state.RecipeDetailsState
 import week.on.a.plate.screenSearchRecipes.view.resultScreen.TagList
-import week.on.a.plate.core.theme.WeekOnAPlateTheme
 
 @Composable
 fun RecipeBase(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) -> Unit) {
-    if (state.recipe.value==null) return
+    if (state.recipe.value == null) return
     Column(Modifier.padding(24.dp)) {
-       if (state.recipe.value?.img?.startsWith("http") == true) {
-            AsyncImage(model = state.recipe.value!!.img, "", modifier = Modifier.fillMaxWidth())
-       }
+        if (state.recipe.value?.img?.startsWith("http") == true) {
+            ImageLoad(state.recipe.value!!.img, Modifier.fillMaxWidth())
+        }
         Spacer(modifier = Modifier.height(12.dp))
         TextTitle(text = state.recipe.value!!.name)
         Spacer(modifier = Modifier.height(12.dp))

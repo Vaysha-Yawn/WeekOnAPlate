@@ -26,7 +26,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import week.on.a.plate.R
 import week.on.a.plate.data.dataView.example.recipeTom
 import week.on.a.plate.core.uitools.TextBody
@@ -40,6 +39,8 @@ import week.on.a.plate.core.theme.ColorTextBlack
 import week.on.a.plate.core.theme.Typography
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.theme.bodyMediumSemiBold
+import week.on.a.plate.core.uitools.ImageLoad
+import week.on.a.plate.core.utils.timeToString
 
 @Composable
 fun RecipeDetailsSteps(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) -> Unit) {
@@ -83,19 +84,14 @@ fun RecipeDetailsSteps(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) 
                             .padding(horizontal = 12.dp, vertical = 5.dp)
                     )
                     Spacer(modifier = Modifier.width(24.dp))
-                    TimerButton(step.timer, onEvent)
+                    TimerButton(step.timer.toInt(), onEvent)
                 }
                 Spacer(modifier = Modifier.height(24.dp))
                 if (step.image.startsWith("http")) {
-                    AsyncImage(
-                        model = step.image,
-                        contentDescription = "",
-                        modifier = Modifier
+                    ImageLoad(
+                        url = step.image, modifier = Modifier
                             .fillMaxWidth()
-                            .height(200.dp),
-                        placeholder = painterResource(
-                            id = R.drawable.time
-                        )
+                            .height(200.dp)
                     )
                     Spacer(modifier = Modifier.height(24.dp))
                 }
@@ -109,8 +105,8 @@ fun RecipeDetailsSteps(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) 
 }
 
 @Composable
-fun TimerButton(timer: Long, onEvent: (RecipeDetailsEvent) -> Unit) {
-    if (timer == 0L) return
+fun TimerButton(timer: Int, onEvent: (RecipeDetailsEvent) -> Unit) {
+    if (timer == 0) return
     val act = LocalContext.current
     Row(
         Modifier
@@ -128,7 +124,7 @@ fun TimerButton(timer: Long, onEvent: (RecipeDetailsEvent) -> Unit) {
         )
         Spacer(modifier = Modifier.width(12.dp))
         TextInApp(
-            text = timeToString(timer),
+            text = timer.timeToString(),
             textStyle = Typography.bodyLarge,
             color = MaterialTheme.colorScheme.onBackground,
         )
@@ -139,13 +135,6 @@ fun TimerButton(timer: Long, onEvent: (RecipeDetailsEvent) -> Unit) {
             modifier = Modifier.size(24.dp)
         )
     }
-}
-
-fun timeToString(time: Long): String {
-    val sec = time.toInt()
-    val min = (sec / 60)
-    val hour = min / 60
-    return "${if (hour < 10) "0" else ""}$hour:${if (min < 10) "0" else ""}$min:${if (sec < 10) "0" else ""}$sec"
 }
 
 @Preview(showBackground = true)

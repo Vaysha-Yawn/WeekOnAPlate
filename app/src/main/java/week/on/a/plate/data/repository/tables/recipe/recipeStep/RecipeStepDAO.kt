@@ -6,21 +6,28 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
+import week.on.a.plate.data.repository.tables.recipe.recipe.RecipeAndRecipeSteps
 
 
 @Dao
 interface RecipeStepDAO {
-    @Query("SELECT * FROM RecipeStepRoom")
-    fun getAll(): Flow<List<RecipeStepRoom>>
+
+    @Transaction
+    @Query("SELECT * FROM recipeRoom WHERE recipeId=:recipeId")
+    suspend fun getRecipeAndRecipeSteps(recipeId:Long): RecipeAndRecipeSteps
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(recipeStepRoom: RecipeStepRoom):Long
+    suspend fun insert(step: RecipeStepRoom):Long
 
     @Update
-    suspend fun update(recipeStepRoom: RecipeStepRoom)
+    suspend fun update(step: RecipeStepRoom)
 
-    @Query("DELETE FROM RecipeStepRoom WHERE id = :id")
-    suspend fun deleteById(id: Long)
+    @Query("DELETE FROM recipesteproom WHERE recipeId = :recipeIdd")
+    suspend fun deleteByRecipeId(recipeIdd: Long)
+
+    @Query("DELETE FROM recipesteproom WHERE id = :stepId")
+    suspend fun deleteByIdStep(stepId:Long)
 }

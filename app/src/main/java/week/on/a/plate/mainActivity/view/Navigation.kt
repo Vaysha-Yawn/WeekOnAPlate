@@ -8,7 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import week.on.a.plate.screenSearchCategories.navigation.CategoriesSearchDestination
 import week.on.a.plate.screenSearchCategories.view.CategoriesSearchMain
-import week.on.a.plate.screenSpecifySelection.navigation.SpecifySelection
+import week.on.a.plate.screenSpecifySelection.navigation.SpecifySelectionDirection
 import week.on.a.plate.screenSpecifySelection.view.SpecifySelectionMain
 import week.on.a.plate.core.navigation.SearchScreen
 import week.on.a.plate.core.navigation.MenuScreen
@@ -17,6 +17,8 @@ import week.on.a.plate.core.navigation.ShoppingListScreen
 import week.on.a.plate.screenFilters.navigation.FilterDestination
 import week.on.a.plate.screenFilters.view.FilterStart
 import week.on.a.plate.mainActivity.logic.MainViewModel
+import week.on.a.plate.screenCreateRecipe.navigation.RecipeCreateDestination
+import week.on.a.plate.screenCreateRecipe.view.RecipeCreateStart
 import week.on.a.plate.screenMenu.view.main.MenuScreen
 import week.on.a.plate.screenRecipeDetails.navigation.RecipeDetailsDestination
 import week.on.a.plate.screenRecipeDetails.view.start.RecipeDetailsStart
@@ -52,7 +54,8 @@ fun Navigation(
             viewModel.isActiveBaseScreen.value = true
         }
 
-        composable<SpecifySelection> {
+        //others
+        composable<SpecifySelectionDirection> {
             viewModel.isActiveBaseScreen.value = false
             SpecifySelectionMain(viewModel, viewModel.specifySelectionViewModel)
         }
@@ -71,6 +74,10 @@ fun Navigation(
             viewModel.isActiveBaseScreen.value = false
             viewModel.recipeDetailsViewModel.launch(0)
             RecipeDetailsStart(viewModel.recipeDetailsViewModel)
+        }
+        composable<RecipeCreateDestination> {
+            viewModel.isActiveBaseScreen.value = false
+            RecipeCreateStart(viewModel.recipeCreateViewModel)
         }
     }
 }

@@ -13,7 +13,7 @@
     <string name="message_select_ingredient">Пожалуйста, выберите ингредиент</string>
     <string name="add_note">Добавить заметку</string>
     <string name="title_edit_note">Текст заметки</string>
-    <string name="enter_text_note">Введите текст заметки</string>
+    <string name="enter_text_note">Введите текст здесь...</string>
     <string name="select_day">Выберите день</string>
     <string name="title_in_generally">В общем</string>
     <string name="title_or_detailed">Или подробнее</string>

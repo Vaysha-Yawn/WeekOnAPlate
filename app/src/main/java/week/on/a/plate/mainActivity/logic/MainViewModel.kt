@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import week.on.a.plate.screenSearchCategories.logic.CategoriesSearchViewModel
 import week.on.a.plate.core.Event
 import week.on.a.plate.mainActivity.event.MainEvent
+import week.on.a.plate.screenCreateRecipe.logic.RecipeCreateViewModel
 import week.on.a.plate.screenFilters.logic.FilterViewModel
 import week.on.a.plate.screenSpecifySelection.logic.SpecifySelectionViewModel
 import week.on.a.plate.screenMenu.logic.useCase.CRUDRecipeInMenu
@@ -35,8 +36,9 @@ class MainViewModel @Inject constructor(
     val categoriesSearchViewModel = CategoriesSearchViewModel()
     val filterViewModel = FilterViewModel()
     val searchViewModel = SearchViewModel(sCRUDRecipeInMenu)
-    val recipeDetailsViewModel = RecipeDetailsViewModel()
+    val recipeDetailsViewModel = RecipeDetailsViewModel(sCRUDRecipeInMenu)
     val shoppingListViewModel = ShoppingListViewModel()
+    val recipeCreateViewModel = RecipeCreateViewModel()
 
     init {
         specifySelectionViewModel.mainViewModel = this
@@ -45,6 +47,8 @@ class MainViewModel @Inject constructor(
         searchViewModel.mainViewModel = this
         recipeDetailsViewModel.mainViewModel = this
         shoppingListViewModel.mainViewModel = this
+        recipeCreateViewModel.mainViewModel = this
+
     }
 
     fun onEvent(event: Event) {
@@ -61,7 +65,6 @@ class MainViewModel @Inject constructor(
                     sCRUDRecipeInMenu.onEvent(event.actionMenuDBData, listOf())
                 }
             }
-
             MainEvent.CloseDialog -> dialogUseCase.closeDialog()
             is MainEvent.GetSelIdAndCreate -> TODO()
             is MainEvent.OpenDialog -> dialogUseCase.openDialog(event.dialog)
@@ -70,15 +73,12 @@ class MainViewModel @Inject constructor(
                     snackbarHostState.showSnackbar(event.message)
                 }
             }
-
             is MainEvent.Navigate -> {
                 nav.navigate(event.destination)
             }
-
             MainEvent.NavigateBack -> {
                 nav.popBackStack()
             }
-
             MainEvent.HideDialog -> dialogUseCase.hide()
             is MainEvent.ShowDialog -> dialogUseCase.show()
             is MainEvent.VoiceToText -> {

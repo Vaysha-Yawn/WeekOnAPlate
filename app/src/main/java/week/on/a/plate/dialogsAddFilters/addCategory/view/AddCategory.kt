@@ -34,7 +34,7 @@ fun AddCategory(
         EditTextLine(
             state.text,
             stringResource(R.string.enter_category_name),
-            stringResource(R.string.enter_category_name), modifier = Modifier
+            modifier = Modifier
         ) { value ->
             state.text.value = value
         }

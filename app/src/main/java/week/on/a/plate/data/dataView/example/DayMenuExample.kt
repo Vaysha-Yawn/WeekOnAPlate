@@ -14,7 +14,7 @@ val positionRecipeExample = Position.PositionRecipeView(0, shortRecipe, 2, 0)
 val ingredientTomato = IngredientView(0, "", "Помидор", "штук")
 
 val positionIngredientExample =
-    Position.PositionIngredientView(0, IngredientInRecipeView(0, ingredientTomato, "Целые", 6.0), 0)
+    Position.PositionIngredientView(0, IngredientInRecipeView(0, ingredientTomato, "Целые", 6), 0)
 
 val positionNoteExample = Position.PositionNoteView(0, "Завтракаю на работе", 0)
 

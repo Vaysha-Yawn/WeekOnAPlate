@@ -4,8 +4,8 @@ package week.on.a.plate.data.repository.tables.menu.position.draft
 import week.on.a.plate.data.dataView.recipe.IngredientView
 import week.on.a.plate.data.dataView.recipe.RecipeTagView
 import week.on.a.plate.data.dataView.week.Position
-import week.on.a.plate.data.repository.tables.recipe.ingredient.IngredientMapper
-import week.on.a.plate.data.repository.tables.recipe.recipeTag.RecipeTagMapper
+import week.on.a.plate.data.repository.tables.filters.ingredient.IngredientMapper
+import week.on.a.plate.data.repository.tables.filters.recipeTag.RecipeTagMapper
 import javax.inject.Inject
 
 
@@ -51,6 +51,7 @@ class PositionDraftRepository @Inject constructor(
         val positionRoom = with(PositionDraftMapper()) {
             position.viewToRoom(selectionId)
         }
+        //insert connection with tags and ingredients, id filters already in db
         return positionDraftDAO.insert(positionRoom)
     }
 

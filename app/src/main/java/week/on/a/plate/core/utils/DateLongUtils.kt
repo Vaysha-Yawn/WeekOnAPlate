@@ -23,3 +23,10 @@ fun Long.dateToLocalDate(): LocalDate {
     val localDate = dates.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
     return localDate
 }
+
+fun Int.timeToString(): String {
+    val sec = this
+    val min = (sec / 60)
+    val hour = min / 60
+    return "${if (hour < 10) "0" else ""}$hour:${if (min < 10) "0" else ""}$min"
+}

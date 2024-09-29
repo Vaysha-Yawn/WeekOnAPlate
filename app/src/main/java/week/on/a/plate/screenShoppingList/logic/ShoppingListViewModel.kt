@@ -10,12 +10,17 @@ import week.on.a.plate.data.dataView.example.ingredients
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
+import week.on.a.plate.screenMenu.dialogs.editPositionIngredient.logic.EditPositionIngredientViewModel
+import week.on.a.plate.screenMenu.event.ActionWeekMenuDB
+import week.on.a.plate.screenMenu.event.MenuEvent
 import week.on.a.plate.screenShoppingList.event.ShoppingListEvent
 import week.on.a.plate.screenShoppingList.state.ShoppingListUIState
 import javax.inject.Inject
 
 @HiltViewModel
 class ShoppingListViewModel @Inject constructor() : ViewModel() {
+
+    //todo добавить второй тип позиции - заметка для кастомных покупок
 
     lateinit var mainViewModel: MainViewModel
     val state = ShoppingListUIState()
@@ -26,7 +31,7 @@ class ShoppingListViewModel @Inject constructor() : ViewModel() {
         val listUnchecked = mutableListOf<IngredientInRecipeView>()
         ingredients.forEach { category ->
             category.ingredientViews.forEach {
-                val position = IngredientInRecipeView(0, it, "", (0..200).random().toDouble())
+                val position = IngredientInRecipeView(0, it, "", (0..200).random())
                 if ((0..1).random() == 0) {
                     listChecked.add(position)
                 } else {
@@ -40,19 +45,14 @@ class ShoppingListViewModel @Inject constructor() : ViewModel() {
 
     fun onEvent(event: Event) {
         when (event) {
-            is MainEvent -> {
-                mainViewModel.onEvent(event)
-            }
-
-            else -> {
-                onEvent(event)
-            }
+            is MainEvent -> mainViewModel.onEvent(event)
+            else -> onEvent(event)
         }
     }
 
     fun onEvent(event: ShoppingListEvent) {
         when (event) {
-            ShoppingListEvent.Add -> {}
+            ShoppingListEvent.Add -> addIngredient()
             is ShoppingListEvent.Check -> {
                 viewModelScope.launch {
                     state.listUnchecked.value = state.listUnchecked.value.toMutableList().apply {
@@ -62,10 +62,8 @@ class ShoppingListViewModel @Inject constructor() : ViewModel() {
                         this.add(event.position)
                     }
                 }
-
             }
-
-            ShoppingListEvent.DeleteChecked -> {}
+            ShoppingListEvent.DeleteChecked -> state.listChecked.value = listOf()
             is ShoppingListEvent.Uncheck -> {
                 viewModelScope.launch {
                     state.listChecked.value = state.listChecked.value.toMutableList().apply {
@@ -79,5 +77,16 @@ class ShoppingListViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-
+    private fun addIngredient() {
+        viewModelScope.launch {
+            val vm = EditPositionIngredientViewModel()
+            vm.mainViewModel = mainViewModel
+            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
+            vm.launchAndGet(null) { updatedIngredient ->
+                state.listUnchecked.value = state.listUnchecked.value.toMutableList().apply {
+                    this.add(updatedIngredient.ingredient)
+                }
+            }
+        }
+    }
 }

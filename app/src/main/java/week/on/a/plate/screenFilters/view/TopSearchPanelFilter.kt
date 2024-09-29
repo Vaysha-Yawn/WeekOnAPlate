@@ -10,8 +10,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
@@ -22,6 +26,7 @@ import week.on.a.plate.core.uitools.SearchLine
 import week.on.a.plate.screenRecipeDetails.view.start.ImageButton
 import week.on.a.plate.core.theme.ColorStrokeGrey
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
+import week.on.a.plate.screenFilters.state.FilterMode
 
 @Composable
 fun TopSearchPanelFilter(stateUI: FilterUIState, onEvent: (FilterEvent) -> Unit) {
@@ -41,9 +46,18 @@ fun TopSearchPanelFilter(stateUI: FilterUIState, onEvent: (FilterEvent) -> Unit)
             ) { onEvent(FilterEvent.ClearSearch) }
         }
         Spacer(modifier = Modifier.width(12.dp))
+
+        val modifier = if (stateUI.filterMode.value==FilterMode.OneIngredient){
+            val focusRequester = remember { FocusRequester() }
+            LaunchedEffect(Unit) {
+                focusRequester.requestFocus()
+            }
+            Modifier.focusRequester(focusRequester)
+        }else{Modifier}
+
         SearchLine(
             textSearch = stateUI.filtersSearchText,
-            modifier = Modifier.weight(1f),
+            modifier = modifier.weight(1f),
             actionSearch = { s -> onEvent(FilterEvent.SearchFilter(s)) },
             actionSearchVoice = { onEvent(FilterEvent.VoiceSearchFilters) },
             actionClear = {}
@@ -54,7 +68,7 @@ fun TopSearchPanelFilter(stateUI: FilterUIState, onEvent: (FilterEvent) -> Unit)
             Modifier
                 .border(1.dp, MaterialTheme.colorScheme.secondaryContainer, RoundedCornerShape(10.dp))
                 .background(MaterialTheme.colorScheme.secondary, RoundedCornerShape(10.dp))
-        ) {  onEvent(FilterEvent.Back) }
+        ) {  onEvent(FilterEvent.Done) }
         Spacer(modifier = Modifier.width(12.dp))
     }
 }

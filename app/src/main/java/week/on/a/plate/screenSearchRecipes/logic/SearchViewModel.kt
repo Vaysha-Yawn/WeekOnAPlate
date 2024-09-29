@@ -15,8 +15,11 @@ import week.on.a.plate.data.dataView.recipe.RecipeView
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.data.dataView.week.RecipeShortView
 import week.on.a.plate.screenFilters.navigation.FilterDestination
-import week.on.a.plate.screenSpecifySelection.navigation.SpecifySelection
+import week.on.a.plate.screenSpecifySelection.navigation.SpecifySelectionDirection
 import week.on.a.plate.core.navigation.MenuScreen
+import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
+import week.on.a.plate.screenCreateRecipe.navigation.RecipeCreateDestination
+import week.on.a.plate.screenFilters.state.FilterMode
 import week.on.a.plate.screenMenu.event.ActionWeekMenuDB
 import week.on.a.plate.screenMenu.logic.useCase.CRUDRecipeInMenu
 import week.on.a.plate.screenRecipeDetails.navigation.RecipeDetailsDestination
@@ -65,14 +68,40 @@ class SearchViewModel @Inject constructor(
             is SearchScreenEvent.NavigateToFullRecipe -> {
                 mainViewModel.nav.navigate(RecipeDetailsDestination)
             }
-
             SearchScreenEvent.ToFilter -> toFilter()
             is SearchScreenEvent.SelectTag -> selectTag(event.recipeTagView)
-            SearchScreenEvent.CreateRecipe -> TODO()
-            SearchScreenEvent.SearchInWeb -> {
-                state.isSearchInWeb.value = true
+            is SearchScreenEvent.CreateRecipe -> {
+                createRecipe()
             }
             SearchScreenEvent.Clear -> searchClear()
+        }
+    }
+
+    private fun createRecipe() {
+        viewModelScope.launch {
+            val vm = mainViewModel.recipeCreateViewModel
+            mainViewModel.nav.navigate(RecipeCreateDestination)
+            val listRecipe = mutableListOf<IngredientInRecipeView>()
+            state.selectedIngredients.value?.forEach {
+                val ingredient = IngredientInRecipeView(0, it, "", 0)
+                listRecipe.add(ingredient)
+            }
+            val recipeStart = RecipeView(
+                id = 0,
+                name = state.searchText.value?:"",
+                description = "",
+                img = "",
+                tags = state.selectedTags.value?: listOf(),
+                prepTime = 0,
+                allTime = 0,
+                standardPortionsCount = 4,
+                ingredients = listRecipe,
+                steps = listOf(),
+                link = ""
+            )
+            vm.launchAndGet(recipeStart) { recipe ->
+
+            }
         }
     }
 
@@ -85,13 +114,13 @@ class SearchViewModel @Inject constructor(
     private fun addToMenu(recipeView: RecipeView) {
         viewModelScope.launch {
             val vm = mainViewModel.specifySelectionViewModel
-            mainViewModel.nav.navigate(SpecifySelection)
-            vm.launchAndGet() { selId ->
+            mainViewModel.nav.navigate(SpecifySelectionDirection)
+            vm.launchAndGet() { selId, count ->
                 viewModelScope.launch {
                     val recipePosition = Position.PositionRecipeView(
                         0,
                         RecipeShortView(0, recipeView.name),
-                        2,
+                        count,
                         selId
                     )
                     sCRUDRecipeInMenu.onEvent(
@@ -137,6 +166,7 @@ class SearchViewModel @Inject constructor(
             val vm = mainViewModel.filterViewModel
             mainViewModel.nav.navigate(FilterDestination)
             vm.launchAndGet(
+                FilterMode.All,
                 Pair(
                     state.selectedTags.value,
                     state.selectedIngredients.value

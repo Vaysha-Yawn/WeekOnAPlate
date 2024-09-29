@@ -3,7 +3,7 @@ package week.on.a.plate.data.repository.tables.menu.position.draft.draftTagCross
 import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
-import week.on.a.plate.data.repository.tables.recipe.recipeTag.RecipeTagRoom
+import week.on.a.plate.data.repository.tables.filters.recipeTag.RecipeTagRoom
 import week.on.a.plate.data.repository.tables.menu.position.draft.PositionDraftRoom
 
 data class DraftAndTag(

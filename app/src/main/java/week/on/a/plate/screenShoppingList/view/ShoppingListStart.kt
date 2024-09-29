@@ -1,9 +1,7 @@
 package week.on.a.plate.screenShoppingList.view
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.FiniteAnimationSpec
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -72,24 +70,26 @@ fun ShoppingListStart(viewModel: ShoppingListViewModel) {
                     }
                 }
                 item {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .padding(vertical = 12.dp)
-                            .background(MaterialTheme.colorScheme.background)
-                            .fillMaxWidth()
-                            .padding(horizontal = 36.dp, vertical = 5.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        TextBody(text = "Выполненные")
-                        Icon(
-                            painter = painterResource(id = R.drawable.delete),
-                            contentDescription = "", modifier = Modifier
-                                .clickable {
-                                    viewModel.onEvent(ShoppingListEvent.DeleteChecked)
-                                }
-                                .size(36.dp)
-                        )
+                    if (viewModel.state.listChecked.value.isNotEmpty()) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .padding(vertical = 12.dp)
+                                .background(MaterialTheme.colorScheme.background)
+                                .fillMaxWidth()
+                                .padding(horizontal = 36.dp, vertical = 5.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            TextBody(text = "Выполненные")
+                            Icon(
+                                painter = painterResource(id = R.drawable.delete),
+                                contentDescription = "", modifier = Modifier
+                                    .clickable {
+                                        viewModel.onEvent(ShoppingListEvent.DeleteChecked)
+                                    }
+                                    .size(36.dp)
+                            )
+                        }
                     }
                 }
                 items(viewModel.state.listChecked.value.size) { index ->
@@ -138,10 +138,7 @@ fun ShoppingListPosition(
         )
         Spacer(modifier = Modifier.width(12.dp))
         val text = "${item.ingredientView.name} " +
-                "${
-                    if (item.count.toInt().toDouble() == item.count) item.count.toInt()
-                    else item.count
-                }" +
+                "${item.count}" +
                 " ${item.ingredientView.measure}"
         Text(
             text = text,

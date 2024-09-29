@@ -10,10 +10,10 @@ import week.on.a.plate.data.dataView.week.SelectionView
 import week.on.a.plate.data.dataView.week.WeekView
 import week.on.a.plate.screenMenu.event.ActionWeekMenuDB
 import week.on.a.plate.data.repository.tables.menu.week.WeekRepository
-import week.on.a.plate.data.repository.tables.recipe.ingredient.IngredientDAO
-import week.on.a.plate.data.repository.tables.recipe.ingredient.IngredientMapper
-import week.on.a.plate.data.repository.tables.recipe.recipeTag.RecipeTagDAO
-import week.on.a.plate.data.repository.tables.recipe.recipeTag.RecipeTagMapper
+import week.on.a.plate.data.repository.tables.filters.ingredient.IngredientDAO
+import week.on.a.plate.data.repository.tables.filters.ingredient.IngredientMapper
+import week.on.a.plate.data.repository.tables.filters.recipeTag.RecipeTagDAO
+import week.on.a.plate.data.repository.tables.filters.recipeTag.RecipeTagMapper
 import week.on.a.plate.data.repository.tables.menu.position.draft.PositionDraftDAO
 import week.on.a.plate.data.repository.tables.menu.position.draft.PositionDraftMapper
 import week.on.a.plate.data.repository.tables.menu.position.draft.PositionDraftRepository
@@ -102,7 +102,7 @@ class CRUDRecipeInMenu @Inject constructor(
                     data.ingredient.ingredientView.ingredientId,
                     data.selectionId,
                     data.ingredient.description,
-                    data.ingredient.count,
+                    data.ingredient.count.toDouble(),
                 )
             }
 

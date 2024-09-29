@@ -29,6 +29,8 @@ import week.on.a.plate.screenFilters.dialogs.selectedFilters.event.SelectedFilte
 import week.on.a.plate.screenFilters.dialogs.selectedFilters.logic.SelectedFiltersViewModel
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.dialogExampleStructure.DialogViewModel
+import week.on.a.plate.screenCreateRecipe.timePickDialog.event.TimePickEvent
+import week.on.a.plate.screenCreateRecipe.timePickDialog.logic.TimePickViewModel
 import java.util.Stack
 import javax.inject.Inject
 
@@ -108,6 +110,9 @@ class DialogUseCase @Inject constructor() {
             }
             is FilterVoiceApplyEvent -> if (activeDialog.value is FilterVoiceApplyViewModel) {
                 (activeDialog.value as FilterVoiceApplyViewModel).onEvent(event)
+            }
+            is TimePickEvent -> if (activeDialog.value is TimePickViewModel) {
+                (activeDialog.value as TimePickViewModel).onEvent(event)
             }
         }
     }

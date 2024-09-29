@@ -8,6 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import week.on.a.plate.core.Event
 import week.on.a.plate.data.dataView.example.recipeTom
 import week.on.a.plate.screenRecipeDetails.event.RecipeDetailsEvent
 import week.on.a.plate.screenRecipeDetails.logic.RecipeDetailsViewModel
@@ -21,14 +22,16 @@ import week.on.a.plate.core.theme.WeekOnAPlateTheme
 @Composable
 fun RecipeDetailsStart(vm: RecipeDetailsViewModel) {
     if (vm.state.recipe.value != null) {
-        RecipeDetailsStart(vm.state) { event: RecipeDetailsEvent ->
+        RecipeDetailsStart(vm.state, { event: Event ->
+            vm.mainViewModel.onEvent(event)
+        }) { event: RecipeDetailsEvent ->
             vm.onEvent(event)
         }
     }
 }
 
 @Composable
-fun RecipeDetailsStart(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) -> Unit) {
+fun RecipeDetailsStart(state: RecipeDetailsState, onEventMain: (Event) -> Unit, onEvent: (RecipeDetailsEvent) -> Unit) {
     Column(
         Modifier
             .fillMaxSize()
@@ -51,7 +54,7 @@ fun RecipeDetailsStart(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) 
                     }
 
                     2 -> {
-                        RecipeDetailsSource(state, onEvent)
+                        RecipeDetailsSource(state,onEventMain, onEvent)
                     }
                 }
             }
@@ -66,6 +69,6 @@ fun PreviewRecipeDetailsStart() {
     WeekOnAPlateTheme {
         RecipeDetailsStart(RecipeDetailsState().apply {
             recipe.value = recipeTom
-        }) {}
+        }, {}) {}
     }
 }

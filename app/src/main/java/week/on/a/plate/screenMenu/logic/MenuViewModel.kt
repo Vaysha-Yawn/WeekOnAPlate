@@ -22,6 +22,7 @@ import week.on.a.plate.screenMenu.dialogs.editRecipePosition.event.EditRecipePos
 import week.on.a.plate.screenMenu.dialogs.editRecipePosition.logic.EditRecipePositionViewModel
 import week.on.a.plate.screenFilters.navigation.FilterDestination
 import week.on.a.plate.core.navigation.SearchScreen
+import week.on.a.plate.screenFilters.state.FilterMode
 import week.on.a.plate.screenMenu.event.ActionWeekMenuDB
 import week.on.a.plate.screenMenu.event.MenuEvent
 import week.on.a.plate.screenMenu.event.NavFromMenuData
@@ -157,12 +158,12 @@ class MenuViewModel @Inject constructor(
     }
 
     private fun getSelAndCreate() {
-        specifyDate { long ->
-            addPosition(long)
+        specifyDate { selId, count ->
+            addPosition(selId)
         }
     }
 
-    private fun specifyDate(use: (Long) -> Unit) {
+    private fun specifyDate(use: (Long, Int) -> Unit) {
         viewModelScope.launch {
             val vm = mainViewModel.specifySelectionViewModel
             navigationMenu.onEvent(NavFromMenuData.SpecifySelection)
@@ -191,7 +192,7 @@ class MenuViewModel @Inject constructor(
         viewModelScope.launch {
             val vm = mainViewModel.filterViewModel
             vm.mainViewModel.nav.navigate(FilterDestination)
-            vm.launchAndGet(null) { filters ->
+            vm.launchAndGet(FilterMode.All,  null) { filters ->
                 if (filters.first.isEmpty() && filters.second.isEmpty()) return@launchAndGet
                 val draft = Position.PositionDraftView(0, filters.first, filters.second, selId)
                 onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.AddDraft(draft)))
@@ -203,7 +204,7 @@ class MenuViewModel @Inject constructor(
         viewModelScope.launch {
             val vm = mainViewModel.filterViewModel
             vm.mainViewModel.nav.navigate(FilterDestination)
-            vm.launchAndGet(Pair(oldDraft.tags, oldDraft.ingredients)) { filters ->
+            vm.launchAndGet(FilterMode.All,  Pair(oldDraft.tags, oldDraft.ingredients)) { filters ->
                 if (filters.first.isEmpty() && filters.second.isEmpty()) {
                     onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.Delete(oldDraft)))
                 } else {
@@ -228,7 +229,6 @@ class MenuViewModel @Inject constructor(
                             )
                         )
                     )
-
                     EditOtherPositionEvent.Double -> getSelAndDouble(position)
                     EditOtherPositionEvent.Edit -> {
                         when (position) {
@@ -238,7 +238,6 @@ class MenuViewModel @Inject constructor(
                             is Position.PositionRecipeView -> {}
                         }
                     }
-
                     EditOtherPositionEvent.Move -> getSelAndMove(position)
                 }
             }
@@ -246,13 +245,13 @@ class MenuViewModel @Inject constructor(
     }
 
     private fun getSelAndMove(position: Position) {
-        specifyDate { selId ->
+        specifyDate { selId, count ->
             onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.MovePositionInMenuDB(selId, position)))
         }
     }
 
     private fun getSelAndDouble(position: Position) {
-        specifyDate { selId ->
+        specifyDate { selId, count ->
             onEvent(
                 MenuEvent.ActionDBMenu(
                     ActionWeekMenuDB.DoublePositionInMenuDB(
@@ -278,7 +277,6 @@ class MenuViewModel @Inject constructor(
                             ActionWeekMenuDB.Delete(position)
                         )
                     )
-
                     EditRecipePositionEvent.Double -> getSelAndDouble(position)
                     EditRecipePositionEvent.FindReplace -> onEvent(
                         MenuEvent.FindReplaceRecipe(

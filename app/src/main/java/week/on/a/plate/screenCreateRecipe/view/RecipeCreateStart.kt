@@ -1,0 +1,132 @@
+package week.on.a.plate.screenCreateRecipe.view
+
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import week.on.a.plate.core.theme.WeekOnAPlateTheme
+import week.on.a.plate.core.uitools.TextTitle
+import week.on.a.plate.core.uitools.WebPage
+import week.on.a.plate.core.uitools.buttons.CommonButton
+import week.on.a.plate.core.uitools.buttons.DoneButtonSmall
+import week.on.a.plate.data.dataView.example.recipeTom
+import week.on.a.plate.screenCreateRecipe.event.RecipeCreateEvent
+import week.on.a.plate.screenCreateRecipe.logic.RecipeCreateViewModel
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun RecipeCreateStart(viewModel: RecipeCreateViewModel) {
+    val onEvent = { event: RecipeCreateEvent ->
+        viewModel.onEvent(event)
+    }
+    val state = rememberLazyListState()
+    Column(Modifier.background(MaterialTheme.colorScheme.surface)) {
+        TopBarRecipeCreate(viewModel.state, onEvent)
+        LazyColumn(
+            state = state,
+            modifier = Modifier
+                .fillMaxSize(),
+        ) {
+            item {
+                SourceRecipeEdit(viewModel.state, onEvent)
+            }
+            stickyHeader {
+                TabCreateRecipe(viewModel.state, onEvent)
+            }
+            if (viewModel.state.activeTabIndex.intValue == 1) {
+                item {
+                    if (viewModel.state.source.value == ""){
+                        DoneButtonSmall(text = "Искать по названию рецепта в интернете", Modifier.padding(24.dp)) {
+                            viewModel.state.source.value = "https://www.google.ru/search?q=${viewModel.state.name.value.replace(" ", "+")}"
+                        }
+                    }else{
+                        WebPage(url = viewModel.state.source) { event ->
+                            viewModel.mainViewModel.onEvent(
+                                event
+                            )
+                        }
+                    }
+                }
+            } else {
+                item {
+                    Column(Modifier.padding(24.dp)) {
+                        PhotoRecipeEdit(viewModel.state, onEvent)
+                        Spacer(modifier = Modifier.height(24.dp))
+                        NameRecipeEdit(viewModel.state, onEvent)
+                        Spacer(modifier = Modifier.height(24.dp))
+                        DescriptionRecipeEdit(viewModel.state, onEvent)
+                        Spacer(modifier = Modifier.height(24.dp))
+                        TimeCookRecipeEdit(viewModel.state, onEvent)
+                        Spacer(modifier = Modifier.height(24.dp))
+                        PortionsRecipeEdit(viewModel.state, onEvent)
+                        Spacer(modifier = Modifier.height(24.dp))
+                        TagsRecipeEdit(viewModel.state, onEvent)
+                    }
+                }
+                item {
+                    Column(Modifier.padding(24.dp)) {
+                        TextTitle(text = "Ингредиенты")
+                    }
+                }
+                items(viewModel.state.ingredients.value.size) {
+                    IngredientRecipeEdit(
+                        viewModel.state.ingredients.value[it],
+                        viewModel.state,
+                        onEvent
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
+                item {
+                    Column(Modifier.padding(24.dp)) {
+                        CommonButton(text = "Добавить ингредиент") {
+                            onEvent(RecipeCreateEvent.AddIngredient)
+                        }
+                    }
+                }
+                item {
+                    Column(Modifier.padding(top = 36.dp, bottom = 12.dp, start = 24.dp)) {
+                        TextTitle(text = "Пошаговый рецепт")
+                    }
+                }
+                items(viewModel.state.steps.value.size) {
+                    Column(Modifier.padding(24.dp)) {
+                        StepRecipeEdit(
+                            it,
+                            viewModel.state.steps.value[it],
+                            viewModel.state,
+                            onEvent
+                        )
+                    }
+                }
+                item {
+                    Column(Modifier.padding(24.dp)) {
+                        CommonButton(text = "Добавить шаг") {
+                            onEvent(RecipeCreateEvent.AddStep)
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(40.dp))
+                }
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewRecipeCreateStart() {
+    WeekOnAPlateTheme {
+        RecipeCreateStart(RecipeCreateViewModel().apply {
+            this.setStateByOldRecipe(recipeTom)
+        })
+    }
+}
