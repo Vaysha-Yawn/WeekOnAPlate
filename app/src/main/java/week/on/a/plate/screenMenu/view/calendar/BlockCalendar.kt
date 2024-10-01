@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import week.on.a.plate.data.dataView.week.DayView
 import java.time.LocalDate
 
@@ -14,7 +15,7 @@ fun BlockCalendar(days: List<DayView>, today: LocalDate, activeDayInd: Int, chan
         for ((ind, day) in days.withIndex()) {
             CalendarDayCard(
                 day.date,
-                day.dayInWeek.shortName,
+                day.getDyInWeekShort(LocalContext.current.resources.configuration.locales[0]),
                 itToday = (day.date == today),
                 itPlanned = (day.selections.any { sel -> sel.positions.isNotEmpty() }),
                 if (days.size == 7){

@@ -20,6 +20,7 @@ import week.on.a.plate.screenSearchRecipes.logic.SearchViewModel
 import week.on.a.plate.screenSearchRecipes.logic.voice.VoiceInputUseCase
 import week.on.a.plate.screenShoppingList.logic.ShoppingListViewModel
 import week.on.a.plate.screenSpecifySelection.logic.SpecifySelectionViewModel
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,6 +38,7 @@ class MainViewModel @Inject constructor(
     lateinit var shoppingListViewModel: ShoppingListViewModel
     lateinit var recipeCreateViewModel: RecipeCreateViewModel
     lateinit var inventoryViewModel: InventoryViewModel
+    lateinit var locale: Locale
 
     fun initViewModels(
         specifySelection: SpecifySelectionViewModel,

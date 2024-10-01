@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.navigation.SearchScreen
+import week.on.a.plate.data.dataView.example.WeekDataExample
+import week.on.a.plate.data.dataView.week.CategoriesSelection
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.data.dataView.week.WeekView
 import week.on.a.plate.mainActivity.event.MainEvent
@@ -60,21 +62,9 @@ class MenuViewModel @Inject constructor(
 
     fun updateWeek() {
         viewModelScope.launch {
-            val week = sCRUDRecipeInMenu.menuR.getCurrentWeek(activeDay)
-            if (week != null) {
-                if (week.days.size < 7) {
-                    val newWeek = sCRUDRecipeInMenu.getWeekParted(week)
-                    weekState.value = WeekState.Success(newWeek)
-                    menuUIState.titleTopBar.value = getTitle(newWeek)
-                } else {
-                    weekState.value = WeekState.Success(week)
-                    menuUIState.titleTopBar.value = getTitle(week)
-                }
-            } else {
-                val emptyweek = sCRUDRecipeInMenu.getEmptyWeek(activeDay)
-                weekState.value = WeekState.Success(sCRUDRecipeInMenu.getEmptyWeek(activeDay))
-                menuUIState.titleTopBar.value = getTitle(emptyweek)
-            }
+            val week = sCRUDRecipeInMenu.menuR.getCurrentWeek(activeDay, Locale.getDefault())
+            weekState.value = WeekState.Success(week)
+            menuUIState.titleTopBar.value = getTitle(week)
         }
     }
 
@@ -92,9 +82,15 @@ class MenuViewModel @Inject constructor(
             is MenuEvent.NavigateFromMenu -> {
                 selectedRecipeManager.clear(menuUIState)
                 when (event.navData) {
-                    is NavFromMenuData.SpecifySelection -> { navController.navigate(SpecifySelectionDirection) }
+                    is NavFromMenuData.SpecifySelection -> {
+                        navController.navigate(SpecifySelectionDirection)
+                    }
+
                     is NavFromMenuData.NavToFullRecipe -> {
-                        mainViewModel.recipeDetailsViewModel.launch(event.navData.recId,event.navData.portionsCount )
+                        mainViewModel.recipeDetailsViewModel.launch(
+                            event.navData.recId,
+                            event.navData.portionsCount
+                        )
                         navController.navigate(RecipeDetailsDestination)
                         viewModelScope.launch {
                             delay(600L)
@@ -149,6 +145,13 @@ class MenuViewModel @Inject constructor(
                     onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.Delete(it)))
                 }
             }
+
+            is MenuEvent.CreateFirstNonPosedPosition -> {
+                viewModelScope.launch {
+                    val sel = sCRUDRecipeInMenu.menuR.getSelIdOrCreate(event.date, false, CategoriesSelection.NonPosed, mainViewModel.locale)
+                    onEvent(MenuEvent.CreatePosition(sel))
+                }
+            }
         }
     }
 
@@ -182,7 +185,7 @@ class MenuViewModel @Inject constructor(
     private fun specifyDate(use: (Long, Int) -> Unit) {
         viewModelScope.launch {
             val vm = mainViewModel.specifySelectionViewModel
-            onEvent(MenuEvent.NavigateFromMenu( NavFromMenuData.SpecifySelection))
+            onEvent(MenuEvent.NavigateFromMenu(NavFromMenuData.SpecifySelection))
             vm.launchAndGet(use)
         }
     }
@@ -245,6 +248,7 @@ class MenuViewModel @Inject constructor(
                             )
                         )
                     )
+
                     EditOtherPositionEvent.Double -> getSelAndDouble(position)
                     EditOtherPositionEvent.Edit -> {
                         when (position) {
@@ -254,6 +258,7 @@ class MenuViewModel @Inject constructor(
                             is Position.PositionRecipeView -> {}
                         }
                     }
+
                     EditOtherPositionEvent.Move -> getSelAndMove(position)
                 }
             }

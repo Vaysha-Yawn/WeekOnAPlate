@@ -10,6 +10,25 @@ import week.on.a.plate.data.repository.tables.filters.ingredient.IngredientDAO
 import week.on.a.plate.data.repository.tables.filters.ingredient.IngredientRoom
 import week.on.a.plate.data.repository.tables.filters.ingredientCategory.IngredientCategoryDAO
 import week.on.a.plate.data.repository.tables.filters.ingredientCategory.IngredientCategoryRoom
+import week.on.a.plate.data.repository.tables.filters.recipeTag.RecipeTagDAO
+import week.on.a.plate.data.repository.tables.filters.recipeTag.RecipeTagRoom
+import week.on.a.plate.data.repository.tables.filters.recipeTagCategory.RecipeTagCategoryDAO
+import week.on.a.plate.data.repository.tables.filters.recipeTagCategory.RecipeTagCategoryRoom
+import week.on.a.plate.data.repository.tables.menu.position.draft.PositionDraftDAO
+import week.on.a.plate.data.repository.tables.menu.position.draft.PositionDraftRoom
+import week.on.a.plate.data.repository.tables.menu.position.draft.draftIngredientCrossRef.DraftAndIngredientCrossRef
+import week.on.a.plate.data.repository.tables.menu.position.draft.draftIngredientCrossRef.DraftAndIngredientCrossRefDAO
+import week.on.a.plate.data.repository.tables.menu.position.draft.draftTagCrossRef.DraftAndTagCrossRef
+import week.on.a.plate.data.repository.tables.menu.position.draft.draftTagCrossRef.DraftAndTagCrossRefDAO
+import week.on.a.plate.data.repository.tables.menu.position.note.PositionNoteDAO
+import week.on.a.plate.data.repository.tables.menu.position.note.PositionNoteRoom
+import week.on.a.plate.data.repository.tables.menu.position.positionIngredient.PositionIngredientDAO
+import week.on.a.plate.data.repository.tables.menu.position.positionIngredient.PositionIngredientRoom
+import week.on.a.plate.data.repository.tables.menu.position.positionRecipe.PositionRecipeRoom
+import week.on.a.plate.data.repository.tables.menu.position.positionRecipe.RecipeInMenuDAO
+import week.on.a.plate.data.repository.tables.menu.selection.DateTypeConverter
+import week.on.a.plate.data.repository.tables.menu.selection.SelectionDAO
+import week.on.a.plate.data.repository.tables.menu.selection.SelectionRoom
 import week.on.a.plate.data.repository.tables.recipe.ingredientInRecipe.IngredientInRecipeDAO
 import week.on.a.plate.data.repository.tables.recipe.ingredientInRecipe.IngredientInRecipeRoom
 import week.on.a.plate.data.repository.tables.recipe.recipe.RecipeDAO
@@ -18,40 +37,15 @@ import week.on.a.plate.data.repository.tables.recipe.recipeRecipeTagCrossRef.Rec
 import week.on.a.plate.data.repository.tables.recipe.recipeRecipeTagCrossRef.RecipeRecipeTagCrossRefDAO
 import week.on.a.plate.data.repository.tables.recipe.recipeStep.RecipeStepDAO
 import week.on.a.plate.data.repository.tables.recipe.recipeStep.RecipeStepRoom
-import week.on.a.plate.data.repository.tables.filters.recipeTag.RecipeTagDAO
-import week.on.a.plate.data.repository.tables.filters.recipeTag.RecipeTagRoom
-import week.on.a.plate.data.repository.tables.filters.recipeTagCategory.RecipeTagCategoryDAO
-import week.on.a.plate.data.repository.tables.filters.recipeTagCategory.RecipeTagCategoryRoom
-import week.on.a.plate.data.repository.tables.menu.day.DateTypeConverter
-import week.on.a.plate.data.repository.tables.menu.day.DayDAO
-import week.on.a.plate.data.repository.tables.menu.day.DayInWeekDataTypeConverter
-import week.on.a.plate.data.repository.tables.menu.day.DayRoom
-import week.on.a.plate.data.repository.tables.menu.position.draft.PositionDraftDAO
-import week.on.a.plate.data.repository.tables.menu.position.draft.PositionDraftRoom
-import week.on.a.plate.data.repository.tables.menu.position.draft.draftIngredientCrossRef.DraftAndIngredientCrossRef
-import week.on.a.plate.data.repository.tables.menu.position.draft.draftIngredientCrossRef.DraftAndIngredientCrossRefDAO
-import week.on.a.plate.data.repository.tables.menu.position.draft.draftTagCrossRef.DraftAndTagCrossRef
-import week.on.a.plate.data.repository.tables.menu.position.draft.draftTagCrossRef.DraftAndTagCrossRefDAO
-import week.on.a.plate.data.repository.tables.menu.position.positionIngredient.PositionIngredientDAO
-import week.on.a.plate.data.repository.tables.menu.position.positionIngredient.PositionIngredientRoom
-import week.on.a.plate.data.repository.tables.menu.position.note.PositionNoteDAO
-import week.on.a.plate.data.repository.tables.menu.position.note.PositionNoteRoom
-import week.on.a.plate.data.repository.tables.menu.position.positionRecipe.PositionRecipeRoom
-import week.on.a.plate.data.repository.tables.menu.position.positionRecipe.RecipeInMenuDAO
-import week.on.a.plate.data.repository.tables.menu.selection.SelectionDAO
-import week.on.a.plate.data.repository.tables.menu.selection.SelectionRoom
-import week.on.a.plate.data.repository.tables.menu.week.WeekDAO
-import week.on.a.plate.data.repository.tables.menu.week.WeekRoom
 
 
 @Database(
     entities = [IngredientRoom::class, IngredientCategoryRoom::class, IngredientInRecipeRoom::class, RecipeRoom::class, RecipeRecipeTagCrossRef::class, RecipeStepRoom::class,
-        RecipeTagRoom::class, RecipeTagCategoryRoom::class, DayRoom::class, PositionRecipeRoom::class, SelectionRoom::class, WeekRoom::class,
+        RecipeTagRoom::class, RecipeTagCategoryRoom::class,  PositionRecipeRoom::class, SelectionRoom::class,
         PositionIngredientRoom::class, PositionNoteRoom::class, PositionDraftRoom::class, DraftAndIngredientCrossRef::class, DraftAndTagCrossRef::class
     ], version = 1, exportSchema = false
 )
 @TypeConverters(
-    DayInWeekDataTypeConverter::class,
     DateTypeConverter::class
 )
 abstract class RecipeDB : RoomDatabase() {
@@ -63,10 +57,8 @@ abstract class RecipeDB : RoomDatabase() {
     abstract fun daoRecipeStep(): RecipeStepDAO
     abstract fun daoRecipeTag(): RecipeTagDAO
     abstract fun daoRecipeTagCategory(): RecipeTagCategoryDAO
-    abstract fun daoDayData(): DayDAO
     abstract fun daoRecipeInMenu(): RecipeInMenuDAO
     abstract fun daoSelectionInDay(): SelectionDAO
-    abstract fun daoWeekDataDAO(): WeekDAO
     abstract fun daoPositionIngredient(): PositionIngredientDAO
     abstract fun daoPositionNote(): PositionNoteDAO
     abstract fun daoPositionDraft(): PositionDraftDAO

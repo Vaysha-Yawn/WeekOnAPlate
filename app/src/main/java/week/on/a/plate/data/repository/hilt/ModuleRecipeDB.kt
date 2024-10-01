@@ -51,19 +51,11 @@ object ModuleRecipeDB {
 
     @Provides
     @Singleton
-    fun provideDayDAO(recipeDB: RecipeDB) = recipeDB.daoDayData()
-
-    @Provides
-    @Singleton
     fun provideRecipeInMenuDAO(recipeDB: RecipeDB) = recipeDB.daoRecipeInMenu()
 
     @Provides
     @Singleton
     fun provideSelectionInDayDAO(recipeDB: RecipeDB) = recipeDB.daoSelectionInDay()
-
-    @Provides
-    @Singleton
-    fun provideWeekDAO(recipeDB: RecipeDB) = recipeDB.daoWeekDataDAO()
 
     @Provides
     @Singleton

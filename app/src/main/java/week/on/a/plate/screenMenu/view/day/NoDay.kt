@@ -26,7 +26,8 @@ fun NoDay(data: LocalDate, onEvent:(MenuEvent)->Unit){
         TextTitle(text = stringResource(R.string.data_not_found))
         Spacer(modifier = Modifier.height(24.dp))
         DoneButton(stringResource(R.string.add_day)) {
-            onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.AddEmptyDay(data)))
+            //todo
+            //onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.AddEmptyDay(data)))
         }
     }
 }

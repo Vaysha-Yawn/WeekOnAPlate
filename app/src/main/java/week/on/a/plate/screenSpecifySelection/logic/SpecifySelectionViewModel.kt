@@ -13,7 +13,7 @@ import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screenSpecifySelection.event.SpecifySelectionEvent
 import week.on.a.plate.screenSpecifySelection.state.SpecifySelectionUIState
-import week.on.a.plate.data.repository.tables.menu.week.WeekRepository
+import week.on.a.plate.data.repository.tables.menu.selection.WeekRepository
 import javax.inject.Inject
 
 @HiltViewModel
@@ -95,7 +95,7 @@ class SpecifySelectionViewModel @Inject constructor(
         val category =  getCategory() ?: return
         state.date.value?:return
         mainViewModel.viewModelScope.launch {
-            val selId = weekRepository.getSelIdOrCreate(state.date.value!!,category)
+            val selId = weekRepository.getSelIdOrCreate(state.date.value!!, state.checkWeek.value, category, mainViewModel.locale)
             resultFlow.value = Pair(selId, state.portionsCount.intValue)
         }
     }

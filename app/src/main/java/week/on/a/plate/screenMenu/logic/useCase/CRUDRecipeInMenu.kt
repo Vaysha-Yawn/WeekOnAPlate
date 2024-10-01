@@ -1,19 +1,13 @@
 package week.on.a.plate.screenMenu.logic.useCase
 
-import week.on.a.plate.data.dataView.example.emptyDayWithoutSel
-import week.on.a.plate.data.dataView.week.DayInWeekData
-import week.on.a.plate.data.dataView.week.DayView
+
 import week.on.a.plate.data.dataView.week.Position
-import week.on.a.plate.data.dataView.week.SelectionView
-import week.on.a.plate.data.dataView.week.WeekView
 import week.on.a.plate.data.repository.tables.menu.position.draft.PositionDraftRepository
 import week.on.a.plate.data.repository.tables.menu.position.note.PositionNoteRepository
 import week.on.a.plate.data.repository.tables.menu.position.positionIngredient.PositionIngredientRepository
 import week.on.a.plate.data.repository.tables.menu.position.positionRecipe.PositionRecipeRepository
-import week.on.a.plate.data.repository.tables.menu.week.WeekRepository
+import week.on.a.plate.data.repository.tables.menu.selection.WeekRepository
 import week.on.a.plate.screenMenu.event.ActionWeekMenuDB
-import java.time.DayOfWeek
-import java.time.LocalDate
 import javax.inject.Inject
 
 class CRUDRecipeInMenu @Inject constructor(
@@ -25,19 +19,15 @@ class CRUDRecipeInMenu @Inject constructor(
 ) {
     suspend fun onEvent(event: ActionWeekMenuDB) {
         when (event) {
-            is ActionWeekMenuDB.AddEmptyDay -> {
-                menuR.addEmptyDay(event.data)
-            }
-
             is ActionWeekMenuDB.AddIngredientPositionDB -> {
                 val ingredient = event.updatedPosition
-                positionIngredientRepository.insert(ingredient, event.selectionId)
+                positionIngredientRepository.insert(ingredient, event.selId)
             }
 
             is ActionWeekMenuDB.AddNoteDB -> {
                 noteRepository.insert(
-                    Position.PositionNoteView(0, event.text, event.selectionId),
-                    event.selectionId
+                    Position.PositionNoteView(0, event.text, event.selId),
+                    event.selId
                 )
             }
 
@@ -130,74 +120,5 @@ class CRUDRecipeInMenu @Inject constructor(
                 draftRepository.update(event.oldDraft, event.filters)
             }
         }
-    }
-
-    private fun getRelatedDate(dateStart: LocalDate, d: DayOfWeek): LocalDate {
-        return dateStart.with(d)
-    }
-
-    fun getWeekParted(week: WeekView): WeekView {
-        val newList = getDayParted(week.days)
-        newList.sortBy { it -> it.date }
-        week.days = newList
-        return week
-    }
-
-    private fun getDayParted(listHave: List<DayView>): MutableList<DayView> {
-        val list = mutableListOf<DayOfWeek>()
-        listHave.forEach {
-            list.add(it.dayInWeek.dayOfWeekMapper())
-        }
-        val listAll = mutableListOf<DayView>()
-        val started = listHave[0].date
-        DayOfWeek.entries.forEach { dayOfWeek ->
-            if (list.contains(dayOfWeek)) {
-                listAll.add(listHave.find { day -> day.dayInWeek.dayOfWeekMapper() == dayOfWeek }!!)
-            } else {
-                val rel = getRelatedDate(started, dayOfWeek)
-                listAll.add(getDayView(rel))
-            }
-        }
-        return listAll
-    }
-
-    private fun DayInWeekData.dayOfWeekMapper(): DayOfWeek {
-        return when (this) {
-            DayInWeekData.Mon -> DayOfWeek.MONDAY
-            DayInWeekData.Tues -> DayOfWeek.TUESDAY
-            DayInWeekData.Wed -> DayOfWeek.WEDNESDAY
-            DayInWeekData.Thurs -> DayOfWeek.THURSDAY
-            DayInWeekData.Fri -> DayOfWeek.FRIDAY
-            DayInWeekData.Sat -> DayOfWeek.SATURDAY
-            DayInWeekData.Sun -> DayOfWeek.SUNDAY
-        }
-    }
-
-    private fun getDayView(d: LocalDate): DayView {
-        val dayInWeek = DayInWeekData.entries[d.dayOfWeek.ordinal]
-        return DayView(0, d, dayInWeek, emptyDayWithoutSel)
-    }
-
-
-    fun getEmptyWeek(activeDay: LocalDate): WeekView {
-        val weekDate = mutableListOf<LocalDate>()
-        DayOfWeek.entries.forEach {
-            val dayInWeek = getRelatedDate(activeDay, it)
-            weekDate.add(dayInWeek)
-        }
-        val week = WeekView(
-            0,
-            SelectionView(0, "", mutableListOf()),
-            mutableListOf(
-                getDayView(weekDate[0]),
-                getDayView(weekDate[1]),
-                getDayView(weekDate[2]),
-                getDayView(weekDate[3]),
-                getDayView(weekDate[4]),
-                getDayView(weekDate[5]),
-                getDayView(weekDate[6]),
-            )
-        )
-        return week
     }
 }

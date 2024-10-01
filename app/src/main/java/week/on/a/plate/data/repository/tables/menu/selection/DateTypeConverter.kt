@@ -1,4 +1,4 @@
-package week.on.a.plate.data.repository.tables.menu.day
+package week.on.a.plate.data.repository.tables.menu.selection
 
 import androidx.room.TypeConverter
 import java.time.LocalDate

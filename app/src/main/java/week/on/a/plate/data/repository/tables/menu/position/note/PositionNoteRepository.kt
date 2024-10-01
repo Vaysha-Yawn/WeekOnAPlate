@@ -22,21 +22,6 @@ class PositionNoteRepository @Inject constructor(
         return list
     }
 
-    /*fun getAllInSel(selectionId: Long): Flow<List<Position.PositionNoteView>> {
-        return  positionNoteDAO.getAllInSel(selectionId)
-            .transform<List<PositionNoteRoom>, List<Position.PositionNoteView>> {
-                val list = mutableListOf<Position.PositionNoteView>()
-                it.forEach { noteRoom ->
-                    with(PositionNoteMapper()) {
-                        val noteView =
-                            noteRoom.roomToView()
-                        list.add(noteView)
-                    }
-                }
-                emit(list)
-            }
-    }*/
-
     suspend fun insert(note: Position.PositionNoteView, selectionId: Long): Long {
         val positionRoom = with(PositionNoteMapper()) { note.viewToRoom(selectionId) }
         return positionNoteDAO.insert(positionRoom)

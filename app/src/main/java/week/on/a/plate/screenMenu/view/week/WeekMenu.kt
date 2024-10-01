@@ -18,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
@@ -43,9 +44,9 @@ fun WeekMenu(
                 TextTitle(text = stringResource(R.string.for_week))
                 Spacer(modifier = Modifier.width(24.dp))
                 LazyRow {
-                    items(week.selection.positions.size) {
+                    items(week.selectionView.positions.size) {
                         WeekCardPosition(
-                            position = week.selection.positions[it],
+                            position = week.selectionView.positions[it],
                             menuIUState = menuIUState,
                             onEvent
                         )
@@ -64,7 +65,7 @@ fun WeekMenu(
             Spacer(modifier = Modifier.size(12.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    TextTitle(text = day.dayInWeek.shortName)
+                    TextTitle(text = day.getDyInWeekShort(LocalContext.current.resources.configuration.locales[0]))
                     TextTitle(text = day.date.dayOfMonth.toString())
                 }
                 Spacer(modifier = Modifier.size(12.dp))
@@ -72,9 +73,10 @@ fun WeekMenu(
                     for (sel in day.selections){
                         Spacer(modifier = Modifier.size(10.dp))
                         Column {
-                            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.background(MaterialTheme.colorScheme.surface, RoundedCornerShape(10.dp))) {
+                            Row(verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.background(MaterialTheme.colorScheme.surface, RoundedCornerShape(10.dp))) {
                                 SubText(
-                                    text = sel.category,
+                                    text = sel.name,
                                     modifier = Modifier.weight(1f),
                                 )
                                 PlusButtonTitle {

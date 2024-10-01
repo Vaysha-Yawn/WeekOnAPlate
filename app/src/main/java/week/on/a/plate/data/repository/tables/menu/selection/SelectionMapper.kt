@@ -9,14 +9,19 @@ class SelectionMapper() {
         positions: MutableList<Position>,
     ): SelectionView =
         SelectionView(
-            id = this.selectionId,
-            category = this.category,
+            id = id,
+            name = name,
+            date = date,
+            weekOfYear = weekOfYear,
+            isForWeek = isForWeek,
             positions = positions
         )
 
-    fun SelectionView.viewToRoom(dayId: Long): SelectionRoom =
+    fun SelectionView.viewToRoom(): SelectionRoom =
         SelectionRoom(
-            dayId = dayId,
-            category = this.category
+            name = name,
+            date = date,
+            weekOfYear = weekOfYear,
+            isForWeek = isForWeek,
         )
 }

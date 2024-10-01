@@ -25,7 +25,7 @@ val positionDraftExample = Position.PositionDraftView(
     ),
     listOf(ingredientTomato), 0
 )
-
+/*
 val dayMenuExample = mutableListOf(
     SelectionView(
         0, CategoriesSelection.NonPosed.fullName,
@@ -48,11 +48,12 @@ val dayMenuExample = mutableListOf(
         3, CategoriesSelection.Dinner.fullName,
         mutableListOf(positionIngredientExample)
     ),
-)
+)*/
+/*
 val emptyDayWithoutSel = mutableListOf<SelectionView>()
 val emptyDay = mutableListOf(
     SelectionView(0, CategoriesSelection.NonPosed.fullName, mutableListOf()),
     SelectionView(1, CategoriesSelection.Breakfast.fullName, mutableListOf()),
     SelectionView(2, CategoriesSelection.Lunch.fullName, mutableListOf()),
     SelectionView(3, CategoriesSelection.Dinner.fullName, mutableListOf()),
-)
+)*/

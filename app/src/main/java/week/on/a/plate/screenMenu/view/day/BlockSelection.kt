@@ -18,8 +18,12 @@ fun BlockSelection(
     menuIUState: MenuIUState,
     onEvent: (event: Event) -> Unit,
     ) {
-    TitleMenu(selection.category) {
-        onEvent(MenuEvent.CreatePosition(selection.id))
+    TitleMenu(selection.name) {
+        if (selection.id==0L){
+            onEvent(MenuEvent.CreateFirstNonPosedPosition(selection.date))
+        }else{
+            onEvent(MenuEvent.CreatePosition(selection.id))
+        }
     }
     Spacer(Modifier.height(10.dp))
     for (rec in selection.positions) {

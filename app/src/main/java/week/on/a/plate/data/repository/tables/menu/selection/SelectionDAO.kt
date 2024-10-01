@@ -8,6 +8,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
+import java.time.LocalDate
 
 
 @Dao
@@ -15,16 +16,8 @@ interface SelectionDAO {
     @Query("SELECT * FROM selectionroom")
     suspend fun getAll(): List<SelectionRoom>
 
-    @Query("SELECT * FROM selectionroom WHERE selectionId=:selectionId")
+    @Query("SELECT * FROM selectionroom WHERE id=:selectionId")
     suspend fun findSelection(selectionId:Long): SelectionRoom
-
-    @Transaction
-    @Query("SELECT * FROM selectionroom WHERE selectionId=:selectionId")
-    suspend fun getSelectionAndRecipesInMenu(selectionId:Long): SelectionAndRecipesInMenu
-
-    @Transaction
-    @Query("SELECT * FROM selectionroom WHERE selectionId=:selectionId")
-    suspend fun getSelectionAndPositionIngredient(selectionId:Long): SelectionAndPositionIngredient
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(selectionRoom: SelectionRoom):Long
@@ -34,4 +27,13 @@ interface SelectionDAO {
 
     @Delete
     suspend fun delete(selectionRoom: SelectionRoom)
+
+    @Query("SELECT * FROM selectionroom WHERE weekOfYear=:week AND isForWeek==1")
+    suspend fun findSelectionForWeek(week: Int) : SelectionRoom?
+
+    @Query("SELECT * FROM selectionroom WHERE date=:day AND isForWeek==0")
+    suspend fun findSelectionsForDay(day: LocalDate) : List<SelectionRoom>
+
+    @Query("SELECT * FROM selectionroom WHERE date=:day AND isForWeek==0 AND name=:name")
+    suspend fun findSelectionForDayByName(day: LocalDate, name:String) : SelectionRoom?
 }
