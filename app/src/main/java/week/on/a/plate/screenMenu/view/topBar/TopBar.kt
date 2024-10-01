@@ -28,7 +28,6 @@ import week.on.a.plate.screenMenu.event.SelectedEvent
 import week.on.a.plate.screenMenu.state.MenuIUState
 import week.on.a.plate.core.theme.ColorButtonNegativeGrey
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar(
     title: String,
@@ -64,20 +63,20 @@ fun TopBar(
                         .padding(vertical = 5.dp)
                         .padding(end = 12.dp)
                 )
-            }
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Image(
-                    painter = painterResource(id = R.drawable.calendar),
-                    contentDescription = "",
-                    modifier = Modifier
-                        .clickable {
-                           onEvent(MenuEvent.ChooseWeek)
-                        }
-                        .padding(6.dp)
-                        .size(24.dp)
-                )
-                TitleMenuSmall(title) {
-                    onEvent(MenuEvent.GetSelIdAndCreate)
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Image(
+                        painter = painterResource(id = R.drawable.calendar),
+                        contentDescription = "",
+                        modifier = Modifier
+                            .clickable {
+                                onEvent(MenuEvent.ChooseWeek)
+                            }
+                            .padding(6.dp)
+                            .size(24.dp)
+                    )
+                    TitleMenuSmall(title) {
+                        onEvent(MenuEvent.GetSelIdAndCreate)
+                    }
                 }
             }
         }

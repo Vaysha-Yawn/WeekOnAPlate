@@ -57,14 +57,7 @@ class RecipeDetailsViewModel @Inject constructor(
                     ingredientInRecipeView.count = state.ingredientsCounts.value[index]
                 }
                 mainViewModel.nav.navigate(InventoryDirection)
-                mainViewModel.inventoryViewModel.launchAndGet(listCopy){listResult->
-                    //todo do it in BD
-                    // and combine with same
-                    mainViewModel.shoppingListViewModel.state.listUnchecked.value = mainViewModel.shoppingListViewModel.state.listUnchecked.value.toMutableList().apply {
-                        this.addAll(listResult)
-                    }
-                    mainViewModel.nav.navigate(ShoppingListScreen)
-                }
+                mainViewModel.inventoryViewModel.launchAndGet(listCopy)
             }
         }
     }

@@ -32,6 +32,7 @@ interface RecipeTagCategoryDAO {
     @Query("DELETE FROM RecipeTagCategoryRoom WHERE recipeTagCategoryId = :id")
     suspend fun deleteById(id: Long)
 
+    @Transaction
     @Query("SELECT * FROM RecipeTagCategoryRoom WHERE recipeTagCategoryId = :id")
     suspend fun getById(id: Long):RecipeTagCategoryAndRecipeTag?
 }

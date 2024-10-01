@@ -37,12 +37,15 @@ import week.on.a.plate.data.repository.tables.recipe.recipeRecipeTagCrossRef.Rec
 import week.on.a.plate.data.repository.tables.recipe.recipeRecipeTagCrossRef.RecipeRecipeTagCrossRefDAO
 import week.on.a.plate.data.repository.tables.recipe.recipeStep.RecipeStepDAO
 import week.on.a.plate.data.repository.tables.recipe.recipeStep.RecipeStepRoom
+import week.on.a.plate.data.repository.tables.shoppingList.ShoppingItemDAO
+import week.on.a.plate.data.repository.tables.shoppingList.ShoppingItemRoom
 
 
 @Database(
     entities = [IngredientRoom::class, IngredientCategoryRoom::class, IngredientInRecipeRoom::class, RecipeRoom::class, RecipeRecipeTagCrossRef::class, RecipeStepRoom::class,
         RecipeTagRoom::class, RecipeTagCategoryRoom::class,  PositionRecipeRoom::class, SelectionRoom::class,
-        PositionIngredientRoom::class, PositionNoteRoom::class, PositionDraftRoom::class, DraftAndIngredientCrossRef::class, DraftAndTagCrossRef::class
+        PositionIngredientRoom::class, PositionNoteRoom::class, PositionDraftRoom::class, DraftAndIngredientCrossRef::class, DraftAndTagCrossRef::class,
+        ShoppingItemRoom::class
     ], version = 1, exportSchema = false
 )
 @TypeConverters(
@@ -64,7 +67,7 @@ abstract class RecipeDB : RoomDatabase() {
     abstract fun daoPositionDraft(): PositionDraftDAO
     abstract fun daoDraftAndIngredientCrossRef(): DraftAndIngredientCrossRefDAO
     abstract fun daoDraftAndTagCrossRef(): DraftAndTagCrossRefDAO
-
+    abstract fun daoShoppingItem(): ShoppingItemDAO
 
     companion object {
         fun buildDatabase(context: Context): RecipeDB {

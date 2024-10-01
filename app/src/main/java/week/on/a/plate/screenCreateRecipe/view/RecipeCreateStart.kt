@@ -131,7 +131,7 @@ fun RecipeCreateStart(viewModel: RecipeCreateViewModel) {
                             onEvent(RecipeCreateEvent.AddStep)
                         }
                     }
-                    Spacer(modifier = Modifier.height(40.dp))
+                    Spacer(modifier = Modifier.height(400.dp))
                 }
             }
         }

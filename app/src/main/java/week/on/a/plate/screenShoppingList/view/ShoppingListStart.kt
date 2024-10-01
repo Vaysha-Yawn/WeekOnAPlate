@@ -23,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -33,12 +34,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import week.on.a.plate.R
 import week.on.a.plate.core.theme.Typography
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.TextBody
+import week.on.a.plate.core.uitools.TextSmall
 import week.on.a.plate.core.uitools.TextTitleLarge
 import week.on.a.plate.core.uitools.buttons.ActionPlusButton
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
@@ -47,6 +51,10 @@ import week.on.a.plate.screenShoppingList.logic.ShoppingListViewModel
 
 @Composable
 fun ShoppingListStart(viewModel: ShoppingListViewModel) {
+
+    viewModel.state.listChecked = viewModel.allItemsChecked.collectAsState()
+    viewModel.state.listUnchecked = viewModel.allItemsUnChecked.collectAsState()
+
     Scaffold(floatingActionButton = {
         ActionPlusButton {
             viewModel.onEvent(ShoppingListEvent.Add)
@@ -65,7 +73,9 @@ fun ShoppingListStart(viewModel: ShoppingListViewModel) {
             Spacer(modifier = Modifier.height(12.dp))
             LazyColumn() {
                 items(viewModel.state.listUnchecked.value.size) { index ->
-                    ShoppingListPosition(viewModel.state.listUnchecked.value[index], false) {
+                    ShoppingListPosition(viewModel.state.listUnchecked.value[index], false, {
+                        viewModel.onEvent(ShoppingListEvent.Edit(it))
+                    }) {
                         viewModel.onEvent(ShoppingListEvent.Check(viewModel.state.listUnchecked.value[index]))
                     }
                 }
@@ -93,7 +103,9 @@ fun ShoppingListStart(viewModel: ShoppingListViewModel) {
                     }
                 }
                 items(viewModel.state.listChecked.value.size) { index ->
-                    ShoppingListPosition(viewModel.state.listChecked.value[index], true) {
+                    ShoppingListPosition(viewModel.state.listChecked.value[index], true,{
+                        viewModel.onEvent(ShoppingListEvent.Edit(it))
+                    }) {
                         viewModel.onEvent(ShoppingListEvent.Uncheck(viewModel.state.listChecked.value[index]))
                     }
                 }
@@ -107,53 +119,46 @@ fun ShoppingListStart(viewModel: ShoppingListViewModel) {
 fun ShoppingListPosition(
     item: IngredientInRecipeView,
     checked: Boolean,
+    edit: (IngredientInRecipeView) -> Unit,
     onCheckedChange: (Boolean) -> Unit
 ) {
     val scope = rememberCoroutineScope()
-    val checkedd = remember { mutableStateOf(checked) }
-    val isColored = remember { mutableStateOf(false) }
-    val bacg = animateColorAsState(
-        targetValue = if (!isColored.value) MaterialTheme.colorScheme.surface
-        else MaterialTheme.colorScheme.secondaryContainer,
-        label = "", animationSpec = tween(durationMillis = 500)
-    )
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
+            .clickable {
+                edit(item)
+            }
             .padding(horizontal = 24.dp)
-            .background(bacg.value)
     ) {
         Checkbox(
-            checked = checkedd.value,
+            checked = checked,
             colors = CheckboxDefaults.colors(checkedColor = MaterialTheme.colorScheme.secondary),
             onCheckedChange = {
                 scope.launch {
-                    checkedd.value = !checkedd.value
-                    isColored.value = checkedd.value
-                    delay(500L)
                     onCheckedChange(it)
                 }
             },
         )
         Spacer(modifier = Modifier.width(12.dp))
-        val text = "${item.ingredientView.name} " +
-                "${item.count}" +
-                " ${item.ingredientView.measure}"
-        Text(
-            text = text,
-            textDecoration = if (checked) TextDecoration.LineThrough else TextDecoration.None,
-            color = MaterialTheme.colorScheme.onBackground,
-            style = Typography.bodyMedium,
-            textAlign = TextAlign.Start
-        )
+        Column {
+            val text = "${item.ingredientView.name} " +
+                    "${item.count}" +
+                    " ${item.ingredientView.measure}"
+            Text(
+                text = text,
+                textDecoration = if (checked) TextDecoration.LineThrough else TextDecoration.None,
+                color = MaterialTheme.colorScheme.onBackground,
+                style = Typography.bodyMedium,
+                textAlign = TextAlign.Start
+            )
+            if (item.description!="") {
+                Spacer(modifier = Modifier.height(3.dp))
+                TextSmall(text = item.description, color = MaterialTheme.colorScheme.outline)
+            }
+        }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewShoppingListStart() {
-    WeekOnAPlateTheme {
-        ShoppingListStart(ShoppingListViewModel())
-    }
+    Spacer(modifier = Modifier.height(12.dp))
 }

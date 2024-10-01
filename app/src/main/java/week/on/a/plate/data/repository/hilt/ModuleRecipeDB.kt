@@ -6,6 +6,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import week.on.a.plate.data.repository.tables.RecipeDB
+import week.on.a.plate.data.repository.tables.shoppingList.ShoppingItemDAO
 import javax.inject.Singleton
 
 
@@ -77,5 +78,8 @@ object ModuleRecipeDB {
     @Singleton
     fun provideDraftAndTagCrossRefDAO(recipeDB: RecipeDB) = recipeDB.daoDraftAndTagCrossRef()
 
+    @Provides
+    @Singleton
+    fun provideShoppingItemDAO(recipeDB: RecipeDB) = recipeDB.daoShoppingItem()
 
 }

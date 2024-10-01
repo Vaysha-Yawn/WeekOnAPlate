@@ -19,6 +19,7 @@ interface IngredientCategoryDAO {
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(ingredientCategoryRoom: IngredientCategoryRoom):Long
 
+    @Transaction
     @Query("SELECT * FROM IngredientCategoryRoom WHERE ingredientCategoryId=:ingredientCategoryId")
     suspend fun getById(ingredientCategoryId:Long): IngredientCategoryAndIngredients
 

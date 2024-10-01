@@ -1,11 +1,14 @@
 package week.on.a.plate.screenInventory.logic
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import week.on.a.plate.core.Event
+import week.on.a.plate.core.navigation.ShoppingListScreen
+import week.on.a.plate.data.dataView.ShoppingItemView
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
+import week.on.a.plate.data.repository.tables.shoppingList.ShoppingItemRepository
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screenInventory.event.InventoryEvent
@@ -16,10 +19,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class InventoryViewModel @Inject constructor(
+    private val shoppingItemRepository: ShoppingItemRepository
 ) : ViewModel() {
     lateinit var mainViewModel: MainViewModel
     val state: InventoryUIState = InventoryUIState()
-    private lateinit var resultFlow: MutableStateFlow<List<IngredientInRecipeView>?>
 
     fun onEvent(event: Event) {
         when (event) {
@@ -45,34 +48,56 @@ class InventoryViewModel @Inject constructor(
 
     fun done() {
         close()
-        resultFlow.value = state.list.value.map { pos ->
-           IngredientInRecipeView(
-                0, pos.ingredient, "", pos.countTarget-pos.answer.intValue
+        val result = state.list.value.map { pos ->
+            IngredientInRecipeView(
+                0, pos.ingredient, "", pos.countTarget - pos.answer.intValue
             )
         }.filter { it.count > 0 }
+
+        addToBd(result)
     }
 
     fun close() {
         mainViewModel.onEvent(MainEvent.NavigateBack)
     }
 
-    fun start(): Flow<List<IngredientInRecipeView>?> {
-        val flow = MutableStateFlow<List<IngredientInRecipeView>?>(null)
-        resultFlow = flow
-        return flow
-    }
-
     suspend fun launchAndGet(
-        listStart: List<IngredientInRecipeView>,
-        use: (List<IngredientInRecipeView>) -> Unit
+        listStart: List<IngredientInRecipeView>
     ) {
         state.list.value = listStart.map { InventoryPositionData.getByIngredientInRecipe(it) }
+    }
 
-        val flow = start()
-        flow.collect { value ->
-            if (value != null) {
-                use(value)
+    private fun addToBd(result: List<IngredientInRecipeView>) {
+        viewModelScope.launch {
+            val allList = shoppingItemRepository.getAll()
+            result.forEach { ingredientInRecipe ->
+                val haveItem =
+                    allList.find { it -> it.ingredientInRecipe.ingredientView.ingredientId == ingredientInRecipe.ingredientView.ingredientId }
+                if (haveItem == null) {
+                    shoppingItemRepository.insert(ShoppingItemView(0, ingredientInRecipe, false))
+                } else {
+                    if (haveItem.checked){
+                        shoppingItemRepository.update(
+                            haveItem.id,
+                            haveItem.ingredientInRecipe.id,
+                            false,
+                            haveItem.ingredientInRecipe.ingredientView.ingredientId,
+                            haveItem.ingredientInRecipe.description,
+                            ingredientInRecipe.count.toDouble()
+                        )
+                    }else{
+                        shoppingItemRepository.update(
+                            haveItem.id,
+                            haveItem.ingredientInRecipe.id,
+                            false,
+                            haveItem.ingredientInRecipe.ingredientView.ingredientId,
+                            haveItem.ingredientInRecipe.description,
+                            ingredientInRecipe.count.toDouble() + haveItem.ingredientInRecipe.count.toDouble()
+                        )
+                    }
+                }
             }
+            mainViewModel.nav.navigate(ShoppingListScreen)
         }
     }
 

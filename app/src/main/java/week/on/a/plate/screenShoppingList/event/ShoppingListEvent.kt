@@ -8,4 +8,5 @@ sealed class ShoppingListEvent:Event() {
     data object DeleteChecked : ShoppingListEvent()
     data class Check(val position: IngredientInRecipeView) : ShoppingListEvent()
     data class Uncheck(val position: IngredientInRecipeView) : ShoppingListEvent()
+    data class Edit(val ingredient: IngredientInRecipeView) : ShoppingListEvent()
 }
