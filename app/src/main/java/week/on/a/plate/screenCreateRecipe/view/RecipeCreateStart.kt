@@ -3,18 +3,23 @@ package week.on.a.plate.screenCreateRecipe.view
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
+import week.on.a.plate.core.uitools.SubText
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.WebPage
 import week.on.a.plate.core.uitools.buttons.CommonButton
@@ -76,20 +81,32 @@ fun RecipeCreateStart(viewModel: RecipeCreateViewModel) {
                 item {
                     Column(Modifier.padding(24.dp)) {
                         TextTitle(text = "Ингредиенты")
+                        Spacer(modifier = Modifier.size(12.dp))
+                        SubText(text = "Нажмите чтобы редактировать, удерживаете чтобы удалить", textAlign = TextAlign.Start)
                     }
                 }
                 items(viewModel.state.ingredients.value.size) {
-                    IngredientRecipeEdit(
-                        viewModel.state.ingredients.value[it],
-                        viewModel.state,
-                        onEvent
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
+                    if (viewModel.state.ingredients.value.isNotEmpty()){
+                        IngredientRecipeEdit(
+                            viewModel.state.ingredients.value[it],
+                            viewModel.state,
+                            onEvent
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                    }
                 }
                 item {
-                    Column(Modifier.padding(24.dp)) {
+                    Column(
+                        Modifier
+                            .padding(horizontal = 24.dp)
+                            .fillMaxWidth()) {
+                        Spacer(modifier = Modifier.height(12.dp))
                         CommonButton(text = "Добавить ингредиент") {
                             onEvent(RecipeCreateEvent.AddIngredient)
+                        }
+                        Spacer(modifier = Modifier.size(24.dp))
+                        CommonButton(text = "Добавить несколько ингредиентов") {
+                            onEvent(RecipeCreateEvent.AddManyIngredients)
                         }
                     }
                 }

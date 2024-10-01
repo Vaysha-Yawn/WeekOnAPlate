@@ -24,7 +24,7 @@ fun SearchNothingFound(state: SearchUIState, onEvent: (Event) -> Unit) {
             .padding(24.dp)) {
         TextTitleLarge(text = "По этому запросу ничего не найдено", modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Start)
         Spacer(modifier = Modifier.height(24.dp))
-        DoneButtonSmall(text = "Создать рецепт: ${state.searchText.value}") {
+        DoneButtonSmall(text = "Создать рецепт ${state.searchText.value}") {
             onEvent(SearchScreenEvent.CreateRecipe)
         }
     }

@@ -4,7 +4,6 @@ import week.on.a.plate.data.dataView.recipe.RecipeTagView
 import week.on.a.plate.data.dataView.recipe.TagCategoryView
 
 val tags = listOf(
-    TagCategoryView(0, "Особое", listOf(RecipeTagView(0, "Избранное"))),
     TagCategoryView(
         1,
         "По приёмам пищи",

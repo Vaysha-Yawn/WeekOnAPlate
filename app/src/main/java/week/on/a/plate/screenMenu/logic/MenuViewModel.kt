@@ -2,35 +2,38 @@ package week.on.a.plate.screenMenu.logic
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.Event
-import week.on.a.plate.mainActivity.event.MainEvent
-import week.on.a.plate.mainActivity.logic.MainViewModel
+import week.on.a.plate.core.navigation.SearchScreen
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.data.dataView.week.WeekView
-import week.on.a.plate.screenMenu.dialogs.addPosition.event.AddPositionEvent
-import week.on.a.plate.screenMenu.dialogs.addPosition.logic.AddPositionViewModel
-import week.on.a.plate.screenMenu.dialogs.changePositionCount.logic.ChangePortionsCountViewModel
-import week.on.a.plate.screenMenu.dialogs.chooseWeekInMenu.logic.ChooseWeekViewModel
-import week.on.a.plate.screenMenu.dialogs.editNote.logic.EditNoteViewModel
-import week.on.a.plate.screenMenu.dialogs.editOtherPosition.event.EditOtherPositionEvent
-import week.on.a.plate.screenMenu.dialogs.editOtherPosition.logic.EditOtherPositionViewModel
-import week.on.a.plate.screenMenu.dialogs.editPositionIngredient.logic.EditPositionIngredientViewModel
-import week.on.a.plate.screenMenu.dialogs.editRecipePosition.event.EditRecipePositionEvent
-import week.on.a.plate.screenMenu.dialogs.editRecipePosition.logic.EditRecipePositionViewModel
+import week.on.a.plate.mainActivity.event.MainEvent
+import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screenFilters.navigation.FilterDestination
-import week.on.a.plate.core.navigation.SearchScreen
 import week.on.a.plate.screenFilters.state.FilterMode
+import week.on.a.plate.dialogAddPosition.event.AddPositionEvent
+import week.on.a.plate.dialogAddPosition.logic.AddPositionViewModel
+import week.on.a.plate.dialogChangePositionCount.logic.ChangePortionsCountViewModel
+import week.on.a.plate.dialogChooseWeekInMenu.logic.ChooseWeekViewModel
+import week.on.a.plate.dialogEditNote.logic.EditNoteViewModel
+import week.on.a.plate.dialogEditOtherPosition.event.EditOtherPositionEvent
+import week.on.a.plate.dialogEditOtherPosition.logic.EditOtherPositionViewModel
+import week.on.a.plate.dialogEditPositionIngredient.logic.EditPositionIngredientViewModel
+import week.on.a.plate.dialogEditRecipePosition.event.EditRecipePositionEvent
+import week.on.a.plate.dialogEditRecipePosition.logic.EditRecipePositionViewModel
 import week.on.a.plate.screenMenu.event.ActionWeekMenuDB
 import week.on.a.plate.screenMenu.event.MenuEvent
 import week.on.a.plate.screenMenu.event.NavFromMenuData
 import week.on.a.plate.screenMenu.logic.useCase.CRUDRecipeInMenu
-import week.on.a.plate.screenMenu.logic.useCase.NavigationMenu
 import week.on.a.plate.screenMenu.logic.useCase.SelectedRecipeManager
 import week.on.a.plate.screenMenu.state.MenuIUState
 import week.on.a.plate.screenMenu.state.WeekState
+import week.on.a.plate.screenRecipeDetails.navigation.RecipeDetailsDestination
+import week.on.a.plate.screenSpecifySelection.navigation.SpecifySelectionDirection
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -40,19 +43,17 @@ import javax.inject.Inject
 class MenuViewModel @Inject constructor(
     private val sCRUDRecipeInMenu: CRUDRecipeInMenu,
     private val selectedRecipeManager: SelectedRecipeManager,
-    val navigationMenu: NavigationMenu,
 ) : ViewModel() {
-
+    lateinit var navController: NavHostController
     private var activeDay = LocalDate.now()
     lateinit var mainViewModel: MainViewModel
-
 
     val weekState: MutableStateFlow<WeekState> = MutableStateFlow(WeekState.Loading)
     val menuUIState = MenuIUState.MenuIUStateExample
 
     init {
         viewModelScope.launch {
-           // sCRUDRecipeInMenu.menuR.insertNewWeek(WeekDataExample)
+            // sCRUDRecipeInMenu.menuR.insertNewWeek(WeekDataExample)
             updateWeek()
         }
     }
@@ -90,14 +91,23 @@ class MenuViewModel @Inject constructor(
             is MenuEvent.SwitchEditMode -> switchEditMode()
             is MenuEvent.NavigateFromMenu -> {
                 selectedRecipeManager.clear(menuUIState)
-                navigationMenu.onEvent(event.navData)
+                when (event.navData) {
+                    is NavFromMenuData.SpecifySelection -> { navController.navigate(SpecifySelectionDirection) }
+                    is NavFromMenuData.NavToFullRecipe -> {
+                        mainViewModel.recipeDetailsViewModel.launch(event.navData.recId,event.navData.portionsCount )
+                        navController.navigate(RecipeDetailsDestination)
+                        viewModelScope.launch {
+                            delay(600L)
+                            mainViewModel.recipeDetailsViewModel.updIngredientsCount()
+                        }
+                    }
+                }
             }
 
             is MenuEvent.ActionDBMenu -> {
                 viewModelScope.launch {
                     sCRUDRecipeInMenu.onEvent(
-                        event.actionWeekMenuDB,
-                        selectedRecipeManager.getSelected(menuUIState)
+                        event.actionWeekMenuDB
                     )
                     updateWeek()
                 }
@@ -134,11 +144,17 @@ class MenuViewModel @Inject constructor(
             is MenuEvent.FindReplaceRecipe -> findReplaceRecipe(event.recipe)
             is MenuEvent.NavToAddRecipe -> navToAddRecipe(event.selId)
             is MenuEvent.SearchByDraft -> searchByDraft(event.draft)
+            MenuEvent.DeleteSelected -> {
+                selectedRecipeManager.getSelected(menuUIState).forEach {
+                    onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.Delete(it)))
+                }
+            }
         }
     }
 
     private fun searchByDraft(draft: Position.PositionDraftView) {
         //todo after delete and add this
+        //  and bag не получается вернуть на меню с нижней панелью
         mainViewModel.searchViewModel.launchAndGet(
             draft.selectionId,
             Pair(draft.tags, draft.ingredients)
@@ -166,7 +182,7 @@ class MenuViewModel @Inject constructor(
     private fun specifyDate(use: (Long, Int) -> Unit) {
         viewModelScope.launch {
             val vm = mainViewModel.specifySelectionViewModel
-            navigationMenu.onEvent(NavFromMenuData.SpecifySelection)
+            onEvent(MenuEvent.NavigateFromMenu( NavFromMenuData.SpecifySelection))
             vm.launchAndGet(use)
         }
     }
@@ -192,7 +208,7 @@ class MenuViewModel @Inject constructor(
         viewModelScope.launch {
             val vm = mainViewModel.filterViewModel
             vm.mainViewModel.nav.navigate(FilterDestination)
-            vm.launchAndGet(FilterMode.All,  null) { filters ->
+            vm.launchAndGet(FilterMode.All, null) { filters ->
                 if (filters.first.isEmpty() && filters.second.isEmpty()) return@launchAndGet
                 val draft = Position.PositionDraftView(0, filters.first, filters.second, selId)
                 onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.AddDraft(draft)))
@@ -204,7 +220,7 @@ class MenuViewModel @Inject constructor(
         viewModelScope.launch {
             val vm = mainViewModel.filterViewModel
             vm.mainViewModel.nav.navigate(FilterDestination)
-            vm.launchAndGet(FilterMode.All,  Pair(oldDraft.tags, oldDraft.ingredients)) { filters ->
+            vm.launchAndGet(FilterMode.All, Pair(oldDraft.tags, oldDraft.ingredients)) { filters ->
                 if (filters.first.isEmpty() && filters.second.isEmpty()) {
                     onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.Delete(oldDraft)))
                 } else {
@@ -277,6 +293,7 @@ class MenuViewModel @Inject constructor(
                             ActionWeekMenuDB.Delete(position)
                         )
                     )
+
                     EditRecipePositionEvent.Double -> getSelAndDouble(position)
                     EditRecipePositionEvent.FindReplace -> onEvent(
                         MenuEvent.FindReplaceRecipe(

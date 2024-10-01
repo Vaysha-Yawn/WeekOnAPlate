@@ -64,9 +64,6 @@ fun CardPosition(
                     RecipePosition(position, menuIUState, onEvent, this)
                 }
             }
-            MoreButton {
-               onEvent(MenuEvent.EditPosition(position))
-            }
         }
     }
 }

@@ -5,15 +5,21 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import week.on.a.plate.mainActivity.event.MainEvent
-import week.on.a.plate.mainActivity.logic.MainViewModel
-import week.on.a.plate.data.dataView.example.ingredients
-import week.on.a.plate.data.dataView.example.tags
+import week.on.a.plate.data.dataView.recipe.IngredientCategoryView
 import week.on.a.plate.data.dataView.recipe.IngredientView
 import week.on.a.plate.data.dataView.recipe.RecipeTagView
-import week.on.a.plate.dialogsAddFilters.addIngrdient.logic.AddIngredientViewModel
-import week.on.a.plate.dialogsAddFilters.addTag.logic.AddTagViewModel
+import week.on.a.plate.data.dataView.recipe.TagCategoryView
+import week.on.a.plate.data.repository.tables.filters.ingredient.IngredientRepository
+import week.on.a.plate.data.repository.tables.filters.ingredientCategory.IngredientCategoryRepository
+import week.on.a.plate.data.repository.tables.filters.recipeTag.RecipeTagRepository
+import week.on.a.plate.data.repository.tables.filters.recipeTagCategory.RecipeTagCategoryRepository
+import week.on.a.plate.dialogAddIngredient.logic.AddIngredientViewModel
+import week.on.a.plate.dialogAddTag.logic.AddTagViewModel
+import week.on.a.plate.mainActivity.event.MainEvent
+import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screenFilters.dialogs.filterVoiceApply.logic.FilterVoiceApplyViewModel
 import week.on.a.plate.screenFilters.dialogs.selectedFilters.logic.SelectedFiltersViewModel
 import week.on.a.plate.screenFilters.event.FilterEvent
@@ -22,18 +28,27 @@ import week.on.a.plate.screenFilters.state.FilterUIState
 import javax.inject.Inject
 
 @HiltViewModel
-class FilterViewModel @Inject constructor() : ViewModel() {
+class FilterViewModel @Inject constructor(
+    private val ingredientCategoryRepository: IngredientCategoryRepository,
+    private val recipeTagCategoryRepository: RecipeTagCategoryRepository,
+    private val ingredientRepository: IngredientRepository,
+    private val recipeTagRepository: RecipeTagRepository,
+) : ViewModel() {
 
     lateinit var mainViewModel: MainViewModel
     val state = FilterUIState()
+    lateinit var allIngredients: StateFlow<List<IngredientCategoryView>>
+    lateinit var allTags: StateFlow<List<TagCategoryView>>
     private lateinit var resultFlow: MutableStateFlow<Pair<List<RecipeTagView>, List<IngredientView>>?>
 
     init {
-        //get all tags and ingredients from db
-        state.allTagsCategories.value = tags
-        state.allIngredientsCategories.value = ingredients
+        viewModelScope.launch {
+            allIngredients = ingredientCategoryRepository.getAllIngredientsByCategoriesForFilters()
+                .stateIn(viewModelScope)
+            allTags = recipeTagCategoryRepository.getAllTagsByCategoriesForFilters()
+                .stateIn(viewModelScope)
+        }
     }
-
 
     fun start(): Flow<Pair<List<RecipeTagView>, List<IngredientView>>?> {
         val flow = MutableStateFlow<Pair<List<RecipeTagView>, List<IngredientView>>?>(null)
@@ -42,7 +57,7 @@ class FilterViewModel @Inject constructor() : ViewModel() {
     }
 
     suspend fun launchAndGet(
-        mode:FilterMode,
+        mode: FilterMode,
         lastFilters: Pair<List<RecipeTagView>, List<IngredientView>>?,
         use: (Pair<List<RecipeTagView>, List<IngredientView>>) -> Unit
     ) {
@@ -81,7 +96,7 @@ class FilterViewModel @Inject constructor() : ViewModel() {
     private fun voiceSearch() {
         mainViewModel.onEvent(MainEvent.VoiceToText() { strings: ArrayList<String>? ->
             if (strings == null) return@VoiceToText
-            val searchedList = strings.getOrNull(0)?.split(" ")?:return@VoiceToText
+            val searchedList = strings.getOrNull(0)?.split(" ") ?: return@VoiceToText
             viewModelScope.launch {
                 val listIngredientView = mutableListOf<IngredientView>()
                 val listTags = mutableListOf<RecipeTagView>()
@@ -90,7 +105,7 @@ class FilterViewModel @Inject constructor() : ViewModel() {
                     if (res.first != null) listTags.add(res.first!!)
                     if (res.second != null) listIngredientView.add(res.second!!)
                 }
-                if (listIngredientView.isEmpty() && listTags.isEmpty()){
+                if (listIngredientView.isEmpty() && listTags.isEmpty()) {
                     state.filtersSearchText.value = strings.joinToString()
                     return@launch
                 }
@@ -136,7 +151,11 @@ class FilterViewModel @Inject constructor() : ViewModel() {
             vm.mainViewModel = mainViewModel
             mainViewModel.onEvent(MainEvent.OpenDialog(vm))
             vm.launchAndGet(state.filtersSearchText.value, null) { tagData ->
-                //todo add bd and refresh state
+                viewModelScope.launch {
+                    val newTagId = recipeTagRepository.insert(tagData.first, tagData.second.id)
+                    val newTag = recipeTagRepository.getById(newTagId)
+                    if (newTag!=null) onEvent(FilterEvent.SelectTag(newTag))
+                }
             }
         }
     }
@@ -146,8 +165,21 @@ class FilterViewModel @Inject constructor() : ViewModel() {
             val vm = AddIngredientViewModel()
             vm.mainViewModel = mainViewModel
             mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-            vm.launchAndGet(null, null) { ingredientData ->
-                //todo add bd and refresh state
+            val oldIngredient = IngredientView(
+                0,
+                img = "",
+                name = state.filtersSearchText.value,
+                measure = "")
+            vm.launchAndGet(oldIngredient, null) { ingredientData ->
+                viewModelScope.launch {
+                    val newIngredientId = ingredientRepository.insert(
+                        categoryId = ingredientData.second.id,
+                        img = ingredientData.first.img,
+                        name = ingredientData.first.name,
+                        measure = ingredientData.first.measure)
+                    val newIngredient = ingredientRepository.getById(newIngredientId)
+                    if (newIngredient!=null) onEvent(FilterEvent.SelectIngredient(newIngredient))
+                }
             }
         }
     }
@@ -196,10 +228,10 @@ class FilterViewModel @Inject constructor() : ViewModel() {
 
     private fun selectIngredient(ingredient: IngredientView) {
         state.selectedIngredients.value = state.selectedIngredients.value.toMutableList().apply {
-            if (state.filterMode.value == FilterMode.OneIngredient){
+            if (state.filterMode.value == FilterMode.OneIngredient) {
                 this.clear()
                 this.add(ingredient)
-            }else{
+            } else {
                 if (this.contains(ingredient)) {
                     this.remove(ingredient)
                 } else {
@@ -220,7 +252,7 @@ class FilterViewModel @Inject constructor() : ViewModel() {
     }
 
 
-    fun done(){
+    fun done() {
         resultFlow.value = Pair(state.selectedTags.value, state.selectedIngredients.value)
         mainViewModel.onEvent(MainEvent.NavigateBack)
     }

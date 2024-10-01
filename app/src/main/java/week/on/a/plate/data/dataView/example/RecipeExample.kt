@@ -105,7 +105,8 @@ val recipeTom =
                 0
             ),
         ),
-        link = "https://eda.ru/media/vopros/zagotovki-tri-prostyh-pravila"
+        link = "https://eda.ru/media/vopros/zagotovki-tri-prostyh-pravila",
+        false
     )
 
 
@@ -114,7 +115,7 @@ val shortRecipe = RecipeShortView(0, "Салат из помидоров с ог
 
 val emptyRecipe = RecipeView(
     0, "name", "description", "img", listOf<RecipeTagView>(),
-    0, 0, 0, listOf(), listOf(), ""
+    0, 0, 0, listOf(), listOf(), "", false
 )
 
 fun getSimpleRecipe(names: String, inFavorite: Boolean = false, image: String = ""): RecipeView {
@@ -124,7 +125,7 @@ fun getSimpleRecipe(names: String, inFavorite: Boolean = false, image: String = 
                 RecipeTagView(0, "Избранное")
             )
         } else listOf(),
-        0, 0, 0, listOf(), listOf(), ""
+        0, 0, 0, listOf(), listOf(), "", false
     )
 }
 

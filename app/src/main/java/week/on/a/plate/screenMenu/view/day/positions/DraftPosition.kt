@@ -29,7 +29,7 @@ fun DraftPosition(
         Spacer(modifier = Modifier.width(20.dp))
         Row(Modifier
             .weight(3f)
-            .padding(vertical = 5.dp),
+            .padding(vertical = 5.dp).clickable {  onEvent(MenuEvent.EditPosition(draft)) },
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically) {
             TagList(draft.tags, draft.ingredients)

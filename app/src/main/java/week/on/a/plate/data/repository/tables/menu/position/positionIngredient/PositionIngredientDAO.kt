@@ -17,7 +17,7 @@ interface PositionIngredientDAO {
 
     @Transaction
     @Query("SELECT * FROM IngredientInRecipeRoom WHERE id=:ingredientInRecipeId")
-    suspend fun getPositionIngredientAndIngredientInRecipeView(ingredientInRecipeId:Long): PositionIngredientAndIngredientInRecipeView
+    suspend fun getPositionIngredientAndIngredientInRecipeView(ingredientInRecipeId:Long): PositionIngredientAndIngredientInRecipe
 
     @Query("SELECT * FROM PositionIngredientRoom WHERE selectionId=:selectionId")
     suspend fun getAllInSel(selectionId:Long): List<PositionIngredientRoom>

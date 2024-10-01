@@ -2,14 +2,12 @@ package week.on.a.plate.data.repository.tables.filters.recipeTagCategory
 
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
-import week.on.a.plate.data.repository.tables.filters.ingredientCategory.IngredientCategoryAndIngredients
 
 
 @Dao
@@ -23,7 +21,7 @@ interface RecipeTagCategoryDAO {
 
     @Transaction
     @Query("SELECT * FROM RecipeTagCategoryRoom ")
-    suspend fun getAllCategoryAndTags(): List<RecipeTagCategoryAndRecipeTag>
+    fun getAllCategoryAndTagsFlow(): Flow<List<RecipeTagCategoryAndRecipeTag>>
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(recipeTagCategoryRoom: RecipeTagCategoryRoom):Long
@@ -33,4 +31,7 @@ interface RecipeTagCategoryDAO {
 
     @Query("DELETE FROM RecipeTagCategoryRoom WHERE recipeTagCategoryId = :id")
     suspend fun deleteById(id: Long)
+
+    @Query("SELECT * FROM RecipeTagCategoryRoom WHERE recipeTagCategoryId = :id")
+    suspend fun getById(id: Long):RecipeTagCategoryAndRecipeTag?
 }

@@ -68,11 +68,11 @@ fun BottomBar(navController: NavHostController, isActiveBaseScreen: Boolean) {
                     selected = isSelected,
                     onClick = {
                         navController.navigate(topLevelRoute.route) {
-                            popUpTo(navController.graph.findStartDestination().id) {
+                           /* popUpTo(navController.graph.findStartDestination().id) {
                                 saveState = true
                             }
                             launchSingleTop = true
-                            restoreState = true
+                            restoreState = true*/
                         }
                     },
                     colors = NavigationBarItemDefaults.colors(

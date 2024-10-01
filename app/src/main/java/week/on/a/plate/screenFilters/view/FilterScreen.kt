@@ -61,6 +61,7 @@ fun FilterScreen(stateUI: FilterUIState, onEvent: (FilterEvent) -> Unit) {
                 }
                 FilterMode.OneIngredient -> {stateUI.activeFilterTabIndex.intValue = 1}
                 FilterMode.TagList -> {stateUI.activeFilterTabIndex.intValue = 0}
+                FilterMode.IngredientList -> {stateUI.activeFilterTabIndex.intValue = 1}
             }
             LazyColumn(
                 Modifier.fillMaxSize()
@@ -208,8 +209,6 @@ fun PreviewFilterScreen() {
     WeekOnAPlateTheme {
         FilterScreen(FilterUIState().apply {
             filtersSearchText.value = "По"
-            allTagsCategories.value = tags
-            allIngredientsCategories.value = ingredients
             activeFilterTabIndex.intValue = 1
             selectedTags.value = selectedTags.value.toMutableList().apply {
                 tags.map { it -> it.tags }.forEach { list ->

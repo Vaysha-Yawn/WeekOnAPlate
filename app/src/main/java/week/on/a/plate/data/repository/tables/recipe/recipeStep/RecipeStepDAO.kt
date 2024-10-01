@@ -19,6 +19,10 @@ interface RecipeStepDAO {
     @Query("SELECT * FROM recipeRoom WHERE recipeId=:recipeId")
     suspend fun getRecipeAndRecipeSteps(recipeId:Long): RecipeAndRecipeSteps
 
+    @Transaction
+    @Query("SELECT * FROM recipeRoom WHERE recipeId=:recipeId")
+    fun getRecipeAndRecipeStepsFlow(recipeId:Long): Flow<RecipeAndRecipeSteps>
+
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(step: RecipeStepRoom):Long
 

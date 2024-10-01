@@ -10,12 +10,6 @@ enum class Measure(val s: String) {
 
 val ingredients = listOf(
         IngredientCategoryView(
-            0, "Прочее",
-            listOf(
-                IngredientView(0, "", "Вода", Measure.Milliliters.s),
-                IngredientView(0, "", "Бульон", Measure.Milliliters.s),
-            )),
-        IngredientCategoryView(
             0, "Мясо и птица",
             listOf(
                 IngredientView(1, "", "Курица", Measure.Grams.s),
@@ -151,17 +145,23 @@ val ingredients = listOf(
         IngredientCategoryView(
             12, "Алкоголь",
             listOf(
-                IngredientView(1, "", "Абсент", Measure.Milliliters.s),
-                IngredientView(2, "", "Арманьяк", Measure.Milliliters.s),
-                IngredientView(3, "", "Вино (сухое белое)", Measure.Milliliters.s),
-                IngredientView(4, "", "Водка", Measure.Milliliters.s),
-                IngredientView(5, "", "Коньяк", Measure.Milliliters.s),
-                IngredientView(6, "", "Виски", Measure.Milliliters.s),
-                IngredientView(7, "", "Граппа", Measure.Milliliters.s),
-                IngredientView(8, "", "Джин", Measure.Milliliters.s),
-                IngredientView(9, "", "Бренди", Measure.Milliliters.s),
-                IngredientView(10, "", "Бурбон", Measure.Milliliters.s),
-                IngredientView(11, "", "Вермут", Measure.Milliliters.s),
+                IngredientView(70, "", "Абсент", Measure.Milliliters.s),
+                IngredientView(71, "", "Арманьяк", Measure.Milliliters.s),
+                IngredientView(72, "", "Вино (сухое белое)", Measure.Milliliters.s),
+                IngredientView(73, "", "Водка", Measure.Milliliters.s),
+                IngredientView(74, "", "Коньяк", Measure.Milliliters.s),
+                IngredientView(75, "", "Виски", Measure.Milliliters.s),
+                IngredientView(76, "", "Граппа", Measure.Milliliters.s),
+                IngredientView(77, "", "Джин", Measure.Milliliters.s),
+                IngredientView(78, "", "Бренди", Measure.Milliliters.s),
+                IngredientView(79, "", "Бурбон", Measure.Milliliters.s),
+                IngredientView(80, "", "Вермут", Measure.Milliliters.s),
             )
-        )
+        ),
+    IngredientCategoryView(
+        13, "Прочее",
+        listOf(
+            IngredientView(81, "", "Вода", Measure.Milliliters.s),
+            IngredientView(82, "", "Бульон", Measure.Milliliters.s),
+        )),
 )

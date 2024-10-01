@@ -13,33 +13,38 @@ class PositionIngredientRepository @Inject constructor(
     private val positionIngredientDAO: PositionIngredientDAO,
     private val ingredientInRecipeDAO: IngredientInRecipeDAO,
 ) {
+    private val positionIngredientMapper = PositionIngredientMapper()
+    private val ingredientInRecipeMapper = IngredientInRecipeMapper()
+    private val ingredientMapper = IngredientMapper()
+
     suspend fun getAllInSel(selectionId: Long): List<Position> {
-        val positionsRoom = positionIngredientDAO.getAllInSel(selectionId)
-        val list = mutableListOf<Position>()
-        positionsRoom.forEach { position ->
+        return positionIngredientDAO.getAllInSel(selectionId).map { position ->
             val ingredient =
                 ingredientInRecipeDAO.getIngredientAndIngredientInRecipe(position.positionIngredientId)
-            val ingredientInMenu = ingredient.ingredientInRecipeRoom
-            val ingredientRoom = ingredient.ingredientRoom
+
             val ingredientView =
-                with(IngredientMapper()) { ingredientRoom.roomToView() }
-            val ingredientInMenuView = with(IngredientInRecipeMapper()) {
-                ingredientInMenu.roomToView(ingredientView)
+                with(ingredientMapper) { ingredient.ingredientRoom.roomToView() }
+
+            val ingredientInMenuView = with(ingredientInRecipeMapper) {
+                ingredient.ingredientInRecipeRoom.roomToView(ingredientView)
             }
-            with(PositionIngredientMapper()) {
-                val positionIngredientView =
-                    position.roomToView(ingredientInRecipe = ingredientInMenuView)
-                list.add(positionIngredientView)
+
+            with(positionIngredientMapper) {
+                position.roomToView(ingredientInRecipe = ingredientInMenuView)
             }
         }
-        return list
     }
 
-    suspend fun insert(position: Position.PositionIngredientView, selectionId: Long): Long {
-        val positionRoom = with(PositionIngredientMapper()) {
-            position.viewToRoom(selectionId)
+    suspend fun insert(position: Position.PositionIngredientView, selectionId: Long) {
+        val ingredientRoom = with(IngredientInRecipeMapper()) {
+            position.ingredient.viewToRoom(0, position.ingredient.ingredientView.ingredientId)
         }
-        return positionIngredientDAO.insert(positionRoom)
+        val newIngredientInRecipeId = positionIngredientDAO.insert(ingredientRoom)
+
+        val positionRoom = with(positionIngredientMapper) {
+            position.viewToRoom(newIngredientInRecipeId, selectionId)
+        }
+        positionIngredientDAO.insert(positionRoom)
     }
 
     suspend fun update(
@@ -57,13 +62,13 @@ class PositionIngredientRepository @Inject constructor(
         )
         ingredientInRecipeDAO.update(
             IngredientInRecipeRoom(
-            recipeId = 0,
-            ingredientId = ingredientId,
-            description = description,
-            count = count
-        ).apply {
-            this.id = ingredientInRecipeId
-        })
+                recipeId = 0,
+                ingredientId = ingredientId,
+                description = description,
+                count = count
+            ).apply {
+                this.id = ingredientInRecipeId
+            })
     }
 
     suspend fun delete(id: Long) {

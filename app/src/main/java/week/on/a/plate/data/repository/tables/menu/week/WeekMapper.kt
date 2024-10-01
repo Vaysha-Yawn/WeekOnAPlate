@@ -6,7 +6,7 @@ import week.on.a.plate.data.dataView.week.WeekView
 
 
 class WeekMapper() {
-    fun WeekRoom.roomToView(selection: SelectionView, days: MutableList<DayView>): WeekView =
+    fun WeekRoom.roomToView(selection: SelectionView, days: List<DayView>): WeekView =
         WeekView(
             id = this.weekId,
             selection = selection,

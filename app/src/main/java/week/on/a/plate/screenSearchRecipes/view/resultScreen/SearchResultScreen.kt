@@ -1,5 +1,6 @@
 package week.on.a.plate.screenSearchRecipes.view.resultScreen
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -47,7 +48,7 @@ fun SearchResultScreen(
     result: List<RecipeView>,
     onEvent: (SearchScreenEvent) -> Unit
 ) {
-    LazyColumn {
+    LazyColumn() {
         items(result.size) {
             RowRecipeResultCard(result[it], onEvent)
         }
@@ -100,7 +101,7 @@ fun RowRecipeResultCard(
             }
             Spacer(modifier = Modifier.width(12.dp))
             Column(Modifier.fillMaxHeight(), verticalArrangement = Arrangement.SpaceAround) {
-                val inFavorite = recipeView.tags.find { tag -> tag.tagName == "Избранное" } != null
+                val inFavorite = recipeView.inFavorite
                 Image(
                     painter = painterResource(
                         id = if (inFavorite) {
@@ -113,7 +114,7 @@ fun RowRecipeResultCard(
                         .clickable {
                             onEvent(
                                 SearchScreenEvent.FlipFavorite(
-                                    recipeView.id,
+                                    recipeView,
                                     inFavorite
                                 )
                             )

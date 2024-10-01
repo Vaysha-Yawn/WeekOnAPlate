@@ -18,6 +18,10 @@ interface RecipeRecipeTagCrossRefDAO {
     @Query("SELECT * FROM RecipeRoom WHERE recipeId=:recipeIdd")
     suspend fun getRecipeAndRecipeTagByRecipeId(recipeIdd: Long): List<RecipeAndRecipeTag>
 
+    @Transaction
+    @Query("SELECT * FROM RecipeRoom WHERE recipeId=:recipeIdd")
+    fun getRecipeAndRecipeTagByRecipeIdFlow(recipeIdd: Long): Flow<List<RecipeAndRecipeTag>>
+
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(recipeRecipeTagCrossRef: RecipeRecipeTagCrossRef):Long
 

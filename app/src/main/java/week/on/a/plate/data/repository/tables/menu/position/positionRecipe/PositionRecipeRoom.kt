@@ -7,7 +7,7 @@ import week.on.a.plate.data.repository.tables.menu.position.PositionRoom
 
 @Entity
 data class PositionRecipeRoom(
-    val recipeId: Long,
+    var recipeId: Long,
     val recipeName: String,
     var portionsCount: Int,
     val selectionId: Long,

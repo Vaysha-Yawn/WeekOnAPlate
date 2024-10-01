@@ -11,5 +11,6 @@ data class RecipeView(
     var standardPortionsCount: Int,
     var ingredients: List<IngredientInRecipeView>,
     var steps: List<RecipeStepView>,
-    var link: String
+    var link: String,
+    val inFavorite:Boolean
 )

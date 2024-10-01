@@ -25,6 +25,9 @@ interface IngredientDAO {
     @Query("SELECT * FROM IngredientRoom WHERE ingredientId=:id")
     suspend fun findByID(id:Long): IngredientRoom?
 
+    @Query("SELECT * FROM IngredientRoom WHERE ingredientId=:id")
+     fun findByIDFlow(id:Long): Flow<IngredientRoom?>
+
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(ingredientRoom: IngredientRoom):Long
 

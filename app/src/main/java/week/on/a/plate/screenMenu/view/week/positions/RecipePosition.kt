@@ -41,7 +41,7 @@ fun WeekRecipePosition(
 ) {
     Column(
         Modifier
-            .width(200.dp)
+            .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(20.dp))
             .padding(20.dp)
             .combinedClickable(
@@ -49,7 +49,7 @@ fun WeekRecipePosition(
                     onEvent(
                         MenuEvent.NavigateFromMenu(
                             NavFromMenuData.NavToFullRecipe(
-                                recipe.recipe
+                                recipe.recipe.id, recipe.portionsCount
                             )
                         )
                     )

@@ -3,16 +3,13 @@ package week.on.a.plate.screenShoppingList.logic
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.Event
 import week.on.a.plate.data.dataView.example.ingredients
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
-import week.on.a.plate.screenMenu.dialogs.editPositionIngredient.logic.EditPositionIngredientViewModel
-import week.on.a.plate.screenMenu.event.ActionWeekMenuDB
-import week.on.a.plate.screenMenu.event.MenuEvent
+import week.on.a.plate.dialogEditPositionIngredient.logic.EditPositionIngredientViewModel
 import week.on.a.plate.screenShoppingList.event.ShoppingListEvent
 import week.on.a.plate.screenShoppingList.state.ShoppingListUIState
 import javax.inject.Inject

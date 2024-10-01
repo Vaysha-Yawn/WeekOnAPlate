@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -21,17 +22,16 @@ import week.on.a.plate.screenSearchRecipes.view.resultScreen.TagList
 
 @Composable
 fun RecipeBase(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) -> Unit) {
-    if (state.recipe.value == null) return
     Column(Modifier.padding(24.dp)) {
-        if (state.recipe.value?.img?.startsWith("http") == true) {
-            ImageLoad(state.recipe.value!!.img, Modifier.fillMaxWidth())
+        if (state.recipe.value.img.startsWith("http")) {
+            ImageLoad(state.recipe.value.img, Modifier.fillMaxWidth().height(250.dp))
         }
         Spacer(modifier = Modifier.height(12.dp))
-        TextTitle(text = state.recipe.value!!.name)
+        TextTitle(text = state.recipe.value.name)
         Spacer(modifier = Modifier.height(12.dp))
-        TagList(tags = state.recipe.value!!.tags, ingredients = listOf())
+        TagList(tags = state.recipe.value.tags, ingredients = listOf())
         Spacer(modifier = Modifier.height(24.dp))
-        TextBody(text = state.recipe.value!!.description)
+        TextBody(text = state.recipe.value.description)
     }
 }
 
@@ -40,7 +40,7 @@ fun RecipeBase(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) -> Unit)
 fun PreviewRecipeBase() {
     WeekOnAPlateTheme {
         RecipeBase(RecipeDetailsState().apply {
-            this.recipe.value = recipeTom
+            this.recipe = mutableStateOf(recipeTom)
         }) {}
     }
 }

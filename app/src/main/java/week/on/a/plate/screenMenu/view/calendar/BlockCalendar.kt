@@ -9,7 +9,7 @@ import week.on.a.plate.data.dataView.week.DayView
 import java.time.LocalDate
 
 @Composable
-fun BlockCalendar(days: MutableList<DayView>, today: LocalDate, activeDayInd: Int, changeDay:(i:Int)->Unit) {
+fun BlockCalendar(days: List<DayView>, today: LocalDate, activeDayInd: Int, changeDay:(i:Int)->Unit) {
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Absolute.Center) {
         for ((ind, day) in days.withIndex()) {
             CalendarDayCard(

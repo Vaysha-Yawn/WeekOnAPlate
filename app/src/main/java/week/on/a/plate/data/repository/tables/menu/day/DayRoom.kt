@@ -13,7 +13,6 @@ data class DayRoom(
     val date: LocalDate,
     @TypeConverters(DayInWeekDataTypeConverter::class)
     val dayInWeek: DayInWeekData,
-    // ссылка на принадлежность дня к неделе
     val weekId:Long,
 ){
     @PrimaryKey(autoGenerate = true)

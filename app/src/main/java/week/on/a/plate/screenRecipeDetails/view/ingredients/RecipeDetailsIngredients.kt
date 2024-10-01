@@ -11,6 +11,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,11 +26,7 @@ import week.on.a.plate.core.theme.WeekOnAPlateTheme
 
 @Composable
 fun RecipeDetailsIngredients(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) -> Unit) {
-    val statePortions = remember {
-        mutableIntStateOf(state.recipe.value!!.standardPortionsCount)
-    }
     Column {
-        if (state.recipe.value == null) return
         HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.outline)
         Row(
             horizontalArrangement = Arrangement.SpaceAround, modifier = Modifier
@@ -38,14 +35,18 @@ fun RecipeDetailsIngredients(state: RecipeDetailsState, onEvent: (RecipeDetailsE
         ) {
 
             TextBody(text = "Ингредиенты на")
-            ButtonsCounterSmall(value = statePortions, minus = {}, plus = { })
+            ButtonsCounterSmall(value = state.currentPortions, minus = {
+                onEvent(RecipeDetailsEvent.MinusPortionsView)
+            }, plus = {
+                onEvent(RecipeDetailsEvent.PlusPortionsView)
+            })
             TextBody(text = "порций")
         }
         HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.outline)
         Spacer(modifier = Modifier.height(24.dp))
 
-        for ((index, ingredient) in state.recipe.value!!.ingredients.withIndex()) {
-            IngredientInRecipeCard(ingredient){}
+        for ((index, ingredient) in state.recipe.value.ingredients.withIndex()) {
+            IngredientInRecipeCard(ingredient, state.ingredientsCounts.value[index], )
             Spacer(modifier = Modifier.height(24.dp))
         }
     }
@@ -56,7 +57,7 @@ fun RecipeDetailsIngredients(state: RecipeDetailsState, onEvent: (RecipeDetailsE
 fun PreviewRecipeDetailsIngredients() {
     WeekOnAPlateTheme {
         RecipeDetailsIngredients(RecipeDetailsState().apply {
-            recipe.value = recipeTom
+            recipe = mutableStateOf(recipeTom)
         }) {}
     }
 }

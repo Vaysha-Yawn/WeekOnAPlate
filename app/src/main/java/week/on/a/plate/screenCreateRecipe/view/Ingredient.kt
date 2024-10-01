@@ -15,9 +15,9 @@ fun IngredientRecipeEdit(
     state: RecipeCreateUIState,
     onEvent: (RecipeCreateEvent) -> Unit
 ) {
-    IngredientInRecipeCard(ingredient){
+    IngredientInRecipeCard(ingredient, null, {
         onEvent(RecipeCreateEvent.EditIngredient(ingredient))
-    }
+    }){onEvent(RecipeCreateEvent.DeleteIngredient(ingredient)) }
 }
 
 @Preview(showBackground = true)

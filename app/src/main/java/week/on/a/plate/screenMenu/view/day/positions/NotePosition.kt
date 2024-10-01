@@ -31,7 +31,7 @@ fun NotePosition(
         Row(
             Modifier
                 .weight(3f).combinedClickable(
-                onClick = {},
+                onClick = { onEvent(MenuEvent.EditPosition(note))},
                 onLongClick =
                 { onEvent(MenuEvent.SwitchEditMode) },
             ).padding(vertical = 5.dp),

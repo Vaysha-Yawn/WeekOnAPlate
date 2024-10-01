@@ -80,7 +80,7 @@ fun ShoppingListStart(viewModel: ShoppingListViewModel) {
                                 .padding(horizontal = 36.dp, vertical = 5.dp),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            TextBody(text = "Выполненные")
+                            TextBody(text = "Куплено")
                             Icon(
                                 painter = painterResource(id = R.drawable.delete),
                                 contentDescription = "", modifier = Modifier

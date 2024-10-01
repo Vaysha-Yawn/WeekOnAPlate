@@ -34,11 +34,11 @@ fun WeekNotePosition(
 ) {
     Column(
         Modifier
-            .width(200.dp)
+            .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(20.dp))
             .padding(20.dp)
             .combinedClickable(
-                onClick = {  },
+                onClick = { onEvent(MenuEvent.EditPosition(note)) },
                 onLongClick = { onEvent(MenuEvent.SwitchEditMode) },
             ),
         horizontalAlignment = Alignment.Start,
@@ -50,9 +50,6 @@ fun WeekNotePosition(
                 modifier = Modifier
                     .size(24.dp),
             )
-            MoreButtonWithBackg {
-                onEvent(MenuEvent.EditPosition(note))
-            }
         }
         Spacer(modifier = Modifier.size(12.dp))
         TextSmall(

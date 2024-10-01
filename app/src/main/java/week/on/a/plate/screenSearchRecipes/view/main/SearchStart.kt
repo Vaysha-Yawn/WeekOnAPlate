@@ -1,11 +1,16 @@
 package week.on.a.plate.screenSearchRecipes.view.main
 
-import android.view.SearchEvent
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Modifier
 import week.on.a.plate.core.Event
+import week.on.a.plate.core.uitools.buttons.ActionPlusButton
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screenSearchRecipes.event.SearchScreenEvent
+import week.on.a.plate.screenSearchRecipes.state.SearchState
 import week.on.a.plate.screenSearchRecipes.view.categoriesScreen.SearchCategoriesScreen
 import week.on.a.plate.screenSearchRecipes.view.categoriesScreen.TopSearchPanel
 import week.on.a.plate.screenSearchRecipes.view.resultScreen.SearchResultScreen
@@ -18,14 +23,35 @@ fun SearchStart(
     val onEvent = { eventData: Event ->
         mainViewModel.searchViewModel.onEvent(eventData)
     }
+
+    viewModel.state.allTagsCategories = viewModel.allTagCategories.collectAsState()
+    viewModel.state.resultSearch = viewModel.floAllRecipe.collectAsState()
+
+    Scaffold(
+        floatingActionButton = {
+            ActionPlusButton {
+                onEvent(SearchScreenEvent.CreateRecipe)
+            }
+        }
+    ) {innerPadding->
+        innerPadding
         Column {
             TopSearchPanel(viewModel.state, onEvent)
-            if (viewModel.state.resultSearch.value.isNotEmpty()) {
+            if (viewModel.state.resultSearch.value.isNotEmpty() &&
+                (viewModel.state.searchText.value != ""
+                        || viewModel.state.selectedTags.value.isNotEmpty()
+                        || viewModel.state.selectedIngredients.value.isNotEmpty()
+                        || viewModel.state.searched.value == SearchState.done)
+            ) {
                 SearchResultScreen(viewModel.state.resultSearch.value, onEvent)
-            } else if (viewModel.state.searchText.value != "" || viewModel.state.selectedTags.value.isNotEmpty() || viewModel.state.selectedIngredients.value.isNotEmpty()) {
+            } else if (viewModel.state.searchText.value != ""
+                || viewModel.state.selectedTags.value.isNotEmpty()
+                || viewModel.state.selectedIngredients.value.isNotEmpty()
+                || viewModel.state.searched.value == SearchState.done) {
                 SearchNothingFound(viewModel.state, onEvent)
             } else {
                 SearchCategoriesScreen(viewModel.state, onEvent)
             }
         }
+    }
 }

@@ -29,7 +29,7 @@ fun IngredientPosition(
             Modifier
                 .weight(3f)
                 .combinedClickable(
-                    onClick = {},
+                    onClick = {onEvent(MenuEvent.EditPosition(ingredient))},
                     onLongClick =
                     { onEvent(MenuEvent.SwitchEditMode) },
                 ).padding(vertical = 5.dp),
@@ -41,7 +41,9 @@ fun IngredientPosition(
                     .weight(3f),
                 horizontalAlignment = Alignment.Start,
             ) {
-                SubText(ingredient.ingredient.description)
+                if (ingredient.ingredient.description!=""){
+                    SubText(ingredient.ingredient.description)
+                }
                 TextBody(ingredient.ingredient.ingredientView.name,)
             }
             TextBody(if (ingredient.ingredient.count.toString() == ingredient.ingredient.count.toInt()

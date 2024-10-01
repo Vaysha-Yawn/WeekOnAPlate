@@ -50,10 +50,10 @@ fun TimePickDialog(
             )
             Spacer(Modifier.weight(1f))
             TextButton(onClick = { onEvent(TimePickEvent.Close) }) {
-                Text("Cancel")
+                Text("Отмена")
             }
             TextButton(onClick = { onEvent(TimePickEvent.Done) }) {
-                Text("Confirm")
+                Text("Подтвердить")
             }
         },
     ) {

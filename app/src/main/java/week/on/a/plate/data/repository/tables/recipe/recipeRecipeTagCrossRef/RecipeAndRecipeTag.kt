@@ -15,13 +15,3 @@ data class RecipeAndRecipeTag(
     )
     val recipeTagRooms: List<RecipeTagRoom>
 )
-
-data class RecipeTagAndRecipe(
-    @Embedded val recipeTagRoom: RecipeTagRoom,
-    @Relation(
-        parentColumn = "recipeTagId",
-        entityColumn = "recipeId",
-        associateBy = Junction(RecipeRecipeTagCrossRef::class)
-    )
-    val recipeRoom: List<RecipeRoom>,
-)

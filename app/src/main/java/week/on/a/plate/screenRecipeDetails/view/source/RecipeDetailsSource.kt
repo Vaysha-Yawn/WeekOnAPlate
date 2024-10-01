@@ -22,9 +22,8 @@ import week.on.a.plate.core.uitools.WebPage
 
 @Composable
 fun RecipeDetailsSource(state: RecipeDetailsState, onEventMain: (Event) -> Unit, onEvent: (RecipeDetailsEvent) -> Unit) {
-    if (state.recipe.value == null) return
     val url = remember {
-        mutableStateOf(state.recipe.value!!.link)
+        mutableStateOf(state.recipe.value.link)
     }
     WebPage(url,onEventMain )
 }
@@ -34,7 +33,7 @@ fun RecipeDetailsSource(state: RecipeDetailsState, onEventMain: (Event) -> Unit,
 fun PreviewRecipeDetailsSource() {
     WeekOnAPlateTheme {
         RecipeDetailsSource(RecipeDetailsState().apply {
-            recipe.value = recipeTom
+            recipe = mutableStateOf(recipeTom)
         }, {}) {}
     }
 }

@@ -20,7 +20,7 @@ interface IngredientCategoryDAO {
     suspend fun insert(ingredientCategoryRoom: IngredientCategoryRoom):Long
 
     @Query("SELECT * FROM IngredientCategoryRoom WHERE ingredientCategoryId=:ingredientCategoryId")
-    suspend fun getById(ingredientCategoryId:Long): IngredientCategoryRoom
+    suspend fun getById(ingredientCategoryId:Long): IngredientCategoryAndIngredients
 
     @Transaction
     @Query("SELECT * FROM IngredientCategoryRoom WHERE ingredientCategoryId=:ingredientCategoryId")
@@ -28,7 +28,7 @@ interface IngredientCategoryDAO {
 
     @Transaction
     @Query("SELECT * FROM IngredientCategoryRoom ")
-    suspend fun getAllIngredientCategoryAndIngredients(): List<IngredientCategoryAndIngredients>
+    fun getAllIngredientCategoryAndIngredients(): Flow<List<IngredientCategoryAndIngredients>>
 
     @Update
     suspend fun update(ingredientCategoryRoom: IngredientCategoryRoom)

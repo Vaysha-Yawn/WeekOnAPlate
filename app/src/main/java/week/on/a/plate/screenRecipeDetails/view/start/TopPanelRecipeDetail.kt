@@ -30,6 +30,9 @@ fun TopPanelRecipeDetail(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent
             onEvent(RecipeDetailsEvent.Back)
         }
         Row {
+            ImageButton(R.drawable.delete) {
+                onEvent(RecipeDetailsEvent.Delete)
+            }
             ImageButton(R.drawable.edit) {
                 onEvent(RecipeDetailsEvent.Edit)
             }
@@ -37,8 +40,7 @@ fun TopPanelRecipeDetail(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent
                 onEvent(RecipeDetailsEvent.AddToCart)
             }
             ImageButton(
-                if (state.recipe.value?.tags?.find { it -> it.tagName == "Избранное" } != null)
-                    R.drawable.bookmark_full else R.drawable.bookmark
+                if (state.recipe.value.inFavorite) R.drawable.bookmark_full else R.drawable.bookmark
             ) {
                 onEvent(RecipeDetailsEvent.SwitchFavorite)
             }

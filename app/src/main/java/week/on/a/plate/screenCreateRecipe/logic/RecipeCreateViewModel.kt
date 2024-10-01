@@ -7,9 +7,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.Event
+import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.data.dataView.recipe.RecipeView
 import week.on.a.plate.data.dataView.week.Position
-import week.on.a.plate.dialogsAddFilters.addIngrdient.logic.AddIngredientViewModel
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screenCreateRecipe.event.RecipeCreateEvent
@@ -18,8 +18,8 @@ import week.on.a.plate.screenCreateRecipe.state.RecipeStepState
 import week.on.a.plate.screenCreateRecipe.timePickDialog.logic.TimePickViewModel
 import week.on.a.plate.screenFilters.navigation.FilterDestination
 import week.on.a.plate.screenFilters.state.FilterMode
-import week.on.a.plate.screenMenu.dialogs.editNote.logic.EditNoteViewModel
-import week.on.a.plate.screenMenu.dialogs.editPositionIngredient.logic.EditPositionIngredientViewModel
+import week.on.a.plate.dialogEditNote.logic.EditNoteViewModel
+import week.on.a.plate.dialogEditPositionIngredient.logic.EditPositionIngredientViewModel
 import javax.inject.Inject
 
 @HiltViewModel
@@ -44,7 +44,7 @@ class RecipeCreateViewModel @Inject constructor(): ViewModel() {
             }
 
             RecipeCreateEvent.Done -> {
-                //
+                resultFlow.value = state
                 mainViewModel.nav.popBackStack()
             }
 
@@ -163,6 +163,28 @@ class RecipeCreateViewModel @Inject constructor(): ViewModel() {
                     ) { note ->
                         state.photoLink.value = note.note
                     }
+                }
+            }
+
+            RecipeCreateEvent.AddManyIngredients -> {
+                viewModelScope.launch {
+                    mainViewModel.nav.navigate(FilterDestination)
+                    mainViewModel.filterViewModel.launchAndGet(
+                        FilterMode.IngredientList,
+                        null
+                    ) {
+                        state.ingredients.value = state.ingredients.value.toMutableList().apply {
+                            it.second.forEach { ingredient->
+                                this.add(IngredientInRecipeView(0, ingredient, "", 0))
+                            }
+                        }.toList()
+                    }
+                }
+            }
+
+            is RecipeCreateEvent.DeleteIngredient -> {
+                state.ingredients.value = state.ingredients.value.toMutableList().apply {
+                    this.remove(event.ingredient)
                 }
             }
         }

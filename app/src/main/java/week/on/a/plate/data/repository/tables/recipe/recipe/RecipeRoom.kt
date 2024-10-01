@@ -11,7 +11,8 @@ data class RecipeRoom(
     val prepTime: Int,
     val allTime: Int,
     val standardPortionsCount: Int,
-    val link: String
+    val link: String,
+    var inFavorite:Boolean
 ){
     @PrimaryKey(autoGenerate = true)
     var recipeId: Long = 0

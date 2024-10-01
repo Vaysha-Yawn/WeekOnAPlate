@@ -11,6 +11,7 @@ sealed class RecipeCreateEvent:Event() {
     class DeleteImage(val recipeStepState: RecipeStepState) : RecipeCreateEvent()
     class EditImage(val recipeStepState: RecipeStepState) : RecipeCreateEvent()
     class EditTimer(val recipeStepState: RecipeStepState) : RecipeCreateEvent()
+    class DeleteIngredient(val ingredient: IngredientInRecipeView) : RecipeCreateEvent()
     data object EditMainImage : RecipeCreateEvent()
     data object Done:RecipeCreateEvent()
     data object Close:RecipeCreateEvent()
@@ -19,4 +20,5 @@ sealed class RecipeCreateEvent:Event() {
     data object EditTags : RecipeCreateEvent()
     data object AddIngredient : RecipeCreateEvent()
     data object AddStep : RecipeCreateEvent()
+    data object AddManyIngredients : RecipeCreateEvent()
 }

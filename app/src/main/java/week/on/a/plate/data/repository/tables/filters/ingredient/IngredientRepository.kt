@@ -1,5 +1,7 @@
 package week.on.a.plate.data.repository.tables.filters.ingredient
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import week.on.a.plate.data.dataView.recipe.IngredientView
 import javax.inject.Inject
 
@@ -18,5 +20,9 @@ class IngredientRepository @Inject constructor(
     }
     suspend fun getById(id:Long): IngredientView? {
         return with(mapper) { ingredientDAO.findByID(id)?.roomToView() }
+    }
+
+    fun getByIdFlow(id:Long): Flow<IngredientView?> {
+        return ingredientDAO.findByIDFlow(id).map { with(mapper) { it?.roomToView() } }
     }
 }

@@ -2,6 +2,7 @@ package week.on.a.plate.screenFilters.view
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import week.on.a.plate.screenFilters.event.FilterEvent
 import week.on.a.plate.screenFilters.logic.FilterViewModel
 
@@ -12,6 +13,9 @@ fun FilterStart(
     val onEvent = {event: FilterEvent ->
         viewModel.onEvent(event)
     }
+    viewModel.state.allIngredientsCategories = viewModel.allIngredients.collectAsState()
+    viewModel.state.allTagsCategories = viewModel.allTags.collectAsState()
+
     Column {
         TopSearchPanelFilter(stateUI = viewModel.state, onEvent)
         FilterScreen(viewModel.state, onEvent)

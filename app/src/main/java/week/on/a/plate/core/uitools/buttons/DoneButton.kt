@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
@@ -84,7 +85,7 @@ fun CommonButton(
             }, horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically
     ) {
         Spacer(modifier = Modifier)
-        TextInApp(text = text, textStyle = titleMediumItalic, color = ColorTextBlack)
+        TextInApp(text = text, textStyle = Typography.bodyMedium, color = ColorTextBlack, textAlign = TextAlign.Center)
         if (image==null){
             Spacer(modifier = Modifier)
         }else{

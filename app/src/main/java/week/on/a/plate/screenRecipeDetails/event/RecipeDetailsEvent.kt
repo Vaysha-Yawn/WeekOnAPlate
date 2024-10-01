@@ -11,5 +11,6 @@ sealed class RecipeDetailsEvent: Event() {
     data object AddToMenu:RecipeDetailsEvent()
     data object PlusPortionsView:RecipeDetailsEvent()
     data object MinusPortionsView:RecipeDetailsEvent()
+    data object Delete : RecipeDetailsEvent()
     data class StartTimerForStep(val time: Int, val act: Context) : RecipeDetailsEvent()
 }

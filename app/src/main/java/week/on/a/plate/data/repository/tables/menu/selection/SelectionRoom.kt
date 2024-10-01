@@ -5,7 +5,6 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class SelectionRoom(
-    // ссылка на день, может быть 0 если это нераспред недели
     val dayId:Long,
     val category:String,
 ){

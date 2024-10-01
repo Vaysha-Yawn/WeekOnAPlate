@@ -35,7 +35,6 @@ sealed class ActionWeekMenuDB {
         val position: Position
     ) : ActionWeekMenuDB()
 
-    data object DeleteSelected : ActionWeekMenuDB()
     class Delete(val position: Position) : ActionWeekMenuDB()
     class AddEmptyDay(val data: LocalDate) : ActionWeekMenuDB()
     class AddDraft(val draft: Position.PositionDraftView) : ActionWeekMenuDB()

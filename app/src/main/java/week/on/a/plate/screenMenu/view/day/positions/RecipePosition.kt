@@ -20,6 +20,7 @@ import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.core.uitools.SubText
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.buttons.CheckButton
+import week.on.a.plate.core.uitools.buttons.MoreButton
 import week.on.a.plate.screenMenu.event.MenuEvent
 import week.on.a.plate.screenMenu.state.MenuIUState
 import week.on.a.plate.screenMenu.event.NavFromMenuData
@@ -42,7 +43,7 @@ fun RecipePosition(
                         onEvent(
                             MenuEvent.NavigateFromMenu(
                                 NavFromMenuData.NavToFullRecipe(
-                                    recipe.recipe
+                                    recipe.recipe.id, recipe.portionsCount
                                 )
                             )
                         )
@@ -77,6 +78,9 @@ fun RecipePosition(
                     recipe.recipe.name
                 )
             }
+        }
+        MoreButton {
+            onEvent(MenuEvent.EditPosition(recipe))
         }
     }
 }

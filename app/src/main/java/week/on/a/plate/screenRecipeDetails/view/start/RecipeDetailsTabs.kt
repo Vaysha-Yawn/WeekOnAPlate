@@ -8,6 +8,7 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -17,10 +18,10 @@ import week.on.a.plate.core.uitools.TextSmall
 import week.on.a.plate.screenRecipeDetails.event.RecipeDetailsEvent
 import week.on.a.plate.screenRecipeDetails.state.RecipeDetailsState
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
+import week.on.a.plate.core.utils.timeToString
 
 @Composable
 fun RecipeDetailsTabs(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) -> Unit) {
-    if (state.recipe.value == null) return
     val tabTitles = listOf("По шагам", "Состав", "Источник")
     TabRow( modifier = Modifier.fillMaxWidth(),
         selectedTabIndex = state.activeTabIndex.intValue,
@@ -38,8 +39,8 @@ fun RecipeDetailsTabs(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) -
                         TextSmall(
                             text =
                             when (index) {
-                                0 -> state.recipe.value!!.allTime.toString() + " мин"
-                                1 -> state.recipe.value!!.ingredients.size.toString()
+                                0 -> state.recipe.value.allTime.timeToString()
+                                1 -> state.recipe.value.ingredients.size.toString()
                                 2 -> ""
                                 else -> ""
                             }
@@ -60,7 +61,7 @@ fun RecipeDetailsTabs(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) -
 fun PreviewRecipeDetailsTabs() {
     WeekOnAPlateTheme {
         RecipeDetailsTabs(RecipeDetailsState().apply {
-            recipe.value = recipeTom
+            recipe = mutableStateOf(recipeTom)
         }) {}
     }
 }

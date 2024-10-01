@@ -12,21 +12,22 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import week.on.a.plate.core.theme.ColorButtonNegativeGrey
+import week.on.a.plate.core.theme.WeekOnAPlateTheme
+import week.on.a.plate.core.uitools.CreateTagOrIngredient
+import week.on.a.plate.core.uitools.SearchLine
+import week.on.a.plate.core.uitools.TagBig
+import week.on.a.plate.core.uitools.buttons.BackButtonOutlined
 import week.on.a.plate.data.dataView.example.tags
 import week.on.a.plate.screenSearchCategories.event.CategoriesSearchEvent
 import week.on.a.plate.screenSearchCategories.logic.CategoriesSearchViewModel
-import week.on.a.plate.core.uitools.CreateTagOrIngredient
-import week.on.a.plate.core.uitools.TagBig
-import week.on.a.plate.core.uitools.buttons.BackButtonOutlined
-import week.on.a.plate.core.uitools.SearchLine
-import week.on.a.plate.core.theme.ColorButtonNegativeGrey
-import week.on.a.plate.core.theme.WeekOnAPlateTheme
 
 @Composable
 fun CategoriesSearchMain(vm: CategoriesSearchViewModel) {
@@ -34,8 +35,17 @@ fun CategoriesSearchMain(vm: CategoriesSearchViewModel) {
     val onEventCategoriesSearch = { event: CategoriesSearchEvent ->
         vm.onEvent(event)
     }
+    vm.state.allTags = vm.allTagCategories.collectAsState()
+    vm.state.allIngredients = vm.allIngredientCategories.collectAsState()
+
+    val list = if (vm.isTag) {
+        state.allTags.value.map { it.name }
+    } else {
+        state.allIngredients.value.map { it.name }
+    }
+
     CategoriesSearch(
-        state.allNames.value,
+        list,
         state.searchText,
         state.resultSearch,
         { onEventCategoriesSearch(CategoriesSearchEvent.Search) },
@@ -110,7 +120,7 @@ fun TopSearchPanelCategory(
         SearchLine(
             textSearch = searchText,
             actionSearch = { s -> searchEvent() },
-            actionSearchVoice = { voiceSearchEvent() }, actionClear = {searchEvent()})
+            actionSearchVoice = { voiceSearchEvent() }, actionClear = { searchEvent() })
     }
 }
 

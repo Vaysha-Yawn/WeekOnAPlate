@@ -20,14 +20,32 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.core.theme.ColorBackgroundWhite
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
+import week.on.a.plate.mainActivity.logic.MainViewModel
+import week.on.a.plate.screenCreateRecipe.logic.RecipeCreateViewModel
+import week.on.a.plate.screenFilters.logic.FilterViewModel
+import week.on.a.plate.screenInventory.logic.InventoryViewModel
+import week.on.a.plate.screenMenu.logic.MenuViewModel
+import week.on.a.plate.screenRecipeDetails.logic.RecipeDetailsViewModel
+import week.on.a.plate.screenSearchCategories.logic.CategoriesSearchViewModel
+import week.on.a.plate.screenSearchRecipes.logic.SearchViewModel
+import week.on.a.plate.screenShoppingList.logic.ShoppingListViewModel
+import week.on.a.plate.screenSpecifySelection.logic.SpecifySelectionViewModel
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val viewModel: MainViewModel by viewModels<MainViewModel>()
+    private val viewModel: MainViewModel by viewModels()
+    private val specifySelectionViewModel: SpecifySelectionViewModel by viewModels()
+    private val categoriesSearchViewModel: CategoriesSearchViewModel by viewModels()
+    private val filterViewModel: FilterViewModel by viewModels()
+    private val searchViewModel: SearchViewModel by viewModels()
+    private val recipeDetailsViewModel: RecipeDetailsViewModel by viewModels()
+    private val shoppingListViewModel: ShoppingListViewModel by viewModels()
+    private val recipeCreateViewModel: RecipeCreateViewModel by viewModels()
+    private val menuViewModel: MenuViewModel by viewModels()
+    private val inventoryViewModel: InventoryViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +66,21 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             WeekOnAPlateTheme {
+
                 viewModel.nav = rememberNavController()
+
+                viewModel.initViewModels(
+                    specifySelectionViewModel,
+                    categoriesSearchViewModel,
+                    filterViewModel,
+                    searchViewModel,
+                    recipeDetailsViewModel,
+                    shoppingListViewModel,
+                    recipeCreateViewModel,
+                    menuViewModel,
+                    inventoryViewModel
+                )
+
                 Scaffold(modifier = Modifier
                     .fillMaxSize()
                     .background(ColorBackgroundWhite),
@@ -71,7 +103,7 @@ class MainActivity : ComponentActivity() {
                         viewModel,
                         innerPadding,
                     )
-                   DialogsContainer(viewModel.dialogUseCase.activeDialog.value){ event->
+                    DialogsContainer(viewModel.dialogUseCase.activeDialog.value) { event ->
                         viewModel.onEvent(event)
                     }
                 }

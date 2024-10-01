@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -45,7 +46,6 @@ import week.on.a.plate.core.utils.timeToString
 @Composable
 fun RecipeDetailsSteps(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) -> Unit) {
     Column {
-        if (state.recipe.value == null) return
         HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.outline)
         Row(
             horizontalArrangement = Arrangement.SpaceAround, modifier = Modifier
@@ -53,18 +53,18 @@ fun RecipeDetailsSteps(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) 
                 .padding(vertical = 12.dp), verticalAlignment = Alignment.CenterVertically
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                TextBody(text = state.recipe.value!!.prepTime.toString() + " мин")
+                TextBody(text = state.recipe.value.prepTime.timeToString())
                 TextBody(text = "Активное время")
             }
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                TextBody(text = state.recipe.value!!.prepTime.toString() + " мин")
+                TextBody(text = state.recipe.value.allTime.timeToString())
                 TextBody(text = "Всё время")
             }
         }
         HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.outline)
         Spacer(modifier = Modifier.height(24.dp))
         val listGradient = listOf(Color(0xFFFFEADE), Color(0xFFFFF2DE), Color(0xFFFFFFFF))
-        for ((index, step) in state.recipe.value!!.steps.withIndex()) {
+        for ((index, step) in state.recipe.value.steps.withIndex()) {
             HorizontalDivider(thickness = 1.dp, color = ColorPanelYellow)
             Column(
                 Modifier
@@ -142,7 +142,7 @@ fun TimerButton(timer: Int, onEvent: (RecipeDetailsEvent) -> Unit) {
 fun PreviewRecipeDetailsSteps() {
     WeekOnAPlateTheme {
         RecipeDetailsSteps(RecipeDetailsState().apply {
-            recipe.value = recipeTom
+            recipe = mutableStateOf(recipeTom)
         }) {}
     }
 }

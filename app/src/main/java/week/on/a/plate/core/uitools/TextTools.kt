@@ -135,13 +135,13 @@ fun TextBodyDisActive(text: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun SubText(text: String, modifier: Modifier = Modifier) {
+fun SubText(text: String, modifier: Modifier = Modifier, textAlign : TextAlign = TextAlign.Center) {
     TextInApp(
         text,
         modifier,
         textStyle = Typography.bodySmall,
         color = ColorSubTextGrey,
-        textAlign = TextAlign.Center
+        textAlign = textAlign
     )
 }
 

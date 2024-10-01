@@ -34,49 +34,26 @@ import java.time.LocalDate
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun MenuScreen(
-    mainVM: MainViewModel, nav: NavHostController,
-    viewModel: MenuViewModel = hiltViewModel(),
+    vm:MenuViewModel
 ) {
-    viewModel.mainViewModel = mainVM
-    viewModel.navigationMenu.navController = nav
-    viewModel.updateWeek()
-
-    val uiState = viewModel.weekState.collectAsStateWithLifecycle().value
+    vm.updateWeek()
+    val uiState = vm.weekState.collectAsStateWithLifecycle().value
     when (uiState) {
         WeekState.EmptyWeek -> {}
         is WeekState.Error -> {}
         WeekState.Loading -> {}
         is WeekState.Success -> {
             if (uiState.week.days.isNotEmpty()) {
-                MenuScreenSuccess(viewModel.menuUIState, uiState.week) { event: Event ->
-                    viewModel.onEvent(event)
+                MenuScreenSuccess(vm.menuUIState, uiState.week) { event: Event ->
+                    vm.onEvent(event)
                 }
             } else {
-                viewModel.weekState.value = WeekState.EmptyWeek
+                vm.weekState.value = WeekState.EmptyWeek
             }
         }
     }
 
-   /* getOptionArgFromSpecifyDate(mainVM.nav){ event: MainEvent ->
-        viewModel.onEvent(event)
-    }*/
-
 }
-
-fun getOptionArgFromSpecifyDate(navController: NavHostController, onEvent: (MainEvent) -> Unit) {
-  /*  val noResultData =
-        navController.currentBackStackEntry?.savedStateHandle?.getStateFlow<Long>("selId", 0)
-
-    if (noResultData?.value!=null && noResultData.value!=0L){
-       *//* onEvent(MainEvent.OpenDialog(DialogData.AddPosition(noResultData.value) { event: MainEvent ->
-            onEvent(event)
-        }))*//*
-        navController.currentBackStackEntry?.savedStateHandle?.remove<Long>("selId")
-
-        navController.popBackStack(FullScreenDialogRoute.SpecifyDateDialog, false)
-    }*/
-}
-
 
 @Composable
 fun MenuScreenSuccess(

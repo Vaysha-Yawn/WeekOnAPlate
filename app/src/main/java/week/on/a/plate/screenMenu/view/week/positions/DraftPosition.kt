@@ -26,6 +26,7 @@ import week.on.a.plate.core.uitools.TagSmall
 import week.on.a.plate.core.uitools.buttons.MoreButtonWithBackg
 import week.on.a.plate.core.Event
 import week.on.a.plate.screenMenu.event.MenuEvent
+import week.on.a.plate.screenSearchRecipes.view.resultScreen.TagList
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -35,11 +36,11 @@ fun WeekDraftPosition(
 ) {
     Column(
         Modifier
-            .width(200.dp)
+            .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(20.dp))
             .padding(20.dp)
             .combinedClickable(
-                onClick = { },
+                onClick = {onEvent(MenuEvent.EditPosition(draft)) },
                 onLongClick = { onEvent(MenuEvent.SwitchEditMode) },
             ),
         horizontalAlignment = Alignment.Start,
@@ -52,23 +53,13 @@ fun WeekDraftPosition(
                     .size(24.dp)
                     .clickable { onEvent(MenuEvent.SearchByDraft(draft)) },
             )
-            MoreButtonWithBackg {
-              onEvent(MenuEvent.EditPosition(draft))
-            }
         }
-        Spacer(modifier = Modifier.size(10.dp))
+        Spacer(modifier = Modifier.size(6.dp))
         Column(
-            Modifier
+            Modifier.fillMaxWidth()
                 .padding(vertical = 5.dp),
         ) {
-            draft.tags.forEach {
-                    TagSmall(tag = it)
-                    Spacer(modifier = Modifier.size(5.dp))
-            }
-            draft.ingredients.forEach{
-                TagSmall(ingredientView = it)
-                Spacer(modifier = Modifier.size(5.dp))
-            }
+            TagList(draft.tags, draft.ingredients)
         }
     }
 

@@ -28,5 +28,12 @@ fun Int.timeToString(): String {
     val sec = this
     val min = (sec / 60)
     val hour = min / 60
-    return "${if (hour < 10) "0" else ""}$hour:${if (min < 10) "0" else ""}$min"
+    val minView = min-hour*60
+    val hourTxt = if (hour>0){
+        "$hour ч "
+    }else ""
+    val minuteTxt = if (minView>0){
+        "$minView мин"
+    }else ""
+    return hourTxt+minuteTxt
 }

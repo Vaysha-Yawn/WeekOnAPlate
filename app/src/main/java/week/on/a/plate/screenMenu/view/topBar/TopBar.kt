@@ -48,7 +48,7 @@ fun TopBar(
                 EditingRow(actionChooseAll = {
                     onEvent(MenuEvent.ActionSelect(SelectedEvent.ChooseAll))
                 }, actionDeleteSelected = {
-                    onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.DeleteSelected))
+                    onEvent(MenuEvent.DeleteSelected)
                 }, actionSelectedToShopList = {
                    // onEvent(MainEvent.OpenDialog(DialogData.SelectedToShopList( onEvent)))
                 }, menuIUState.isAllSelected.value)

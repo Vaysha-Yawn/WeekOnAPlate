@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import week.on.a.plate.data.dataView.week.CategoriesSelection
-import week.on.a.plate.screenMenu.dialogs.datePicker.logic.DatePickerViewModel
+import week.on.a.plate.dialogDatePicker.logic.DatePickerViewModel
 import week.on.a.plate.core.Event
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel

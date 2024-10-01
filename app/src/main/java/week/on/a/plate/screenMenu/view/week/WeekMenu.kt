@@ -75,7 +75,7 @@ fun WeekMenu(
                             Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.background(MaterialTheme.colorScheme.surface, RoundedCornerShape(10.dp))) {
                                 SubText(
                                     text = sel.category,
-                                    modifier = Modifier.width(170.dp),
+                                    modifier = Modifier.weight(1f),
                                 )
                                 PlusButtonTitle {
                                     onEvent(MenuEvent.CreatePosition(sel.id))
@@ -90,7 +90,7 @@ fun WeekMenu(
                                 )
                             }
                         }
-                        Spacer(modifier = Modifier.width(10.dp))
+                        Spacer(modifier = Modifier.size(10.dp))
                     }
                 }
             }
