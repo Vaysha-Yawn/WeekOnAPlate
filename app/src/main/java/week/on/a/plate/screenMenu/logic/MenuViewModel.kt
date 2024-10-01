@@ -55,7 +55,6 @@ class MenuViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            // sCRUDRecipeInMenu.menuR.insertNewWeek(WeekDataExample)
             updateWeek()
         }
     }
@@ -136,7 +135,6 @@ class MenuViewModel @Inject constructor(
 
             is MenuEvent.RecipeToShopList -> TODO()
             MenuEvent.SelectedToShopList -> TODO()
-
             is MenuEvent.FindReplaceRecipe -> findReplaceRecipe(event.recipe)
             is MenuEvent.NavToAddRecipe -> navToAddRecipe(event.selId)
             is MenuEvent.SearchByDraft -> searchByDraft(event.draft)
@@ -145,7 +143,6 @@ class MenuViewModel @Inject constructor(
                     onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.Delete(it)))
                 }
             }
-
             is MenuEvent.CreateFirstNonPosedPosition -> {
                 viewModelScope.launch {
                     val sel = sCRUDRecipeInMenu.menuR.getSelIdOrCreate(event.date, false, CategoriesSelection.NonPosed, mainViewModel.locale)
@@ -157,7 +154,6 @@ class MenuViewModel @Inject constructor(
 
     private fun searchByDraft(draft: Position.PositionDraftView) {
         //todo after delete and add this
-        //  and bag не получается вернуть на меню с нижней панелью
         mainViewModel.searchViewModel.launchAndGet(
             draft.selectionId,
             Pair(draft.tags, draft.ingredients)

@@ -24,19 +24,6 @@ class SelectedRecipeManager @Inject constructor() {
         menuUIState.chosenRecipes[id] = state
     }
 
-    private fun actionChooseAll(menuUIState: MenuIUState) {
-        if (menuUIState.isAllSelected.value) {
-            menuUIState.chosenRecipes.values.forEach {
-                it.value = false
-            }
-        } else {
-            menuUIState.chosenRecipes.values.forEach {
-                it.value = true
-            }
-        }
-        menuUIState.isAllSelected.value = !menuUIState.isAllSelected.value
-    }
-
     fun getSelected(menuUIState: MenuIUState): List<Position.PositionRecipeView> {
         val list = mutableListOf<Position.PositionRecipeView>()
         menuUIState.chosenRecipes.entries.forEach {
@@ -53,7 +40,6 @@ class SelectedRecipeManager @Inject constructor() {
         when (selectedEvent) {
             is SelectedEvent.AddCheckState -> addNewState(menuUIState, selectedEvent.recipe)
             is SelectedEvent.CheckRecipe -> actionCheckRecipe(menuUIState, selectedEvent.recipe)
-            SelectedEvent.ChooseAll -> actionChooseAll(menuUIState)
         }
     }
 
