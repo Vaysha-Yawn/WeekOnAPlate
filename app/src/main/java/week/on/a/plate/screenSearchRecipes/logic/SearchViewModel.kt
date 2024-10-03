@@ -55,6 +55,7 @@ class SearchViewModel @Inject constructor(
     private var selId: Long? = null
     private val _floAllRecipe: MutableStateFlow<List<RecipeView>> = MutableStateFlow(listOf())
     val floAllRecipe: StateFlow<List<RecipeView>> = _floAllRecipe
+    var resultFlow : MutableStateFlow<RecipeView?>? = null
 
 
     init {
@@ -63,7 +64,7 @@ class SearchViewModel @Inject constructor(
             allTagCategories =
                 tagCategoryRepository.getAllTagsByCategoriesForFilters().stateIn(viewModelScope)
 
-            recipeRepository.getAllRecipeFlow().collect{
+            recipeRepository.getAllRecipeFlow().collect {
                 _floAllRecipe.value = it
             }
         }
@@ -71,7 +72,7 @@ class SearchViewModel @Inject constructor(
 
 
     private fun search() {
-        searchAbstract{recipeView ->
+        searchAbstract { recipeView ->
             recipeView.name.contains(state.searchText.value, true)
                     && recipeView.tags.containsAll(state.selectedTags.value)
                     && recipeView.ingredients.map { ingredientInRecipeView -> ingredientInRecipeView.ingredientView }
@@ -79,11 +80,11 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    private fun searchAbstract(filter:(RecipeView)->Boolean) {
+    private fun searchAbstract(filter: (RecipeView) -> Boolean) {
         state.searched.value = SearchState.searching
         viewModelScope.launch {
-            recipeRepository.getAllRecipeFlow().collect{ recipeViewList ->
-                _floAllRecipe.value = recipeViewList.filter {  filter(it) }
+            recipeRepository.getAllRecipeFlow().collect { recipeViewList ->
+                _floAllRecipe.value = recipeViewList.filter { filter(it) }
                 state.searched.value = SearchState.done
             }
         }
@@ -91,13 +92,13 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun searchAll() {
-        searchAbstract{ true }
+        searchAbstract { true }
     }
 
     private fun searchRandom() {
         state.searched.value = SearchState.searching
         viewModelScope.launch {
-            recipeRepository.getAllRecipeFlow().collect{ recipeViewList ->
+            recipeRepository.getAllRecipeFlow().collect { recipeViewList ->
                 if (recipeViewList.isNotEmpty()) {
                     val mutableRecipeViewList = recipeViewList.toMutableList()
                     val listRandom = mutableListOf<RecipeView>()
@@ -114,7 +115,7 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun searchFavorite() {
-        searchAbstract{recipeView ->
+        searchAbstract { recipeView ->
             recipeView.inFavorite
         }
     }
@@ -157,30 +158,24 @@ class SearchViewModel @Inject constructor(
             is SearchScreenEvent.Search -> search()
             SearchScreenEvent.VoiceSearch -> onEvent(MainEvent.VoiceToText() {
                 state.searchText.value = it?.joinToString() ?: ""
-                search()
-            })
-
+                search()})
             SearchScreenEvent.Back -> close()
             is SearchScreenEvent.FlipFavorite -> flipFavorite(event.recipe, event.inFavorite)
             is SearchScreenEvent.AddToMenu -> addToMenu(event.recipeView)
-            is SearchScreenEvent.NavigateToFullRecipe -> {
-                mainViewModel.recipeDetailsViewModel.launch(
-                    event.recipeView.id
-                )
-                mainViewModel.nav.navigate(RecipeDetailsDestination)
-            }
-
+            is SearchScreenEvent.NavigateToFullRecipe -> navigateToFullRecipe(event.recipeView.id)
             SearchScreenEvent.ToFilter -> toFilter()
             is SearchScreenEvent.SelectTag -> selectTag(event.recipeTagView)
-            is SearchScreenEvent.CreateRecipe -> {
-                createRecipe()
-            }
-
+            is SearchScreenEvent.CreateRecipe -> createRecipe()
             SearchScreenEvent.Clear -> searchClear()
             SearchScreenEvent.SearchFavorite -> searchFavorite()
             SearchScreenEvent.SearchAll -> searchAll()
             SearchScreenEvent.SearchRandom -> searchRandom()
         }
+    }
+
+    private fun navigateToFullRecipe(id: Long) {
+        mainViewModel.recipeDetailsViewModel.launch(id)
+        mainViewModel.nav.navigate(RecipeDetailsDestination)
     }
 
     private fun createRecipe() {
@@ -237,29 +232,35 @@ class SearchViewModel @Inject constructor(
         state.searchText.value = ""
         state.selectedTags.value = listOf()
         state.selectedIngredients.value = listOf()
+        state.searched.value = SearchState.none
     }
 
     private fun addToMenu(recipeView: RecipeView) {
         viewModelScope.launch {
-            val vm = mainViewModel.specifySelectionViewModel
-            mainViewModel.nav.navigate(SpecifySelectionDirection)
-            vm.launchAndGet() { selId, count ->
-                viewModelScope.launch {
-                    val recipePosition = Position.PositionRecipeView(
-                        0,
-                        RecipeShortView(recipeView.id, recipeView.name),
-                        count,
-                        selId
-                    )
-                    sCRUDRecipeInMenu.onEvent(
-                        ActionWeekMenuDB.AddRecipePositionInMenuDB(
-                            selId,
-                            recipePosition
-                        )
-                    )
-                }
-                close()
+            if (selId != null) {
+                resultFlow?.value = recipeView
+                selId = null
                 mainViewModel.nav.navigate(MenuScreen)
+            } else {
+                val vm = mainViewModel.specifySelectionViewModel
+                mainViewModel.nav.navigate(SpecifySelectionDirection)
+                vm.launchAndGet() { res ->
+                    viewModelScope.launch {
+                        val recipePosition = Position.PositionRecipeView(
+                            0,
+                            RecipeShortView(recipeView.id, recipeView.name),
+                            res.portions,
+                            res.selId
+                        )
+                        sCRUDRecipeInMenu.onEvent(
+                            ActionWeekMenuDB.AddRecipePositionInMenuDB(
+                                res.selId,
+                                recipePosition
+                            )
+                        )
+                    }
+                    close()
+                }
             }
         }
     }
@@ -296,19 +297,33 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    fun launchAndGet(selIde: Long?, filters: Pair<List<RecipeTagView>, List<IngredientView>>?) {
+    fun start(): MutableStateFlow<RecipeView?> {
+        val flow = MutableStateFlow<RecipeView?>(null)
+        resultFlow = flow
+        return flow
+    }
+
+    suspend fun launchAndGet( selIde: Long?, filters: Pair<List<RecipeTagView>, List<IngredientView>>?,  use: (RecipeView) -> Unit) {
         selId = selIde
         if (filters != null) {
             state.selectedTags.value = filters.first
             state.selectedIngredients.value = filters.second
         }
         search()
+        val flow = start()
+        flow.collect { value ->
+            if (value != null) {
+                use(value)
+                resultFlow = null
+                return@collect
+            }
+        }
     }
 
     fun close() {
         if (state.resultSearch.value.isNotEmpty() || state.selectedTags.value.isNotEmpty() ||
             state.selectedIngredients.value.isNotEmpty() ||
-            state.searchText.value != "" || state.searched.value==SearchState.done
+            state.searchText.value != "" || state.searched.value == SearchState.done
         ) {
             state.resultSearch = mutableStateOf(listOf())
             state.selectedTags.value = listOf()

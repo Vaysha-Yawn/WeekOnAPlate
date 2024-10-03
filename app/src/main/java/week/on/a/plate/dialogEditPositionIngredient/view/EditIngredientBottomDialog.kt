@@ -9,14 +9,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 import week.on.a.plate.R
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.EditNumberLine
@@ -26,15 +28,14 @@ import week.on.a.plate.core.uitools.buttons.CommonButton
 import week.on.a.plate.core.uitools.buttons.DoneButton
 import week.on.a.plate.core.uitools.ingredientCard.CardIngredient
 import week.on.a.plate.data.dataView.example.positionIngredientExample
-import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.dialogEditPositionIngredient.event.EditPositionIngredientEvent
 import week.on.a.plate.dialogEditPositionIngredient.state.EditPositionIngredientUIState
 
 @Composable
 fun EditOrAddIngredientBottomDialogContent(
+    snackBarState: SnackbarHostState,
     state: EditPositionIngredientUIState,
     onEvent: (EditPositionIngredientEvent) -> Unit,
-    onEventMain: (MainEvent) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -99,6 +100,7 @@ fun EditOrAddIngredientBottomDialogContent(
             }
         }
         val messageError = stringResource(id = R.string.message_select_ingredient)
+        val coroutineScope = rememberCoroutineScope()
         Spacer(modifier = Modifier.height(36.dp))
         DoneButton(
             text = stringResource(id = R.string.apply),
@@ -107,7 +109,9 @@ fun EditOrAddIngredientBottomDialogContent(
             if (state.ingredientState.value != null) {
                 onEvent(EditPositionIngredientEvent.Done)
             } else {
-                onEventMain(MainEvent.ShowSnackBar(messageError))
+                coroutineScope.launch {
+                    snackBarState.showSnackbar(messageError)
+                }
             }
         }
     }
@@ -118,9 +122,9 @@ fun EditOrAddIngredientBottomDialogContent(
 @Composable
 fun PreviewEditIngredientBottomDialog() {
     WeekOnAPlateTheme {
-        val state = rememberModalBottomSheetState(true)
+        val snackBar = SnackbarHostState()
         EditOrAddIngredientBottomDialogContent(
-            EditPositionIngredientUIState(positionIngredientExample), {}
+            snackBar, EditPositionIngredientUIState(positionIngredientExample)
         ) {}
     }
 }

@@ -113,12 +113,12 @@ fun TextTitleItalic(
 }
 
 @Composable
-fun TextTitle(text: String, modifier: Modifier = Modifier, textAlign: TextAlign = TextAlign.Start) {
+fun TextTitle(text: String, modifier: Modifier = Modifier, textAlign: TextAlign = TextAlign.Start, color: Color = MaterialTheme.colorScheme.onBackground,) {
     TextInApp(
         text,
         modifier,
         textStyle = Typography.titleMedium,
-        color = MaterialTheme.colorScheme.onBackground,
+        color = color,
         textAlign = textAlign,
     )
 }

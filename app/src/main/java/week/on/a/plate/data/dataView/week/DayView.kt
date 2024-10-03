@@ -12,4 +12,7 @@ data class DayView (
     fun getDyInWeekShort(local: Locale):String{
         return date.dayOfWeek.getDisplayName(TextStyle.SHORT, local)
     }
+    fun getDyInWeekFull(local: Locale):String{
+        return date.dayOfWeek.getDisplayName(TextStyle.FULL, local).capitalize()
+    }
 }

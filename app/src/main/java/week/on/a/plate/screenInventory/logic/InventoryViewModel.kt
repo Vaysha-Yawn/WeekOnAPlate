@@ -67,6 +67,22 @@ class InventoryViewModel @Inject constructor(
         state.list.value = listStart.map { InventoryPositionData.getByIngredientInRecipe(it) }
     }
 
+    suspend fun launchAndGetMore(
+        listsStart: List<IngredientInRecipeView>
+    ) {
+        val listResult = mutableMapOf<Long, IngredientInRecipeView>()
+        listsStart.forEach {
+            if (listResult[it.ingredientView.ingredientId]!=null){
+                listResult[it.ingredientView.ingredientId]!!.count = listResult[it.ingredientView.ingredientId]!!.count.plus(it.count)
+                listResult[it.ingredientView.ingredientId]!!.description = ""
+            }else{
+                listResult[it.ingredientView.ingredientId] = it
+                listResult[it.ingredientView.ingredientId]!!.description = ""
+            }
+        }
+        state.list.value = listResult.values.map { InventoryPositionData.getByIngredientInRecipe(it) }
+    }
+
     private fun addToBd(result: List<IngredientInRecipeView>) {
         viewModelScope.launch {
             val allList = shoppingItemRepository.getAll()

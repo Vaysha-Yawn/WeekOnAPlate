@@ -5,14 +5,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 import week.on.a.plate.R
-import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.dialogAddIngredient.event.AddIngredientEvent
 import week.on.a.plate.dialogAddIngredient.state.AddIngredientUIState
 import week.on.a.plate.core.uitools.EditTextLine
@@ -24,8 +26,8 @@ import week.on.a.plate.core.uitools.TextBody
 
 @Composable
 fun AddIngredient(
+    snackBarState: SnackbarHostState,
     state: AddIngredientUIState,
-    onEventMain: (MainEvent) -> Unit,
     onEvent: (AddIngredientEvent) -> Unit,
 ) {
     LazyColumn(modifier = Modifier.padding(24.dp)) {
@@ -92,6 +94,7 @@ fun AddIngredient(
                 state.photoUri.value = value
             }
             val messageError = "Пожалуйста введите название, меру и выберите категорию"
+            val coroutineScope = rememberCoroutineScope()
             Spacer(modifier = Modifier.height(36.dp))
             DoneButton(
                 text = stringResource(id = R.string.add),
@@ -100,7 +103,9 @@ fun AddIngredient(
                 if (state.name.value != "" && state.category.value != null && state.measure.value != "") {
                     onEvent(AddIngredientEvent.Done)
                 } else {
-                    onEventMain(MainEvent.ShowSnackBar(messageError))
+                    coroutineScope.launch {
+                        snackBarState.showSnackbar(messageError)
+                    }
                 }
             }
             Spacer(modifier = Modifier.height(200.dp))
@@ -113,7 +118,8 @@ fun AddIngredient(
 @Composable
 fun PreviewAddIngredient() {
     WeekOnAPlateTheme {
+        val snackBar = SnackbarHostState()
         val state = AddIngredientUIState("", "", null, "")
-        AddIngredient(state, {}, {})
+        AddIngredient(snackBar, state) {}
     }
 }

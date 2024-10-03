@@ -25,8 +25,8 @@ interface SelectionDAO {
     @Update
     suspend fun update(selectionRoom: SelectionRoom)
 
-    @Delete
-    suspend fun delete(selectionRoom: SelectionRoom)
+    @Query("DELETE FROM selectionroom WHERE id = :id")
+    suspend fun deleteById(id: Long)
 
     @Query("SELECT * FROM selectionroom WHERE weekOfYear=:week AND isForWeek==1")
     suspend fun findSelectionForWeek(week: Int) : SelectionRoom?

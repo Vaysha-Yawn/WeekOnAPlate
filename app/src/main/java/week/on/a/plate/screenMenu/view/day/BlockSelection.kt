@@ -2,12 +2,12 @@ package week.on.a.plate.screenMenu.view.day
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.data.dataView.week.SelectionView
 import week.on.a.plate.core.Event
-import week.on.a.plate.screenMenu.event.MenuEvent
 import week.on.a.plate.screenMenu.state.MenuIUState
 import week.on.a.plate.screenMenu.view.day.positions.CardPosition
 import week.on.a.plate.screenMenu.view.topBar.TitleMenu
@@ -18,13 +18,8 @@ fun BlockSelection(
     menuIUState: MenuIUState,
     onEvent: (event: Event) -> Unit,
     ) {
-    TitleMenu(selection.name) {
-        if (selection.id==0L){
-            onEvent(MenuEvent.CreateFirstNonPosedPosition(selection.date))
-        }else{
-            onEvent(MenuEvent.CreatePosition(selection.id))
-        }
-    }
+    TitleMenu(selection, Modifier.padding(horizontal = 10.dp)
+        .padding(start = 20.dp), onEvent)
     Spacer(Modifier.height(10.dp))
     for (rec in selection.positions) {
         CardPosition(rec, menuIUState, onEvent)

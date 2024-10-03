@@ -43,7 +43,9 @@ fun TopBar(
                 EditingRow(actionDeleteSelected = {
                     onEvent(MenuEvent.DeleteSelected)
                 }, actionSelectedToShopList = {
-                   // onEvent(MainEvent.OpenDialog(DialogData.SelectedToShopList( onEvent)))
+                   onEvent(MenuEvent.SelectedToShopList)
+                }, actionExit = {
+                    onEvent(MenuEvent.SwitchEditMode)
                 })
             } else {
                 TextBodyDisActive(

@@ -69,12 +69,10 @@ class MainViewModel @Inject constructor(
         shoppingListViewModel.mainViewModel = this
         recipeCreateViewModel.mainViewModel = this
         menuViewModel.mainViewModel = this
-        menuViewModel.navController = nav
         inventoryViewModel.mainViewModel = this
     }
 
     val voiceInputUseCase = VoiceInputUseCase()
-
     val snackbarHostState = SnackbarHostState()
     lateinit var nav: NavHostController
     val isActiveBaseScreen = mutableStateOf(true)
@@ -93,31 +91,26 @@ class MainViewModel @Inject constructor(
                     sCRUDRecipeInMenu.onEvent(event.actionMenuDBData)
                 }
             }
-
             MainEvent.CloseDialog -> dialogUseCase.closeDialog()
-            is MainEvent.GetSelIdAndCreate -> TODO()
             is MainEvent.OpenDialog -> dialogUseCase.openDialog(event.dialog)
-            is MainEvent.ShowSnackBar -> {
-                viewModelScope.launch {
-                    snackbarHostState.showSnackbar(event.message)
-                }
-            }
-
-            is MainEvent.Navigate -> {
-                nav.navigate(event.destination)
-            }
-
-            MainEvent.NavigateBack -> {
-                nav.popBackStack()
-            }
-
+            is MainEvent.ShowSnackBar -> showSnackBar(event.message)
+            is MainEvent.Navigate -> nav.navigate(event.destination)
+            MainEvent.NavigateBack -> nav.popBackStack()
             MainEvent.HideDialog -> dialogUseCase.hide()
             is MainEvent.ShowDialog -> dialogUseCase.show()
-            is MainEvent.VoiceToText -> {
-                viewModelScope.launch {
-                    voiceInputUseCase.start(event.use)
-                }
-            }
+            is MainEvent.VoiceToText -> voiceToText(event.use)
+        }
+    }
+
+    private fun voiceToText(use: (ArrayList<String>?) -> Unit) {
+        viewModelScope.launch {
+            voiceInputUseCase.start(use)
+        }
+    }
+
+    private fun showSnackBar(message: String) {
+        viewModelScope.launch {
+            snackbarHostState.showSnackbar(message)
         }
     }
 

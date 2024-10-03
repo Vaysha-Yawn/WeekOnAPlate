@@ -4,7 +4,7 @@ import java.time.LocalDate
 
 data class SelectionView(
     val id:Long,
-    val name:String,
+    var name:String,
     val date:LocalDate,
     val weekOfYear:Int,
     val isForWeek:Boolean,

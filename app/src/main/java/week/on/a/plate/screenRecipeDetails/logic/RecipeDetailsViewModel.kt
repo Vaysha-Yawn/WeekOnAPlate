@@ -110,16 +110,16 @@ class RecipeDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             val vm = mainViewModel.specifySelectionViewModel
             mainViewModel.nav.navigate(SpecifySelectionDirection)
-            vm.launchAndGet() { selId, count ->
+            vm.launchAndGet() { res->
                 viewModelScope.launch {
                     sCRUDRecipeInMenu.onEvent(
                         ActionWeekMenuDB.AddRecipePositionInMenuDB(
-                            selId,
+                            res.selId,
                             Position.PositionRecipeView(
                                 0,
                                 RecipeShortView(state.recipe.value.id, state.recipe.value.name),
-                                count,
-                                selId
+                                res.portions,
+                                res.selId
                             )
                         )
                     )

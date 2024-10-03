@@ -6,7 +6,3 @@ sealed class SelectedEvent {
     class CheckRecipe(val recipe: Position.PositionRecipeView) : SelectedEvent()
     class AddCheckState(val recipe: Position.PositionRecipeView) : SelectedEvent()
 }
-
-
-
-

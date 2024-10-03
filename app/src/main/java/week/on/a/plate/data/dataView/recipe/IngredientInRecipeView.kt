@@ -6,6 +6,6 @@ import kotlinx.serialization.Serializable
 data class IngredientInRecipeView(
     val id: Long,
     val ingredientView: IngredientView,
-    val description:String,
+    var description:String,
     var count:Int
 )

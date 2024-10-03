@@ -119,6 +119,18 @@ class CRUDRecipeInMenu @Inject constructor(
             is ActionWeekMenuDB.EditDraft -> {
                 draftRepository.update(event.oldDraft, event.filters)
             }
+
+            is ActionWeekMenuDB.DeleteSelection -> {
+                menuR.deleteSelection(event.sel)
+            }
+            is ActionWeekMenuDB.EditSelection -> {
+                menuR.editSelection(event.sel, event.newName)
+            }
+
+            is ActionWeekMenuDB.CreateSelection -> {
+                menuR.createSelection(event.date, event.newName,  event.locale,
+                    event.isForWeek)
+            }
         }
     }
 }

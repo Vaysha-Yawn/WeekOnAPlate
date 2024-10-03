@@ -31,7 +31,7 @@ class WeekRepository @Inject constructor(
     suspend fun getSelIdOrCreate(
         date: LocalDate,
         isForWeek: Boolean,
-        category: CategoriesSelection,
+        category: String,
         locale: Locale
     ): Long {
         val calendar = Calendar.getInstance(locale)
@@ -39,10 +39,10 @@ class WeekRepository @Inject constructor(
         val week = calendar.get(Calendar.WEEK_OF_YEAR)
         return if (isForWeek) {
             val sel = selectionDAO.findSelectionForWeek(week)
-            sel?.id ?: selectionDAO.insert(SelectionRoom(category.fullName, date, week, isForWeek))
+            sel?.id ?: selectionDAO.insert(SelectionRoom(category, date, week, isForWeek))
         } else {
-            val sel = selectionDAO.findSelectionForDayByName(date, category.fullName)
-            sel?.id ?: selectionDAO.insert(SelectionRoom(category.fullName, date, week, isForWeek))
+            val sel = selectionDAO.findSelectionForDayByName(date, category)
+            sel?.id ?: selectionDAO.insert(SelectionRoom(category, date, week, isForWeek))
         }
     }
 
@@ -69,25 +69,45 @@ class WeekRepository @Inject constructor(
 
         val dayDates = getDaysOfWeek(date, locale)
         val dayViews = dayDates.map { dateDay ->
-            val listSelections = selectionDAO.findSelectionsForDay(dateDay).map { sel ->
-                mapSelection(sel)
-            }.toMutableList()
-            if (listSelections.isEmpty()){
-                listSelections.add(SelectionView(0, CategoriesSelection.NonPosed.fullName, dateDay, weekOfYear, false, mutableListOf()))
+            val listSelections = getSelectionsByDate(dateDay)
+            if (listSelections.isEmpty()) {
+                listSelections.add(
+                    SelectionView(
+                        0,
+                        CategoriesSelection.NonPosed.fullName,
+                        dateDay,
+                        weekOfYear,
+                        false,
+                        mutableListOf()
+                    )
+                )
             }
             DayView(dateDay, listSelections)
         }
 
         val roomSel = selectionDAO.findSelectionForWeek(weekOfYear)
-        val weekSel = if (roomSel!=null){
+        val weekSel = if (roomSel != null) {
             mapSelection(roomSel)
-        }else{
-            SelectionView(0, CategoriesSelection.ForWeek.fullName, date, weekOfYear, true, mutableListOf())
+        } else {
+            SelectionView(
+                0,
+                CategoriesSelection.ForWeek.fullName,
+                date,
+                weekOfYear,
+                true,
+                mutableListOf()
+            )
         }
 
         val week = WeekView(weekOfYear, weekSel, dayViews)
 
         return week
+    }
+
+    suspend fun getSelectionsByDate(date:LocalDate):MutableList<SelectionView>{
+        return selectionDAO.findSelectionsForDay(date).map { sel ->
+            mapSelection(sel)
+        }.toMutableList()
     }
 
     private suspend fun mapSelection(selectionRoom: SelectionRoom): SelectionView {
@@ -114,5 +134,38 @@ class WeekRepository @Inject constructor(
             selectionRoom.roomToView(targetList)
         }
         return sel
+    }
+
+    suspend fun deleteSelection(sel: SelectionView) {
+        selectionDAO.deleteById(sel.id)
+        sel.positions.forEach { pos ->
+            when (pos) {
+                is Position.PositionDraftView -> draftRepository.delete(pos.id)
+                is Position.PositionIngredientView -> positionIngredientRepository.delete(pos.id)
+                is Position.PositionNoteView -> noteRepository.delete(pos.id)
+                is Position.PositionRecipeView -> positionRecipeRepository.delete(pos.id)
+            }
+        }
+    }
+
+    suspend fun editSelection(sel: SelectionView, newName: String) {
+        sel.name = newName
+        val selRoom = with(selectionMapper) {
+            sel.viewToRoom()
+        }
+        selectionDAO.update(selRoom)
+    }
+
+    suspend fun createSelection(
+        date: LocalDate,
+        newName: String,
+        locale: Locale,
+        isForWeek: Boolean
+    ) {
+        val calendar = Calendar.getInstance(locale)
+        calendar.set(date.year, date.monthValue, date.dayOfMonth)
+        val weekOfYear = calendar.get(Calendar.WEEK_OF_YEAR)
+        val sel = SelectionRoom(newName, date, weekOfYear, isForWeek)
+        selectionDAO.insert(sel)
     }
 }

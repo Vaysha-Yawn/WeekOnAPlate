@@ -12,6 +12,7 @@ import week.on.a.plate.data.dataView.ShoppingItemView
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.data.repository.tables.shoppingList.ShoppingItemRepository
+import week.on.a.plate.data.repository.tables.shoppingList.ShoppingItemRoom
 import week.on.a.plate.dialogEditPositionIngredient.logic.EditPositionIngredientViewModel
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
@@ -49,45 +50,31 @@ class ShoppingListViewModel @Inject constructor(
     fun onEvent(event: ShoppingListEvent) {
         when (event) {
             ShoppingListEvent.Add -> addIngredient()
-            is ShoppingListEvent.Check -> {
-                viewModelScope.launch {
-                    val item = allItemsUnChecked.value.find { it -> it == event.position }
-                        ?: return@launch
-                    shoppingItemRepository.update(
-                        id = item.id,
-                        ingredientInRecipeId = item.id,
-                        checked = true,
-                        ingredientId = item.ingredientView.ingredientId,
-                        description = item.description,
-                        count = item.count.toDouble()
-                    )
-                }
-            }
+            is ShoppingListEvent.Check -> updateCheck(true, event.position)
+            ShoppingListEvent.DeleteChecked -> deleteChecked()
+            is ShoppingListEvent.Uncheck -> updateCheck(false, event.position)
+            is ShoppingListEvent.Edit -> editIngredient(event.ingredient)
+        }
+    }
 
-            ShoppingListEvent.DeleteChecked -> {
-                viewModelScope.launch {
-                    shoppingItemRepository.deleteAllChecked()
-                }
-            }
+    private fun deleteChecked() {
+        viewModelScope.launch {
+            shoppingItemRepository.deleteAllChecked()
+        }
+    }
 
-            is ShoppingListEvent.Uncheck -> {
-                viewModelScope.launch {
-                    val item = allItemsChecked.value.find { it -> it == event.position }
-                        ?: return@launch
-                    shoppingItemRepository.update(
-                        id = item.id,
-                        ingredientInRecipeId = item.id,
-                        checked = false,
-                        ingredientId = item.ingredientView.ingredientId,
-                        description = item.description,
-                        count = item.count.toDouble()
-                    )
-                }
-            }
-
-            is ShoppingListEvent.Edit -> {
-                editIngredient(event.ingredient)
-            }
+    private fun updateCheck(checked:Boolean, ingredientInRecipe: IngredientInRecipeView){
+        viewModelScope.launch {
+            val item = shoppingItemRepository.getAll().find { it -> it.ingredientInRecipe.ingredientView.ingredientId ==
+                    ingredientInRecipe.ingredientView.ingredientId }?:return@launch
+            shoppingItemRepository.update(
+                id = item.id,
+                ingredientInRecipeId = item.ingredientInRecipe.id,
+                checked = checked,
+                ingredientId = item.ingredientInRecipe.ingredientView.ingredientId,
+                description = item.ingredientInRecipe.description,
+                count = item.ingredientInRecipe.count.toDouble()
+            )
         }
     }
 
