@@ -29,6 +29,7 @@ import week.on.a.plate.core.theme.ColorTextBlack
 import week.on.a.plate.core.theme.Typography
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.theme.titleMediumItalic
+import week.on.a.plate.core.uitools.TextBody
 
 @Composable
 fun DoneButton(
@@ -45,7 +46,8 @@ fun DoneButton(
                 click()
             }, horizontalArrangement = Arrangement.Center
     ) {
-        TextInApp(text = text, textStyle = Typography.titleLarge, color = ColorTextBlack)
+        TextBody(text = text, color = ColorTextBlack)
+        //TextInApp(text = text, textStyle = Typography.titleLarge, color = ColorTextBlack)
     }
 }
 

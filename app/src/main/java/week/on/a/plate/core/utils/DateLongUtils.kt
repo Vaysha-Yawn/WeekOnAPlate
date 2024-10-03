@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -18,10 +19,18 @@ fun LocalDate.dateToString(): String {
     return formattedDate
 }
 
+fun LocalDate.dateToStringShort(): String {
+    val formattedDate = this.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+    return formattedDate
+}
+
 fun Long.dateToLocalDate(): LocalDate {
     val dates = Date(this)
     val localDate = dates.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
     return localDate
+}
+fun LocalDate.dateToLong(): Long {
+    return this.toEpochDay()
 }
 
 fun Int.timeToString(): String {

@@ -23,6 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SpecifySelectionViewModel @Inject constructor(
     private val weekRepository: WeekRepository,
+
 ) : ViewModel() {
     lateinit var mainViewModel: MainViewModel
     val state: SpecifySelectionUIState = SpecifySelectionUIState()
@@ -45,7 +46,18 @@ class SpecifySelectionViewModel @Inject constructor(
             SpecifySelectionEvent.ChooseDate -> chooseDate()
             SpecifySelectionEvent.Done -> done()
             SpecifySelectionEvent.AddCustomSelection -> addCustomSelection()
+            SpecifySelectionEvent.UpdatePreview -> updatePreview()
         }
+    }
+
+    private fun updatePreview() {
+        if (state.date.value!=null){
+            viewModelScope.launch {
+                val selections = weekRepository.getSelectionsByDate(state.date.value!!)
+                state.dayViewPreview.value = selections
+            }
+        }
+
     }
 
     private fun addCustomSelection() {
@@ -66,7 +78,9 @@ class SpecifySelectionViewModel @Inject constructor(
 
     private fun chooseDate() {
         viewModelScope.launch {
-            val vm = DatePickerViewModel()
+            state.isDateChooseActive.value = true
+
+            /*val vm = DatePickerViewModel()
             vm.mainViewModel = mainViewModel
             mainViewModel.onEvent(MainEvent.OpenDialog(vm))
             vm.launchAndGet() { date ->
@@ -80,7 +94,20 @@ class SpecifySelectionViewModel @Inject constructor(
                     }
                     state.allSelectionsIdDay.value = listSelName
                 }
+            }*/
+        }
+    }
+
+    fun updateSelections(){
+        if (state.date.value==null) return
+        viewModelScope.launch {
+            val allSelections = weekRepository.getSelectionsByDate(state.date.value!!)
+            val listSelName = if (allSelections.isEmpty()){
+                listOf<String>(CategoriesSelection.NonPosed.fullName)
+            }else{
+                allSelections.map { it.name }
             }
+            state.allSelectionsIdDay.value = listSelName
         }
     }
 

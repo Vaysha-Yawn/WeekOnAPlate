@@ -1,5 +1,6 @@
 package week.on.a.plate.screenSpecifySelection.state
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import week.on.a.plate.data.dataView.week.CategoriesSelection
@@ -12,4 +13,6 @@ class SpecifySelectionUIState() {
     val date = mutableStateOf<LocalDate?>(null)
     val portionsCount = mutableIntStateOf(2)
     val allSelectionsIdDay = mutableStateOf<List<String>>(listOf())
+    val dayViewPreview:MutableState<List<SelectionView>> = mutableStateOf(listOf())
+    val isDateChooseActive:MutableState<Boolean> = mutableStateOf(false)
 }

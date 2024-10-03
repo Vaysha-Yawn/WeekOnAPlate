@@ -1,6 +1,7 @@
 package week.on.a.plate.screenSpecifySelection.view
 
 import androidx.compose.runtime.Composable
+import week.on.a.plate.core.utils.dateToLocalDate
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screenSpecifySelection.event.SpecifySelectionEvent
@@ -20,5 +21,13 @@ fun SpecifySelectionMain(
         viewModel.onEvent(eventData)
     }
     val state = viewModel.state
-    SpecifyDateScreen(state, onEvent, onEventMain)
+    if (state.isDateChooseActive.value){
+        CalendarWithMenu(state){ dateLong->
+            viewModel.state.date.value = dateLong?.dateToLocalDate()
+            viewModel.onEvent(SpecifySelectionEvent.UpdatePreview)
+        }
+    }else{
+        viewModel.updateSelections()
+        SpecifyDateScreen(state, onEvent, onEventMain)
+    }
 }

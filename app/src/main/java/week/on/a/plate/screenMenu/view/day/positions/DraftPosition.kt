@@ -43,5 +43,4 @@ fun DraftPosition(
         )
         Spacer(modifier = Modifier.width(10.dp))
     }
-
 }
