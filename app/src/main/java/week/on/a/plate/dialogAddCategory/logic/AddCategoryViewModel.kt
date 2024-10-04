@@ -38,7 +38,7 @@ class AddCategoryViewModel() : DialogViewModel() {
         }
     }
 
-    suspend fun launchAndGet(startValue:String?, use: (String) -> Unit) {
+    suspend fun launchAndGet(startValue:String?, use: suspend (String) -> Unit) {
         state.text.value = startValue?:""
         val flow = start()
         flow.collect { value ->

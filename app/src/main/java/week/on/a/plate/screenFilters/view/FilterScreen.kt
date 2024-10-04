@@ -81,10 +81,13 @@ fun FilterScreen(stateUI: FilterUIState, onEvent: (FilterEvent) -> Unit) {
                             items(stateUI.resultSearchFilterTags.value.size) {
                                 TagBig(
                                     tag = stateUI.resultSearchFilterTags.value[it], isActive =
-                                    stateUI.selectedTags.value.contains(stateUI.resultSearchFilterTags.value[it])
-                                ){
-                                    onEvent(FilterEvent.SelectTag(stateUI.resultSearchFilterTags.value[it]))
-                                }
+                                    stateUI.selectedTags.value.contains(stateUI.resultSearchFilterTags.value[it]),
+                                    clickable = {
+                                        onEvent(FilterEvent.SelectTag(stateUI.resultSearchFilterTags.value[it]))
+                                    }, longClick = {
+                                        onEvent(FilterEvent.EditOrDeleteTag(stateUI.resultSearchFilterTags.value[it]))
+                                    }
+                                )
                                 Spacer(modifier = Modifier.height(24.dp))
                             }
                         } else {
@@ -110,10 +113,13 @@ fun FilterScreen(stateUI: FilterUIState, onEvent: (FilterEvent) -> Unit) {
                                 TagBig(
                                     ingredientView = stateUI.resultSearchFilterIngredients.value[it],
                                     isActive =
-                                    stateUI.selectedIngredients.value.contains(stateUI.resultSearchFilterIngredients.value[it])
-                                ){
-                                    onEvent(FilterEvent.SelectIngredient(stateUI.resultSearchFilterIngredients.value[it]))
-                                }
+                                    stateUI.selectedIngredients.value.contains(stateUI.resultSearchFilterIngredients.value[it]),
+                                    clickable = {
+                                        onEvent(FilterEvent.SelectIngredient(stateUI.resultSearchFilterIngredients.value[it]))
+                                    }, longClick = {
+                                        onEvent(FilterEvent.EditOrDeleteIngredient(stateUI.resultSearchFilterIngredients.value[it]))
+                                    }
+                                )
                                 Spacer(modifier = Modifier.height(24.dp))
                             }
                         } else {
@@ -178,9 +184,11 @@ fun CategoriesTags(
     TextTitle(text = tagCategoryView.name)
     Spacer(modifier = Modifier.height(12.dp))
     for (tag in tagCategoryView.tags) {
-        TagBig(tag = tag, selectedTags.value.contains(tag)){
+        TagBig(tag = tag, selectedTags.value.contains(tag),clickable = {
             onEvent(FilterEvent.SelectTag(tag))
-        }
+        }, longClick = {
+            onEvent(FilterEvent.EditOrDeleteTag(tag))
+        })
         Spacer(modifier = Modifier.height(12.dp))
     }
 }
@@ -196,9 +204,11 @@ fun IngredientCategories(
     TextTitle(text = ingredientCategory.name)
     Spacer(modifier = Modifier.height(12.dp))
     for (ingredient in ingredientCategory.ingredientViews) {
-        TagBig(ingredientView = ingredient, selectedIngredients.value.contains(ingredient)){
+        TagBig(ingredientView = ingredient, selectedIngredients.value.contains(ingredient),clickable = {
             onEvent(FilterEvent.SelectIngredient(ingredient))
-        }
+        }, longClick = {
+            onEvent(FilterEvent.EditOrDeleteIngredient(ingredient))
+        })
         Spacer(modifier = Modifier.height(12.dp))
     }
 }

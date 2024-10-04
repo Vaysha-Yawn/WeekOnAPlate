@@ -1,6 +1,5 @@
 package week.on.a.plate.screenSpecifySelection.view
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -41,7 +40,6 @@ import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.CloseButton
 import week.on.a.plate.core.uitools.buttons.DoneButton
 import week.on.a.plate.core.utils.dateToLocalDate
-import week.on.a.plate.core.utils.dateToString
 import week.on.a.plate.core.utils.dateToStringShort
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.data.dataView.week.SelectionView
@@ -49,21 +47,24 @@ import week.on.a.plate.dialogDatePicker.view.DatePickerMy
 import week.on.a.plate.screenMenu.view.day.positions.DraftPosition
 import week.on.a.plate.screenMenu.view.day.positions.IngredientPosition
 import week.on.a.plate.screenMenu.view.day.positions.NotePosition
+import week.on.a.plate.screenSpecifySelection.event.SpecifySelectionEvent
 import week.on.a.plate.screenSpecifySelection.state.SpecifySelectionUIState
 import java.time.LocalDate
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CalendarWithMenu(state: SpecifySelectionUIState, clickToRefreshDate: (Long?) -> Unit) {
+fun CalendarWithMenu(
+    state: SpecifySelectionUIState,
+    onEvent: (SpecifySelectionEvent) -> Unit,
+) {
     val stateDatePicker = rememberDatePickerState()
     Scaffold(floatingActionButtonPosition = FabPosition.Center, floatingActionButton = {
         DoneButton(
             text = stringResource(id = R.string.apply),
             Modifier.padding(horizontal = 24.dp)
         ) {
-            state.isDateChooseActive.value = false
-            state.date.value = stateDatePicker.selectedDateMillis?.dateToLocalDate()
+            onEvent(SpecifySelectionEvent.ApplyDate(stateDatePicker.selectedDateMillis?.dateToLocalDate()))
         }
     }) { pad ->
         Column {
@@ -73,12 +74,13 @@ fun CalendarWithMenu(state: SpecifySelectionUIState, clickToRefreshDate: (Long?)
                         .offset(y = (-15).dp)
                         .pointerInput(Unit) {
                             detectTapGestures(
-                                onTap = { clickToRefreshDate(stateDatePicker.selectedDateMillis) },
+                                onTap = {
+                                    onEvent(SpecifySelectionEvent.UpdatePreview(stateDatePicker.selectedDateMillis?.dateToLocalDate()))
+                                },
                             )
                         })
                 CloseButton {
-                    state.isDateChooseActive.value = false
-                    state.date.value = stateDatePicker.selectedDateMillis?.dateToLocalDate()
+                    onEvent(SpecifySelectionEvent.ApplyDate(stateDatePicker.selectedDateMillis?.dateToLocalDate()))
                 }
             }
             Column(Modifier.offset(y = (-50).dp)) {
@@ -97,14 +99,14 @@ fun CalendarWithMenu(state: SpecifySelectionUIState, clickToRefreshDate: (Long?)
                     TextBody(
                         text = "Обновить",
                         Modifier.clickable {
-                            clickToRefreshDate(stateDatePicker.selectedDateMillis)
+                            onEvent(SpecifySelectionEvent.UpdatePreview(stateDatePicker.selectedDateMillis?.dateToLocalDate()))
                         },
                         textAlign = TextAlign.End
                     )
                 }
                 Spacer(modifier = Modifier.height(12.dp))
                 TextBody(
-                    text = "Превью для ${state.date.value?.dateToStringShort()?:""}",
+                    text = "Превью для ${state.date.value?.dateToStringShort() ?: ""}",
                     Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 24.dp),
@@ -143,7 +145,7 @@ fun PreviewCalendarWithMenu() {
             isDateChooseActive.value = true
             dayViewPreview.value = list
             date.value = LocalDate.now()
-        }, {})
+        }) {}
     }
 }
 

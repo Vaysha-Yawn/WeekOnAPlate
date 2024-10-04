@@ -1,7 +1,8 @@
 package week.on.a.plate.core.uitools
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,8 +16,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import week.on.a.plate.data.dataView.recipe.IngredientView
-import week.on.a.plate.data.dataView.recipe.RecipeTagView
 import week.on.a.plate.core.theme.ColorButtonGreen
 import week.on.a.plate.core.theme.ColorButtonNegativeGrey
 import week.on.a.plate.core.theme.ColorPanelGreen
@@ -28,6 +27,8 @@ import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.theme.bodyGrey
 import week.on.a.plate.core.theme.titleLargeNonItalic
 import week.on.a.plate.core.theme.titleMediumItalic
+import week.on.a.plate.data.dataView.recipe.IngredientView
+import week.on.a.plate.data.dataView.recipe.RecipeTagView
 
 
 @Composable
@@ -113,7 +114,12 @@ fun TextTitleItalic(
 }
 
 @Composable
-fun TextTitle(text: String, modifier: Modifier = Modifier, textAlign: TextAlign = TextAlign.Start, color: Color = MaterialTheme.colorScheme.onBackground,) {
+fun TextTitle(
+    text: String,
+    modifier: Modifier = Modifier,
+    textAlign: TextAlign = TextAlign.Start,
+    color: Color = MaterialTheme.colorScheme.onBackground,
+) {
     TextInApp(
         text,
         modifier,
@@ -135,7 +141,7 @@ fun TextBodyDisActive(text: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun SubText(text: String, modifier: Modifier = Modifier, textAlign : TextAlign = TextAlign.Center) {
+fun SubText(text: String, modifier: Modifier = Modifier, textAlign: TextAlign = TextAlign.Center) {
     TextInApp(
         text,
         modifier,
@@ -146,8 +152,10 @@ fun SubText(text: String, modifier: Modifier = Modifier, textAlign : TextAlign =
 }
 
 @Composable
-fun TextSmall(text: String, modifier: Modifier = Modifier,
-              color: Color = MaterialTheme.colorScheme.onBackground) {
+fun TextSmall(
+    text: String, modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.onBackground
+) {
     TextInApp(
         text,
         modifier,
@@ -176,27 +184,33 @@ fun TextBody(
 }
 
 @Composable
-fun TagBig(tag: RecipeTagView, isActive: Boolean, clickable: () -> Unit = {}) {
-    TagBig(tag.tagName, if (isActive) ColorPanelGreen else ColorButtonNegativeGrey, clickable)
-}
-
-@Composable
-fun CreateTagOrIngredient(name: String, eventCreate: () -> Unit)
-{
+fun CreateTagOrIngredient(name: String, eventCreate: () -> Unit) {
     TagBig("+ Создать: " + name, ColorButtonNegativeGrey, eventCreate)
 }
+
 @Composable
-fun TagBig(ingredientView: IngredientView, isActive: Boolean, clickable: () -> Unit = {}) {
-    TagBig(ingredientView.name, if (isActive) ColorPanelYellow else ColorButtonNegativeGrey, clickable)
+fun TagBig(tag: RecipeTagView, isActive: Boolean, clickable: () -> Unit = {}, longClick: () -> Unit = {}) {
+    TagBig(tag.tagName, if (isActive) ColorPanelGreen else ColorButtonNegativeGrey, clickable, longClick)
 }
 
 @Composable
-fun TagBig(text: String, color: Color, clickable: () -> Unit = {}) {
+fun TagBig(ingredientView: IngredientView, isActive: Boolean, clickable: () -> Unit = {}, longClick: () -> Unit = {}) {
+    TagBig(
+        ingredientView.name,
+        if (isActive) ColorPanelYellow else ColorButtonNegativeGrey,
+        clickable, longClick
+    )
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun TagBig(text: String, color: Color, clickable: () -> Unit = {}, longClick: () -> Unit = {}) {
     TextInApp(
         text, modifier = Modifier
-            .clickable {
-                clickable()
-            }
+            .combinedClickable(
+                onClick = clickable,
+                onLongClick = longClick
+            )
             .background(
                 color, RoundedCornerShape(30.dp)
             )

@@ -32,7 +32,6 @@ import week.on.a.plate.data.dataView.week.WeekView
 import week.on.a.plate.screenMenu.event.MenuEvent
 import week.on.a.plate.screenMenu.state.MenuIUState
 import week.on.a.plate.screenMenu.view.day.positions.CardPosition
-import week.on.a.plate.screenMenu.view.topBar.TitleMenu
 import week.on.a.plate.screenMenu.view.topBar.TitleMenuS
 
 @Composable
@@ -44,22 +43,29 @@ fun WeekMenu(
     LazyColumn(Modifier.padding(horizontal = 12.dp)) {
         item {
             Spacer(modifier = Modifier.height(24.dp))
-            Row {
-                TextTitle(text = stringResource(R.string.for_week), Modifier.padding(start = 12.dp))
-                Spacer(modifier = Modifier.width(24.dp))
-                if (week.selectionView.positions.isEmpty()) {
+            Column {
+                Row {
+                    TextTitle(
+                        text = stringResource(R.string.for_week),
+                        Modifier.padding(start = 12.dp)
+                    )
+                    Spacer(modifier = Modifier.width(24.dp))
                     PlusButtonTitle {
-                        onEvent(MenuEvent.CreatePosition(week.selectionView.id))
-                    }
-                } else {
-                    Column {
-                        for (pos in week.selectionView.positions) {
-                            CardPosition(
-                                position = pos,
-                                menuIUState = menuIUState,
-                                onEvent
-                            )
+                        if (week.selectionView.positions.isEmpty() && week.selectionView.id == 0L) {
+                            onEvent(MenuEvent.CreateWeekSelIdAndCreatePosition)
+                        } else {
+                            onEvent(MenuEvent.CreatePosition(week.selectionView.id))
                         }
+                    }
+                }
+                Spacer(modifier = Modifier.size(12.dp))
+                if (week.selectionView.positions.isNotEmpty()) {
+                    for (pos in week.selectionView.positions) {
+                        CardPosition(
+                            position = pos,
+                            menuIUState = menuIUState,
+                            onEvent
+                        )
                     }
                 }
             }
@@ -75,7 +81,7 @@ fun WeekMenu(
             Spacer(modifier = Modifier.size(12.dp))
             Column() {
                 TextTitle(
-                    text =  day.getDyInWeekFull(LocalContext.current.resources.configuration.locales[0])+", " +day.date.dayOfMonth.toString(),
+                    text = day.getDyInWeekFull(LocalContext.current.resources.configuration.locales[0]) + ", " + day.date.dayOfMonth.toString(),
                     modifier = Modifier.padding(start = 12.dp)
                 )
                 Spacer(modifier = Modifier.size(10.dp))
@@ -86,7 +92,6 @@ fun WeekMenu(
                             TitleMenuS(sel, Modifier.padding(start = 12.dp), onEvent)
                             Spacer(modifier = Modifier.size(10.dp))
                             sel.positions.forEach { pos ->
-                                Spacer(modifier = Modifier.size(12.dp))
                                 CardPosition(
                                     position = pos,
                                     menuIUState = menuIUState,

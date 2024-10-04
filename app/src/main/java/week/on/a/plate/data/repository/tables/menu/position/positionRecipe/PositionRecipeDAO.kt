@@ -11,7 +11,7 @@ import week.on.a.plate.data.repository.tables.recipe.recipe.RecipeRoom
 
 
 @Dao
-interface RecipeInMenuDAO {
+interface PositionRecipeDAO {
     @Query("SELECT * FROM positionreciperoom")
     suspend fun getAll(): List<PositionRecipeRoom>
 
@@ -33,4 +33,7 @@ interface RecipeInMenuDAO {
 
     @Query("DELETE FROM positionreciperoom WHERE recipeInMenuId = :id")
     suspend fun deleteById(id: Long)
+
+    @Query("DELETE FROM positionreciperoom WHERE recipeId = :id")
+    suspend fun deleteByRecipeId(id: Long)
 }

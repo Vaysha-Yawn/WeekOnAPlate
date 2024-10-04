@@ -61,13 +61,13 @@ class InventoryViewModel @Inject constructor(
         mainViewModel.onEvent(MainEvent.NavigateBack)
     }
 
-    suspend fun launchAndGet(
+    fun launchAndGet(
         listStart: List<IngredientInRecipeView>
     ) {
         state.list.value = listStart.map { InventoryPositionData.getByIngredientInRecipe(it) }
     }
 
-    suspend fun launchAndGetMore(
+    fun launchAndGetMore(
         listsStart: List<IngredientInRecipeView>
     ) {
         val listResult = mutableMapOf<Long, IngredientInRecipeView>()

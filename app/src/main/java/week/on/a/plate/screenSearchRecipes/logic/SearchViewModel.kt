@@ -303,7 +303,7 @@ class SearchViewModel @Inject constructor(
         return flow
     }
 
-    suspend fun launchAndGet( selIde: Long?, filters: Pair<List<RecipeTagView>, List<IngredientView>>?,  use: (RecipeView) -> Unit) {
+    suspend fun launchAndGet( selIde: Long?, filters: Pair<List<RecipeTagView>, List<IngredientView>>?,  use: suspend (RecipeView) -> Unit) {
         selId = selIde
         if (filters != null) {
             state.selectedTags.value = filters.first

@@ -38,7 +38,7 @@ class EditOrDeleteViewModel (): DialogViewModel() {
         }
     }
 
-    suspend fun launchAndGet(use: (EditOrDeleteEvent) -> Unit) {
+    suspend fun launchAndGet( use: suspend (EditOrDeleteEvent) -> Unit) {
         val flow = start()
         flow.collect { value ->
             if (value != null) {

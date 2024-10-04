@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.zip
 import week.on.a.plate.data.dataView.recipe.RecipeView
+import week.on.a.plate.data.repository.tables.menu.position.positionRecipe.PositionRecipeRepository
 import week.on.a.plate.data.repository.tables.recipe.ingredientInRecipe.IngredientInRecipeRepository
 import week.on.a.plate.data.repository.tables.recipe.recipeRecipeTagCrossRef.RecipeTagCrossRefRepository
 import week.on.a.plate.data.repository.tables.recipe.recipeStep.StepRepository
@@ -22,6 +23,7 @@ class RecipeRepository @Inject constructor(
     private val stepRepository: StepRepository,
     private val tagCrossRefRepository: RecipeTagCrossRefRepository,
     private val ingredientInRecipeRepository: IngredientInRecipeRepository,
+    private val positionRecipeRepository: PositionRecipeRepository,
 ) {
     private val recipeMapper = RecipeMapper()
 
@@ -148,6 +150,7 @@ class RecipeRepository @Inject constructor(
         stepRepository.deleteByRecipeId(id)
         tagCrossRefRepository.deleteByRecipeId(id)
         ingredientInRecipeRepository.deleteByRecipeId(id)
+        positionRecipeRepository.deleteByRecipeId(id)
     }
 }
 

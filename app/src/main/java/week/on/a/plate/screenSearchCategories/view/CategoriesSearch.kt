@@ -48,11 +48,12 @@ fun CategoriesSearchMain(vm: CategoriesSearchViewModel) {
         list,
         state.searchText,
         state.resultSearch,
-        { onEventCategoriesSearch(CategoriesSearchEvent.Search) },
-        { onEventCategoriesSearch(CategoriesSearchEvent.VoiceSearch) },
-        { onEventCategoriesSearch(CategoriesSearchEvent.Create(it)) },
-        { onEventCategoriesSearch(CategoriesSearchEvent.Select(it)) },
-        { onEventCategoriesSearch(CategoriesSearchEvent.Close) },
+        searchEvent = { onEventCategoriesSearch(CategoriesSearchEvent.Search) },
+        voiceSearchEvent = { onEventCategoriesSearch(CategoriesSearchEvent.VoiceSearch) },
+        createAction = { onEventCategoriesSearch(CategoriesSearchEvent.Create(it)) },
+        done = { onEventCategoriesSearch(CategoriesSearchEvent.Select(it)) },
+        close = { onEventCategoriesSearch(CategoriesSearchEvent.Close) },
+        editOrDelete = { onEventCategoriesSearch(CategoriesSearchEvent.EditOrDelete(it)) },
     )
 }
 
@@ -66,7 +67,8 @@ fun CategoriesSearch(
     voiceSearchEvent: () -> Unit,
     createAction: (String) -> Unit,
     done: (String) -> Unit,
-    close: () -> Unit
+    close: () -> Unit,
+    editOrDelete: (String) -> Unit,
 ) {
     Column {
         TopSearchPanelCategory(searchText, searchEvent, voiceSearchEvent, close)
@@ -84,16 +86,21 @@ fun CategoriesSearch(
                     Spacer(modifier = Modifier.height(24.dp))
                 }
                 items(resultSearch.value.size) {
-                    TagBig(resultSearch.value[it], ColorButtonNegativeGrey) {
+                    TagBig(resultSearch.value[it], ColorButtonNegativeGrey, clickable = {
                         done(resultSearch.value[it])
-                    }
+                    }, longClick = {
+                        editOrDelete(resultSearch.value[it])
+                    })
                     Spacer(modifier = Modifier.height(24.dp))
                 }
             } else {
                 items(allCategoriesNames.size) {
-                    TagBig(allCategoriesNames[it], ColorButtonNegativeGrey) {
+                    TagBig(allCategoriesNames[it], ColorButtonNegativeGrey,
+                        clickable = {
                         done(allCategoriesNames[it])
-                    }
+                    }, longClick = {
+                        editOrDelete(allCategoriesNames[it])
+                    })
                     Spacer(modifier = Modifier.height(24.dp))
                 }
             }
@@ -138,7 +145,7 @@ fun PreviewFilterScreen() {
             tags.map { it -> it.name },
             search,
             result,
-            {}, {}, {}, {}, {}
+            {}, {}, {}, {}, {},{}
         )
     }
 }

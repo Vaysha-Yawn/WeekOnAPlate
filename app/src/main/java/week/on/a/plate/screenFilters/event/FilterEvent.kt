@@ -15,4 +15,6 @@ sealed class FilterEvent : Event() {
     data class SelectTag(val tag: RecipeTagView) : FilterEvent()
     data class SelectIngredient(val ingredient: IngredientView) : FilterEvent()
     data object ClearSearch: FilterEvent()
+    data class EditOrDeleteTag(val tag: RecipeTagView) : FilterEvent()
+    data class EditOrDeleteIngredient(val ingredient: IngredientView) : FilterEvent()
 }

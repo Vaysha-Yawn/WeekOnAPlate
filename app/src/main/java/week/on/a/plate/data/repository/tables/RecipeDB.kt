@@ -25,7 +25,7 @@ import week.on.a.plate.data.repository.tables.menu.position.note.PositionNoteRoo
 import week.on.a.plate.data.repository.tables.menu.position.positionIngredient.PositionIngredientDAO
 import week.on.a.plate.data.repository.tables.menu.position.positionIngredient.PositionIngredientRoom
 import week.on.a.plate.data.repository.tables.menu.position.positionRecipe.PositionRecipeRoom
-import week.on.a.plate.data.repository.tables.menu.position.positionRecipe.RecipeInMenuDAO
+import week.on.a.plate.data.repository.tables.menu.position.positionRecipe.PositionRecipeDAO
 import week.on.a.plate.data.repository.tables.menu.selection.DateTypeConverter
 import week.on.a.plate.data.repository.tables.menu.selection.SelectionDAO
 import week.on.a.plate.data.repository.tables.menu.selection.SelectionRoom
@@ -60,7 +60,7 @@ abstract class RecipeDB : RoomDatabase() {
     abstract fun daoRecipeStep(): RecipeStepDAO
     abstract fun daoRecipeTag(): RecipeTagDAO
     abstract fun daoRecipeTagCategory(): RecipeTagCategoryDAO
-    abstract fun daoRecipeInMenu(): RecipeInMenuDAO
+    abstract fun daoRecipeInMenu(): PositionRecipeDAO
     abstract fun daoSelectionInDay(): SelectionDAO
     abstract fun daoPositionIngredient(): PositionIngredientDAO
     abstract fun daoPositionNote(): PositionNoteDAO

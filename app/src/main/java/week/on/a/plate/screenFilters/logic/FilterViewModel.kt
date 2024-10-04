@@ -18,6 +18,8 @@ import week.on.a.plate.data.repository.tables.filters.recipeTag.RecipeTagReposit
 import week.on.a.plate.data.repository.tables.filters.recipeTagCategory.RecipeTagCategoryRepository
 import week.on.a.plate.dialogAddIngredient.logic.AddIngredientViewModel
 import week.on.a.plate.dialogAddTag.logic.AddTagViewModel
+import week.on.a.plate.dialogEditOrDelete.event.EditOrDeleteEvent
+import week.on.a.plate.dialogEditOrDelete.logic.EditOrDeleteViewModel
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screenFilters.dialogs.filterVoiceApply.logic.FilterVoiceApplyViewModel
@@ -84,7 +86,84 @@ class FilterViewModel @Inject constructor(
             is FilterEvent.SelectTag -> selectTag(event.tag)
             FilterEvent.ClearSearch -> clearSearch()
             FilterEvent.Done -> done()
+            is FilterEvent.EditOrDeleteIngredient -> editOrDeleteIngredient(event.ingredient)
+            is FilterEvent.EditOrDeleteTag -> editOrDeleteTag(event.tag)
         }
+    }
+
+    private fun editOrDeleteTag(tag: RecipeTagView) {
+        val vm = EditOrDeleteViewModel()
+        vm.mainViewModel = mainViewModel
+        mainViewModel.onEvent(MainEvent.OpenDialog(vm))
+        viewModelScope.launch {
+            vm.launchAndGet { event ->
+                    when (event) {
+                        EditOrDeleteEvent.Close -> {}
+                        EditOrDeleteEvent.Delete -> recipeTagRepository.delete(tag.id)
+                        EditOrDeleteEvent.Edit -> editTag(tag)
+                    }
+            }
+        }
+    }
+
+    private fun editOrDeleteIngredient(ingredient: IngredientView) {
+        val vm = EditOrDeleteViewModel()
+        vm.mainViewModel = mainViewModel
+        mainViewModel.onEvent(MainEvent.OpenDialog(vm))
+        viewModelScope.launch {
+            vm.launchAndGet { event ->
+                    when (event) {
+                        EditOrDeleteEvent.Close -> {}
+                        EditOrDeleteEvent.Delete -> ingredientRepository.delete(ingredient.ingredientId)
+                        EditOrDeleteEvent.Edit -> editIngredient(ingredient)
+                    }
+            }
+        }
+    }
+
+    private suspend fun editTag(tag: RecipeTagView) {
+        val vm = AddTagViewModel()
+        vm.mainViewModel = mainViewModel
+        mainViewModel.onEvent(MainEvent.OpenDialog(vm))
+        val oldCategory = allTags.value.find{ it.tags.contains(tag)}
+        viewModelScope.launch {
+            vm.launchAndGet(tag.tagName, oldCategory) { newNameAndCategory ->
+                viewModelScope.launch {
+                    editTagDB(tag, newNameAndCategory.first, newNameAndCategory.second)
+                }
+            }
+        }
+    }
+
+    private suspend fun editTagDB(oldTag: RecipeTagView, newName: String, newCategory: TagCategoryView) {
+        recipeTagRepository.update(oldTag.id, newName,newCategory.id)
+    }
+
+    private suspend fun editIngredient(ingredient: IngredientView) {
+        val vm = AddIngredientViewModel()
+        vm.mainViewModel = mainViewModel
+        mainViewModel.onEvent(MainEvent.OpenDialog(vm))
+        val oldCategory = allIngredients.value.find{ it.ingredientViews.contains(ingredient)}
+        viewModelScope.launch {
+            vm.launchAndGet(ingredient, oldCategory) { newIngredientAndCategory ->
+                viewModelScope.launch {
+                    editIngredientDB(ingredient, newIngredientAndCategory.first, newIngredientAndCategory.second)
+                }
+            }
+        }
+    }
+
+    private suspend fun editIngredientDB(
+        ingredientOld: IngredientView,
+        ingredientNew: IngredientView,
+        newCategory: IngredientCategoryView
+    ) {
+        ingredientRepository.update(
+            ingredientOld.ingredientId,
+            newCategory.id,
+            ingredientNew.img,
+            ingredientNew.name,
+            ingredientNew.measure)
     }
 
     private fun clearSearch() {

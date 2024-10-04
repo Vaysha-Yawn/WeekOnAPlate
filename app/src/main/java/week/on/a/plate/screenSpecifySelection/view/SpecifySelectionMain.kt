@@ -22,10 +22,7 @@ fun SpecifySelectionMain(
     }
     val state = viewModel.state
     if (state.isDateChooseActive.value){
-        CalendarWithMenu(state){ dateLong->
-            viewModel.state.date.value = dateLong?.dateToLocalDate()
-            viewModel.onEvent(SpecifySelectionEvent.UpdatePreview)
-        }
+        CalendarWithMenu(state, onEvent)
     }else{
         viewModel.updateSelections()
         SpecifyDateScreen(state, onEvent, onEventMain)

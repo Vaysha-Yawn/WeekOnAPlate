@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import week.on.a.plate.data.dataView.week.CategoriesSelection
-import week.on.a.plate.dialogDatePicker.logic.DatePickerViewModel
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.navigation.MenuScreen
 import week.on.a.plate.mainActivity.event.MainEvent
@@ -46,12 +45,19 @@ class SpecifySelectionViewModel @Inject constructor(
             SpecifySelectionEvent.ChooseDate -> chooseDate()
             SpecifySelectionEvent.Done -> done()
             SpecifySelectionEvent.AddCustomSelection -> addCustomSelection()
-            SpecifySelectionEvent.UpdatePreview -> updatePreview()
+            is SpecifySelectionEvent.UpdatePreview -> updatePreview(event.date)
+            is SpecifySelectionEvent.ApplyDate -> applyDate(event.date)
         }
     }
 
-    private fun updatePreview() {
-        if (state.date.value!=null){
+    private fun applyDate(date: LocalDate?) {
+        state.isDateChooseActive.value = false
+        state.date.value = date
+    }
+
+    private fun updatePreview(date: LocalDate?) {
+        state.date.value = date
+        if (date!=null){
             viewModelScope.launch {
                 val selections = weekRepository.getSelectionsByDate(state.date.value!!)
                 state.dayViewPreview.value = selections
@@ -77,25 +83,7 @@ class SpecifySelectionViewModel @Inject constructor(
     }
 
     private fun chooseDate() {
-        viewModelScope.launch {
-            state.isDateChooseActive.value = true
-
-            /*val vm = DatePickerViewModel()
-            vm.mainViewModel = mainViewModel
-            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-            vm.launchAndGet() { date ->
-                state.date.value = date
-                viewModelScope.launch {
-                    val allSelections = weekRepository.getSelectionsByDate(date)
-                    val listSelName = if (allSelections.isEmpty()){
-                        listOf<String>(CategoriesSelection.NonPosed.fullName)
-                    }else{
-                        allSelections.map { it.name }
-                    }
-                    state.allSelectionsIdDay.value = listSelName
-                }
-            }*/
-        }
+        state.isDateChooseActive.value = true
     }
 
     fun updateSelections(){
@@ -148,5 +136,3 @@ class SpecifySelectionViewModel @Inject constructor(
         }
     }
 }
-
-data class SpecifySelectionResult(val selId:Long, val date:LocalDate, val portions:Int)

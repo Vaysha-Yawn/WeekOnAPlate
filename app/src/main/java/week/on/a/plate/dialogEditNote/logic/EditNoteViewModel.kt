@@ -42,7 +42,7 @@ class EditNoteViewModel() : DialogViewModel() {
 
     suspend fun launchAndGet(
         positiond: Position.PositionNoteView?,
-        use: (Position.PositionNoteView) -> Unit,
+        use: suspend (Position.PositionNoteView) -> Unit,
     ) {
         state = EditNoteUIState(positiond)
         val flow = start()

@@ -13,6 +13,8 @@ import week.on.a.plate.data.dataView.recipe.TagCategoryView
 import week.on.a.plate.data.repository.tables.filters.ingredientCategory.IngredientCategoryRepository
 import week.on.a.plate.data.repository.tables.filters.recipeTagCategory.RecipeTagCategoryRepository
 import week.on.a.plate.dialogAddCategory.logic.AddCategoryViewModel
+import week.on.a.plate.dialogEditOrDelete.event.EditOrDeleteEvent
+import week.on.a.plate.dialogEditOrDelete.logic.EditOrDeleteViewModel
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screenSearchCategories.event.CategoriesSearchEvent
@@ -41,12 +43,12 @@ class CategoriesSearchViewModel @Inject constructor(
 
     private fun initStartValue() {
         viewModelScope.launch {
-                allTagCategories = recipeTagCategoryRepository.getAllTagsByCategoriesForFilters()
-                    .stateIn(viewModelScope)
+            allTagCategories = recipeTagCategoryRepository.getAllTagsByCategoriesForFilters()
+                .stateIn(viewModelScope)
 
-                allIngredientCategories =
-                    ingredientCategoryRepository.getAllIngredientsByCategoriesForFilters()
-                        .stateIn(viewModelScope)
+            allIngredientCategories =
+                ingredientCategoryRepository.getAllIngredientsByCategoriesForFilters()
+                    .stateIn(viewModelScope)
 
         }
     }
@@ -87,13 +89,58 @@ class CategoriesSearchViewModel @Inject constructor(
 
     fun onEvent(event: CategoriesSearchEvent) {
         when (event) {
-            CategoriesSearchEvent.Close -> {
-                done(null)
-            }
+            CategoriesSearchEvent.Close -> done(null)
             is CategoriesSearchEvent.Select -> done(event.text)
             is CategoriesSearchEvent.Create -> create(event.text)
             CategoriesSearchEvent.Search -> search()
             CategoriesSearchEvent.VoiceSearch -> voiceSearch()
+            is CategoriesSearchEvent.EditOrDelete -> editOrDelete(event.text)
+        }
+    }
+
+    private fun editOrDelete(text: String) {
+        val vm = EditOrDeleteViewModel()
+        vm.mainViewModel = mainViewModel
+        mainViewModel.onEvent(MainEvent.OpenDialog(vm))
+        viewModelScope.launch {
+            vm.launchAndGet { event ->
+                when (event) {
+                    EditOrDeleteEvent.Close -> {}
+                    EditOrDeleteEvent.Delete -> deleteCategory(text)
+                    EditOrDeleteEvent.Edit -> editCategory(text)
+                }
+            }
+        }
+    }
+
+    private suspend fun editCategory(oldName: String) {
+        val vm = AddCategoryViewModel()
+        vm.mainViewModel = mainViewModel
+        mainViewModel.onEvent(MainEvent.OpenDialog(vm))
+        vm.launchAndGet(oldName) { newName ->
+            if (isTag) {
+                val oldCategory =
+                    allTagCategories.value.find { it -> it.name == oldName } ?: return@launchAndGet
+                recipeTagCategoryRepository.updateName(newName, oldCategory.id)
+            } else {
+                val oldCategory =
+                    allIngredientCategories.value.find { it -> it.name == oldName }
+                        ?: return@launchAndGet
+                ingredientCategoryRepository.updateName(newName, oldCategory.id)
+            }
+        }
+    }
+
+    private suspend fun deleteCategory(name: String) {
+        if (isTag) {
+            val oldCategory =
+                allTagCategories.value.find { it -> it.name == name } ?: return
+            recipeTagCategoryRepository.delete(oldCategory.id)
+        } else {
+            val oldCategory =
+                allIngredientCategories.value.find { it -> it.name == name }
+                    ?: return
+            ingredientCategoryRepository.delete(oldCategory.id)
         }
     }
 
@@ -124,11 +171,11 @@ class CategoriesSearchViewModel @Inject constructor(
                 viewModelScope.launch {
                     if (isTag) {
                         val id = recipeTagCategoryRepository.create(name)
-                        val tag = recipeTagCategoryRepository.getById(id)?:return@launch
+                        val tag = recipeTagCategoryRepository.getById(id) ?: return@launch
                         done(tag)
                     } else {
-                        val id =ingredientCategoryRepository.create(name)
-                        val ingredient = ingredientCategoryRepository.getById(id)?:return@launch
+                        val id = ingredientCategoryRepository.create(name)
+                        val ingredient = ingredientCategoryRepository.getById(id) ?: return@launch
                         done(ingredient)
                     }
                 }
