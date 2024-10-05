@@ -14,8 +14,12 @@ import week.on.a.plate.data.dataView.recipe.RecipeView
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.data.dataView.week.RecipeShortView
 import week.on.a.plate.data.repository.tables.recipe.recipe.RecipeRepository
+import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screenCreateRecipe.navigation.RecipeCreateDestination
+import week.on.a.plate.screenDeleteApply.event.DeleteApplyEvent
+import week.on.a.plate.screenDeleteApply.logic.DeleteApplyViewModel
+import week.on.a.plate.screenDeleteApply.navigation.DeleteApplyDirection
 import week.on.a.plate.screenInventory.navigation.InventoryDirection
 import week.on.a.plate.screenMenu.event.ActionWeekMenuDB
 import week.on.a.plate.screenMenu.logic.useCase.CRUDRecipeInMenu
@@ -91,8 +95,15 @@ class RecipeDetailsViewModel @Inject constructor(
 
     private fun delete() {
         viewModelScope.launch {
-            recipeRepository.delete(state.recipe.value.id)
-            mainViewModel.nav.popBackStack()
+            val vm = mainViewModel.deleteApplyViewModel
+            //todo аписать предупреждение
+            mainViewModel.nav.navigate(DeleteApplyDirection)
+            vm.launchAndGet(""){event->
+                if (event == DeleteApplyEvent.Apply){
+                    recipeRepository.delete(state.recipe.value.id)
+                    mainViewModel.onEvent(MainEvent.NavigateBack)
+                }
+            }
         }
     }
 

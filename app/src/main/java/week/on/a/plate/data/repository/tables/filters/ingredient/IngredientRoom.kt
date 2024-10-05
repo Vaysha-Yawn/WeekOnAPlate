@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class IngredientRoom(
-    val ingredientCategoryId: Long,
+    var ingredientCategoryId: Long,
     val img: String,
     val name: String,
     val measure:String

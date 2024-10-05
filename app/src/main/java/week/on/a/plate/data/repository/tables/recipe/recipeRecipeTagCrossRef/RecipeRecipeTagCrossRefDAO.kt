@@ -33,4 +33,7 @@ interface RecipeRecipeTagCrossRefDAO {
 
     @Query("DELETE FROM reciperecipetagcrossref WHERE recipeId = :recipeIdd AND recipeTagId=:tagID")
     suspend fun deleteByIdTag(recipeIdd: Long, tagID:Long)
+
+    @Query("DELETE FROM reciperecipetagcrossref WHERE recipeTagId=:tagID")
+    suspend fun deleteByTag( tagID:Long)
 }

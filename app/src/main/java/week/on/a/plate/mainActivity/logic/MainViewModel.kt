@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import week.on.a.plate.core.Event
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.screenCreateRecipe.logic.RecipeCreateViewModel
+import week.on.a.plate.screenDeleteApply.logic.DeleteApplyViewModel
 import week.on.a.plate.screenFilters.logic.FilterViewModel
 import week.on.a.plate.screenInventory.logic.InventoryViewModel
 import week.on.a.plate.screenMenu.logic.MenuViewModel
@@ -38,6 +39,7 @@ class MainViewModel @Inject constructor(
     lateinit var shoppingListViewModel: ShoppingListViewModel
     lateinit var recipeCreateViewModel: RecipeCreateViewModel
     lateinit var inventoryViewModel: InventoryViewModel
+    lateinit var deleteApplyViewModel: DeleteApplyViewModel
     lateinit var locale: Locale
 
     fun initViewModels(
@@ -49,7 +51,8 @@ class MainViewModel @Inject constructor(
         shoppingList: ShoppingListViewModel,
         recipeCreate: RecipeCreateViewModel,
         menuView: MenuViewModel,
-        inventory: InventoryViewModel
+        inventory: InventoryViewModel,
+        delete: DeleteApplyViewModel
     ) {
         specifySelectionViewModel = specifySelection
         categoriesSearchViewModel = categoriesSearch
@@ -60,6 +63,7 @@ class MainViewModel @Inject constructor(
         recipeCreateViewModel = recipeCreate
         menuViewModel = menuView
         inventoryViewModel = inventory
+        deleteApplyViewModel = delete
 
         specifySelectionViewModel.mainViewModel = this
         categoriesSearchViewModel.mainViewModel = this
@@ -70,6 +74,7 @@ class MainViewModel @Inject constructor(
         recipeCreateViewModel.mainViewModel = this
         menuViewModel.mainViewModel = this
         inventoryViewModel.mainViewModel = this
+        deleteApplyViewModel.mainViewModel = this
     }
 
     val voiceInputUseCase = VoiceInputUseCase()

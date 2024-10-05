@@ -28,4 +28,7 @@ interface DraftAndTagCrossRefDAO {
 
     @Delete
     suspend fun delete(draftAndTagCrossRef: DraftAndTagCrossRef)
+
+    @Query("DELETE FROM draftandtagcrossref WHERE recipeTagId=:tagID")
+    suspend fun deleteByTag( tagID:Long)
 }

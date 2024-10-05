@@ -125,7 +125,7 @@ class SpecifySelectionViewModel @Inject constructor(
         return flow
     }
 
-    suspend fun launchAndGet(use: (SpecifySelectionResult) -> Unit) {
+    suspend fun launchAndGet(use: suspend (SpecifySelectionResult) -> Unit) {
         val flow = start()
         flow.collect { value ->
             if (value != null) {

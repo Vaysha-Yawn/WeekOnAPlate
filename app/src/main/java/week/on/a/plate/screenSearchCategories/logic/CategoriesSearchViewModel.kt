@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import week.on.a.plate.data.dataView.recipe.IngredientCategoryView
+import week.on.a.plate.data.dataView.recipe.IngredientView
 import week.on.a.plate.data.dataView.recipe.TagCategoryView
 import week.on.a.plate.data.repository.tables.filters.ingredientCategory.IngredientCategoryRepository
 import week.on.a.plate.data.repository.tables.filters.recipeTagCategory.RecipeTagCategoryRepository
@@ -17,6 +18,9 @@ import week.on.a.plate.dialogEditOrDelete.event.EditOrDeleteEvent
 import week.on.a.plate.dialogEditOrDelete.logic.EditOrDeleteViewModel
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
+import week.on.a.plate.screenDeleteApply.event.DeleteApplyEvent
+import week.on.a.plate.screenDeleteApply.logic.DeleteApplyViewModel
+import week.on.a.plate.screenDeleteApply.navigation.DeleteApplyDirection
 import week.on.a.plate.screenSearchCategories.event.CategoriesSearchEvent
 import week.on.a.plate.screenSearchCategories.state.CategoriesSearchUIState
 import javax.inject.Inject
@@ -106,8 +110,22 @@ class CategoriesSearchViewModel @Inject constructor(
             vm.launchAndGet { event ->
                 when (event) {
                     EditOrDeleteEvent.Close -> {}
-                    EditOrDeleteEvent.Delete -> deleteCategory(text)
+                    EditOrDeleteEvent.Delete -> askDeleteCategory(text)
                     EditOrDeleteEvent.Edit -> editCategory(text)
+                }
+            }
+        }
+    }
+
+
+    private fun askDeleteCategory(text: String) {
+        viewModelScope.launch {
+            val vmDel = mainViewModel.deleteApplyViewModel
+            //todo аписать предупреждение
+            mainViewModel.nav.navigate(DeleteApplyDirection)
+            vmDel.launchAndGet("") { event ->
+                if (event == DeleteApplyEvent.Apply) {
+                    deleteCategory(text)
                 }
             }
         }

@@ -35,4 +35,7 @@ interface RecipeTagCategoryDAO {
     @Transaction
     @Query("SELECT * FROM RecipeTagCategoryRoom WHERE recipeTagCategoryId = :id")
     suspend fun getById(id: Long):RecipeTagCategoryAndRecipeTag?
+
+    @Query("SELECT * FROM RecipeTagCategoryRoom WHERE name=:startCategoryName")
+    suspend fun findCategoryByName(startCategoryName: String) :RecipeTagCategoryRoom?
 }

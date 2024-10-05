@@ -3,11 +3,15 @@ package week.on.a.plate.data.repository.tables.filters.recipeTagCategory
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import week.on.a.plate.data.dataView.recipe.TagCategoryView
+import week.on.a.plate.data.repository.tables.filters.recipeTag.RecipeTagDAO
 import week.on.a.plate.data.repository.tables.filters.recipeTag.RecipeTagMapper
 import javax.inject.Inject
 
-
-class RecipeTagCategoryRepository @Inject constructor(private val dao: RecipeTagCategoryDAO) {
+val startCategoryName = "Без категории"
+class RecipeTagCategoryRepository @Inject constructor(
+    private val dao: RecipeTagCategoryDAO,
+    private val daoTag: RecipeTagDAO,
+) {
 
     private val recipeTagMapper = RecipeTagMapper()
     private val categoryMapper = RecipeTagCategoryMapper()
@@ -50,6 +54,15 @@ class RecipeTagCategoryRepository @Inject constructor(private val dao: RecipeTag
 
     suspend fun delete(id: Long) {
         dao.deleteById(id)
+        val tags = daoTag.getAllByCategoryId(id)
+        val startCategory = dao.findCategoryByName(startCategoryName)!!
+        tags.forEach {
+            daoTag.update(it.apply { recipeTagCategoryId = startCategory.recipeTagCategoryId })
+        }
+    }
+
+    suspend fun isStartCategoryInstalled():Boolean {
+        return dao.findCategoryByName(startCategoryName)!=null
     }
 }
 

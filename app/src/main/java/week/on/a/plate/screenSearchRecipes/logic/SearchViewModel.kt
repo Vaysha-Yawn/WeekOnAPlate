@@ -44,9 +44,6 @@ class SearchViewModel @Inject constructor(
     private val sCRUDRecipeInMenu: CRUDRecipeInMenu,
     private val tagCategoryRepository: RecipeTagCategoryRepository,
     private val recipeRepository: RecipeRepository,
-    private val ingredientRepository: IngredientRepository,
-    private val ingredientCategoryRepository: IngredientCategoryRepository,
-    private val tagRepository: RecipeTagRepository,
 ) : ViewModel() {
 
     lateinit var mainViewModel: MainViewModel
@@ -60,7 +57,6 @@ class SearchViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            //setStartValue()
             allTagCategories =
                 tagCategoryRepository.getAllTagsByCategoriesForFilters().stateIn(viewModelScope)
 
@@ -69,7 +65,6 @@ class SearchViewModel @Inject constructor(
             }
         }
     }
-
 
     private fun search() {
         searchAbstract { recipeView ->
@@ -117,28 +112,6 @@ class SearchViewModel @Inject constructor(
     private fun searchFavorite() {
         searchAbstract { recipeView ->
             recipeView.inFavorite
-        }
-    }
-
-    private fun setStartValue() {
-        viewModelScope.launch {
-            tags.forEach { category ->
-                val catId = tagCategoryRepository.create(category.name)
-                category.tags.forEach { tag ->
-                    tagRepository.insert(tag.tagName, catId)
-                }
-            }
-            ingredients.forEach { category ->
-                val catId = ingredientCategoryRepository.create(category.name)
-                category.ingredientViews.forEach { ingredientView ->
-                    ingredientRepository.insert(
-                        catId,
-                        ingredientView.img,
-                        ingredientView.name,
-                        ingredientView.measure,
-                    )
-                }
-            }
         }
     }
 

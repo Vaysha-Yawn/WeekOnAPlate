@@ -34,4 +34,6 @@ interface ShoppingItemDAO {
     @Query("DELETE FROM ShoppingItemRoom WHERE checked = 1")
     suspend fun deleteAllChecked()
 
+    @Query("DELETE FROM ShoppingItemRoom WHERE ingredientInRecipeId = :id")
+    suspend fun deleteAllByIngredientInRecipeId(id: Long)
 }

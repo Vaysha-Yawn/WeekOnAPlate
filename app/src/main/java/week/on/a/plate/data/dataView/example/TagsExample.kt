@@ -2,8 +2,14 @@ package week.on.a.plate.data.dataView.example
 
 import week.on.a.plate.data.dataView.recipe.RecipeTagView
 import week.on.a.plate.data.dataView.recipe.TagCategoryView
+import week.on.a.plate.data.repository.tables.filters.recipeTagCategory.startCategoryName
 
 val tags = listOf(
+    TagCategoryView(
+        0,
+        startCategoryName,
+        listOf()
+    ),
     TagCategoryView(
         1,
         "По приёмам пищи",

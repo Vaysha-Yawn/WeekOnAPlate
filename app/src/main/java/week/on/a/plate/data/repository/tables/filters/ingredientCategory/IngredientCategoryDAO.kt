@@ -36,4 +36,7 @@ interface IngredientCategoryDAO {
 
     @Query("DELETE FROM IngredientCategoryRoom WHERE ingredientCategoryId = :id")
     suspend fun deleteById(id: Long)
+
+    @Query("SELECT * FROM IngredientCategoryRoom WHERE name=:startCategoryName")
+    suspend fun findCategoryByName(startCategoryName: String): IngredientCategoryRoom?
 }

@@ -47,5 +47,9 @@ interface IngredientInRecipeDAO {
     @Query("DELETE FROM IngredientInRecipeRoom WHERE recipeId = :recipeIdd")
     suspend fun deleteByRecipeId(recipeIdd: Long)
 
+    @Query("DELETE FROM IngredientInRecipeRoom WHERE ingredientId = :id")
+    suspend fun deleteByIngredientId(id: Long)
 
+    @Query("SELECT * FROM IngredientInRecipeRoom WHERE ingredientId = :id")
+    suspend fun getAllByIngredientId(id: Long): List<IngredientInRecipeRoom>
 }

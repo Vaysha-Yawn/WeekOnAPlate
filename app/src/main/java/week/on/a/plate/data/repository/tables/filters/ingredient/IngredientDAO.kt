@@ -39,4 +39,7 @@ interface IngredientDAO {
 
     @Query("DELETE FROM IngredientRoom WHERE ingredientId = :id")
     suspend fun deleteById(id: Long)
+
+    @Query("SELECT * FROM IngredientRoom WHERE ingredientCategoryId = :id")
+    suspend fun getAllByCategoryId(id: Long): List<IngredientRoom>
 }

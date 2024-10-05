@@ -29,4 +29,7 @@ interface RecipeTagDAO {
 
     @Query("DELETE FROM RecipeTagRoom WHERE recipeTagId = :id")
     suspend fun deleteById(id: Long)
+
+    @Query("SELECT * FROM RecipeTagRoom WHERE recipeTagCategoryId = :id")
+    suspend fun getAllByCategoryId(id: Long):List<RecipeTagRoom>
 }

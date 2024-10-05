@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class RecipeTagRoom(
-    val recipeTagCategoryId: Long,
+    var recipeTagCategoryId: Long,
     val tagName: String,
 ){
     @PrimaryKey(autoGenerate = true)

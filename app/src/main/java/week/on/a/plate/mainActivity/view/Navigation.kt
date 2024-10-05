@@ -19,6 +19,8 @@ import week.on.a.plate.screenFilters.view.FilterStart
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screenCreateRecipe.navigation.RecipeCreateDestination
 import week.on.a.plate.screenCreateRecipe.view.RecipeCreateStart
+import week.on.a.plate.screenDeleteApply.navigation.DeleteApplyDirection
+import week.on.a.plate.screenDeleteApply.view.DeleteApplyStart
 import week.on.a.plate.screenInventory.navigation.InventoryDirection
 import week.on.a.plate.screenInventory.view.InventoryStart
 import week.on.a.plate.screenMenu.view.main.MenuScreen
@@ -85,6 +87,11 @@ fun Navigation(
         composable<InventoryDirection> {
             viewModel.isActiveBaseScreen.value = false
             InventoryStart(viewModel.inventoryViewModel)
+        }
+
+        composable<DeleteApplyDirection> {
+            viewModel.isActiveBaseScreen.value = false
+            DeleteApplyStart(viewModel.deleteApplyViewModel)
         }
     }
 }

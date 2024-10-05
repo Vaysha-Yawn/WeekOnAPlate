@@ -3,12 +3,16 @@ package week.on.a.plate.data.repository.tables.filters.ingredientCategory
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import week.on.a.plate.data.dataView.recipe.IngredientCategoryView
-import week.on.a.plate.data.dataView.recipe.TagCategoryView
+import week.on.a.plate.data.repository.tables.filters.ingredient.IngredientDAO
 import week.on.a.plate.data.repository.tables.filters.ingredient.IngredientMapper
+import week.on.a.plate.data.repository.tables.filters.recipeTagCategory.startCategoryName
 import javax.inject.Inject
 
 
-class IngredientCategoryRepository @Inject constructor(private val dao: IngredientCategoryDAO) {
+class IngredientCategoryRepository @Inject constructor(
+    private val dao: IngredientCategoryDAO,
+    private val daoIngredient: IngredientDAO,
+) {
 
     private val ingredientMapper = IngredientMapper()
     private val ingredientCategoryMapper = IngredientCategoryMapper()
@@ -42,6 +46,11 @@ class IngredientCategoryRepository @Inject constructor(private val dao: Ingredie
 
     suspend fun delete(id: Long) {
         dao.deleteById(id)
+        val ingredientRooms = daoIngredient.getAllByCategoryId(id)
+        val startCategory = dao.findCategoryByName(startCategoryName)!!
+        ingredientRooms.forEach {
+            daoIngredient.update(it.apply { ingredientCategoryId = startCategory.ingredientCategoryId })
+        }
     }
 
     suspend fun getById(id: Long): IngredientCategoryView? {

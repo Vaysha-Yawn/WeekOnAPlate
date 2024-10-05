@@ -27,4 +27,7 @@ interface DraftAndIngredientCrossRefDAO {
 
     @Delete
     suspend fun delete(draftAndIngredientCrossRef: DraftAndIngredientCrossRef)
+
+    @Query("DELETE FROM DraftAndIngredientCrossRef WHERE ingredientId=:ingredientID")
+    suspend fun deleteByIngredient( ingredientID:Long)
 }

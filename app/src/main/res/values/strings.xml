@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Week on a Plate</string>
+    <string name="app_name">Неделя на тарелке</string>
     <string name="done">Готово</string>
     <string name="Portions">Порции</string>
     <string name="data_not_found">Нет данных</string>
