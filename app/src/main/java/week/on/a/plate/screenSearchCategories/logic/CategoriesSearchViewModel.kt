@@ -121,9 +121,11 @@ class CategoriesSearchViewModel @Inject constructor(
     private fun askDeleteCategory(text: String) {
         viewModelScope.launch {
             val vmDel = mainViewModel.deleteApplyViewModel
-            //todo аписать предупреждение
+            val mes = "Вы уверены, что хотите удалить эту категорию?\n" +
+                    "Это действие нельзя отменить.\n" +
+                    "Внимание, при удалении категории все её элементы переместятся в категорию под названием \"Без категории\". Вы можете переместить их в другие категории с помощью редактирования."
             mainViewModel.nav.navigate(DeleteApplyDirection)
-            vmDel.launchAndGet("") { event ->
+            vmDel.launchAndGet(mes) { event ->
                 if (event == DeleteApplyEvent.Apply) {
                     deleteCategory(text)
                 }

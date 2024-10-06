@@ -112,9 +112,11 @@ class FilterViewModel @Inject constructor(
     private fun deleteIngredient(ingredient: IngredientView) {
         viewModelScope.launch {
             val vmDel = mainViewModel.deleteApplyViewModel
-            //todo аписать предупреждение
+            val mes = "Вы уверены, что хотите удалить этот ингредиент?\n" +
+                    "Внимание, при удалении ингредиента он удалится из рецептов, меню (позиции этого ингредиента, в набросках) и списка покупок.\n" +
+                    "Это действие нельзя отменить."
             mainViewModel.nav.navigate(DeleteApplyDirection)
-            vmDel.launchAndGet("") { event ->
+            vmDel.launchAndGet(mes) { event ->
                 if (event == DeleteApplyEvent.Apply) {
                     ingredientRepository.delete(ingredient.ingredientId)
                 }
@@ -125,9 +127,11 @@ class FilterViewModel @Inject constructor(
     private fun deleteTag(tag: RecipeTagView) {
         viewModelScope.launch {
             val vmDel = mainViewModel.deleteApplyViewModel
-            //todo написать предупреждение
+            val mes = "Вы уверены, что хотите удалить этот тэг?\n" +
+                    "Внимание, при удалении тэга он удалится из всех набросков и рецептов.\n" +
+                    "Это действие нельзя отменить."
             mainViewModel.nav.navigate(DeleteApplyDirection)
-            vmDel.launchAndGet("") { event ->
+            vmDel.launchAndGet(mes) { event ->
                 if (event == DeleteApplyEvent.Apply) {
                     recipeTagRepository.delete(tag.id)
                 }

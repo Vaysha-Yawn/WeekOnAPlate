@@ -96,9 +96,11 @@ class RecipeDetailsViewModel @Inject constructor(
     private fun delete() {
         viewModelScope.launch {
             val vm = mainViewModel.deleteApplyViewModel
-            //todo аписать предупреждение
+            val mes = "Вы уверены, что хотите удалить этот рецепт?\n" +
+                    "Внимание, при удалении рецепта так же удалятся все позиции с ним в меню.\n" +
+                    "Это действие нельзя отменить."
             mainViewModel.nav.navigate(DeleteApplyDirection)
-            vm.launchAndGet(""){event->
+            vm.launchAndGet(mes){event->
                 if (event == DeleteApplyEvent.Apply){
                     recipeRepository.delete(state.recipe.value.id)
                     mainViewModel.onEvent(MainEvent.NavigateBack)
