@@ -15,7 +15,7 @@ class PositionRecipeRepository @Inject constructor(
         return positionRecipeDAO.getAllInSel(selectionId).map { recipeInMenu ->
             with(mapper) {
                 recipeInMenu.roomToView(
-                    recipeInMenu.recipeId, recipeInMenu.recipeName
+                    recipeInMenu.recipeId, recipeInMenu.recipeName, recipeInMenu.recipeImg
                 )
             }
         }
@@ -28,7 +28,7 @@ class PositionRecipeRepository @Inject constructor(
 
     suspend fun update(id: Long, recipe: RecipeShortView, count: Int, selectionId: Long) {
         positionRecipeDAO.update(
-            PositionRecipeRoom(recipe.id, recipe.name, count, selectionId).apply {
+            PositionRecipeRoom(recipe.id, recipe.name, count, selectionId, recipe.image).apply {
                 this.recipeInMenuId = id
             }
         )

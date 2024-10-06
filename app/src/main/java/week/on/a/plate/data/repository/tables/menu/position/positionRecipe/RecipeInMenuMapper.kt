@@ -5,10 +5,10 @@ import week.on.a.plate.data.dataView.week.RecipeShortView
 
 
 class RecipeInMenuMapper() {
-    fun PositionRecipeRoom.roomToView(recipeId:Long, name:String): Position.PositionRecipeView =
+    fun PositionRecipeRoom.roomToView(recipeId:Long, name:String, img:String,): Position.PositionRecipeView =
         Position.PositionRecipeView(
             id = this.recipeInMenuId,
-            recipe = RecipeShortView(recipeId, name) ,
+            recipe = RecipeShortView(recipeId, name, img) ,
             portionsCount = this.portionsCount,
             this.selectionId
         )
@@ -18,6 +18,7 @@ class RecipeInMenuMapper() {
             recipeId = this.recipe.id,
             recipeName = this.recipe.name,
             portionsCount = this.portionsCount,
-            selectionId = selectionId
+            selectionId = selectionId,
+            recipe.image
         )
 }

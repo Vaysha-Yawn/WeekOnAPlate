@@ -11,6 +11,7 @@ data class PositionRecipeRoom(
     val recipeName: String,
     var portionsCount: Int,
     val selectionId: Long,
+    val recipeImg: String,
 ) : PositionRoom() {
     @PrimaryKey(autoGenerate = true)
     var recipeInMenuId: Long = 0
