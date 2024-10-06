@@ -333,7 +333,7 @@ class FilterViewModel @Inject constructor(
     private fun searchTags(text: String) {
         val resultTags = mutableListOf<RecipeTagView>()
         state.allTagsCategories.value.forEach { tagCategory ->
-            val tagsRes = tagCategory.tags.filter { it -> it.tagName.contains(text, true) }
+            val tagsRes = tagCategory.tags.filter { it -> it.tagName.contains(text.trim(), true) }
             resultTags.addAll(tagsRes)
         }
         state.resultSearchFilterTags.value = resultTags
@@ -343,7 +343,7 @@ class FilterViewModel @Inject constructor(
         val resultIngredient = mutableListOf<IngredientView>()
         state.allIngredientsCategories.value.forEach { ingredientCategory ->
             val ingredientRes =
-                ingredientCategory.ingredientViews.filter { it -> it.name.contains(text, true) }
+                ingredientCategory.ingredientViews.filter { it -> it.name.contains(text.trim(), true) }
             resultIngredient.addAll(ingredientRes)
         }
         state.resultSearchFilterIngredients.value = resultIngredient
@@ -378,9 +378,11 @@ class FilterViewModel @Inject constructor(
     fun done() {
         resultFlow.value = Pair(state.selectedTags.value, state.selectedIngredients.value)
         mainViewModel.onEvent(MainEvent.NavigateBack)
+        state.filtersSearchText.value = ""
     }
 
     fun close() {
+        state.filtersSearchText.value = ""
         if (state.activeFilterTabIndex.intValue == 0 && state.resultSearchFilterTags.value.isNotEmpty()) {
             state.resultSearchFilterTags.value = listOf()
         } else if (state.activeFilterTabIndex.intValue == 1 && state.resultSearchFilterIngredients.value.isNotEmpty()) {

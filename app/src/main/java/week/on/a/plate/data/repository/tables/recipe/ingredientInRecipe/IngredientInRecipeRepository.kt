@@ -50,7 +50,6 @@ class IngredientInRecipeRepository @Inject constructor(
             with(ingredientMapper) {
                 it.viewToRoom(
                     recipeId,
-                    it.ingredientView.ingredientId
                 )
             }
         }

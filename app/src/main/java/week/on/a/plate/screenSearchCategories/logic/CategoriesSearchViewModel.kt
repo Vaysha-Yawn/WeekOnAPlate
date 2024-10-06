@@ -9,17 +9,16 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import week.on.a.plate.data.dataView.recipe.IngredientCategoryView
-import week.on.a.plate.data.dataView.recipe.IngredientView
 import week.on.a.plate.data.dataView.recipe.TagCategoryView
 import week.on.a.plate.data.repository.tables.filters.ingredientCategory.IngredientCategoryRepository
 import week.on.a.plate.data.repository.tables.filters.recipeTagCategory.RecipeTagCategoryRepository
-import week.on.a.plate.dialogAddCategory.logic.AddCategoryViewModel
+import week.on.a.plate.dialogEditOneString.logic.EditOneStringViewModel
+import week.on.a.plate.dialogEditOneString.state.EditOneStringUIState
 import week.on.a.plate.dialogEditOrDelete.event.EditOrDeleteEvent
 import week.on.a.plate.dialogEditOrDelete.logic.EditOrDeleteViewModel
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screenDeleteApply.event.DeleteApplyEvent
-import week.on.a.plate.screenDeleteApply.logic.DeleteApplyViewModel
 import week.on.a.plate.screenDeleteApply.navigation.DeleteApplyDirection
 import week.on.a.plate.screenSearchCategories.event.CategoriesSearchEvent
 import week.on.a.plate.screenSearchCategories.state.CategoriesSearchUIState
@@ -134,10 +133,16 @@ class CategoriesSearchViewModel @Inject constructor(
     }
 
     private suspend fun editCategory(oldName: String) {
-        val vm = AddCategoryViewModel()
+        val vm = EditOneStringViewModel()
         vm.mainViewModel = mainViewModel
         mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-        vm.launchAndGet(oldName) { newName ->
+        vm.launchAndGet(
+            EditOneStringUIState(
+                oldName,
+                "Редактировать название категории",
+                "Введите название категории здесь..."
+            )
+        ) { newName ->
             if (isTag) {
                 val oldCategory =
                     allTagCategories.value.find { it -> it.name == oldName } ?: return@launchAndGet
@@ -147,6 +152,33 @@ class CategoriesSearchViewModel @Inject constructor(
                     allIngredientCategories.value.find { it -> it.name == oldName }
                         ?: return@launchAndGet
                 ingredientCategoryRepository.updateName(newName, oldCategory.id)
+            }
+        }
+    }
+
+    private fun create(text: String) {
+        viewModelScope.launch {
+            val vm = EditOneStringViewModel()
+            vm.mainViewModel = mainViewModel
+            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
+            vm.launchAndGet(
+                EditOneStringUIState(
+                    text,
+                    "Редактировать название категории",
+                    "Введите название категории здесь..."
+                )
+            ) { name ->
+                viewModelScope.launch {
+                    if (isTag) {
+                        val id = recipeTagCategoryRepository.create(name)
+                        val tag = recipeTagCategoryRepository.getById(id) ?: return@launch
+                        done(tag)
+                    } else {
+                        val id = ingredientCategoryRepository.create(name)
+                        val ingredient = ingredientCategoryRepository.getById(id) ?: return@launch
+                        done(ingredient)
+                    }
+                }
             }
         }
     }
@@ -167,10 +199,10 @@ class CategoriesSearchViewModel @Inject constructor(
     private fun search() {
         val listResult = if (isTag) {
             state.allTags.value.map { it.name }
-                .filter { it -> it.contains(state.searchText.value, true) }
+                .filter { it -> it.contains(state.searchText.value.trim(), true) }
         } else {
             state.allIngredients.value.map { it.name }
-                .filter { it -> it.contains(state.searchText.value, true) }
+                .filter { it -> it.contains(state.searchText.value.trim(), true) }
         }
         state.resultSearch.value = listResult
     }
@@ -180,27 +212,6 @@ class CategoriesSearchViewModel @Inject constructor(
             state.searchText.value = it?.joinToString() ?: ""
             search()
         })
-    }
-
-    private fun create(text: String) {
-        viewModelScope.launch {
-            val vm = AddCategoryViewModel()
-            vm.mainViewModel = mainViewModel
-            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-            vm.launchAndGet(text) { name ->
-                viewModelScope.launch {
-                    if (isTag) {
-                        val id = recipeTagCategoryRepository.create(name)
-                        val tag = recipeTagCategoryRepository.getById(id) ?: return@launch
-                        done(tag)
-                    } else {
-                        val id = ingredientCategoryRepository.create(name)
-                        val ingredient = ingredientCategoryRepository.getById(id) ?: return@launch
-                        done(ingredient)
-                    }
-                }
-            }
-        }
     }
 
     fun done(tag: TagCategoryView) {
@@ -236,6 +247,7 @@ class CategoriesSearchViewModel @Inject constructor(
     }
 
     fun close() {
+        state.searchText.value = ""
         if (state.resultSearch.value.isNotEmpty()) {
             state.resultSearch.value = listOf()
         } else {

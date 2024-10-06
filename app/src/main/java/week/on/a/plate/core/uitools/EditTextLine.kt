@@ -2,7 +2,6 @@ package week.on.a.plate.core.uitools
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
@@ -23,13 +22,13 @@ fun EditTextLine(
     text: MutableState<String>,
     placeholder: String,
     modifier : Modifier = Modifier,
-    textChangeEvent: (String) -> Unit,
 ) {
-
     OutlinedTextField(
         value = text.value,
         onValueChange = { newValue ->
-            textChangeEvent(newValue)
+            text.value = if (newValue.length<2){newValue}else{
+                newValue[0].uppercaseChar()+newValue.substring(1 until newValue.length)
+            }
         },
         modifier = modifier.fillMaxWidth(),
         textStyle = Typography.bodyMedium,

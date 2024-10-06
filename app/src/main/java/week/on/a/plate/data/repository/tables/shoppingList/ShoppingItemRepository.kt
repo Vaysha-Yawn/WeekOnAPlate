@@ -81,8 +81,7 @@ class ShoppingItemRepository @Inject constructor(
     suspend fun insert(itemView: ShoppingItemView) {
         val ingredientInRecipeRoom = with(IngredientInRecipeMapper()) {
             itemView.ingredientInRecipe.viewToRoom(
-                0,
-                itemView.ingredientInRecipe.ingredientView.ingredientId
+                0
             )
         }
         val newIngredientInRecipeId = ingredientInRecipeDAO.insert(ingredientInRecipeRoom)

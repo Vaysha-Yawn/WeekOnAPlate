@@ -36,10 +36,10 @@ class PositionIngredientRepository @Inject constructor(
     }
 
     suspend fun insert(position: Position.PositionIngredientView, selectionId: Long) {
-        val ingredientRoom = with(IngredientInRecipeMapper()) {
-            position.ingredient.viewToRoom(0, position.ingredient.ingredientView.ingredientId)
+        val ingredientInRecipeRoom = with(IngredientInRecipeMapper()) {
+            position.ingredient.viewToRoom(0)
         }
-        val newIngredientInRecipeId = positionIngredientDAO.insert(ingredientRoom)
+        val newIngredientInRecipeId = ingredientInRecipeDAO.insert(ingredientInRecipeRoom)
 
         val positionRoom = with(positionIngredientMapper) {
             position.viewToRoom(newIngredientInRecipeId, selectionId)

@@ -1,6 +1,7 @@
 package week.on.a.plate.screenSearchRecipes.view.resultScreen
 
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,10 +19,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,6 +42,7 @@ import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.ImageLoad
 import week.on.a.plate.core.uitools.TagSmall
 import week.on.a.plate.core.uitools.TextBody
+import week.on.a.plate.core.uitools.TextSmall
 import week.on.a.plate.core.uitools.buttons.PlusButtonCard
 import week.on.a.plate.data.dataView.example.recipeTom
 import week.on.a.plate.data.dataView.recipe.IngredientView
@@ -51,6 +58,9 @@ fun SearchResultScreen(
     LazyColumn() {
         items(result.size) {
             RowRecipeResultCard(result[it], onEvent)
+        }
+        item {
+            Spacer(modifier = Modifier.height(80.dp))
         }
     }
 }
@@ -141,6 +151,7 @@ fun TagList(tags: List<RecipeTagView>, ingredients: List<IngredientView>) {
                 Spacer(modifier = Modifier.width(6.dp))
             }
         }
+        Spacer(modifier = Modifier.height(6.dp))
         if (ingredients.isNotEmpty()) {
             CustomGridTagsFlow(ingredients.size) { index ->
                 TagSmall(ingredientView = ingredients[index])
@@ -152,9 +163,42 @@ fun TagList(tags: List<RecipeTagView>, ingredients: List<IngredientView>) {
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun CustomGridTagsFlow(sizeList: Int, content: @Composable (Int) -> Unit) {
+    val showMore = remember {
+        mutableStateOf(false)
+    }
     FlowRow(Modifier.fillMaxWidth()) {
-        for (i in 0 until sizeList) {
-            content(i)
+        if (sizeList > 2) {
+            for (i in 0 until 2) {
+                content(i)
+            }
+            if (showMore.value) {
+                for (i in 2 until sizeList) {
+                    content(i)
+                }
+                TextSmall(
+                    text = "—", modifier = Modifier
+                        .clickable {
+                            showMore.value = false
+                        }
+                        .background(MaterialTheme.colorScheme.background, RoundedCornerShape(20.dp))
+                        .padding(vertical = 3.dp)
+                        .padding(horizontal = 12.dp)
+                )
+            } else {
+                TextSmall(
+                    text = "+", modifier = Modifier
+                        .clickable {
+                            showMore.value = true
+                        }
+                        .background(MaterialTheme.colorScheme.background, RoundedCornerShape(20.dp))
+                        .padding(vertical = 3.dp)
+                        .padding(horizontal = 12.dp)
+                )
+            }
+        } else {
+            for (i in 0 until sizeList) {
+                content(i)
+            }
         }
     }
 }

@@ -16,36 +16,3 @@ import week.on.a.plate.core.theme.ColorButtonNegativeGrey
 import week.on.a.plate.core.theme.ColorPanelGreen
 import week.on.a.plate.core.theme.Typography
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
-
-//todo delete
-@Composable
-fun ButtonText(
-    text: String,
-    modifier: Modifier = Modifier,
-    maxLines: Int? = null,
-    textStyle: TextStyle = Typography.bodySmall,
-    color: Color = Typography.bodyMedium.color,
-    textAlign: TextAlign = TextAlign.Center,
-    colorBackground: Color = ColorButtonNegativeGrey,
-    click:()->Unit
-) {
-    TextInApp(
-        text, modifier = modifier
-            .background(
-                colorBackground, RoundedCornerShape(30.dp)
-            )
-            .padding(horizontal = 6.dp, vertical = 3.dp).clickable {
-                click()
-            }, textStyle = textStyle,
-        maxLines = maxLines, color = color,
-        textAlign = textAlign
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewButtonText() {
-    WeekOnAPlateTheme {
-        ButtonText("Button", colorBackground = ColorPanelGreen, click = {})
-    }
-}

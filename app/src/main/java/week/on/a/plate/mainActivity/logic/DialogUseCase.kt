@@ -1,8 +1,6 @@
 package week.on.a.plate.mainActivity.logic
 
 import androidx.compose.runtime.mutableStateOf
-import week.on.a.plate.dialogAddCategory.event.AddCategoryEvent
-import week.on.a.plate.dialogAddCategory.logic.AddCategoryViewModel
 import week.on.a.plate.dialogAddIngredient.event.AddIngredientEvent
 import week.on.a.plate.dialogAddIngredient.logic.AddIngredientViewModel
 import week.on.a.plate.dialogAddTag.event.AddTagEvent
@@ -17,8 +15,8 @@ import week.on.a.plate.dialogChooseWeekInMenu.event.ChooseWeekDialogEvent
 import week.on.a.plate.dialogChooseWeekInMenu.logic.ChooseWeekViewModel
 import week.on.a.plate.dialogDatePicker.event.DatePickerEvent
 import week.on.a.plate.dialogDatePicker.logic.DatePickerViewModel
-import week.on.a.plate.dialogEditNote.event.EditNoteEvent
-import week.on.a.plate.dialogEditNote.logic.EditNoteViewModel
+import week.on.a.plate.dialogEditOneString.event.EditOneStringEvent
+import week.on.a.plate.dialogEditOneString.logic.EditOneStringViewModel
 import week.on.a.plate.dialogEditOtherPosition.event.EditOtherPositionEvent
 import week.on.a.plate.dialogEditOtherPosition.logic.EditOtherPositionViewModel
 import week.on.a.plate.dialogEditPositionIngredient.event.EditPositionIngredientEvent
@@ -86,8 +84,8 @@ class DialogUseCase @Inject constructor() {
             is AddPositionEvent -> if (activeDialog.value is AddPositionViewModel) {
                 (activeDialog.value as AddPositionViewModel).onEvent(event)
             }
-            is EditNoteEvent -> if (activeDialog.value is EditNoteViewModel) {
-                (activeDialog.value as EditNoteViewModel).onEvent(event)
+            is EditOneStringEvent -> if (activeDialog.value is EditOneStringViewModel) {
+                (activeDialog.value as EditOneStringViewModel).onEvent(event)
             }
             is ChangePortionsCountEvent -> if (activeDialog.value is ChangePortionsCountViewModel) {
                 (activeDialog.value as ChangePortionsCountViewModel).onEvent(event)
@@ -97,9 +95,6 @@ class DialogUseCase @Inject constructor() {
             }
             is DatePickerEvent -> if (activeDialog.value is DatePickerViewModel) {
                 (activeDialog.value as DatePickerViewModel).onEvent(event)
-            }
-            is AddCategoryEvent -> if (activeDialog.value is AddCategoryViewModel) {
-                (activeDialog.value as AddCategoryViewModel).onEvent(event)
             }
             is AddTagEvent -> if (activeDialog.value is AddTagViewModel) {
                 (activeDialog.value as AddTagViewModel).onEvent(event)

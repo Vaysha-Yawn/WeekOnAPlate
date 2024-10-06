@@ -43,11 +43,11 @@ fun RecipeDetailsIngredients(state: RecipeDetailsState, onEvent: (RecipeDetailsE
             TextBody(text = "порций")
         }
         HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.outline)
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         for ((index, ingredient) in state.recipe.value.ingredients.withIndex()) {
             IngredientInRecipeCard(ingredient, state.ingredientsCounts.value[index], )
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(12.dp))
         }
     }
 }

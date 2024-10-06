@@ -27,9 +27,7 @@ fun SourceRecipeEdit(state: RecipeCreateUIState, onEvent: (RecipeCreateEvent) ->
     Column(Modifier.padding(24.dp)) {
         TextBody(text = "Источник рецепта, ссылка")
         Spacer(modifier = Modifier.height(12.dp))
-        EditTextLine(text = state.source, placeholder = "Введите ссылку на рецепт") {
-            state.source.value = it
-        }
+        EditTextLine(text = state.source, placeholder = "Введите ссылку на рецепт")
     }
 }
 

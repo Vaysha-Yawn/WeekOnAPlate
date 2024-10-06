@@ -47,9 +47,7 @@ fun AddIngredient(
                 state.name,
                 "Введите название ингредиента",
                 modifier = Modifier
-            ) { value ->
-                state.name.value = value
-            }
+            )
             Spacer(modifier = Modifier.height(24.dp))
 
             TextBody(
@@ -62,9 +60,7 @@ fun AddIngredient(
                 state.measure,
                 "Введите меру измерения",
                 modifier = Modifier
-            ) { value ->
-                state.measure.value = value
-            }
+            )
             Spacer(modifier = Modifier.height(24.dp))
 
             TextBody(
@@ -90,9 +86,7 @@ fun AddIngredient(
                 state.photoUri,
                 "Введите ссылку на изображение",
                 modifier = Modifier
-            ) { value ->
-                state.photoUri.value = value
-            }
+            )
             val messageError = "Пожалуйста введите название, меру и выберите категорию"
             val coroutineScope = rememberCoroutineScope()
             Spacer(modifier = Modifier.height(36.dp))

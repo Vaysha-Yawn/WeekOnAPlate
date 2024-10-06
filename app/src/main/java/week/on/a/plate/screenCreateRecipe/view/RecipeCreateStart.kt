@@ -55,7 +55,7 @@ fun RecipeCreateStart(viewModel: RecipeCreateViewModel) {
                             viewModel.state.source.value = "https://www.google.ru/search?q=${viewModel.state.name.value.replace(" ", "+")}"
                         }
                     }else{
-                        WebPage(url = viewModel.state.source) { event ->
+                        WebPage(url = viewModel.state.source, viewModel.state.webview) { event ->
                             viewModel.mainViewModel.onEvent(
                                 event
                             )

@@ -1,5 +1,6 @@
 package week.on.a.plate.screenCreateRecipe.state
 
+import android.webkit.WebView
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
@@ -17,6 +18,7 @@ class RecipeCreateUIState {
     val tags = mutableStateOf(listOf<RecipeTagView>())
     val ingredients = mutableStateOf(listOf<IngredientInRecipeView>())
     val steps = mutableStateOf(listOf<RecipeStepState>())
+    val webview = mutableStateOf<WebView?>(null)
 }
 
 class RecipeStepState {

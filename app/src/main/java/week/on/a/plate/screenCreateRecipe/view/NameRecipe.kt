@@ -16,9 +16,7 @@ import week.on.a.plate.screenCreateRecipe.state.RecipeCreateUIState
 fun NameRecipeEdit(state: RecipeCreateUIState, onEvent: (RecipeCreateEvent) -> Unit) {
     TextTitle(text = "Название рецепта")
     Spacer(modifier = Modifier.height(12.dp))
-    EditTextLine(text = state.name, placeholder = "Введите название рецепта") {
-        state.name.value = it
-    }
+    EditTextLine(text = state.name, placeholder = "Введите название рецепта")
 }
 
 @Preview(showBackground = true)

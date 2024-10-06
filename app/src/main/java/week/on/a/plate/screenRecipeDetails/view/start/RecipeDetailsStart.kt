@@ -61,7 +61,7 @@ fun RecipeDetailsStart(
                     }
 
                     2 -> {
-                        RecipeDetailsSource(state, onEventMain, onEvent)
+                        RecipeDetailsSource(state, onEventMain)
                     }
                 }
             }

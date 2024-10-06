@@ -18,7 +18,8 @@ import week.on.a.plate.screenCreateRecipe.state.RecipeStepState
 import week.on.a.plate.screenCreateRecipe.timePickDialog.logic.TimePickViewModel
 import week.on.a.plate.screenFilters.navigation.FilterDestination
 import week.on.a.plate.screenFilters.state.FilterMode
-import week.on.a.plate.dialogEditNote.logic.EditNoteViewModel
+import week.on.a.plate.dialogEditOneString.logic.EditOneStringViewModel
+import week.on.a.plate.dialogEditOneString.state.EditOneStringUIState
 import week.on.a.plate.dialogEditPositionIngredient.logic.EditPositionIngredientViewModel
 import javax.inject.Inject
 
@@ -76,7 +77,6 @@ class RecipeCreateViewModel @Inject constructor(): ViewModel() {
                 viewModelScope.launch {
                     val vm = EditPositionIngredientViewModel()
                     vm.mainViewModel = mainViewModel
-                    mainViewModel.onEvent(MainEvent.OpenDialog(vm))
                     vm.launchAndGet(
                         null
                     ) { ingredient ->
@@ -91,7 +91,6 @@ class RecipeCreateViewModel @Inject constructor(): ViewModel() {
                 viewModelScope.launch {
                     val vm = EditPositionIngredientViewModel()
                     vm.mainViewModel = mainViewModel
-                    mainViewModel.onEvent(MainEvent.OpenDialog(vm))
                     vm.launchAndGet(
                         Position.PositionIngredientView(0,  event.ingredient, 0)
                     ) { ingredient ->
@@ -120,17 +119,13 @@ class RecipeCreateViewModel @Inject constructor(): ViewModel() {
 
             is RecipeCreateEvent.EditImage -> {
                 viewModelScope.launch {
-                    val vm = EditNoteViewModel()
+                    val vm = EditOneStringViewModel()
                     vm.mainViewModel = mainViewModel
                     mainViewModel.onEvent(MainEvent.OpenDialog(vm))
                     vm.launchAndGet(
-                        Position.PositionNoteView(
-                            0,
-                            event.recipeStepState.image.value,
-                            0
-                        )
+                        EditOneStringUIState(event.recipeStepState.image.value, "Редактировать ссылку на изображение","Введите новую ссылку на изображение")
                     ) { note ->
-                        event.recipeStepState.image.value = note.note
+                        event.recipeStepState.image.value = note
                     }
                 }
             }
@@ -151,17 +146,14 @@ class RecipeCreateViewModel @Inject constructor(): ViewModel() {
 
             RecipeCreateEvent.EditMainImage -> {
                 viewModelScope.launch {
-                    val vm = EditNoteViewModel()
+                    val vm = EditOneStringViewModel()
                     vm.mainViewModel = mainViewModel
                     mainViewModel.onEvent(MainEvent.OpenDialog(vm))
                     vm.launchAndGet(
-                        Position.PositionNoteView(
-                            0,
-                            state.photoLink.value,
-                            0
-                        )
-                    ) { note ->
-                        state.photoLink.value = note.note
+                        EditOneStringUIState( state.photoLink.value,
+                        "Редактировать ссылку на изображение","Введите новую ссылку на изображение"
+                    )) { note ->
+                        state.photoLink.value = note
                     }
                 }
             }

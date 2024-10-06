@@ -1,12 +1,12 @@
 package week.on.a.plate.dialogDatePicker.view
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -15,11 +15,10 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import week.on.a.plate.R
-import week.on.a.plate.core.uitools.buttons.DoneButton
 import week.on.a.plate.core.theme.ColorButtonGreen
 import week.on.a.plate.core.theme.ColorTextBlack
+import week.on.a.plate.core.uitools.buttons.DoneButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,32 +29,36 @@ fun DatePickerMy(
     done: () -> Unit
 ) {
     if (showState.value) {
-        Dialog(onDismissRequest = {
-            onClose()
-        }) {
-            Column(
-                Modifier
-                    .background(
-                        MaterialTheme.colorScheme.background,
-                        RoundedCornerShape(20.dp)
-                    )
-                    .padding(10.dp)
-            ) {
-                DatePickerMy(state)
-                DoneButton(text = stringResource(id = R.string.apply), Modifier.padding(12.dp)) {
+        DatePickerDialog(
+            onDismissRequest = {
+                onClose()
+            },
+            confirmButton = {
+                DoneButton(
+                    text = stringResource(id = R.string.apply),
+                    modifier = Modifier
+                        .padding(horizontal = 24.dp)
+                        .padding(bottom = 24.dp)
+                ) {
                     done()
                 }
-            }
+            },
+            shape = RoundedCornerShape(20.dp),
+            colors = DatePickerDefaults.colors(containerColor = MaterialTheme.colorScheme.background)
+        ) {
+            DatePickerMy(state)
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DatePickerMy(state: DatePickerState, modifier: Modifier = Modifier){
+fun DatePickerMy(state: DatePickerState, modifier: Modifier = Modifier) {
     DatePicker(
         state = state,
-        modifier = modifier.animateContentSize(),
+        modifier = modifier
+            .animateContentSize()
+            .fillMaxWidth(),
         title = {},
         colors = DatePickerDefaults.colors(
             containerColor = MaterialTheme.colorScheme.background,

@@ -68,7 +68,7 @@ class SearchViewModel @Inject constructor(
 
     private fun search() {
         searchAbstract { recipeView ->
-            recipeView.name.contains(state.searchText.value, true)
+            recipeView.name.contains(state.searchText.value.trim(), true)
                     && recipeView.tags.containsAll(state.selectedTags.value)
                     && recipeView.ingredients.map { ingredientInRecipeView -> ingredientInRecipeView.ingredientView }
                 .containsAll(state.selectedIngredients.value)

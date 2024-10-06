@@ -39,6 +39,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import week.on.a.plate.R
+import week.on.a.plate.core.theme.ColorButtonNegativeGrey
+import week.on.a.plate.core.theme.ColorSubTextGrey
 import week.on.a.plate.core.theme.Typography
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.TextBody
@@ -156,7 +158,7 @@ fun ShoppingListPosition(
             )
             if (item.description!="") {
                 Spacer(modifier = Modifier.height(3.dp))
-                TextSmall(text = item.description, color = MaterialTheme.colorScheme.outline)
+                TextSmall(text = item.description, color = ColorSubTextGrey)
             }
         }
     }

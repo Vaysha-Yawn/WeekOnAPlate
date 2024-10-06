@@ -48,9 +48,7 @@ fun AddTag(
             state.text,
             "Введите название тэга здесь",
             modifier = Modifier
-        ) { value ->
-            state.text.value = value
-        }
+        )
         Spacer(modifier = Modifier.height(24.dp))
         TextBody(
             text = "Категория",

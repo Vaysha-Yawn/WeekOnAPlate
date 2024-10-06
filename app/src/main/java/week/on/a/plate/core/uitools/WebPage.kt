@@ -24,53 +24,53 @@ import java.security.AccessController.getContext
 
 
 @Composable
-fun WebPage(url:MutableState<String>, onEvent:(Event)->Unit){
+fun WebPage(url:MutableState<String>, webview:MutableState<WebView?>, onEvent:(Event)->Unit, ){
     AndroidView(
         { context ->
-            val view = WebView(context)
-            view.webViewClient = object : WebViewClient() {
-                override fun shouldOverrideUrlLoading(
-                    view: WebView?,
-                    request: WebResourceRequest?
-                ): Boolean {
-                    url.value = request!!.url.toString()
-                    return super.shouldOverrideUrlLoading(view, request)
+            if (webview.value == null) {
+                webview.value = WebView(context)
+                val view = webview.value
+                view!!.webViewClient = object : WebViewClient() {
+                    override fun shouldOverrideUrlLoading(
+                        view: WebView?,
+                        request: WebResourceRequest?
+                    ): Boolean {
+                        url.value = request!!.url.toString()
+                        return super.shouldOverrideUrlLoading(view, request)
+                    }
                 }
-            }
-            view.webChromeClient = object : WebChromeClient() {
-                override fun onCreateWindow(
-                    newview: WebView?,
-                    isDialog: Boolean,
-                    isUserGesture: Boolean,
-                    resultMsg: Message?
-                ): Boolean {
-                    val transport = resultMsg!!.obj as WebViewTransport
-                    transport.webView = view
-                    resultMsg.sendToTarget()
-                    return true
+                view.webChromeClient = object : WebChromeClient() {
+                    override fun onCreateWindow(
+                        newview: WebView?,
+                        isDialog: Boolean,
+                        isUserGesture: Boolean,
+                        resultMsg: Message?
+                    ): Boolean {
+                        val transport = resultMsg!!.obj as WebViewTransport
+                        transport.webView = view
+                        resultMsg.sendToTarget()
+                        return true
+                    }
                 }
-            }
-            view.setSettings()
+                view.setSettings()
 
-            view.setOnLongClickListener {
-                val result = view.getHitTestResult()
-                if (result.type == WebView.HitTestResult.IMAGE_TYPE ||
-                    result.type == WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE) {
+                view.setOnLongClickListener {
+                    val result = view.getHitTestResult()
+                    if (result.type == WebView.HitTestResult.IMAGE_TYPE ||
+                        result.type == WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE
+                    ) {
 
-                    // Получаем URL изображения
-                    val imageUrl = result.extra
-
-                    // Копируем ссылку в буфер обмена
-                    copyLinkToClipboard(context, imageUrl, onEvent)
-
-                    true
-                } else {
-                    false
+                        val imageUrl = result.extra
+                        copyLinkToClipboard(context, imageUrl, onEvent)
+                        true
+                    } else {
+                        false
+                    }
                 }
-            }
 
-            view.loadUrl(url.value)
-            return@AndroidView view
+                view.loadUrl(url.value)
+            }
+            return@AndroidView webview.value!!
         }, modifier = Modifier
             .fillMaxSize()
             .animateContentSize()

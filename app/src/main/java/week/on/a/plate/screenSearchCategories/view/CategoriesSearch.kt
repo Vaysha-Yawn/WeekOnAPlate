@@ -86,7 +86,7 @@ fun CategoriesSearch(
                     Spacer(modifier = Modifier.height(24.dp))
                 }
                 items(resultSearch.value.size) {
-                    TagBig(resultSearch.value[it], ColorButtonNegativeGrey, clickable = {
+                    TagBig(resultSearch.value[it], MaterialTheme.colorScheme.background, clickable = {
                         done(resultSearch.value[it])
                     }, longClick = {
                         editOrDelete(resultSearch.value[it])
@@ -95,7 +95,7 @@ fun CategoriesSearch(
                 }
             } else {
                 items(allCategoriesNames.size) {
-                    TagBig(allCategoriesNames[it], ColorButtonNegativeGrey,
+                    TagBig(allCategoriesNames[it], MaterialTheme.colorScheme.background,
                         clickable = {
                         done(allCategoriesNames[it])
                     }, longClick = {

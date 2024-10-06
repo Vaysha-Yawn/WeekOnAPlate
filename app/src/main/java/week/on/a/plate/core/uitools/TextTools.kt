@@ -18,8 +18,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.core.theme.ColorButtonGreen
 import week.on.a.plate.core.theme.ColorButtonNegativeGrey
+import week.on.a.plate.core.theme.ColorPanelEdit
 import week.on.a.plate.core.theme.ColorPanelGreen
 import week.on.a.plate.core.theme.ColorPanelYellow
+import week.on.a.plate.core.theme.ColorStrokeGrey
 import week.on.a.plate.core.theme.ColorSubTextGrey
 import week.on.a.plate.core.theme.ColorTextBlack
 import week.on.a.plate.core.theme.Typography
@@ -185,19 +187,19 @@ fun TextBody(
 
 @Composable
 fun CreateTagOrIngredient(name: String, eventCreate: () -> Unit) {
-    TagBig("+ Создать: " + name, ColorButtonNegativeGrey, eventCreate)
+    TagBig("+ Создать: " + name, MaterialTheme.colorScheme.background, eventCreate)
 }
 
 @Composable
 fun TagBig(tag: RecipeTagView, isActive: Boolean, clickable: () -> Unit = {}, longClick: () -> Unit = {}) {
-    TagBig(tag.tagName, if (isActive) ColorPanelGreen else ColorButtonNegativeGrey, clickable, longClick)
+    TagBig(tag.tagName, if (isActive) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.background, clickable, longClick)
 }
 
 @Composable
 fun TagBig(ingredientView: IngredientView, isActive: Boolean, clickable: () -> Unit = {}, longClick: () -> Unit = {}) {
     TagBig(
         ingredientView.name,
-        if (isActive) ColorPanelYellow else ColorButtonNegativeGrey,
+        if (isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.background,
         clickable, longClick
     )
 }
@@ -215,7 +217,7 @@ fun TagBig(text: String, color: Color, clickable: () -> Unit = {}, longClick: ()
                 color, RoundedCornerShape(30.dp)
             )
             .padding(horizontal = 24.dp, vertical = 6.dp), textStyle = Typography.bodyMedium,
-        maxLines = 1, color = ColorTextBlack,
+        maxLines = 1, color = MaterialTheme.colorScheme.onBackground,
         textAlign = TextAlign.Start
     )
 }

@@ -23,6 +23,7 @@ import week.on.a.plate.core.Event
 import week.on.a.plate.screenMenu.event.MenuEvent
 import week.on.a.plate.screenMenu.state.MenuIUState
 import week.on.a.plate.core.theme.ColorButtonNegativeGrey
+import week.on.a.plate.core.uitools.TextBody
 
 @Composable
 fun TopBar(
@@ -70,9 +71,7 @@ fun TopBar(
                             .padding(6.dp)
                             .size(24.dp)
                     )
-                    TitleMenuSmall(title) {
-                        onEvent(MenuEvent.GetSelIdAndCreate)
-                    }
+                    TextBody(text = title, modifier = Modifier.padding(end = 24.dp))
                 }
             }
         }

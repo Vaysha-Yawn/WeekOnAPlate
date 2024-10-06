@@ -94,9 +94,7 @@ fun StepRecipeEdit(
         }
     }
     Spacer(modifier = Modifier.height(12.dp))
-    EditTextLine(text = recipeStepState.description, placeholder = "Введите описание шага") {
-        recipeStepState.description.value = it
-    }
+    EditTextLine(text = recipeStepState.description, placeholder = "Введите описание шага")
     if (recipeStepState.image.value != "") {
         Spacer(modifier = Modifier.height(24.dp))
         Row {

@@ -5,9 +5,6 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import week.on.a.plate.dialogAddCategory.event.AddCategoryEvent
-import week.on.a.plate.dialogAddCategory.logic.AddCategoryViewModel
-import week.on.a.plate.dialogAddCategory.view.AddCategory
 import week.on.a.plate.dialogAddIngredient.event.AddIngredientEvent
 import week.on.a.plate.dialogAddIngredient.logic.AddIngredientViewModel
 import week.on.a.plate.dialogAddIngredient.view.AddIngredient
@@ -30,9 +27,9 @@ import week.on.a.plate.dialogDatePicker.event.DatePickerEvent
 import week.on.a.plate.dialogDatePicker.logic.DatePickerViewModel
 import week.on.a.plate.dialogDatePicker.state.DatePickerUIState
 import week.on.a.plate.dialogDatePicker.view.DatePickerMy
-import week.on.a.plate.dialogEditNote.event.EditNoteEvent
-import week.on.a.plate.dialogEditNote.logic.EditNoteViewModel
-import week.on.a.plate.dialogEditNote.view.EditNoteBottomDialogContent
+import week.on.a.plate.dialogEditOneString.event.EditOneStringEvent
+import week.on.a.plate.dialogEditOneString.logic.EditOneStringViewModel
+import week.on.a.plate.dialogEditOneString.view.EditOneStringContent
 import week.on.a.plate.dialogEditOtherPosition.event.EditOtherPositionEvent
 import week.on.a.plate.dialogEditOtherPosition.logic.EditOtherPositionViewModel
 import week.on.a.plate.dialogEditOtherPosition.view.EditOtherPositionDialogContent
@@ -106,11 +103,11 @@ fun DialogsContainer(data: DialogViewModel?, onEvent: (event: Event) -> Unit) {
             }
         }
 
-        is EditNoteViewModel -> {
+        is EditOneStringViewModel -> {
             val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-            BottomDialogContainer(sheetState, { onEvent(EditNoteEvent.Close) }) {snackBarState->
-                EditNoteBottomDialogContent(data.state.text) {
-                    onEvent(EditNoteEvent.Done)
+            BottomDialogContainer(sheetState, { onEvent(EditOneStringEvent.Close) }) { snackBarState->
+                EditOneStringContent(data.state) {
+                    onEvent(EditOneStringEvent.Done)
                 }
             }
             LaunchedEffect(true) {
@@ -154,21 +151,6 @@ fun DialogsContainer(data: DialogViewModel?, onEvent: (event: Event) -> Unit) {
                 showState = data.state.show,
                 onClose = { onEvent(DatePickerEvent.Close) }) {
                 onEvent(DatePickerEvent.Done)
-            }
-        }
-
-        is AddCategoryViewModel -> {
-            val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-            BottomDialogContainer(
-                sheetState,
-                { onEvent(AddCategoryEvent.Close) }) { snackBarState->
-                AddCategory(
-                    snackBarState,
-                    data.state,
-                ) { onEvent(AddCategoryEvent.Done) }
-            }
-            LaunchedEffect(true) {
-                sheetState.show()
             }
         }
 

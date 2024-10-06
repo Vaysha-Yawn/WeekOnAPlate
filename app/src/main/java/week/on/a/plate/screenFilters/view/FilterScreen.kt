@@ -1,11 +1,14 @@
 package week.on.a.plate.screenFilters.view
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.FabPosition
@@ -24,34 +27,34 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
+import week.on.a.plate.core.theme.WeekOnAPlateTheme
+import week.on.a.plate.core.uitools.CreateTagOrIngredient
+import week.on.a.plate.core.uitools.TagBig
+import week.on.a.plate.core.uitools.TextBody
+import week.on.a.plate.core.uitools.TextTitle
+import week.on.a.plate.core.uitools.buttons.CommonButton
 import week.on.a.plate.data.dataView.example.ingredients
 import week.on.a.plate.data.dataView.example.tags
 import week.on.a.plate.data.dataView.recipe.IngredientCategoryView
 import week.on.a.plate.data.dataView.recipe.IngredientView
 import week.on.a.plate.data.dataView.recipe.RecipeTagView
 import week.on.a.plate.data.dataView.recipe.TagCategoryView
-import week.on.a.plate.core.uitools.CreateTagOrIngredient
-import week.on.a.plate.core.uitools.TagBig
-import week.on.a.plate.core.uitools.TextBody
-import week.on.a.plate.core.uitools.TextTitle
-import week.on.a.plate.core.uitools.buttons.DoneButton
 import week.on.a.plate.screenFilters.event.FilterEvent
-import week.on.a.plate.screenFilters.state.FilterUIState
-import week.on.a.plate.core.theme.WeekOnAPlateTheme
-import week.on.a.plate.core.uitools.buttons.CommonButton
 import week.on.a.plate.screenFilters.state.FilterMode
+import week.on.a.plate.screenFilters.state.FilterUIState
 
 @Composable
 fun FilterScreen(stateUI: FilterUIState, onEvent: (FilterEvent) -> Unit) {
     Scaffold(Modifier.fillMaxSize(), floatingActionButton = {
-        CommonButton( modifier = Modifier.padding(horizontal = 20.dp),
+        CommonButton(
+            modifier = Modifier.padding(horizontal = 20.dp),
             text = stringResource(R.string.selected_tags),
         ) {
             onEvent(FilterEvent.SelectedFilters)
         }
     }, floatingActionButtonPosition = FabPosition.Center) { innerPadding ->
         Column {
-            when(stateUI.filterMode.value){
+            when (stateUI.filterMode.value) {
                 FilterMode.All -> {
                     TabRowFilter(
                         stateUI.activeFilterTabIndex,
@@ -59,14 +62,25 @@ fun FilterScreen(stateUI: FilterUIState, onEvent: (FilterEvent) -> Unit) {
                         stateUI.selectedIngredients.value.size
                     )
                 }
-                FilterMode.OneIngredient -> {stateUI.activeFilterTabIndex.intValue = 1}
-                FilterMode.TagList -> {stateUI.activeFilterTabIndex.intValue = 0}
-                FilterMode.IngredientList -> {stateUI.activeFilterTabIndex.intValue = 1}
+
+                FilterMode.OneIngredient -> {
+                    stateUI.activeFilterTabIndex.intValue = 1
+                }
+
+                FilterMode.TagList -> {
+                    stateUI.activeFilterTabIndex.intValue = 0
+                }
+
+                FilterMode.IngredientList -> {
+                    stateUI.activeFilterTabIndex.intValue = 1
+                }
             }
             LazyColumn(
-                Modifier.fillMaxSize()
+                Modifier
+                    .fillMaxSize()
                     .background(MaterialTheme.colorScheme.surface)
-                    .padding(horizontal = 24.dp).padding(bottom = 110.dp)
+                    .padding(horizontal = 24.dp)
+                    .padding(bottom = 110.dp)
             ) {
                 when (stateUI.activeFilterTabIndex.intValue) {
                     0 -> {
@@ -174,6 +188,7 @@ fun TabRowFilter(
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun CategoriesTags(
     tagCategoryView: TagCategoryView,
@@ -183,16 +198,24 @@ fun CategoriesTags(
     Spacer(modifier = Modifier.height(12.dp))
     TextTitle(text = tagCategoryView.name)
     Spacer(modifier = Modifier.height(12.dp))
-    for (tag in tagCategoryView.tags) {
-        TagBig(tag = tag, selectedTags.value.contains(tag),clickable = {
-            onEvent(FilterEvent.SelectTag(tag))
-        }, longClick = {
-            onEvent(FilterEvent.EditOrDeleteTag(tag))
-        })
-        Spacer(modifier = Modifier.height(12.dp))
+    FlowRow(Modifier.fillMaxWidth()) {
+        for (tag in tagCategoryView.tags) {
+            Box(
+                modifier = Modifier
+                    .padding(end = 12.dp)
+                    .padding(bottom = 12.dp)
+            ) {
+                TagBig(tag = tag, selectedTags.value.contains(tag), clickable = {
+                    onEvent(FilterEvent.SelectTag(tag))
+                }, longClick = {
+                    onEvent(FilterEvent.EditOrDeleteTag(tag))
+                })
+            }
+        }
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun IngredientCategories(
     ingredientCategory: IngredientCategoryView,
@@ -203,13 +226,24 @@ fun IngredientCategories(
     Spacer(modifier = Modifier.height(12.dp))
     TextTitle(text = ingredientCategory.name)
     Spacer(modifier = Modifier.height(12.dp))
-    for (ingredient in ingredientCategory.ingredientViews) {
-        TagBig(ingredientView = ingredient, selectedIngredients.value.contains(ingredient),clickable = {
-            onEvent(FilterEvent.SelectIngredient(ingredient))
-        }, longClick = {
-            onEvent(FilterEvent.EditOrDeleteIngredient(ingredient))
-        })
-        Spacer(modifier = Modifier.height(12.dp))
+    FlowRow(Modifier.fillMaxWidth()) {
+        for (ingredient in ingredientCategory.ingredientViews) {
+            Box(
+                modifier = Modifier
+                    .padding(end = 12.dp)
+                    .padding(bottom = 12.dp)
+            ) {
+                TagBig(
+                    ingredientView = ingredient,
+                    selectedIngredients.value.contains(ingredient),
+                    clickable = {
+                        onEvent(FilterEvent.SelectIngredient(ingredient))
+                    },
+                    longClick = {
+                        onEvent(FilterEvent.EditOrDeleteIngredient(ingredient))
+                    })
+            }
+        }
     }
 }
 

@@ -12,10 +12,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -26,7 +29,9 @@ import week.on.a.plate.R
 import week.on.a.plate.core.theme.ColorButtonNegativeGrey
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.TextBody
+import week.on.a.plate.core.uitools.TextBodyDisActive
 import week.on.a.plate.core.uitools.TextTitleItalic
+import week.on.a.plate.core.uitools.buttons.CheckButton
 import week.on.a.plate.core.uitools.buttons.CloseButton
 import week.on.a.plate.core.uitools.buttons.DoneButton
 import week.on.a.plate.screenInventory.event.InventoryEvent
@@ -52,7 +57,9 @@ fun InventoryScreen(
     ) { innerPadding ->
         Column {
             Row(
-                Modifier.fillMaxWidth().padding(24.dp),
+                Modifier
+                    .fillMaxWidth()
+                    .padding(24.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -84,33 +91,19 @@ fun CardInventory(data: InventoryPositionData, onEvent: (InventoryEvent) -> Unit
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        TextBody(text = data.ingredient.name + " " + data.countTarget.toString() + " " + data.ingredient.measure)
-        Row {
-            TextBody(
-                text = "Нет",
-                Modifier
-                    .clickable {
-                        onEvent(InventoryEvent.PickCount(data, 0))
-                    }
-                    .background(
-                        if (data.answer.intValue == 0) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.outline,
-                        CircleShape
-                    )
-                    .padding(6.dp)
-            )
-            Spacer(modifier = Modifier.size(24.dp))
-            TextBody(
-                text = "Есть",
-                Modifier
-                    .clickable {
-                        onEvent(InventoryEvent.PickCount(data, data.countTarget))
-                    }
-                    .background(
-                        if (data.answer.intValue == data.countTarget) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.outline,
-                        CircleShape
-                    )
-                    .padding(6.dp)
-            )
+        val checkState = remember{ mutableStateOf(false)}
+        Column(Modifier.weight(1f), horizontalAlignment = Alignment.Start) {
+            TextBody(text = data.ingredient.name)
+            TextBodyDisActive(text = data.countTarget.toString() + " " + data.ingredient.measure)
+        }
+        CheckButton(checked = checkState) {
+            if (checkState.value){
+                onEvent(InventoryEvent.PickCount(data, 0))
+                checkState.value = false
+            }else{
+                onEvent(InventoryEvent.PickCount(data, data.countTarget))
+                checkState.value = true
+            }
         }
     }
     Spacer(modifier = Modifier.size(24.dp))

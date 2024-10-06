@@ -13,10 +13,10 @@ class IngredientInRecipeMapper() {
             count = count.toInt(),
         )
 
-    fun IngredientInRecipeView.viewToRoom(recipeId:Long, ingredientId:Long,): IngredientInRecipeRoom =
+    fun IngredientInRecipeView.viewToRoom(recipeId:Long,): IngredientInRecipeRoom =
         IngredientInRecipeRoom(
             recipeId = recipeId,
-            ingredientId = ingredientId,
+            ingredientId = ingredientView.ingredientId,
             description = description,
             count = count.toDouble()
         )

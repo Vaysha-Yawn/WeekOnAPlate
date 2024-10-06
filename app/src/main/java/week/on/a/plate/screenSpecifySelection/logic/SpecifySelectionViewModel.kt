@@ -14,7 +14,8 @@ import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screenSpecifySelection.event.SpecifySelectionEvent
 import week.on.a.plate.screenSpecifySelection.state.SpecifySelectionUIState
 import week.on.a.plate.data.repository.tables.menu.selection.WeekRepository
-import week.on.a.plate.dialogEditNote.logic.EditNoteViewModel
+import week.on.a.plate.dialogEditOneString.logic.EditOneStringViewModel
+import week.on.a.plate.dialogEditOneString.state.EditOneStringUIState
 import week.on.a.plate.screenMenu.event.MenuEvent
 import java.time.LocalDate
 import javax.inject.Inject
@@ -68,15 +69,15 @@ class SpecifySelectionViewModel @Inject constructor(
 
     private fun addCustomSelection() {
         viewModelScope.launch {
-            val vm = EditNoteViewModel()
+            val vm = EditOneStringViewModel()
             vm.mainViewModel = mainViewModel
             mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-            vm.launchAndGet(null){ note->
+            vm.launchAndGet(EditOneStringUIState(startTitle = "Добавить приём пищи", startPlaceholder = "Завтрак...")){ note->
                 state.allSelectionsIdDay.value = state.allSelectionsIdDay.value.toMutableList().apply {
-                    add(note.note)
+                    add(note)
                 }
                 state.checkWeek.value = false
-                state.checkDayCategory.value = note.note
+                state.checkDayCategory.value = note
             }
             mainViewModel.onEvent(MainEvent.OpenDialog(vm))
         }

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,6 +30,9 @@ import week.on.a.plate.screenMenu.view.day.NoDay
 import week.on.a.plate.screenMenu.view.week.WeekMenu
 import week.on.a.plate.screenMenu.view.topBar.TopBar
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
+import week.on.a.plate.core.uitools.buttons.ActionPlusButton
+import week.on.a.plate.screenMenu.event.MenuEvent
+import week.on.a.plate.screenMenu.view.topBar.TitleMenuSmall
 import java.time.LocalDate
 
 @SuppressLint("StateFlowValueCalledInComposition")
@@ -61,14 +65,20 @@ fun MenuScreenSuccess(
     week: WeekView,
     onEvent: (event: Event) -> Unit
 ) {
-    Column(
+    Scaffold(
         Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            .padding(top = 10.dp)
-    ) {
-        TopBar(uiState.titleTopBar.value, uiState, onEvent)
-
+            .padding(top = 10.dp),
+        floatingActionButton = {
+            ActionPlusButton {
+                onEvent(MenuEvent.GetSelIdAndCreate)
+            }
+        }
+    ) {pad->
+        pad
+        Column {
+            TopBar(uiState.titleTopBar.value, uiState, onEvent)
         if (uiState.itsDayMenu.value) {
             Spacer(modifier = Modifier.height(24.dp))
             BlockCalendar(week.days, LocalDate.now(), uiState.activeDayInd.value) { ind ->
@@ -86,7 +96,7 @@ fun MenuScreenSuccess(
         } else {
             WeekMenu(uiState, onEvent, week)
         }
-    }
+    }}
 }
 
 

@@ -1,5 +1,6 @@
 package week.on.a.plate.screenRecipeDetails.state
 
+import android.webkit.WebView
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
@@ -14,4 +15,5 @@ class RecipeDetailsState() {
     val ingredientsCounts = mutableStateOf<List<Int>>(listOf())
     val activeTabIndex = mutableIntStateOf(0)
     val currentPortions = mutableIntStateOf(2)
+    val webview = mutableStateOf<WebView?>(null)
 }

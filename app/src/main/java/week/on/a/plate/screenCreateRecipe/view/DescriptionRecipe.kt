@@ -16,9 +16,7 @@ import week.on.a.plate.screenCreateRecipe.state.RecipeCreateUIState
 fun DescriptionRecipeEdit(state: RecipeCreateUIState, onEvent: (RecipeCreateEvent) -> Unit) {
     TextTitle(text = "Описание рецепта")
     Spacer(modifier = Modifier.height(12.dp))
-    EditTextLine(text = state.description, placeholder = "Введите описание рецепта") {
-        state.description.value = it
-    }
+    EditTextLine(text = state.description, placeholder = "Введите описание рецепта")
 }
 
 @Preview(showBackground = true)

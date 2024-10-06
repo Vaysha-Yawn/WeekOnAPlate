@@ -77,9 +77,7 @@ fun EditOrAddIngredientBottomDialogContent(
             state.description,
             stringResource(R.string.Pieces),
             modifier = Modifier.padding(horizontal = 24.dp)
-        ) { value ->
-            state.description.value = value
-        }
+        )
         Spacer(modifier = Modifier.height(24.dp))
         TextBody(
             text = "Колличество" + if (state.ingredientState.value != null) {

@@ -9,9 +9,9 @@ class PositionIngredientMapper() {
         ingredientInRecipe: IngredientInRecipeView,
     ): Position.PositionIngredientView =
         Position.PositionIngredientView(
-            id = this.positionIngredientId,
+            id = positionIngredientId,
             ingredient = ingredientInRecipe,
-            this.selectionId
+            selectionId
         )
 
     fun Position.PositionIngredientView.viewToRoom(ingredientInRecipeId:Long, selectionId:Long): PositionIngredientRoom =

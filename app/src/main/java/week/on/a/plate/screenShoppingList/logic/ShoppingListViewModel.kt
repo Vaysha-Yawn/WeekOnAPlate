@@ -82,7 +82,6 @@ class ShoppingListViewModel @Inject constructor(
         viewModelScope.launch {
             val vm = EditPositionIngredientViewModel()
             vm.mainViewModel = mainViewModel
-            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
             vm.launchAndGet(
                 Position.PositionIngredientView(
                     0,
@@ -148,11 +147,8 @@ class ShoppingListViewModel @Inject constructor(
         viewModelScope.launch {
             val vm = EditPositionIngredientViewModel()
             vm.mainViewModel = mainViewModel
-            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
             vm.launchAndGet(null) { updatedIngredient ->
-                viewModelScope.launch {
-                    checkInListToAdd(updatedIngredient.ingredient)
-                }
+                checkInListToAdd(updatedIngredient.ingredient)
             }
         }
     }

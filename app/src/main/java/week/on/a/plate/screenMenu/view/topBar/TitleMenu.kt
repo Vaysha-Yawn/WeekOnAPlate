@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.core.Event
+import week.on.a.plate.core.theme.ColorSubTextGrey
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextTitle
@@ -65,7 +66,7 @@ fun TitleMenuS(selection: SelectionView, modifier: Modifier, onEvent: (event: Ev
                         onEvent(MenuEvent.EditOrDeleteSelection(selection))
                     }
                 ),
-            color = MaterialTheme.colorScheme.outline
+            color = ColorSubTextGrey
         )
         PlusButtonTitle() {
             if (selection.id == 0L) {

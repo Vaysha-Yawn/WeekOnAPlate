@@ -1,12 +1,13 @@
 package week.on.a.plate.dialogEditPositionIngredient.logic
 
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import week.on.a.plate.core.dialogExampleStructure.DialogViewModel
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.data.dataView.week.Position
-import week.on.a.plate.core.dialogExampleStructure.DialogViewModel
 import week.on.a.plate.dialogEditPositionIngredient.event.EditPositionIngredientEvent
 import week.on.a.plate.dialogEditPositionIngredient.state.EditPositionIngredientUIState
 import week.on.a.plate.mainActivity.event.MainEvent
@@ -19,13 +20,7 @@ class EditPositionIngredientViewModel() : DialogViewModel() {
 
     lateinit var mainViewModel: MainViewModel
     lateinit var state: EditPositionIngredientUIState
-    private lateinit var resultFlow: MutableStateFlow<Position.PositionIngredientView?>
-
-    fun start(): Flow<Position.PositionIngredientView?> {
-        val flow = MutableStateFlow<Position.PositionIngredientView?>(null)
-        resultFlow = flow
-        return flow
-    }
+    private var resultFlow: MutableStateFlow<Position.PositionIngredientView?> = MutableStateFlow<Position.PositionIngredientView?>(null)
 
     fun done() {
         close()
@@ -50,14 +45,19 @@ class EditPositionIngredientViewModel() : DialogViewModel() {
         when (event) {
             EditPositionIngredientEvent.Close -> close()
             EditPositionIngredientEvent.Done -> done()
-            EditPositionIngredientEvent.ChooseIngredient -> chooseIngredient()
+            EditPositionIngredientEvent.ChooseIngredient -> {
+                mainViewModel.viewModelScope.launch {
+                    chooseIngredient()
+                }
+            }
         }
     }
 
-    private fun chooseIngredient() {
+    private suspend fun chooseIngredient() {
+        mainViewModel.nav.navigate(FilterDestination)
+        mainViewModel.onEvent(MainEvent.HideDialog)
+
         mainViewModel.viewModelScope.launch {
-            mainViewModel.onEvent(MainEvent.HideDialog)
-            mainViewModel.nav.navigate(FilterDestination)
             val listLast = if (state.ingredientState.value != null) {
                 listOf(state.ingredientState.value!!)
             } else listOf()
@@ -74,13 +74,18 @@ class EditPositionIngredientViewModel() : DialogViewModel() {
 
     suspend fun launchAndGet(
         positionIngredient: Position.PositionIngredientView?,
-        use: (Position.PositionIngredientView) -> Unit
+        use: suspend (Position.PositionIngredientView) -> Unit
     ) {
         state = EditPositionIngredientUIState(positionIngredient)
-        val flow = start()
-        flow.collect { value ->
-            if (value != null) {
-                use(value)
+        mainViewModel.onEvent(MainEvent.OpenDialog(this))
+        chooseIngredient()
+
+        mainViewModel.viewModelScope.launch {
+            val flow:Flow<Position.PositionIngredientView?> = resultFlow
+            flow.collect { value ->
+                if (value != null) {
+                    use(value)
+                }
             }
         }
     }

@@ -18,7 +18,8 @@ import week.on.a.plate.dialogAddPosition.event.AddPositionEvent
 import week.on.a.plate.dialogAddPosition.logic.AddPositionViewModel
 import week.on.a.plate.dialogChangePositionCount.logic.ChangePortionsCountViewModel
 import week.on.a.plate.dialogChooseWeekInMenu.logic.ChooseWeekViewModel
-import week.on.a.plate.dialogEditNote.logic.EditNoteViewModel
+import week.on.a.plate.dialogEditOneString.logic.EditOneStringViewModel
+import week.on.a.plate.dialogEditOneString.state.EditOneStringUIState
 import week.on.a.plate.dialogEditOrDelete.event.EditOrDeleteEvent
 import week.on.a.plate.dialogEditOrDelete.logic.EditOrDeleteViewModel
 import week.on.a.plate.dialogEditOtherPosition.event.EditOtherPositionEvent
@@ -60,6 +61,7 @@ class MenuViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             updateWeek()
+            menuUIState.activeDayInd.value = activeDay.dayOfWeek.ordinal
         }
     }
 
@@ -144,15 +146,15 @@ class MenuViewModel @Inject constructor(
     }
 
     private fun createSelection(date: LocalDate, isForWeek: Boolean) {
-        val vmCategory = EditNoteViewModel()
+        val vmCategory = EditOneStringViewModel()
         vmCategory.mainViewModel = mainViewModel
         mainViewModel.onEvent(MainEvent.OpenDialog(vmCategory))
         viewModelScope.launch {
-            vmCategory.launchAndGet(null) { newName ->
+            vmCategory.launchAndGet(EditOneStringUIState(startTitle = "Добавить приём пищи", startPlaceholder = "Завтрак...")) { newName ->
                 sCRUDRecipeInMenu.onEvent(
                     ActionWeekMenuDB.CreateSelection(
                         date,
-                        newName.note, mainViewModel.locale, isForWeek
+                        newName, mainViewModel.locale, isForWeek
                     )
                 )
                 updateWeek()
@@ -176,14 +178,15 @@ class MenuViewModel @Inject constructor(
     }
 
     private suspend fun editSelection(sel: SelectionView) {
-        val vmCategory = EditNoteViewModel()
+        val vmCategory = EditOneStringViewModel()
         vmCategory.mainViewModel = mainViewModel
         mainViewModel.onEvent(MainEvent.OpenDialog(vmCategory))
-        vmCategory.launchAndGet(Position.PositionNoteView(0, sel.name, 0)) { newName ->
+        vmCategory.launchAndGet(EditOneStringUIState(sel.name,  startTitle = "Изменение названия приёма пищи",
+             startPlaceholder = "Завтрак...")) { newName ->
             sCRUDRecipeInMenu.onEvent(
                 ActionWeekMenuDB.EditSelection(
                     sel,
-                    newName.note
+                    newName
                 )
             )
             updateWeek()
@@ -477,7 +480,6 @@ class MenuViewModel @Inject constructor(
         viewModelScope.launch {
             val vm = EditPositionIngredientViewModel()
             vm.mainViewModel = mainViewModel
-            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
             vm.launchAndGet(null) { updatedIngredient ->
                 onEvent(
                     MenuEvent.ActionDBMenu(
@@ -495,7 +497,6 @@ class MenuViewModel @Inject constructor(
         viewModelScope.launch {
             val vm = EditPositionIngredientViewModel()
             vm.mainViewModel = mainViewModel
-            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
             vm.launchAndGet(ingredientPos) { updatedIngredient ->
                 onEvent(
                     MenuEvent.ActionDBMenu(
@@ -528,22 +529,22 @@ class MenuViewModel @Inject constructor(
 
     private fun editNote(note: Position.PositionNoteView) {
         viewModelScope.launch {
-            val vm = EditNoteViewModel()
+            val vm = EditOneStringViewModel()
             vm.mainViewModel = mainViewModel
             mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-            vm.launchAndGet(note) { updatedNote ->
-                onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.EditNoteDB(updatedNote)))
+            vm.launchAndGet(EditOneStringUIState(note.note, "Изменение заметки", "Введите текст заметки здесь...")) { updatedNote ->
+                onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.EditNoteDB(Position.PositionNoteView(note.id, updatedNote, note.selectionId))))
             }
         }
     }
 
     private fun addNote(selId: Long) {
         viewModelScope.launch {
-            val vm = EditNoteViewModel()
+            val vm = EditOneStringViewModel()
             vm.mainViewModel = mainViewModel
             mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-            vm.launchAndGet(null) { updatedNote ->
-                onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.AddNoteDB(updatedNote.note, selId)))
+            vm.launchAndGet(EditOneStringUIState("", "Добавить заметку", "Введите текст заметки здесь...")) { updatedNote ->
+                onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.AddNoteDB(updatedNote, selId)))
             }
         }
     }
