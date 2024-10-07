@@ -62,7 +62,7 @@ class ShoppingItemRepository @Inject constructor(
     suspend fun getAll(): List<ShoppingItemView> {
         return shoppingItemDAO.getAll().map { position ->
             val ingredient =
-                ingredientInRecipeDAO.getIngredientAndIngredientInRecipe(position.id)
+                ingredientInRecipeDAO.getIngredientAndIngredientInRecipe(position.ingredientInRecipeId)
 
             val ingredientView =
                 with(ingredientMapper) { ingredient.ingredientRoom.roomToView() }
@@ -84,11 +84,13 @@ class ShoppingItemRepository @Inject constructor(
                 0
             )
         }
+
         val newIngredientInRecipeId = ingredientInRecipeDAO.insert(ingredientInRecipeRoom)
 
         val shoppingItemRoom = with(shoppingItemMapper) {
             itemView.viewToRoom(newIngredientInRecipeId)
         }
+
         shoppingItemDAO.insert(shoppingItemRoom)
     }
 

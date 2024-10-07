@@ -1,7 +1,5 @@
 package week.on.a.plate.screenShoppingList.view
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -26,27 +24,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import week.on.a.plate.R
-import week.on.a.plate.core.theme.ColorButtonNegativeGrey
 import week.on.a.plate.core.theme.ColorSubTextGrey
 import week.on.a.plate.core.theme.Typography
-import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextSmall
 import week.on.a.plate.core.uitools.TextTitleLarge
 import week.on.a.plate.core.uitools.buttons.ActionPlusButton
+import week.on.a.plate.core.uitools.buttons.CheckButton
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.screenShoppingList.event.ShoppingListEvent
 import week.on.a.plate.screenShoppingList.logic.ShoppingListViewModel
@@ -105,7 +96,7 @@ fun ShoppingListStart(viewModel: ShoppingListViewModel) {
                     }
                 }
                 items(viewModel.state.listChecked.value.size) { index ->
-                    ShoppingListPosition(viewModel.state.listChecked.value[index], true,{
+                    ShoppingListPosition(viewModel.state.listChecked.value[index], true, {
                         viewModel.onEvent(ShoppingListEvent.Edit(it))
                     }) {
                         viewModel.onEvent(ShoppingListEvent.Uncheck(viewModel.state.listChecked.value[index]))
@@ -124,7 +115,6 @@ fun ShoppingListPosition(
     edit: (IngredientInRecipeView) -> Unit,
     onCheckedChange: (Boolean) -> Unit
 ) {
-    val scope = rememberCoroutineScope()
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -139,9 +129,7 @@ fun ShoppingListPosition(
             checked = checked,
             colors = CheckboxDefaults.colors(checkedColor = MaterialTheme.colorScheme.secondary),
             onCheckedChange = {
-                scope.launch {
-                    onCheckedChange(it)
-                }
+                onCheckedChange(!checked)
             },
         )
         Spacer(modifier = Modifier.width(12.dp))
@@ -156,7 +144,7 @@ fun ShoppingListPosition(
                 style = Typography.bodyMedium,
                 textAlign = TextAlign.Start
             )
-            if (item.description!="") {
+            if (item.description != "") {
                 Spacer(modifier = Modifier.height(3.dp))
                 TextSmall(text = item.description, color = ColorSubTextGrey)
             }
