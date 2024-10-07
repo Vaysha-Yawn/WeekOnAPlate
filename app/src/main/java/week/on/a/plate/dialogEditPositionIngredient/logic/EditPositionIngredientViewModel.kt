@@ -73,12 +73,13 @@ class EditPositionIngredientViewModel() : DialogViewModel() {
 
 
     suspend fun launchAndGet(
-        positionIngredient: Position.PositionIngredientView?,
-        use: suspend (Position.PositionIngredientView) -> Unit
+        positionIngredient: Position.PositionIngredientView?, isForAdd:Boolean,
+        use: suspend (Position.PositionIngredientView) -> Unit,
     ) {
         state = EditPositionIngredientUIState(positionIngredient)
         mainViewModel.onEvent(MainEvent.OpenDialog(this))
-        chooseIngredient()
+
+        if (isForAdd) chooseIngredient()
 
         mainViewModel.viewModelScope.launch {
             val flow:Flow<Position.PositionIngredientView?> = resultFlow

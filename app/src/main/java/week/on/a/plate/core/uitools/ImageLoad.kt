@@ -10,7 +10,7 @@ import week.on.a.plate.R
 fun ImageLoad(url: String, modifier: Modifier) {
     AsyncImage(
         modifier = modifier,
-        model = url,
+        model = url.lowercase(),
         contentDescription = null,
         placeholder = painterResource(
             id = R.drawable.time

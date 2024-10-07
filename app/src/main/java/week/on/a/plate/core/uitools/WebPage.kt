@@ -69,6 +69,8 @@ fun WebPage(url:MutableState<String>, webview:MutableState<WebView?>, onEvent:(E
                 }
 
                 view.loadUrl(url.value)
+            }else{
+                webview.value!!.loadUrl(url.value)
             }
             return@AndroidView webview.value!!
         }, modifier = Modifier

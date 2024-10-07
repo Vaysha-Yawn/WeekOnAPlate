@@ -41,7 +41,6 @@ class RecipeCreateViewModel @Inject constructor(): ViewModel() {
         when (event) {
             RecipeCreateEvent.Close -> {
                 mainViewModel.nav.popBackStack()
-                //dialog close
             }
 
             RecipeCreateEvent.Done -> {
@@ -78,7 +77,7 @@ class RecipeCreateViewModel @Inject constructor(): ViewModel() {
                     val vm = EditPositionIngredientViewModel()
                     vm.mainViewModel = mainViewModel
                     vm.launchAndGet(
-                        null
+                        null, true
                     ) { ingredient ->
                         state.ingredients.value = state.ingredients.value.toMutableList().apply {
                             this.add(ingredient.ingredient)
@@ -92,7 +91,7 @@ class RecipeCreateViewModel @Inject constructor(): ViewModel() {
                     val vm = EditPositionIngredientViewModel()
                     vm.mainViewModel = mainViewModel
                     vm.launchAndGet(
-                        Position.PositionIngredientView(0,  event.ingredient, 0)
+                        Position.PositionIngredientView(0,  event.ingredient, 0), false
                     ) { ingredient ->
                         state.ingredients.value = state.ingredients.value.toMutableList().apply {
                             val index = this.indexOf(event.ingredient)
@@ -125,7 +124,7 @@ class RecipeCreateViewModel @Inject constructor(): ViewModel() {
                     vm.launchAndGet(
                         EditOneStringUIState(event.recipeStepState.image.value, "Редактировать ссылку на изображение","Введите новую ссылку на изображение")
                     ) { note ->
-                        event.recipeStepState.image.value = note
+                        event.recipeStepState.image.value = note.lowercase()
                     }
                 }
             }
@@ -153,7 +152,7 @@ class RecipeCreateViewModel @Inject constructor(): ViewModel() {
                         EditOneStringUIState( state.photoLink.value,
                         "Редактировать ссылку на изображение","Введите новую ссылку на изображение"
                     )) { note ->
-                        state.photoLink.value = note
+                        state.photoLink.value = note.lowercase()
                     }
                 }
             }
@@ -182,7 +181,7 @@ class RecipeCreateViewModel @Inject constructor(): ViewModel() {
         }
     }
 
-    fun getTime(use:(Int)->Unit){
+    private fun getTime(use:(Int)->Unit){
         viewModelScope.launch {
             val vm = TimePickViewModel()
             vm.mainViewModel = mainViewModel

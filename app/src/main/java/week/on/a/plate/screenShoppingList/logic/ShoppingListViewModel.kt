@@ -87,7 +87,7 @@ class ShoppingListViewModel @Inject constructor(
                     0,
                     ingredient,
                     0
-                )
+                ), false
             ) { updatedIngredient ->
                 viewModelScope.launch {
                     if (updatedIngredient.ingredient.ingredientView.ingredientId != ingredient.ingredientView.ingredientId) {
@@ -147,7 +147,7 @@ class ShoppingListViewModel @Inject constructor(
         viewModelScope.launch {
             val vm = EditPositionIngredientViewModel()
             vm.mainViewModel = mainViewModel
-            vm.launchAndGet(null) { updatedIngredient ->
+            vm.launchAndGet(null, true) { updatedIngredient ->
                 checkInListToAdd(updatedIngredient.ingredient)
             }
         }

@@ -39,7 +39,9 @@ fun SearchLine(
         modifier = modifier,
         value = textSearch.value,
         onValueChange = { value: String ->
-            textSearch.value = value
+            textSearch.value = if (value.length<2){value}else{
+                value[0].uppercaseChar()+value.substring(1 until value.length)
+            }
             actionSearch(value)},
         leadingIcon = {
             Image(

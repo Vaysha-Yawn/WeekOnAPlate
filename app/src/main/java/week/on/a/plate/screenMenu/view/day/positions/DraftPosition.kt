@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.screenMenu.event.MenuEvent
-import week.on.a.plate.screenSearchRecipes.view.resultScreen.TagList
+import week.on.a.plate.screenSearchRecipes.view.resultScreen.TagListHidden
 
 @Composable
 fun DraftPosition(
@@ -32,7 +32,7 @@ fun DraftPosition(
             .padding(vertical = 5.dp).clickable {  onEvent(MenuEvent.EditPosition(draft)) },
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically) {
-            TagList(draft.tags, draft.ingredients)
+            TagListHidden(draft.tags, draft.ingredients)
         }
         Image(
             painter = painterResource(id = R.drawable.search),

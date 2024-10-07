@@ -17,13 +17,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.core.theme.ColorButtonGreen
-import week.on.a.plate.core.theme.ColorButtonNegativeGrey
-import week.on.a.plate.core.theme.ColorPanelEdit
-import week.on.a.plate.core.theme.ColorPanelGreen
-import week.on.a.plate.core.theme.ColorPanelYellow
-import week.on.a.plate.core.theme.ColorStrokeGrey
 import week.on.a.plate.core.theme.ColorSubTextGrey
-import week.on.a.plate.core.theme.ColorTextBlack
 import week.on.a.plate.core.theme.Typography
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.theme.bodyGrey
@@ -191,12 +185,27 @@ fun CreateTagOrIngredient(name: String, eventCreate: () -> Unit) {
 }
 
 @Composable
-fun TagBig(tag: RecipeTagView, isActive: Boolean, clickable: () -> Unit = {}, longClick: () -> Unit = {}) {
-    TagBig(tag.tagName, if (isActive) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.background, clickable, longClick)
+fun TagBig(
+    tag: RecipeTagView,
+    isActive: Boolean,
+    clickable: () -> Unit = {},
+    longClick: () -> Unit = {}
+) {
+    TagBig(
+        tag.tagName,
+        if (isActive) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.background,
+        clickable,
+        longClick
+    )
 }
 
 @Composable
-fun TagBig(ingredientView: IngredientView, isActive: Boolean, clickable: () -> Unit = {}, longClick: () -> Unit = {}) {
+fun TagBig(
+    ingredientView: IngredientView,
+    isActive: Boolean,
+    clickable: () -> Unit = {},
+    longClick: () -> Unit = {}
+) {
     TagBig(
         ingredientView.name,
         if (isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.background,
@@ -225,13 +234,13 @@ fun TagBig(text: String, color: Color, clickable: () -> Unit = {}, longClick: ()
 @Composable
 fun TagSmall(tag: RecipeTagView) {
     val backg =
-        ColorPanelGreen
+        MaterialTheme.colorScheme.secondary
     TagSmall(tag.tagName, backg)
 }
 
 @Composable
 fun TagSmall(ingredientView: IngredientView) {
-    val backg = ColorPanelYellow
+    val backg = MaterialTheme.colorScheme.primary
     TagSmall(ingredientView.name, backg)
 }
 
@@ -244,7 +253,7 @@ private fun TagSmall(text: String, color: Color) {
                 color, RoundedCornerShape(10.dp)
             )
             .padding(horizontal = 10.dp, vertical = 2.dp), textStyle = Typography.bodySmall,
-        maxLines = 1, color = ColorTextBlack,
+        maxLines = 1, color = MaterialTheme.colorScheme.onBackground,
         textAlign = TextAlign.Start
     )
 }
@@ -279,9 +288,6 @@ fun PreviewPlusButton() {
         Column {
             TextInApp("Text 1")
             TextInAppColored("Text 2", ColorButtonGreen)
-            TagSmall("Гречка", ColorPanelYellow)
-
-
             TextDisplayItalic("TextDisplayItalic")
             TextTitleLargeItalic("TextTitleLargeItalic")
             TextTitleLarge("TextTitleLarge")

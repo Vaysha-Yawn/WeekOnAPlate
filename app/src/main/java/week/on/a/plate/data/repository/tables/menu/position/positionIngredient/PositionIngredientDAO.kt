@@ -22,7 +22,7 @@ interface PositionIngredientDAO {
     @Query("SELECT * FROM PositionIngredientRoom WHERE selectionId=:selectionId")
     suspend fun getAllInSel(selectionId:Long): List<PositionIngredientRoom>
 
-    @Insert (onConflict = OnConflictStrategy.REPLACE)
+    @Insert (onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(ingredientInRecipeRoom: IngredientInRecipeRoom):Long
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
@@ -36,4 +36,7 @@ interface PositionIngredientDAO {
 
     @Query("DELETE FROM PositionIngredientRoom WHERE ingredientInRecipeId = :id")
     suspend fun deleteAllByIngredientInRecipeId(id: Long)
+
+    @Query("SELECT * FROM PositionIngredientRoom WHERE positionIngredientId=:id")
+    suspend fun getById(id: Long):PositionIngredientRoom
 }

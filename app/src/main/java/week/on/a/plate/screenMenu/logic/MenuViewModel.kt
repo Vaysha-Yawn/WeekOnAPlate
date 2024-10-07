@@ -277,7 +277,7 @@ class MenuViewModel @Inject constructor(
                 onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.Delete(draft)))
                 val recipePosition = Position.PositionRecipeView(
                     0,
-                    RecipeShortView(recipe.id, recipe.name),
+                    RecipeShortView(recipe.id, recipe.name,  recipe.img),
                     2,
                     draft.selectionId
                 )
@@ -298,7 +298,7 @@ class MenuViewModel @Inject constructor(
             mainViewModel.searchViewModel.launchAndGet(selId, null) { recipe ->
                 val recipePosition = Position.PositionRecipeView(
                     0,
-                    RecipeShortView(recipe.id, recipe.name),
+                    RecipeShortView(recipe.id, recipe.name, recipe.img),
                     2,
                     selId
                 )
@@ -317,7 +317,7 @@ class MenuViewModel @Inject constructor(
             mainViewModel.searchViewModel.launchAndGet(positionRecipe.selectionId, null) { recipe ->
                 val recipePosition = Position.PositionRecipeView(
                     0,
-                    RecipeShortView(recipe.id, recipe.name),
+                    RecipeShortView(recipe.id, recipe.name, recipe.img),
                     2,
                     positionRecipe.selectionId
                 )
@@ -480,7 +480,7 @@ class MenuViewModel @Inject constructor(
         viewModelScope.launch {
             val vm = EditPositionIngredientViewModel()
             vm.mainViewModel = mainViewModel
-            vm.launchAndGet(null) { updatedIngredient ->
+            vm.launchAndGet(null, true) { updatedIngredient ->
                 onEvent(
                     MenuEvent.ActionDBMenu(
                         ActionWeekMenuDB.AddIngredientPositionDB(
@@ -497,7 +497,7 @@ class MenuViewModel @Inject constructor(
         viewModelScope.launch {
             val vm = EditPositionIngredientViewModel()
             vm.mainViewModel = mainViewModel
-            vm.launchAndGet(ingredientPos) { updatedIngredient ->
+            vm.launchAndGet(ingredientPos, false) { updatedIngredient ->
                 onEvent(
                     MenuEvent.ActionDBMenu(
                         ActionWeekMenuDB.EditIngredientPositionDB(

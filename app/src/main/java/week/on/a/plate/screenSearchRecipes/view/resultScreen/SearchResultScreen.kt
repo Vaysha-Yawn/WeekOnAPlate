@@ -1,7 +1,5 @@
 package week.on.a.plate.screenSearchRecipes.view.resultScreen
 
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -20,8 +18,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -107,7 +103,7 @@ fun RowRecipeResultCard(
             Column(Modifier.weight(2f)) {
                 TextBody(text = recipeView.name)
                 Spacer(modifier = Modifier.height(12.dp))
-                TagList(recipeView.tags, recipeView.ingredients.map { it -> it.ingredientView })
+                TagListHidden(recipeView.tags, recipeView.ingredients.map { it -> it.ingredientView })
             }
             Spacer(modifier = Modifier.width(12.dp))
             Column(Modifier.fillMaxHeight(), verticalArrangement = Arrangement.SpaceAround) {
@@ -143,17 +139,35 @@ fun RowRecipeResultCard(
 
 
 @Composable
-fun TagList(tags: List<RecipeTagView>, ingredients: List<IngredientView>) {
+fun TagListHidden(tags: List<RecipeTagView>, ingredients: List<IngredientView>) {
     Column {
         if (tags.isNotEmpty()) {
-            CustomGridTagsFlow(sizeList = tags.size) { index ->
+            TagsFlowRowWithHidden(sizeList = tags.size) { index ->
                 TagSmall(tag = tags[index])
                 Spacer(modifier = Modifier.width(6.dp))
             }
         }
         Spacer(modifier = Modifier.height(6.dp))
         if (ingredients.isNotEmpty()) {
-            CustomGridTagsFlow(ingredients.size) { index ->
+            TagsFlowRowWithHidden(ingredients.size) { index ->
+                TagSmall(ingredientView = ingredients[index])
+            }
+        }
+    }
+}
+
+@Composable
+fun TagList(tags: List<RecipeTagView>, ingredients: List<IngredientView>) {
+    Column {
+        if (tags.isNotEmpty()) {
+            TagsFlowRow(sizeList = tags.size) { index ->
+                TagSmall(tag = tags[index])
+                Spacer(modifier = Modifier.width(6.dp))
+            }
+        }
+        Spacer(modifier = Modifier.height(6.dp))
+        if (ingredients.isNotEmpty()) {
+            TagsFlowRow(ingredients.size) { index ->
                 TagSmall(ingredientView = ingredients[index])
             }
         }
@@ -162,7 +176,17 @@ fun TagList(tags: List<RecipeTagView>, ingredients: List<IngredientView>) {
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun CustomGridTagsFlow(sizeList: Int, content: @Composable (Int) -> Unit) {
+fun TagsFlowRow(sizeList: Int, content: @Composable (Int) -> Unit) {
+    FlowRow(Modifier.fillMaxWidth()) {
+        for (i in 0 until sizeList) {
+            content(i)
+        }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun TagsFlowRowWithHidden(sizeList: Int, content: @Composable (Int) -> Unit) {
     val showMore = remember {
         mutableStateOf(false)
     }

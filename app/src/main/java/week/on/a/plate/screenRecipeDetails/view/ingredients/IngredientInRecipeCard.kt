@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
@@ -21,7 +22,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import week.on.a.plate.core.theme.ColorPanelYellow
 import week.on.a.plate.core.theme.ColorTextBlack
 import week.on.a.plate.core.uitools.ImageLoad
 import week.on.a.plate.core.uitools.TextBody
@@ -37,7 +37,7 @@ fun IngredientInRecipeCard(
     longClick: () -> Unit = {},
 ) {
     val listGradient = listOf(Color(0xFFFFEADE), Color(0xFFFFF2DE), Color(0xFFFFFFFF))
-    HorizontalDivider(thickness = 1.dp, color = ColorPanelYellow)
+    HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.primary)
     Row(
         Modifier
             .fillMaxWidth().combinedClickable (
@@ -71,5 +71,5 @@ fun IngredientInRecipeCard(
             TextBody(text = ingredient.ingredientView.measure, color = ColorTextBlack)
         }
     }
-    HorizontalDivider(thickness = 1.dp, color = ColorPanelYellow)
+    HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.primary)
 }

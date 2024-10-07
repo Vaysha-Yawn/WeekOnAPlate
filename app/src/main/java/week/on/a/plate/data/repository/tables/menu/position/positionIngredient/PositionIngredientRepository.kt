@@ -1,6 +1,7 @@
 package week.on.a.plate.data.repository.tables.menu.position.positionIngredient
 
 
+import android.util.Log
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.data.repository.tables.filters.ingredient.IngredientMapper
 import week.on.a.plate.data.repository.tables.recipe.ingredientInRecipe.IngredientInRecipeDAO
@@ -20,7 +21,7 @@ class PositionIngredientRepository @Inject constructor(
     suspend fun getAllInSel(selectionId: Long): List<Position> {
         return positionIngredientDAO.getAllInSel(selectionId).map { position ->
             val ingredient =
-                ingredientInRecipeDAO.getIngredientAndIngredientInRecipe(position.positionIngredientId)
+                ingredientInRecipeDAO.getIngredientAndIngredientInRecipe(position.ingredientInRecipeId)
 
             val ingredientView =
                 with(ingredientMapper) { ingredient.ingredientRoom.roomToView() }

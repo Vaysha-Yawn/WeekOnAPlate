@@ -14,6 +14,7 @@ import week.on.a.plate.core.uitools.buttons.CommonButton
 import week.on.a.plate.screenCreateRecipe.event.RecipeCreateEvent
 import week.on.a.plate.screenCreateRecipe.state.RecipeCreateUIState
 import week.on.a.plate.screenSearchRecipes.view.resultScreen.TagList
+import week.on.a.plate.screenSearchRecipes.view.resultScreen.TagListHidden
 
 @Composable
 fun TagsRecipeEdit(state: RecipeCreateUIState, onEvent: (RecipeCreateEvent) -> Unit) {

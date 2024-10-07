@@ -7,7 +7,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import week.on.a.plate.core.navigation.ShoppingListScreen
 import week.on.a.plate.data.dataView.example.emptyRecipe
 import week.on.a.plate.data.dataView.recipe.RecipeStepView
 import week.on.a.plate.data.dataView.recipe.RecipeView
@@ -18,7 +17,6 @@ import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screenCreateRecipe.navigation.RecipeCreateDestination
 import week.on.a.plate.screenDeleteApply.event.DeleteApplyEvent
-import week.on.a.plate.screenDeleteApply.logic.DeleteApplyViewModel
 import week.on.a.plate.screenDeleteApply.navigation.DeleteApplyDirection
 import week.on.a.plate.screenInventory.navigation.InventoryDirection
 import week.on.a.plate.screenMenu.event.ActionWeekMenuDB
@@ -54,10 +52,10 @@ class RecipeDetailsViewModel @Inject constructor(
     }
 
     private fun addToCart() {
-        if (state.recipe.value.ingredients.isNotEmpty() && state.recipe.value.ingredients.find { it.count>0 }!=null){
+        if (state.recipe.value.ingredients.isNotEmpty() && state.recipe.value.ingredients.find { it.count > 0 } != null) {
             viewModelScope.launch {
                 val listCopy = state.recipe.value.ingredients.toList()
-                listCopy.forEachIndexed {index,ingredientInRecipeView->
+                listCopy.forEachIndexed { index, ingredientInRecipeView ->
                     ingredientInRecipeView.count = state.ingredientsCounts.value[index]
                 }
                 mainViewModel.nav.navigate(InventoryDirection)
@@ -100,8 +98,8 @@ class RecipeDetailsViewModel @Inject constructor(
                     "Внимание, при удалении рецепта так же удалятся все позиции с ним в меню.\n" +
                     "Это действие нельзя отменить."
             mainViewModel.nav.navigate(DeleteApplyDirection)
-            vm.launchAndGet(mes){event->
-                if (event == DeleteApplyEvent.Apply){
+            vm.launchAndGet(mes) { event ->
+                if (event == DeleteApplyEvent.Apply) {
                     recipeRepository.delete(state.recipe.value.id)
                     mainViewModel.onEvent(MainEvent.NavigateBack)
                 }
@@ -123,14 +121,18 @@ class RecipeDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             val vm = mainViewModel.specifySelectionViewModel
             mainViewModel.nav.navigate(SpecifySelectionDirection)
-            vm.launchAndGet() { res->
+            vm.launchAndGet() { res ->
                 viewModelScope.launch {
                     sCRUDRecipeInMenu.onEvent(
                         ActionWeekMenuDB.AddRecipePositionInMenuDB(
                             res.selId,
                             Position.PositionRecipeView(
                                 0,
-                                RecipeShortView(state.recipe.value.id, state.recipe.value.name),
+                                RecipeShortView(
+                                    state.recipe.value.id,
+                                    state.recipe.value.name,
+                                    state.recipe.value.img
+                                ),
                                 res.portions,
                                 res.selId
                             )

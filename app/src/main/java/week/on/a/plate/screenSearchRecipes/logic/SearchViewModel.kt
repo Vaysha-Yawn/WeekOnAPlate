@@ -221,7 +221,7 @@ class SearchViewModel @Inject constructor(
                     viewModelScope.launch {
                         val recipePosition = Position.PositionRecipeView(
                             0,
-                            RecipeShortView(recipeView.id, recipeView.name),
+                            RecipeShortView(recipeView.id, recipeView.name, recipeView.img),
                             res.portions,
                             res.selId
                         )

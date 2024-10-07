@@ -35,7 +35,6 @@ import week.on.a.plate.core.uitools.TextSmall
 import week.on.a.plate.screenRecipeDetails.event.RecipeDetailsEvent
 import week.on.a.plate.screenRecipeDetails.state.RecipeDetailsState
 import week.on.a.plate.core.theme.ColorBackgroundYellow
-import week.on.a.plate.core.theme.ColorPanelYellow
 import week.on.a.plate.core.theme.ColorTextBlack
 import week.on.a.plate.core.theme.Typography
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
@@ -65,7 +64,7 @@ fun RecipeDetailsSteps(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) 
         Spacer(modifier = Modifier.height(24.dp))
         val listGradient = listOf(Color(0xFFFFEADE), Color(0xFFFFF2DE), Color(0xFFFFFFFF))
         for ((index, step) in state.recipe.value.steps.withIndex()) {
-            HorizontalDivider(thickness = 1.dp, color = ColorPanelYellow)
+            HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.primary)
             Column(
                 Modifier
                     .fillMaxWidth()
@@ -80,7 +79,7 @@ fun RecipeDetailsSteps(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) 
                             .background(
                                 ColorBackgroundYellow, CircleShape
                             )
-                            .border(1.dp, ColorPanelYellow, CircleShape)
+                            .border(1.dp, MaterialTheme.colorScheme.primary, CircleShape)
                             .padding(horizontal = 12.dp, vertical = 5.dp)
                     )
                     Spacer(modifier = Modifier.width(24.dp))
@@ -97,7 +96,7 @@ fun RecipeDetailsSteps(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) 
                 }
                 TextSmall(text = step.description, color = ColorTextBlack)
             }
-            HorizontalDivider(thickness = 1.dp, color = ColorPanelYellow)
+            HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.primary)
             Spacer(modifier = Modifier.height(24.dp))
         }
     }

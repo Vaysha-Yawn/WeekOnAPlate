@@ -19,7 +19,6 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
-import week.on.a.plate.core.theme.ColorPanelGreen
 import week.on.a.plate.screenFilters.event.FilterEvent
 import week.on.a.plate.screenFilters.state.FilterUIState
 import week.on.a.plate.core.uitools.SearchLine
