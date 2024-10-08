@@ -36,7 +36,7 @@ import javax.inject.Inject
 
 class DialogUseCase @Inject constructor() {
     val activeDialog = mutableStateOf<DialogViewModel?>(null)
-    private var hiddenDialog: DialogViewModel? = null
+    private val hiddenDialog = Stack<DialogViewModel>()
     private val dialogsVMMap = Stack<DialogViewModel>()
 
     private fun showTopDialog(dialog: DialogViewModel) {
@@ -45,6 +45,7 @@ class DialogUseCase @Inject constructor() {
 
     private fun hideAllDialogs() {
         activeDialog.value = null
+        hiddenDialog.clear()
     }
 
     fun closeDialog() {
@@ -118,12 +119,11 @@ class DialogUseCase @Inject constructor() {
     }
 
     fun hide() {
-        hiddenDialog = activeDialog.value
-        hideAllDialogs()
+        hiddenDialog.add(activeDialog.value)
+        activeDialog.value = null
     }
 
     fun show() {
-        activeDialog.value = hiddenDialog
-        hiddenDialog = null
+        activeDialog.value = hiddenDialog.pop()
     }
 }
