@@ -1,7 +1,6 @@
 package week.on.a.plate.dialogEditPositionIngredient.logic
 
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -13,6 +12,7 @@ import week.on.a.plate.dialogEditPositionIngredient.state.EditPositionIngredient
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screenFilters.navigation.FilterDestination
+import week.on.a.plate.screenFilters.state.FilterEnum
 import week.on.a.plate.screenFilters.state.FilterMode
 
 
@@ -20,7 +20,8 @@ class EditPositionIngredientViewModel() : DialogViewModel() {
 
     lateinit var mainViewModel: MainViewModel
     lateinit var state: EditPositionIngredientUIState
-    private var resultFlow: MutableStateFlow<Position.PositionIngredientView?> = MutableStateFlow<Position.PositionIngredientView?>(null)
+    private var resultFlow: MutableStateFlow<Position.PositionIngredientView?> =
+        MutableStateFlow<Position.PositionIngredientView?>(null)
 
     fun done() {
         close()
@@ -58,22 +59,20 @@ class EditPositionIngredientViewModel() : DialogViewModel() {
         mainViewModel.onEvent(MainEvent.HideDialog)
 
         mainViewModel.viewModelScope.launch {
-            val listLast = if (state.ingredientState.value != null) {
-                listOf(state.ingredientState.value!!)
-            } else listOf()
             mainViewModel.filterViewModel.launchAndGet(
-                FilterMode.OneIngredient,
-                Pair(listOf(), listLast)
+                FilterMode.One, FilterEnum.Ingredient,
+                Pair(listOf(), listOf()), false
             ) {
                 mainViewModel.onEvent(MainEvent.ShowDialog(this@EditPositionIngredientViewModel))
-                state.ingredientState.value = it.second.getOrNull(0)
+                val new = it.ingredients?.getOrNull(0)
+                if (new != null) state.ingredientState.value = new
             }
         }
     }
 
 
     suspend fun launchAndGet(
-        positionIngredient: Position.PositionIngredientView?, isForAdd:Boolean,
+        positionIngredient: Position.PositionIngredientView?, isForAdd: Boolean,
         use: suspend (Position.PositionIngredientView) -> Unit,
     ) {
         state = EditPositionIngredientUIState(positionIngredient)
@@ -82,7 +81,7 @@ class EditPositionIngredientViewModel() : DialogViewModel() {
         if (isForAdd) chooseIngredient()
 
         mainViewModel.viewModelScope.launch {
-            val flow:Flow<Position.PositionIngredientView?> = resultFlow
+            val flow: Flow<Position.PositionIngredientView?> = resultFlow
             flow.collect { value ->
                 if (value != null) {
                     use(value)

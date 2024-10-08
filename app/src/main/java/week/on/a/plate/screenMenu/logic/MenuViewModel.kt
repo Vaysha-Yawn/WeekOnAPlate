@@ -30,6 +30,7 @@ import week.on.a.plate.dialogEditRecipePosition.logic.EditRecipePositionViewMode
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screenFilters.navigation.FilterDestination
+import week.on.a.plate.screenFilters.state.FilterEnum
 import week.on.a.plate.screenFilters.state.FilterMode
 import week.on.a.plate.screenInventory.navigation.InventoryDirection
 import week.on.a.plate.screenMenu.event.ActionWeekMenuDB
@@ -363,13 +364,14 @@ class MenuViewModel @Inject constructor(
         }
     }
 
+
     private fun addDraft(selId: Long) {
         viewModelScope.launch {
             val vm = mainViewModel.filterViewModel
             vm.mainViewModel.nav.navigate(FilterDestination)
-            vm.launchAndGet(FilterMode.All, null) { filters ->
-                if (filters.first.isEmpty() && filters.second.isEmpty()) return@launchAndGet
-                val draft = Position.PositionDraftView(0, filters.first, filters.second, selId)
+            vm.launchAndGet(FilterMode.Multiple, FilterEnum.IngredientAndTag,null, false) { filters ->
+                if (filters.tags?.isEmpty()==true && filters.ingredients?.isEmpty()==true) return@launchAndGet
+                val draft = Position.PositionDraftView(0, filters.tags!!, filters.ingredients!!, selId)
                 onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.AddDraft(draft)))
             }
         }
@@ -379,11 +381,11 @@ class MenuViewModel @Inject constructor(
         viewModelScope.launch {
             val vm = mainViewModel.filterViewModel
             vm.mainViewModel.nav.navigate(FilterDestination)
-            vm.launchAndGet(FilterMode.All, Pair(oldDraft.tags, oldDraft.ingredients)) { filters ->
-                if (filters.first.isEmpty() && filters.second.isEmpty()) {
+            vm.launchAndGet(FilterMode.Multiple,FilterEnum.Tag, Pair(oldDraft.tags, oldDraft.ingredients), false) { filters ->
+                if (filters.tags?.isEmpty()==true && filters.ingredients?.isEmpty()==true || filters.ingredients==null || filters.tags==null ) {
                     onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.Delete(oldDraft)))
                 } else {
-                    onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.EditDraft(oldDraft, filters)))
+                    onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.EditDraft(oldDraft, Pair(filters.tags, filters.ingredients))))
                 }
             }
         }

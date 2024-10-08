@@ -29,6 +29,7 @@ import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screenCreateRecipe.navigation.RecipeCreateDestination
 import week.on.a.plate.screenFilters.navigation.FilterDestination
+import week.on.a.plate.screenFilters.state.FilterEnum
 import week.on.a.plate.screenFilters.state.FilterMode
 import week.on.a.plate.screenMenu.event.ActionWeekMenuDB
 import week.on.a.plate.screenMenu.logic.useCase.CRUDRecipeInMenu
@@ -252,19 +253,20 @@ class SearchViewModel @Inject constructor(
         }
     }
 
+
     private fun toFilter() {
         viewModelScope.launch {
             val vm = mainViewModel.filterViewModel
             mainViewModel.nav.navigate(FilterDestination)
             vm.launchAndGet(
-                FilterMode.All,
+                FilterMode.Multiple, FilterEnum.IngredientAndTag,
                 Pair(
                     state.selectedTags.value,
                     state.selectedIngredients.value
-                )
+                ), false
             ) { resultFilters ->
-                state.selectedTags.value = resultFilters.first
-                state.selectedIngredients.value = resultFilters.second
+                state.selectedTags.value = resultFilters.tags!!
+                state.selectedIngredients.value = resultFilters.ingredients!!
                 search()
             }
         }

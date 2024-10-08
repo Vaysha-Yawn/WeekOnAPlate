@@ -35,7 +35,6 @@ fun BottomBar(navController: NavHostController, isActiveBaseScreen: Boolean) {
     val currentDestination = navBackStackEntry?.destination
     if (!isActiveBaseScreen) return
     BottomAppBar(
-        Modifier.height(72.dp),
         containerColor = MaterialTheme.colorScheme.surface,
         contentColor = MaterialTheme.colorScheme.surface,
     ) {

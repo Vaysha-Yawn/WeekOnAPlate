@@ -77,7 +77,7 @@ class RecipeDetailsViewModel @Inject constructor(
                 this.forEachIndexed { index, _ ->
                     val startIngredientCount = state.recipe.value.ingredients[index].count
                     if (startIngredientCount > 0) {
-                        this[index] = startIngredientCount / startCount * newCountPortions
+                        this[index] = (startIngredientCount.toFloat() / startCount.toFloat() * newCountPortions.toFloat()).toInt()
                     }
                 }
             }.toList()

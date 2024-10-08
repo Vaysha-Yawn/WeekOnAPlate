@@ -16,7 +16,6 @@ import week.on.a.plate.screenInventory.logic.InventoryViewModel
 import week.on.a.plate.screenMenu.logic.MenuViewModel
 import week.on.a.plate.screenMenu.logic.useCase.CRUDRecipeInMenu
 import week.on.a.plate.screenRecipeDetails.logic.RecipeDetailsViewModel
-import week.on.a.plate.screenSearchCategories.logic.CategoriesSearchViewModel
 import week.on.a.plate.screenSearchRecipes.logic.SearchViewModel
 import week.on.a.plate.screenSearchRecipes.logic.voice.VoiceInputUseCase
 import week.on.a.plate.screenShoppingList.logic.ShoppingListViewModel
@@ -32,7 +31,6 @@ class MainViewModel @Inject constructor(
 
     lateinit var menuViewModel: MenuViewModel
     lateinit var specifySelectionViewModel: SpecifySelectionViewModel
-    lateinit var categoriesSearchViewModel: CategoriesSearchViewModel
     lateinit var filterViewModel: FilterViewModel
     lateinit var searchViewModel: SearchViewModel
     lateinit var recipeDetailsViewModel: RecipeDetailsViewModel
@@ -44,7 +42,6 @@ class MainViewModel @Inject constructor(
 
     fun initViewModels(
         specifySelection: SpecifySelectionViewModel,
-        categoriesSearch: CategoriesSearchViewModel,
         filter: FilterViewModel,
         search: SearchViewModel,
         recipeDetails: RecipeDetailsViewModel,
@@ -55,7 +52,6 @@ class MainViewModel @Inject constructor(
         delete: DeleteApplyViewModel
     ) {
         specifySelectionViewModel = specifySelection
-        categoriesSearchViewModel = categoriesSearch
         filterViewModel = filter
         searchViewModel = search
         recipeDetailsViewModel = recipeDetails
@@ -66,7 +62,6 @@ class MainViewModel @Inject constructor(
         deleteApplyViewModel = delete
 
         specifySelectionViewModel.mainViewModel = this
-        categoriesSearchViewModel.mainViewModel = this
         filterViewModel.mainViewModel = this
         searchViewModel.mainViewModel = this
         recipeDetailsViewModel.mainViewModel = this

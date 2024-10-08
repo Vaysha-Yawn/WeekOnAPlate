@@ -7,7 +7,6 @@ import week.on.a.plate.data.dataView.recipe.TagCategoryView
 class AddTagUIState (
 ){
     val category: MutableState<TagCategoryView?> = mutableStateOf(null)
-    val categoryName: MutableState<String?> = mutableStateOf("")
     val text: MutableState<String> = mutableStateOf("")
     val show: MutableState<Boolean> = mutableStateOf(true)
 }

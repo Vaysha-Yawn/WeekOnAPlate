@@ -73,7 +73,7 @@ fun RecipeDetailsSteps(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) 
             ) {
                 Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
                     TextInApp(
-                        text = index.toString(),
+                        text = (index+1).toString(),
                         textStyle = bodyMediumSemiBold,
                         color = Color(0xFF4D2222), modifier = Modifier
                             .background(

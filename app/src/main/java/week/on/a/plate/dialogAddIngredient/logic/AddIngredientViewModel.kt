@@ -4,15 +4,17 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import week.on.a.plate.core.dialogExampleStructure.DialogViewModel
 import week.on.a.plate.data.dataView.recipe.IngredientCategoryView
 import week.on.a.plate.data.dataView.recipe.IngredientView
-import week.on.a.plate.core.dialogExampleStructure.DialogViewModel
 import week.on.a.plate.dialogAddIngredient.event.AddIngredientEvent
 import week.on.a.plate.dialogAddIngredient.state.AddIngredientUIState
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
-import week.on.a.plate.screenSearchCategories.event.CategoriesSearchEvent
-import week.on.a.plate.screenSearchCategories.navigation.CategoriesSearchDestination
+import week.on.a.plate.screenFilters.event.FilterEvent
+import week.on.a.plate.screenFilters.navigation.FilterDestination
+import week.on.a.plate.screenFilters.state.FilterEnum
+import week.on.a.plate.screenFilters.state.FilterMode
 
 
 class AddIngredientViewModel() : DialogViewModel() {
@@ -29,7 +31,10 @@ class AddIngredientViewModel() : DialogViewModel() {
 
     fun done() {
         close()
-        resultFlow.value = Pair(IngredientView(0, state.photoUri.value, state.name.value, state.measure.value), state.category.value!!)
+        resultFlow.value = Pair(
+            IngredientView(0, state.photoUri.value, state.name.value, state.measure.value),
+            state.category.value!!
+        )
     }
 
     fun close() {
@@ -47,27 +52,45 @@ class AddIngredientViewModel() : DialogViewModel() {
 
     private fun toSearchCategory() {
         mainViewModel.viewModelScope.launch {
-            val vm = mainViewModel.categoriesSearchViewModel
+            val vm = mainViewModel.filterViewModel
+            vm.state.selectedIngredientsCategories.value = listOf()
+            vm.state.resultSearchIngredientsCategories.value = listOf()
+            vm.state.searchText.value = ""
+
+            val oldFilterState = vm.state.getCopy()
             mainViewModel.onEvent(MainEvent.HideDialog)
-            mainViewModel.nav.navigate(CategoriesSearchDestination)
-            vm.launchAndGetIngredient( ) { pair->
-                if (pair.first !is CategoriesSearchEvent.Close){
-                    state.category.value = pair.second
-                    mainViewModel.onEvent(MainEvent.ShowDialog(this@AddIngredientViewModel))
-                }else{
-                    mainViewModel.onEvent(MainEvent.ShowDialog(this@AddIngredientViewModel))
-                }
+            mainViewModel.nav.navigate(FilterDestination)
+
+            vm.launchAndGet(FilterMode.One, FilterEnum.CategoryIngredient,null, true) { filters ->
+                val res = filters.ingredientsCategories?.getOrNull(0)
+                if (res != null) state.category.value = res
+                mainViewModel.onEvent(MainEvent.ShowDialog(this@AddIngredientViewModel))
+                vm.isForCategory = false
+                vm.state.restoreState(oldFilterState)
             }
         }
     }
 
-    suspend fun launchAndGet(oldIngredient: IngredientView?, oldCategory: IngredientCategoryView?, use: (Pair<IngredientView, IngredientCategoryView>) -> Unit) {
-        state = AddIngredientUIState(oldIngredient?.name?:"", oldIngredient?.measure?:"", oldCategory, oldIngredient?.img?:"")
+    suspend fun launchAndGet(
+        oldIngredient: IngredientView?,
+        oldCategory: IngredientCategoryView?,
+        defaultCategoryView: IngredientCategoryView,
+        use: suspend (Pair<IngredientView, IngredientCategoryView>) -> Unit
+    ) {
+        state = AddIngredientUIState(
+            oldIngredient?.name ?: "",
+            oldIngredient?.measure ?: "",
+            oldCategory,
+            oldIngredient?.img ?: ""
+        )
+
+        state.category.value = defaultCategoryView
 
         val flow = start()
         flow.collect { value ->
             if (value != null) {
                 use(value)
+                mainViewModel.filterViewModel.onEvent(FilterEvent.SearchFilter())
             }
         }
     }

@@ -58,7 +58,7 @@ fun AddTag(
             textAlign = TextAlign.Start
         )
         CommonButton(
-            if (state.categoryName.value == "") "Выбрать категорию" else state.categoryName.value!!,
+            if (state.category.value?.name == "") "Выбрать категорию" else state.category.value?.name?:"",
             image = R.drawable.search,
         ) {
             onEvent(AddTagEvent.ChooseCategory)

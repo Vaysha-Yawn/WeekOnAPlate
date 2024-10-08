@@ -32,7 +32,8 @@ import week.on.a.plate.core.uitools.CreateTagOrIngredient
 import week.on.a.plate.core.uitools.TagBig
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextTitle
-import week.on.a.plate.core.uitools.buttons.CommonButton
+import week.on.a.plate.core.uitools.buttons.ActionPlusButton
+import week.on.a.plate.core.uitools.buttons.DoneButton
 import week.on.a.plate.data.dataView.example.ingredients
 import week.on.a.plate.data.dataView.example.tags
 import week.on.a.plate.data.dataView.recipe.IngredientCategoryView
@@ -40,117 +41,221 @@ import week.on.a.plate.data.dataView.recipe.IngredientView
 import week.on.a.plate.data.dataView.recipe.RecipeTagView
 import week.on.a.plate.data.dataView.recipe.TagCategoryView
 import week.on.a.plate.screenFilters.event.FilterEvent
+import week.on.a.plate.screenFilters.state.FilterEnum
 import week.on.a.plate.screenFilters.state.FilterMode
 import week.on.a.plate.screenFilters.state.FilterUIState
 
 @Composable
 fun FilterScreen(stateUI: FilterUIState, onEvent: (FilterEvent) -> Unit) {
     Scaffold(Modifier.fillMaxSize(), floatingActionButton = {
-        CommonButton(
-            modifier = Modifier.padding(horizontal = 20.dp),
-            text = stringResource(R.string.selected_tags),
-        ) {
-            onEvent(FilterEvent.SelectedFilters)
+        ActionPlusButton {
+            createFilterElement(stateUI, onEvent)
         }
-    }, floatingActionButtonPosition = FabPosition.Center) { innerPadding ->
-        Column {
-            when (stateUI.filterMode.value) {
-                FilterMode.All -> {
-                    TabRowFilter(
-                        stateUI.activeFilterTabIndex,
-                        stateUI.selectedTags.value.size,
-                        stateUI.selectedIngredients.value.size
-                    )
-                }
-
-                FilterMode.OneIngredient -> {
-                    stateUI.activeFilterTabIndex.intValue = 1
-                }
-
-                FilterMode.TagList -> {
-                    stateUI.activeFilterTabIndex.intValue = 0
-                }
-
-                FilterMode.IngredientList -> {
-                    stateUI.activeFilterTabIndex.intValue = 1
-                }
+        Spacer(Modifier.height(100.dp))
+    }, floatingActionButtonPosition = FabPosition.End) { innerPadding ->
+        Column(Modifier.background(MaterialTheme.colorScheme.surface)) {
+            if (stateUI.filterEnum.value == FilterEnum.IngredientAndTag) {
+                TabRowFilter(
+                    stateUI.activeFilterTabIndex,
+                    stateUI.selectedTags.value.size,
+                    stateUI.selectedIngredients.value.size
+                )
             }
             LazyColumn(
                 Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.surface)
+                    .fillMaxWidth()
+                    .weight(1f)
                     .padding(horizontal = 24.dp)
-                    .padding(bottom = 110.dp)
             ) {
-                when (stateUI.activeFilterTabIndex.intValue) {
-                    0 -> {
-                        if (stateUI.filtersSearchText.value != "") {
-                            item {
-                                Spacer(modifier = Modifier.height(24.dp))
-                                CreateTagOrIngredient(stateUI.filtersSearchText.value) {
-                                    onEvent(FilterEvent.CreateTag(stateUI.filtersSearchText.value))
-                                }
-                                Spacer(modifier = Modifier.height(24.dp))
-                            }
-                            items(stateUI.resultSearchFilterTags.value.size) {
-                                TagBig(
-                                    tag = stateUI.resultSearchFilterTags.value[it], isActive =
-                                    stateUI.selectedTags.value.contains(stateUI.resultSearchFilterTags.value[it]),
-                                    clickable = {
-                                        onEvent(FilterEvent.SelectTag(stateUI.resultSearchFilterTags.value[it]))
-                                    }, longClick = {
-                                        onEvent(FilterEvent.EditOrDeleteTag(stateUI.resultSearchFilterTags.value[it]))
-                                    }
-                                )
-                                Spacer(modifier = Modifier.height(24.dp))
-                            }
-                        } else {
-                            items(stateUI.allTagsCategories.value.size) {
-                                CategoriesTags(
-                                    stateUI.allTagsCategories.value[it],
-                                    stateUI.selectedTags, onEvent
-                                )
-                            }
-                        }
-                    }
-
-                    1 -> {
-                        if (stateUI.filtersSearchText.value != "") {
-                            item {
-                                Spacer(modifier = Modifier.height(24.dp))
-                                CreateTagOrIngredient(stateUI.filtersSearchText.value) {
-                                    onEvent(FilterEvent.CreateIngredient(stateUI.filtersSearchText.value))
-                                }
-                                Spacer(modifier = Modifier.height(24.dp))
-                            }
-                            items(stateUI.resultSearchFilterIngredients.value.size) {
-                                TagBig(
-                                    ingredientView = stateUI.resultSearchFilterIngredients.value[it],
-                                    isActive =
-                                    stateUI.selectedIngredients.value.contains(stateUI.resultSearchFilterIngredients.value[it]),
-                                    clickable = {
-                                        onEvent(FilterEvent.SelectIngredient(stateUI.resultSearchFilterIngredients.value[it]))
-                                    }, longClick = {
-                                        onEvent(FilterEvent.EditOrDeleteIngredient(stateUI.resultSearchFilterIngredients.value[it]))
-                                    }
-                                )
-                                Spacer(modifier = Modifier.height(24.dp))
-                            }
-                        } else {
-                            items(stateUI.allIngredientsCategories.value.size) {
-                                IngredientCategories(
-                                    stateUI.allIngredientsCategories.value[it],
-                                    stateUI.selectedIngredients, onEvent
-                                )
+                if (stateUI.searchText.value != "") {
+                    item {
+                        Spacer(modifier = Modifier.height(24.dp))
+                        if (checkNotHaveFilter(stateUI)) {
+                            CreateTagOrIngredient(stateUI.searchText.value) {
+                                createFilterElement(stateUI, onEvent)
                             }
                         }
                     }
                 }
 
+                if ((stateUI.activeFilterTabIndex.intValue == 0 && stateUI.filterEnum.value == FilterEnum.IngredientAndTag)
+                    || stateUI.filterEnum.value == FilterEnum.Tag
+                ) {
+                    if (stateUI.searchText.value != "") {
+                        items(stateUI.resultSearchTags.value.size) {
+                            Spacer(modifier = Modifier.height(24.dp))
+                            TagBig(
+                                tag = stateUI.resultSearchTags.value[it], isActive =
+                                stateUI.selectedTags.value.contains(stateUI.resultSearchTags.value[it]),
+                                clickable = {
+                                    onEvent(FilterEvent.SelectTag(stateUI.resultSearchTags.value[it]))
+                                }, longClick = {
+                                    onEvent(FilterEvent.EditOrDeleteTag(stateUI.resultSearchTags.value[it]))
+                                }
+                            )
+                        }
+                    } else {
+                        items(stateUI.allTagsCategories.value.size) {
+                            CategoriesTags(
+                                stateUI.allTagsCategories.value[it],
+                                stateUI.selectedTags, onEvent
+                            )
+                        }
+                    }
+                }
+
+                if ((stateUI.activeFilterTabIndex.intValue == 1 && stateUI.filterEnum.value == FilterEnum.IngredientAndTag)
+                    || stateUI.filterEnum.value == FilterEnum.Ingredient
+                ) {
+                    if (stateUI.searchText.value != "") {
+                        items(stateUI.resultSearchIngredients.value.size) {
+                            Spacer(modifier = Modifier.height(24.dp))
+                            TagBig(
+                                ingredientView = stateUI.resultSearchIngredients.value[it],
+                                isActive =
+                                stateUI.selectedIngredients.value.contains(stateUI.resultSearchIngredients.value[it]),
+                                clickable = {
+                                    onEvent(FilterEvent.SelectIngredient(stateUI.resultSearchIngredients.value[it]))
+                                }, longClick = {
+                                    onEvent(FilterEvent.EditOrDeleteIngredient(stateUI.resultSearchIngredients.value[it]))
+                                }
+                            )
+                            Spacer(modifier = Modifier.height(24.dp))
+                        }
+                    } else {
+                        items(stateUI.allIngredientsCategories.value.size) {
+                            IngredientCategories(
+                                stateUI.allIngredientsCategories.value[it],
+                                stateUI.selectedIngredients, onEvent
+                            )
+                        }
+                    }
+                }
+
+                if (stateUI.filterEnum.value == FilterEnum.CategoryTag) {
+                    if (stateUI.searchText.value != "") {
+                        items(stateUI.resultSearchTagsCategories.value.size) {
+                            Spacer(modifier = Modifier.height(24.dp))
+                            TagBig(
+                                text = stateUI.resultSearchTagsCategories.value[it].name,
+                                color = if (stateUI.selectedTagsCategories.value.contains(stateUI.resultSearchTagsCategories.value[it]))
+                                    MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.background,
+                                clickable = {
+                                    onEvent(FilterEvent.SelectTagCategory(stateUI.resultSearchTagsCategories.value[it]))
+                                }, longClick = {
+                                    onEvent(FilterEvent.EditOrDeleteTagCategory(stateUI.resultSearchTagsCategories.value[it]))
+                                }
+                            )
+                        }
+                    } else {
+                        items(stateUI.allTagsCategories.value.size) {
+                            Spacer(modifier = Modifier.height(24.dp))
+                            TagBig(
+                                text = stateUI.allTagsCategories.value[it].name,
+                                color = if (stateUI.selectedTagsCategories.value.contains(stateUI.allTagsCategories.value[it]))
+                                    MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.background,
+                                clickable = {
+                                    onEvent(FilterEvent.SelectTagCategory(stateUI.allTagsCategories.value[it]))
+                                }, longClick = {
+                                    onEvent(FilterEvent.EditOrDeleteTagCategory(stateUI.allTagsCategories.value[it]))
+                                }
+                            )
+                        }
+                    }
+                }
+
+                if (stateUI.filterEnum.value == FilterEnum.CategoryIngredient) {
+                    if (stateUI.searchText.value != "") {
+                        items(stateUI.resultSearchIngredientsCategories.value.size) {
+                            Spacer(modifier = Modifier.height(24.dp))
+                            TagBig(
+                                text = stateUI.resultSearchIngredientsCategories.value[it].name,
+                                color = if (stateUI.selectedIngredientsCategories.value.contains(
+                                        stateUI.resultSearchIngredientsCategories.value[it]
+                                    )
+                                )
+                                    MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.background,
+                                clickable = {
+                                    onEvent(FilterEvent.SelectIngredientCategory(stateUI.resultSearchIngredientsCategories.value[it]))
+                                }, longClick = {
+                                    onEvent(FilterEvent.EditOrDeleteIngredientCategory(stateUI.resultSearchIngredientsCategories.value[it]))
+                                }
+                            )
+                        }
+                    } else {
+                        items(stateUI.allIngredientsCategories.value.size) {
+                            Spacer(modifier = Modifier.height(24.dp))
+                            TagBig(
+                                text = stateUI.allIngredientsCategories.value[it].name,
+                                color = if (stateUI.selectedIngredientsCategories.value.contains(stateUI.allIngredientsCategories.value[it]))
+                                    MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.background,
+                                clickable = {
+                                    onEvent(FilterEvent.SelectIngredientCategory(stateUI.allIngredientsCategories.value[it]))
+                                }, longClick = {
+                                    onEvent(FilterEvent.EditOrDeleteIngredientCategory(stateUI.allIngredientsCategories.value[it]))
+                                }
+                            )
+                        }
+                    }
+                }
+                item { 100.dp }
+            }
+            if (stateUI.filterMode.value==FilterMode.Multiple){
+                DoneButton(
+                    modifier = Modifier.padding(horizontal = 20.dp),
+                    text = stringResource(R.string.apply),
+                ) {
+                    onEvent(FilterEvent.Done)
+                }
             }
         }
         innerPadding
     }
+}
+
+fun createFilterElement(stateUI: FilterUIState, onEvent: (FilterEvent) -> Unit) {
+    when (stateUI.filterEnum.value) {
+        FilterEnum.Ingredient -> onEvent(FilterEvent.CreateIngredient)
+        FilterEnum.Tag -> onEvent(FilterEvent.CreateTag)
+        FilterEnum.CategoryTag -> onEvent(FilterEvent.CreateTagCategory)
+        FilterEnum.CategoryIngredient -> onEvent(FilterEvent.CreateIngredientCategory)
+        FilterEnum.IngredientAndTag -> if (stateUI.activeFilterTabIndex.intValue == 0) {
+            onEvent(FilterEvent.CreateTag)
+        } else {
+            onEvent(FilterEvent.CreateIngredient)
+        }
+    }
+}
+
+fun checkNotHaveFilter(stateUI: FilterUIState): Boolean {
+    return (stateUI.resultSearchTags.value.find {
+        //tag
+        it.tagName.lowercase() == stateUI.searchText.value.trim()
+            .lowercase()
+    } == null
+            && ((stateUI.filterMode.value == FilterMode.Multiple
+            && stateUI.activeFilterTabIndex.intValue == 0)
+            || stateUI.filterEnum.value == FilterEnum.Tag))
+
+            //Ingredient
+            || (stateUI.resultSearchIngredients.value.find {
+        it.name.lowercase() == stateUI.searchText.value.trim()
+            .lowercase()
+    } == null && ((stateUI.filterMode.value == FilterMode.Multiple
+            && stateUI.activeFilterTabIndex.intValue == 1)
+            || stateUI.filterEnum.value == FilterEnum.Ingredient))
+
+            //CategoryTag
+            || (stateUI.resultSearchTagsCategories.value.find {
+        it.name.lowercase() == stateUI.searchText.value.trim()
+            .lowercase()
+    } == null && stateUI.filterEnum.value == FilterEnum.CategoryTag)
+
+            //CategoryIngredient
+            || (stateUI.resultSearchIngredientsCategories.value.find {
+        it.name.lowercase() == stateUI.searchText.value.trim()
+            .lowercase()
+    } == null && stateUI.filterEnum.value == FilterEnum.CategoryIngredient)
 }
 
 @Composable
@@ -252,7 +357,7 @@ fun IngredientCategories(
 fun PreviewFilterScreen() {
     WeekOnAPlateTheme {
         FilterScreen(FilterUIState().apply {
-            filtersSearchText.value = "По"
+            searchText.value = "По"
             activeFilterTabIndex.intValue = 1
             selectedTags.value = selectedTags.value.toMutableList().apply {
                 tags.map { it -> it.tags }.forEach { list ->
@@ -269,14 +374,14 @@ fun PreviewFilterScreen() {
                 this.removeAt(2)
             }
 
-            resultSearchFilterTags.value = mutableListOf<RecipeTagView>().toMutableList().apply {
+            resultSearchTags.value = mutableListOf<RecipeTagView>().toMutableList().apply {
                 tags.map { it -> it.tags }.forEach { list ->
                     this.addAll(list)
                 }
                 this.removeAt(1)
                 this.removeAt(2)
             }
-            resultSearchFilterIngredients.value = mutableListOf<IngredientView>().apply {
+            resultSearchIngredients.value = mutableListOf<IngredientView>().apply {
                 ingredients.map { it -> it.ingredientViews }.forEach { list ->
                     this.addAll(list)
                 }

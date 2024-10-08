@@ -21,6 +21,7 @@ import week.on.a.plate.screenFilters.state.FilterMode
 import week.on.a.plate.dialogEditOneString.logic.EditOneStringViewModel
 import week.on.a.plate.dialogEditOneString.state.EditOneStringUIState
 import week.on.a.plate.dialogEditPositionIngredient.logic.EditPositionIngredientViewModel
+import week.on.a.plate.screenFilters.state.FilterEnum
 import javax.inject.Inject
 
 @HiltViewModel
@@ -64,10 +65,12 @@ class RecipeCreateViewModel @Inject constructor(): ViewModel() {
                 viewModelScope.launch {
                     mainViewModel.nav.navigate(FilterDestination)
                     mainViewModel.filterViewModel.launchAndGet(
-                        FilterMode.TagList,
-                        Pair(state.tags.value, listOf())
+                        FilterMode.Multiple, FilterEnum.Tag,
+                        Pair(state.tags.value, listOf()), false
                     ) {
-                        state.tags.value = it.first
+                        if (it.tags!=null){
+                            state.tags.value = it.tags
+                        }
                     }
                 }
             }
@@ -161,12 +164,12 @@ class RecipeCreateViewModel @Inject constructor(): ViewModel() {
                 viewModelScope.launch {
                     mainViewModel.nav.navigate(FilterDestination)
                     mainViewModel.filterViewModel.launchAndGet(
-                        FilterMode.IngredientList,
-                        null
+                        FilterMode.Multiple, FilterEnum.Ingredient,
+                        null, false
                     ) {
                         state.ingredients.value = state.ingredients.value.toMutableList().apply {
-                            it.second.forEach { ingredient->
-                                this.add(IngredientInRecipeView(0, ingredient, "", 0))
+                            it.ingredients?.forEach { ingredient->
+                                add(IngredientInRecipeView(0, ingredient, "", 0))
                             }
                         }.toList()
                     }

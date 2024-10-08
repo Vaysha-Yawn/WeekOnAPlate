@@ -6,8 +6,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import week.on.a.plate.screenSearchCategories.navigation.CategoriesSearchDestination
-import week.on.a.plate.screenSearchCategories.view.CategoriesSearchMain
 import week.on.a.plate.screenSpecifySelection.navigation.SpecifySelectionDirection
 import week.on.a.plate.screenSpecifySelection.view.SpecifySelectionMain
 import week.on.a.plate.core.navigation.SearchScreen
@@ -67,11 +65,6 @@ fun Navigation(
         composable<FilterDestination>() {
             viewModel.isActiveBaseScreen.value = false
             FilterStart(viewModel.filterViewModel)
-        }
-
-        composable<CategoriesSearchDestination> {
-            viewModel.isActiveBaseScreen.value = false
-            CategoriesSearchMain(viewModel.categoriesSearchViewModel)
         }
 
         composable<RecipeDetailsDestination> {

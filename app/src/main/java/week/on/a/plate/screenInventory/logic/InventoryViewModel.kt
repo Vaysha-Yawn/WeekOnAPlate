@@ -50,7 +50,7 @@ class InventoryViewModel @Inject constructor(
         close()
         val result = state.list.value.map { pos ->
             IngredientInRecipeView(
-                0, pos.ingredient, "", pos.countTarget - pos.answer.intValue
+                0, pos.ingredient, "", pos.answer.intValue
             )
         }.filter { it.count > 0 }
 

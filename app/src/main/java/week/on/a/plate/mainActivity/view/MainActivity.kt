@@ -30,7 +30,6 @@ import week.on.a.plate.screenFilters.logic.FilterViewModel
 import week.on.a.plate.screenInventory.logic.InventoryViewModel
 import week.on.a.plate.screenMenu.logic.MenuViewModel
 import week.on.a.plate.screenRecipeDetails.logic.RecipeDetailsViewModel
-import week.on.a.plate.screenSearchCategories.logic.CategoriesSearchViewModel
 import week.on.a.plate.screenSearchRecipes.logic.SearchViewModel
 import week.on.a.plate.screenShoppingList.logic.ShoppingListViewModel
 import week.on.a.plate.screenSpecifySelection.logic.SpecifySelectionViewModel
@@ -40,7 +39,6 @@ class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels()
     private val specifySelectionViewModel: SpecifySelectionViewModel by viewModels()
-    private val categoriesSearchViewModel: CategoriesSearchViewModel by viewModels()
     private val filterViewModel: FilterViewModel by viewModels()
     private val searchViewModel: SearchViewModel by viewModels()
     private val recipeDetailsViewModel: RecipeDetailsViewModel by viewModels()
@@ -75,7 +73,6 @@ class MainActivity : ComponentActivity() {
 
                 viewModel.initViewModels(
                     specifySelectionViewModel,
-                    categoriesSearchViewModel,
                     filterViewModel,
                     searchViewModel,
                     recipeDetailsViewModel,

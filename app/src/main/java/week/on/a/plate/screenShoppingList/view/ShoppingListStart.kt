@@ -127,7 +127,7 @@ fun ShoppingListPosition(
     ) {
         Checkbox(
             checked = checked,
-            colors = CheckboxDefaults.colors(checkedColor = MaterialTheme.colorScheme.secondary),
+            colors = CheckboxDefaults.colors(checkedColor = MaterialTheme.colorScheme.secondary, checkmarkColor = MaterialTheme.colorScheme.onBackground),
             onCheckedChange = {
                 onCheckedChange(!checked)
             },
