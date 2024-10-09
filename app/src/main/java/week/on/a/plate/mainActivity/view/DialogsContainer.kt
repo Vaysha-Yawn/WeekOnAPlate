@@ -5,6 +5,7 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import week.on.a.plate.dialogAddIngredient.event.AddIngredientEvent
 import week.on.a.plate.dialogAddIngredient.logic.AddIngredientViewModel
 import week.on.a.plate.dialogAddIngredient.view.AddIngredient
@@ -56,8 +57,10 @@ import week.on.a.plate.screenCreateRecipe.timePickDialog.view.TimePickDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DialogsContainer(data: DialogViewModel?, onEvent: (event: Event) -> Unit) {
-
+fun DialogsContainer(
+    data: DialogViewModel?,
+    onEvent: (event: Event) -> Unit
+) {
     when (data) {
         is ChooseWeekViewModel -> {
             val datePickerState = rememberDatePickerState()

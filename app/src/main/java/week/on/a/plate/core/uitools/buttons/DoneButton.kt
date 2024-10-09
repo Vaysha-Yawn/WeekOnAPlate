@@ -1,6 +1,5 @@
 package week.on.a.plate.core.uitools.buttons
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -21,15 +20,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import week.on.a.plate.R
-import week.on.a.plate.core.uitools.TextInApp
 import week.on.a.plate.core.theme.ColorButtonGreen
-import week.on.a.plate.core.theme.ColorButtonNegativeGrey
 import week.on.a.plate.core.theme.ColorTextBlack
 import week.on.a.plate.core.theme.Typography
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
-import week.on.a.plate.core.theme.titleMediumItalic
 import week.on.a.plate.core.uitools.TextBody
+import week.on.a.plate.core.uitools.TextInApp
 
 @Composable
 fun DoneButton(
@@ -74,23 +70,32 @@ fun DoneButtonSmall(
 fun CommonButton(
     text: String,
     modifier: Modifier = Modifier,
-    image:Int? = null,
+    image: Int? = null,
     click: () -> Unit
 ) {
     Row(
         modifier
             .fillMaxWidth()
-            .background(ColorButtonNegativeGrey, RoundedCornerShape(20.dp))
+            .background(
+                MaterialTheme.colorScheme.background, RoundedCornerShape(20.dp)
+            )
             .padding(10.dp)
             .clickable {
                 click()
-            }, horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically
+            },
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Spacer(modifier = Modifier)
-        TextInApp(text = text, textStyle = Typography.bodyMedium, color = ColorTextBlack, textAlign = TextAlign.Center)
-        if (image==null){
+        TextInApp(
+            text = text,
+            textStyle = Typography.bodyMedium,
+            color = ColorTextBlack,
+            textAlign = TextAlign.Center
+        )
+        if (image == null) {
             Spacer(modifier = Modifier)
-        }else{
+        } else {
             Icon(
                 painter = painterResource(id = image),
                 contentDescription = "",

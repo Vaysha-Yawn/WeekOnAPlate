@@ -39,7 +39,7 @@ fun AddIngredient(
     state: AddIngredientUIState,
     onEvent: (AddIngredientEvent) -> Unit,
 ) {
-    LazyColumn(modifier = Modifier.padding(24.dp)) {
+    LazyColumn(modifier = Modifier.background(MaterialTheme.colorScheme.surface).padding(24.dp)) {
         item {
             TextTitleItalic(
                 text = "Добавить ингредиент",
@@ -61,7 +61,7 @@ fun AddIngredient(
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.background(MaterialTheme.colorScheme.background, RoundedCornerShape(20.dp)),
+                modifier = Modifier,
                 horizontalArrangement = Arrangement.End,
             ) {
                 TextBody(
@@ -84,6 +84,7 @@ fun AddIngredient(
                         }
                     },
                 )
+                Spacer(modifier = Modifier.width(12.dp))
             }
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -95,7 +96,7 @@ fun AddIngredient(
             )
             CommonButton(
                 if (state.category.value == null) "Выбрать категорию" else state.category.value!!.name,
-                image = R.drawable.search,
+                image = R.drawable.search
             ) {
                 onEvent(AddIngredientEvent.ChooseCategory)
             }
@@ -113,7 +114,7 @@ fun AddIngredient(
             )
             val messageError = "Пожалуйста введите название, меру и выберите категорию"
             val coroutineScope = rememberCoroutineScope()
-            Spacer(modifier = Modifier.height(36.dp))
+            Spacer(modifier = Modifier.height(48.dp))
             DoneButton(
                 text = stringResource(id = R.string.add),
                 modifier = Modifier

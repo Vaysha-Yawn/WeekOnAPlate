@@ -8,37 +8,29 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
+import week.on.a.plate.core.Event
+import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.data.dataView.example.WeekDataExample
 import week.on.a.plate.data.dataView.week.WeekView
-import week.on.a.plate.core.Event
-import week.on.a.plate.mainActivity.event.MainEvent
-import week.on.a.plate.mainActivity.logic.MainViewModel
-import week.on.a.plate.screenMenu.state.MenuIUState
 import week.on.a.plate.screenMenu.logic.MenuViewModel
+import week.on.a.plate.screenMenu.state.MenuIUState
 import week.on.a.plate.screenMenu.state.WeekState
 import week.on.a.plate.screenMenu.view.calendar.BlockCalendar
 import week.on.a.plate.screenMenu.view.day.DayView
 import week.on.a.plate.screenMenu.view.day.NoDay
-import week.on.a.plate.screenMenu.view.week.WeekMenu
 import week.on.a.plate.screenMenu.view.topBar.TopBar
-import week.on.a.plate.core.theme.WeekOnAPlateTheme
-import week.on.a.plate.core.uitools.buttons.ActionPlusButton
-import week.on.a.plate.screenMenu.event.MenuEvent
-import week.on.a.plate.screenMenu.view.topBar.TitleMenuSmall
+import week.on.a.plate.screenMenu.view.week.WeekMenu
 import java.time.LocalDate
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun MenuScreen(
-    vm:MenuViewModel
+    vm: MenuViewModel
 ) {
     vm.updateWeek()
     val uiState = vm.weekState.collectAsStateWithLifecycle().value
@@ -65,20 +57,13 @@ fun MenuScreenSuccess(
     week: WeekView,
     onEvent: (event: Event) -> Unit
 ) {
-    Scaffold(
+    Column(
         Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            .padding(top = 10.dp),
-        floatingActionButton = {
-            ActionPlusButton {
-                onEvent(MenuEvent.GetSelIdAndCreate)
-            }
-        }
-    ) {pad->
-        pad
-        Column {
-            TopBar(uiState.titleTopBar.value, uiState, onEvent)
+            .padding(top = 10.dp)
+    ) {
+        TopBar(uiState.titleTopBar.value, uiState, onEvent)
         if (uiState.itsDayMenu.value) {
             Spacer(modifier = Modifier.height(24.dp))
             BlockCalendar(week.days, LocalDate.now(), uiState.activeDayInd.value) { ind ->
@@ -96,7 +81,7 @@ fun MenuScreenSuccess(
         } else {
             WeekMenu(uiState, onEvent, week)
         }
-    }}
+    }
 }
 
 

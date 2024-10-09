@@ -6,14 +6,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.FabPosition
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
@@ -32,7 +29,6 @@ import week.on.a.plate.core.uitools.CreateTagOrIngredient
 import week.on.a.plate.core.uitools.TagBig
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextTitle
-import week.on.a.plate.core.uitools.buttons.ActionPlusButton
 import week.on.a.plate.core.uitools.buttons.DoneButton
 import week.on.a.plate.data.dataView.example.ingredients
 import week.on.a.plate.data.dataView.example.tags
@@ -47,185 +43,164 @@ import week.on.a.plate.screenFilters.state.FilterUIState
 
 @Composable
 fun FilterScreen(stateUI: FilterUIState, onEvent: (FilterEvent) -> Unit) {
-    Scaffold(Modifier.fillMaxSize(), floatingActionButton = {
-        ActionPlusButton {
-            createFilterElement(stateUI, onEvent)
+    Column(Modifier.background(MaterialTheme.colorScheme.surface)) {
+        if (stateUI.filterEnum.value == FilterEnum.IngredientAndTag) {
+            TabRowFilter(
+                stateUI.activeFilterTabIndex,
+                stateUI.selectedTags.value.size,
+                stateUI.selectedIngredients.value.size
+            )
         }
-        Spacer(Modifier.height(100.dp))
-    }, floatingActionButtonPosition = FabPosition.End) { innerPadding ->
-        Column(Modifier.background(MaterialTheme.colorScheme.surface)) {
-            if (stateUI.filterEnum.value == FilterEnum.IngredientAndTag) {
-                TabRowFilter(
-                    stateUI.activeFilterTabIndex,
-                    stateUI.selectedTags.value.size,
-                    stateUI.selectedIngredients.value.size
-                )
+        LazyColumn(
+            Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .padding(horizontal = 24.dp)
+        ) {
+            if (stateUI.searchText.value != "") {
+                item {
+                    Spacer(modifier = Modifier.height(24.dp))
+                    if (checkNotHaveFilter(stateUI)) {
+                        CreateTagOrIngredient(stateUI.searchText.value) {
+                            onEvent(FilterEvent.CreateActive)
+                        }
+                    }
+                }
             }
-            LazyColumn(
-                Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-                    .padding(horizontal = 24.dp)
+
+            if ((stateUI.activeFilterTabIndex.intValue == 0 && stateUI.filterEnum.value == FilterEnum.IngredientAndTag)
+                || stateUI.filterEnum.value == FilterEnum.Tag
             ) {
                 if (stateUI.searchText.value != "") {
-                    item {
+                    items(stateUI.resultSearchTags.value.size) {
                         Spacer(modifier = Modifier.height(24.dp))
-                        if (checkNotHaveFilter(stateUI)) {
-                            CreateTagOrIngredient(stateUI.searchText.value) {
-                                createFilterElement(stateUI, onEvent)
+                        TagBig(
+                            tag = stateUI.resultSearchTags.value[it], isActive =
+                            stateUI.selectedTags.value.contains(stateUI.resultSearchTags.value[it]),
+                            clickable = {
+                                onEvent(FilterEvent.SelectTag(stateUI.resultSearchTags.value[it]))
+                            }, longClick = {
+                                onEvent(FilterEvent.EditOrDeleteTag(stateUI.resultSearchTags.value[it]))
                             }
-                        }
+                        )
+                    }
+                } else {
+                    items(stateUI.allTagsCategories.value.size) {
+                        CategoriesTags(
+                            stateUI.allTagsCategories.value[it],
+                            stateUI.selectedTags, onEvent
+                        )
                     }
                 }
+            }
 
-                if ((stateUI.activeFilterTabIndex.intValue == 0 && stateUI.filterEnum.value == FilterEnum.IngredientAndTag)
-                    || stateUI.filterEnum.value == FilterEnum.Tag
-                ) {
-                    if (stateUI.searchText.value != "") {
-                        items(stateUI.resultSearchTags.value.size) {
-                            Spacer(modifier = Modifier.height(24.dp))
-                            TagBig(
-                                tag = stateUI.resultSearchTags.value[it], isActive =
-                                stateUI.selectedTags.value.contains(stateUI.resultSearchTags.value[it]),
-                                clickable = {
-                                    onEvent(FilterEvent.SelectTag(stateUI.resultSearchTags.value[it]))
-                                }, longClick = {
-                                    onEvent(FilterEvent.EditOrDeleteTag(stateUI.resultSearchTags.value[it]))
-                                }
-                            )
-                        }
-                    } else {
-                        items(stateUI.allTagsCategories.value.size) {
-                            CategoriesTags(
-                                stateUI.allTagsCategories.value[it],
-                                stateUI.selectedTags, onEvent
-                            )
-                        }
+            if ((stateUI.activeFilterTabIndex.intValue == 1 && stateUI.filterEnum.value == FilterEnum.IngredientAndTag)
+                || stateUI.filterEnum.value == FilterEnum.Ingredient
+            ) {
+                if (stateUI.searchText.value != "") {
+                    items(stateUI.resultSearchIngredients.value.size) {
+                        Spacer(modifier = Modifier.height(24.dp))
+                        TagBig(
+                            ingredientView = stateUI.resultSearchIngredients.value[it],
+                            isActive =
+                            stateUI.selectedIngredients.value.contains(stateUI.resultSearchIngredients.value[it]),
+                            clickable = {
+                                onEvent(FilterEvent.SelectIngredient(stateUI.resultSearchIngredients.value[it]))
+                            }, longClick = {
+                                onEvent(FilterEvent.EditOrDeleteIngredient(stateUI.resultSearchIngredients.value[it]))
+                            }
+                        )
+                        Spacer(modifier = Modifier.height(24.dp))
+                    }
+                } else {
+                    items(stateUI.allIngredientsCategories.value.size) {
+                        IngredientCategories(
+                            stateUI.allIngredientsCategories.value[it],
+                            stateUI.selectedIngredients, onEvent
+                        )
                     }
                 }
+            }
 
-                if ((stateUI.activeFilterTabIndex.intValue == 1 && stateUI.filterEnum.value == FilterEnum.IngredientAndTag)
-                    || stateUI.filterEnum.value == FilterEnum.Ingredient
-                ) {
-                    if (stateUI.searchText.value != "") {
-                        items(stateUI.resultSearchIngredients.value.size) {
-                            Spacer(modifier = Modifier.height(24.dp))
-                            TagBig(
-                                ingredientView = stateUI.resultSearchIngredients.value[it],
-                                isActive =
-                                stateUI.selectedIngredients.value.contains(stateUI.resultSearchIngredients.value[it]),
-                                clickable = {
-                                    onEvent(FilterEvent.SelectIngredient(stateUI.resultSearchIngredients.value[it]))
-                                }, longClick = {
-                                    onEvent(FilterEvent.EditOrDeleteIngredient(stateUI.resultSearchIngredients.value[it]))
-                                }
-                            )
-                            Spacer(modifier = Modifier.height(24.dp))
-                        }
-                    } else {
-                        items(stateUI.allIngredientsCategories.value.size) {
-                            IngredientCategories(
-                                stateUI.allIngredientsCategories.value[it],
-                                stateUI.selectedIngredients, onEvent
-                            )
-                        }
+            if (stateUI.filterEnum.value == FilterEnum.CategoryTag) {
+                if (stateUI.searchText.value != "") {
+                    items(stateUI.resultSearchTagsCategories.value.size) {
+                        Spacer(modifier = Modifier.height(24.dp))
+                        TagBig(
+                            text = stateUI.resultSearchTagsCategories.value[it].name,
+                            color = if (stateUI.selectedTagsCategories.value.contains(stateUI.resultSearchTagsCategories.value[it]))
+                                MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.background,
+                            clickable = {
+                                onEvent(FilterEvent.SelectTagCategory(stateUI.resultSearchTagsCategories.value[it]))
+                            }, longClick = {
+                                onEvent(FilterEvent.EditOrDeleteTagCategory(stateUI.resultSearchTagsCategories.value[it]))
+                            }
+                        )
+                    }
+                } else {
+                    items(stateUI.allTagsCategories.value.size) {
+                        Spacer(modifier = Modifier.height(24.dp))
+                        TagBig(
+                            text = stateUI.allTagsCategories.value[it].name,
+                            color = if (stateUI.selectedTagsCategories.value.contains(stateUI.allTagsCategories.value[it]))
+                                MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.background,
+                            clickable = {
+                                onEvent(FilterEvent.SelectTagCategory(stateUI.allTagsCategories.value[it]))
+                            }, longClick = {
+                                onEvent(FilterEvent.EditOrDeleteTagCategory(stateUI.allTagsCategories.value[it]))
+                            }
+                        )
                     }
                 }
+            }
 
-                if (stateUI.filterEnum.value == FilterEnum.CategoryTag) {
-                    if (stateUI.searchText.value != "") {
-                        items(stateUI.resultSearchTagsCategories.value.size) {
-                            Spacer(modifier = Modifier.height(24.dp))
-                            TagBig(
-                                text = stateUI.resultSearchTagsCategories.value[it].name,
-                                color = if (stateUI.selectedTagsCategories.value.contains(stateUI.resultSearchTagsCategories.value[it]))
-                                    MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.background,
-                                clickable = {
-                                    onEvent(FilterEvent.SelectTagCategory(stateUI.resultSearchTagsCategories.value[it]))
-                                }, longClick = {
-                                    onEvent(FilterEvent.EditOrDeleteTagCategory(stateUI.resultSearchTagsCategories.value[it]))
-                                }
-                            )
-                        }
-                    } else {
-                        items(stateUI.allTagsCategories.value.size) {
-                            Spacer(modifier = Modifier.height(24.dp))
-                            TagBig(
-                                text = stateUI.allTagsCategories.value[it].name,
-                                color = if (stateUI.selectedTagsCategories.value.contains(stateUI.allTagsCategories.value[it]))
-                                    MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.background,
-                                clickable = {
-                                    onEvent(FilterEvent.SelectTagCategory(stateUI.allTagsCategories.value[it]))
-                                }, longClick = {
-                                    onEvent(FilterEvent.EditOrDeleteTagCategory(stateUI.allTagsCategories.value[it]))
-                                }
-                            )
-                        }
-                    }
-                }
-
-                if (stateUI.filterEnum.value == FilterEnum.CategoryIngredient) {
-                    if (stateUI.searchText.value != "") {
-                        items(stateUI.resultSearchIngredientsCategories.value.size) {
-                            Spacer(modifier = Modifier.height(24.dp))
-                            TagBig(
-                                text = stateUI.resultSearchIngredientsCategories.value[it].name,
-                                color = if (stateUI.selectedIngredientsCategories.value.contains(
-                                        stateUI.resultSearchIngredientsCategories.value[it]
-                                    )
+            if (stateUI.filterEnum.value == FilterEnum.CategoryIngredient) {
+                if (stateUI.searchText.value != "") {
+                    items(stateUI.resultSearchIngredientsCategories.value.size) {
+                        Spacer(modifier = Modifier.height(24.dp))
+                        TagBig(
+                            text = stateUI.resultSearchIngredientsCategories.value[it].name,
+                            color = if (stateUI.selectedIngredientsCategories.value.contains(
+                                    stateUI.resultSearchIngredientsCategories.value[it]
                                 )
-                                    MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.background,
-                                clickable = {
-                                    onEvent(FilterEvent.SelectIngredientCategory(stateUI.resultSearchIngredientsCategories.value[it]))
-                                }, longClick = {
-                                    onEvent(FilterEvent.EditOrDeleteIngredientCategory(stateUI.resultSearchIngredientsCategories.value[it]))
-                                }
                             )
-                        }
-                    } else {
-                        items(stateUI.allIngredientsCategories.value.size) {
-                            Spacer(modifier = Modifier.height(24.dp))
-                            TagBig(
-                                text = stateUI.allIngredientsCategories.value[it].name,
-                                color = if (stateUI.selectedIngredientsCategories.value.contains(stateUI.allIngredientsCategories.value[it]))
-                                    MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.background,
-                                clickable = {
-                                    onEvent(FilterEvent.SelectIngredientCategory(stateUI.allIngredientsCategories.value[it]))
-                                }, longClick = {
-                                    onEvent(FilterEvent.EditOrDeleteIngredientCategory(stateUI.allIngredientsCategories.value[it]))
-                                }
-                            )
-                        }
+                                MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.background,
+                            clickable = {
+                                onEvent(FilterEvent.SelectIngredientCategory(stateUI.resultSearchIngredientsCategories.value[it]))
+                            }, longClick = {
+                                onEvent(FilterEvent.EditOrDeleteIngredientCategory(stateUI.resultSearchIngredientsCategories.value[it]))
+                            }
+                        )
+                    }
+                } else {
+                    items(stateUI.allIngredientsCategories.value.size) {
+                        Spacer(modifier = Modifier.height(24.dp))
+                        TagBig(
+                            text = stateUI.allIngredientsCategories.value[it].name,
+                            color = if (stateUI.selectedIngredientsCategories.value.contains(stateUI.allIngredientsCategories.value[it]))
+                                MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.background,
+                            clickable = {
+                                onEvent(FilterEvent.SelectIngredientCategory(stateUI.allIngredientsCategories.value[it]))
+                            }, longClick = {
+                                onEvent(FilterEvent.EditOrDeleteIngredientCategory(stateUI.allIngredientsCategories.value[it]))
+                            }
+                        )
                     }
                 }
-                item { 100.dp }
             }
-            if (stateUI.filterMode.value==FilterMode.Multiple){
-                DoneButton(
-                    modifier = Modifier.padding(horizontal = 20.dp),
-                    text = stringResource(R.string.apply),
-                ) {
-                    onEvent(FilterEvent.Done)
-                }
+            item { 100.dp }
+        }
+        if (stateUI.filterMode.value == FilterMode.Multiple) {
+            DoneButton(
+                modifier = Modifier.padding(horizontal = 20.dp),
+                text = stringResource(R.string.apply),
+            ) {
+                onEvent(FilterEvent.Done)
             }
         }
-        innerPadding
     }
 }
 
-fun createFilterElement(stateUI: FilterUIState, onEvent: (FilterEvent) -> Unit) {
-    when (stateUI.filterEnum.value) {
-        FilterEnum.Ingredient -> onEvent(FilterEvent.CreateIngredient)
-        FilterEnum.Tag -> onEvent(FilterEvent.CreateTag)
-        FilterEnum.CategoryTag -> onEvent(FilterEvent.CreateTagCategory)
-        FilterEnum.CategoryIngredient -> onEvent(FilterEvent.CreateIngredientCategory)
-        FilterEnum.IngredientAndTag -> if (stateUI.activeFilterTabIndex.intValue == 0) {
-            onEvent(FilterEvent.CreateTag)
-        } else {
-            onEvent(FilterEvent.CreateIngredient)
-        }
-    }
-}
 
 fun checkNotHaveFilter(stateUI: FilterUIState): Boolean {
     return (stateUI.resultSearchTags.value.find {

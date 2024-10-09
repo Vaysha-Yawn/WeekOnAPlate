@@ -56,7 +56,7 @@ fun SearchResultScreen(
             RowRecipeResultCard(result[it], onEvent)
         }
         item {
-            Spacer(modifier = Modifier.height(80.dp))
+            Spacer(modifier = Modifier.height(100.dp))
         }
     }
 }
@@ -82,27 +82,27 @@ fun RowRecipeResultCard(
             Modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.surface)
-                .padding(12.dp), verticalAlignment = Alignment.CenterVertically
+                .padding(horizontal = 12.dp, vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             if (recipeView.img.startsWith("http")) {
                 ImageLoad(
                     recipeView.img, Modifier
-                        .size(85.dp)
-                        .clip(CircleShape)
-                        .background(ColorButtonNegativeGrey, CircleShape)
+                        .size(80.dp)
+                        .clip(RoundedCornerShape(20.dp))
                         .scale(1.5f)
                 )
             } else {
                 Spacer(
                     modifier = Modifier
-                        .background(ColorButtonNegativeGrey, CircleShape)
-                        .size(85.dp)
+                        .background(ColorButtonNegativeGrey, RoundedCornerShape(20.dp))
+                        .size(80.dp)
                 )
             }
             Spacer(modifier = Modifier.width(12.dp))
             Column(Modifier.weight(2f)) {
-                TextBody(text = recipeView.name)
-                Spacer(modifier = Modifier.height(12.dp))
+                TextBody(text = recipeView.name, Modifier.padding(start = 6.dp))
+                Spacer(modifier = Modifier.height(6.dp))
                 TagListHidden(recipeView.tags, recipeView.ingredients.map { it -> it.ingredientView })
             }
             Spacer(modifier = Modifier.width(12.dp))
@@ -162,10 +162,10 @@ fun TagList(tags: List<RecipeTagView>, ingredients: List<IngredientView>) {
         if (tags.isNotEmpty()) {
             TagsFlowRow(sizeList = tags.size) { index ->
                 TagSmall(tag = tags[index])
-                Spacer(modifier = Modifier.width(6.dp))
+                Spacer(modifier = Modifier.size(6.dp))
             }
         }
-        Spacer(modifier = Modifier.height(6.dp))
+        Spacer(modifier = Modifier.size(6.dp))
         if (ingredients.isNotEmpty()) {
             TagsFlowRow(ingredients.size) { index ->
                 TagSmall(ingredientView = ingredients[index])

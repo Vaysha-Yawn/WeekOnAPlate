@@ -1,11 +1,13 @@
 package week.on.a.plate.dialogAddTag.view
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -31,7 +33,7 @@ fun AddTag(
     state: AddTagUIState,
     onEvent: (AddTagEvent) -> Unit,
 ) {
-    Column(modifier = Modifier.padding(24.dp)) {
+    Column(modifier = Modifier.background(MaterialTheme.colorScheme.surface).padding(24.dp)) {
         TextTitleItalic(
             text = "Добавить тэг",
             modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center

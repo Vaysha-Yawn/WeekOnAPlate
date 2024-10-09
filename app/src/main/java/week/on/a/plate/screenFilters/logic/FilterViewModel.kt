@@ -124,6 +124,24 @@ class FilterViewModel @Inject constructor(
             is FilterEvent.EditOrDeleteTagCategory -> editOrDelete(
                 delete = { deleteTagCategory(event.tagCategory) },
                 edit = { editTagCategory(event.tagCategory) })
+
+            FilterEvent.CreateActive -> {
+                createFilterElement()
+            }
+        }
+    }
+
+    private fun createFilterElement() {
+        when (state.filterEnum.value) {
+            FilterEnum.Ingredient -> onEvent(FilterEvent.CreateIngredient)
+            FilterEnum.Tag -> onEvent(FilterEvent.CreateTag)
+            FilterEnum.CategoryTag -> onEvent(FilterEvent.CreateTagCategory)
+            FilterEnum.CategoryIngredient -> onEvent(FilterEvent.CreateIngredientCategory)
+            FilterEnum.IngredientAndTag -> if (state.activeFilterTabIndex.intValue == 0) {
+                onEvent(FilterEvent.CreateTag)
+            } else {
+                onEvent(FilterEvent.CreateIngredient)
+            }
         }
     }
 

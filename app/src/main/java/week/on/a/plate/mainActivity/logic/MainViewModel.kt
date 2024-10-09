@@ -38,7 +38,6 @@ class MainViewModel @Inject constructor(
     lateinit var recipeCreateViewModel: RecipeCreateViewModel
     lateinit var inventoryViewModel: InventoryViewModel
     lateinit var deleteApplyViewModel: DeleteApplyViewModel
-    lateinit var locale: Locale
 
     fun initViewModels(
         specifySelection: SpecifySelectionViewModel,
@@ -72,10 +71,14 @@ class MainViewModel @Inject constructor(
         deleteApplyViewModel.mainViewModel = this
     }
 
+    lateinit var locale: Locale
+    val actionPlusButton = mutableStateOf({})
     val voiceInputUseCase = VoiceInputUseCase()
     val snackbarHostState = SnackbarHostState()
     lateinit var nav: NavHostController
     val isActiveBaseScreen = mutableStateOf(true)
+    val isActivePlusButton = mutableStateOf(true)
+    val isActiveFilterScreen = mutableStateOf(false)
 
     fun onEvent(event: Event) {
         when (event) {

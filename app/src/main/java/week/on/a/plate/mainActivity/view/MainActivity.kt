@@ -10,6 +10,7 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
@@ -23,10 +24,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.theme.ColorBackgroundWhite
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
+import week.on.a.plate.core.uitools.buttons.ActionPlusButton
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screenCreateRecipe.logic.RecipeCreateViewModel
 import week.on.a.plate.screenDeleteApply.logic.DeleteApplyViewModel
 import week.on.a.plate.screenFilters.logic.FilterViewModel
+import week.on.a.plate.screenFilters.navigation.FilterDestination
 import week.on.a.plate.screenInventory.logic.InventoryViewModel
 import week.on.a.plate.screenMenu.logic.MenuViewModel
 import week.on.a.plate.screenRecipeDetails.logic.RecipeDetailsViewModel
@@ -64,7 +67,6 @@ class MainActivity : ComponentActivity() {
             }
         }
         viewModel.voiceInputUseCase.voiceInputLauncher = voiceInputLauncher
-
         setContent {
             WeekOnAPlateTheme {
                 viewModel.locale = LocalContext.current.resources.configuration.locales[0]
@@ -97,6 +99,17 @@ class MainActivity : ComponentActivity() {
                                     containerColor = MaterialTheme.colorScheme.surface,
                                     contentColor = MaterialTheme.colorScheme.onBackground
                                 )
+                            }
+                        }
+                    }, floatingActionButton = {
+                        if (viewModel.isActivePlusButton.value && viewModel.dialogUseCase.activeDialog.value==null){
+                            val pad = if ( viewModel.isActiveFilterScreen.value ){
+                                60.dp
+                            }else {
+                                0.dp
+                            }
+                            ActionPlusButton(Modifier.padding(bottom = pad)) {
+                                viewModel.actionPlusButton.value()
                             }
                         }
                     }

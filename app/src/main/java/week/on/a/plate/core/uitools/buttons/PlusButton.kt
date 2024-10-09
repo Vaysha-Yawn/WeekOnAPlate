@@ -16,16 +16,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
-import week.on.a.plate.core.theme.ColorButtonGreen
-import week.on.a.plate.core.theme.ColorStrokeGrey
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 
 @Composable
-fun ActionPlusButton(actionAdd: () -> Unit) {
+fun ActionPlusButton(modifier:Modifier = Modifier, actionAdd: () -> Unit) {
     Image(
         painter = painterResource(id = R.drawable.add),
         contentDescription = "",
-        modifier = Modifier
+        modifier = modifier
             .background(MaterialTheme.colorScheme.secondary, CircleShape)
             .padding(6.dp)
             .size(48.dp)

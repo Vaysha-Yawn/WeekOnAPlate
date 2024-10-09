@@ -124,6 +124,6 @@ class DialogUseCase @Inject constructor() {
     }
 
     fun show() {
-        activeDialog.value = hiddenDialog.pop()
+        if (hiddenDialog.isNotEmpty()) activeDialog.value = hiddenDialog.pop()
     }
 }

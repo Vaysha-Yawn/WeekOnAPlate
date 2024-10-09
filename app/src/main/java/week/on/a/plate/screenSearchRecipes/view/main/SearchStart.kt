@@ -24,33 +24,23 @@ fun SearchStart(
     }
 
     viewModel.state.allTagsCategories = viewModel.allTagCategories.collectAsState()
-
-    Scaffold(
-        floatingActionButton = {
-            ActionPlusButton {
-                onEvent(SearchScreenEvent.CreateRecipe)
-            }
-        }
-    ) { innerPadding ->
-        innerPadding
-        Column {
-            TopSearchPanel(viewModel.state, onEvent)
-            if (viewModel.state.resultSearch.value.isNotEmpty() &&
-                (viewModel.state.searchText.value != ""
-                        || viewModel.state.selectedTags.value.isNotEmpty()
-                        || viewModel.state.selectedIngredients.value.isNotEmpty()
-                        || viewModel.state.searched.value == SearchState.done)
-            ) {
-                SearchResultScreen(viewModel.state.resultSearch.value, onEvent)
-            } else if (viewModel.state.searchText.value != ""
-                || viewModel.state.selectedTags.value.isNotEmpty()
-                || viewModel.state.selectedIngredients.value.isNotEmpty()
-                || viewModel.state.searched.value == SearchState.done
-            ) {
-                SearchNothingFound(viewModel.state, onEvent)
-            } else {
-                SearchCategoriesScreen(viewModel.state, onEvent)
-            }
+    Column {
+        TopSearchPanel(viewModel.state, onEvent)
+        if (viewModel.state.resultSearch.value.isNotEmpty() &&
+            (viewModel.state.searchText.value != ""
+                    || viewModel.state.selectedTags.value.isNotEmpty()
+                    || viewModel.state.selectedIngredients.value.isNotEmpty()
+                    || viewModel.state.searched.value == SearchState.done)
+        ) {
+            SearchResultScreen(viewModel.state.resultSearch.value, onEvent)
+        } else if (viewModel.state.searchText.value != ""
+            || viewModel.state.selectedTags.value.isNotEmpty()
+            || viewModel.state.selectedIngredients.value.isNotEmpty()
+            || viewModel.state.searched.value == SearchState.done
+        ) {
+            SearchNothingFound(viewModel.state, onEvent)
+        } else {
+            SearchCategoriesScreen(viewModel.state, onEvent)
         }
     }
 }

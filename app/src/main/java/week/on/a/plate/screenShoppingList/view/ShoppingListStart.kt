@@ -18,12 +18,9 @@ import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -36,10 +33,7 @@ import week.on.a.plate.core.theme.Typography
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextSmall
 import week.on.a.plate.core.uitools.TextTitleLarge
-import week.on.a.plate.core.uitools.buttons.ActionPlusButton
-import week.on.a.plate.core.uitools.buttons.CheckButton
 import week.on.a.plate.core.utils.getIngredientCountAndMeasure1000
-import week.on.a.plate.data.dataView.example.Measure
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.screenShoppingList.event.ShoppingListEvent
 import week.on.a.plate.screenShoppingList.logic.ShoppingListViewModel
@@ -50,63 +44,56 @@ fun ShoppingListStart(viewModel: ShoppingListViewModel) {
     viewModel.state.listChecked = viewModel.allItemsChecked.collectAsState()
     viewModel.state.listUnchecked = viewModel.allItemsUnChecked.collectAsState()
 
-    Scaffold(floatingActionButton = {
-        ActionPlusButton {
-            viewModel.onEvent(ShoppingListEvent.Add)
-        }
-    }) { innerPadding ->
-        Column(
-            Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.surface)
-        ) {
-            TextTitleLarge(
-                text = "Список покупок",
-                modifier = Modifier.padding(horizontal = 36.dp, vertical = 12.dp)
-            )
-            HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.outline)
-            Spacer(modifier = Modifier.height(12.dp))
-            LazyColumn() {
-                items(viewModel.state.listUnchecked.value.size) { index ->
-                    ShoppingListPosition(viewModel.state.listUnchecked.value[index], false, {
-                        viewModel.onEvent(ShoppingListEvent.Edit(it))
-                    }) {
-                        viewModel.onEvent(ShoppingListEvent.Check(viewModel.state.listUnchecked.value[index]))
-                    }
+    Column(
+        Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
+    ) {
+        TextTitleLarge(
+            text = "Список покупок",
+            modifier = Modifier.padding(horizontal = 36.dp, vertical = 12.dp)
+        )
+        HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.outline)
+        Spacer(modifier = Modifier.height(12.dp))
+        LazyColumn() {
+            items(viewModel.state.listUnchecked.value.size) { index ->
+                ShoppingListPosition(viewModel.state.listUnchecked.value[index], false, {
+                    viewModel.onEvent(ShoppingListEvent.Edit(it))
+                }) {
+                    viewModel.onEvent(ShoppingListEvent.Check(viewModel.state.listUnchecked.value[index]))
                 }
-                item {
-                    if (viewModel.state.listChecked.value.isNotEmpty()) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .padding(vertical = 12.dp)
-                                .background(MaterialTheme.colorScheme.background)
-                                .fillMaxWidth()
-                                .padding(horizontal = 36.dp, vertical = 5.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            TextBody(text = "Куплено")
-                            Icon(
-                                painter = painterResource(id = R.drawable.delete),
-                                contentDescription = "", modifier = Modifier
-                                    .clickable {
-                                        viewModel.onEvent(ShoppingListEvent.DeleteChecked)
-                                    }
-                                    .size(36.dp)
-                            )
-                        }
-                    }
-                }
-                items(viewModel.state.listChecked.value.size) { index ->
-                    ShoppingListPosition(viewModel.state.listChecked.value[index], true, {
-                        viewModel.onEvent(ShoppingListEvent.Edit(it))
-                    }) {
-                        viewModel.onEvent(ShoppingListEvent.Uncheck(viewModel.state.listChecked.value[index]))
+            }
+            item {
+                if (viewModel.state.listChecked.value.isNotEmpty()) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .padding(vertical = 12.dp)
+                            .background(MaterialTheme.colorScheme.background)
+                            .fillMaxWidth()
+                            .padding(horizontal = 36.dp, vertical = 5.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        TextBody(text = "Куплено")
+                        Icon(
+                            painter = painterResource(id = R.drawable.delete),
+                            contentDescription = "", modifier = Modifier
+                                .clickable {
+                                    viewModel.onEvent(ShoppingListEvent.DeleteChecked)
+                                }
+                                .size(36.dp)
+                        )
                     }
                 }
             }
+            items(viewModel.state.listChecked.value.size) { index ->
+                ShoppingListPosition(viewModel.state.listChecked.value[index], true, {
+                    viewModel.onEvent(ShoppingListEvent.Edit(it))
+                }) {
+                    viewModel.onEvent(ShoppingListEvent.Uncheck(viewModel.state.listChecked.value[index]))
+                }
+            }
         }
-        innerPadding
     }
 }
 
@@ -129,14 +116,18 @@ fun ShoppingListPosition(
     ) {
         Checkbox(
             checked = checked,
-            colors = CheckboxDefaults.colors(checkedColor = MaterialTheme.colorScheme.secondary, checkmarkColor = MaterialTheme.colorScheme.onBackground),
+            colors = CheckboxDefaults.colors(
+                checkedColor = MaterialTheme.colorScheme.secondary,
+                checkmarkColor = MaterialTheme.colorScheme.onBackground
+            ),
             onCheckedChange = {
                 onCheckedChange(!checked)
             },
         )
         Spacer(modifier = Modifier.width(12.dp))
 
-        val valueAndMeasure = getIngredientCountAndMeasure1000(item.count, item.ingredientView.measure)
+        val valueAndMeasure =
+            getIngredientCountAndMeasure1000(item.count, item.ingredientView.measure)
         Column {
             val text = "${item.ingredientView.name} " +
                     valueAndMeasure.first +

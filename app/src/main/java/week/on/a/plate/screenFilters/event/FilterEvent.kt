@@ -12,6 +12,7 @@ sealed class FilterEvent : Event() {
     data object VoiceSearchFilters : FilterEvent()
     data object ClearSearch: FilterEvent()
 
+    data object CreateActive:FilterEvent()
     data object CreateTag : FilterEvent()
     data object CreateIngredient : FilterEvent()
     data object CreateTagCategory : FilterEvent()
