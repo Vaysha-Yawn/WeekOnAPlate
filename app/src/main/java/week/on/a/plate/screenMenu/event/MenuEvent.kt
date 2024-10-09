@@ -15,7 +15,7 @@ sealed class MenuEvent : Event() {
     data class ChangeWeek (val date: LocalDate) : MenuEvent()
     data object ChooseWeek : MenuEvent()
     data class CreatePosition (val selId: Long) : MenuEvent()
-    data class CreateFirstNonPosedPosition (val date: LocalDate) : MenuEvent()
+    data class CreateFirstNonPosedPosition(val date: LocalDate, val name: String) : MenuEvent()
     data class EditPosition (val position: Position) : MenuEvent()
     data object SelectedToShopList : MenuEvent()
     data object DeleteSelected : MenuEvent()

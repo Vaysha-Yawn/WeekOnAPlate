@@ -6,17 +6,17 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import week.on.a.plate.data.dataView.week.CategoriesSelection
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.navigation.MenuScreen
-import week.on.a.plate.mainActivity.event.MainEvent
-import week.on.a.plate.mainActivity.logic.MainViewModel
-import week.on.a.plate.screenSpecifySelection.event.SpecifySelectionEvent
-import week.on.a.plate.screenSpecifySelection.state.SpecifySelectionUIState
+import week.on.a.plate.data.dataView.week.CategoriesSelection
 import week.on.a.plate.data.repository.tables.menu.selection.WeekRepository
 import week.on.a.plate.dialogEditOneString.logic.EditOneStringViewModel
 import week.on.a.plate.dialogEditOneString.state.EditOneStringUIState
+import week.on.a.plate.mainActivity.event.MainEvent
+import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screenMenu.event.MenuEvent
+import week.on.a.plate.screenSpecifySelection.event.SpecifySelectionEvent
+import week.on.a.plate.screenSpecifySelection.state.SpecifySelectionUIState
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -24,7 +24,7 @@ import javax.inject.Inject
 class SpecifySelectionViewModel @Inject constructor(
     private val weekRepository: WeekRepository,
 
-) : ViewModel() {
+    ) : ViewModel() {
     lateinit var mainViewModel: MainViewModel
     val state: SpecifySelectionUIState = SpecifySelectionUIState()
     private lateinit var resultFlow: MutableStateFlow<SpecifySelectionResult?>
@@ -34,6 +34,7 @@ class SpecifySelectionViewModel @Inject constructor(
             is MainEvent -> {
                 mainViewModel.onEvent(event)
             }
+
             is SpecifySelectionEvent -> {
                 onEvent(event)
             }
@@ -58,7 +59,7 @@ class SpecifySelectionViewModel @Inject constructor(
 
     private fun updatePreview(date: LocalDate?) {
         state.date.value = date
-        if (date!=null){
+        if (date != null) {
             viewModelScope.launch {
                 val selections = weekRepository.getSelectionsByDate(state.date.value!!)
                 state.dayViewPreview.value = selections
@@ -72,10 +73,16 @@ class SpecifySelectionViewModel @Inject constructor(
             val vm = EditOneStringViewModel()
             vm.mainViewModel = mainViewModel
             mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-            vm.launchAndGet(EditOneStringUIState(startTitle = "Добавить приём пищи", startPlaceholder = "Завтрак...")){ note->
-                state.allSelectionsIdDay.value = state.allSelectionsIdDay.value.toMutableList().apply {
-                    add(note)
-                }
+            vm.launchAndGet(
+                EditOneStringUIState(
+                    startTitle = "Добавить приём пищи",
+                    startPlaceholder = "Завтрак..."
+                )
+            ) { note ->
+                state.allSelectionsIdDay.value =
+                    state.allSelectionsIdDay.value.toMutableList().apply {
+                        add(note)
+                    }
                 state.checkWeek.value = false
                 state.checkDayCategory.value = note
             }
@@ -87,14 +94,22 @@ class SpecifySelectionViewModel @Inject constructor(
         state.isDateChooseActive.value = true
     }
 
-    fun updateSelections(){
-        if (state.date.value==null) return
+    fun updateSelections() {
+        if (state.date.value == null) return
         viewModelScope.launch {
             val allSelections = weekRepository.getSelectionsByDate(state.date.value!!)
-            val listSelName = if (allSelections.isEmpty()){
-                listOf<String>(CategoriesSelection.NonPosed.fullName)
-            }else{
-                allSelections.map { it.name }
+            val listSelName = allSelections.map { it.name }.toMutableList()
+            val listSuggest = listOf(
+                CategoriesSelection.NonPosed, CategoriesSelection.Breakfast,
+                CategoriesSelection.Lunch, CategoriesSelection.Snack,
+                CategoriesSelection.Dinner,
+            )
+            for (i in listSuggest) {
+                if (listSelName.find { it == i.fullName } == null) {
+                    listSelName.add(
+                        i.fullName,
+                    )
+                }
             }
             state.allSelectionsIdDay.value = listSelName
         }
@@ -108,11 +123,17 @@ class SpecifySelectionViewModel @Inject constructor(
 
     fun done() {
         close()
-        val category =  getCategory() ?: return
-        state.date.value?:return
+        val category = getCategory() ?: return
+        state.date.value ?: return
         mainViewModel.viewModelScope.launch {
-            val selId = weekRepository.getSelIdOrCreate(state.date.value!!, state.checkWeek.value, category, mainViewModel.locale)
-            resultFlow.value = SpecifySelectionResult(selId, state.date.value!!,  state.portionsCount.intValue)
+            val selId = weekRepository.getSelIdOrCreate(
+                state.date.value!!,
+                state.checkWeek.value,
+                category,
+                mainViewModel.locale
+            )
+            resultFlow.value =
+                SpecifySelectionResult(selId, state.date.value!!, state.portionsCount.intValue)
         }
     }
 

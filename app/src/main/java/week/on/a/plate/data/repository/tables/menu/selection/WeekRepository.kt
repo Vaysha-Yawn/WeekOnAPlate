@@ -70,17 +70,24 @@ class WeekRepository @Inject constructor(
         val dayDates = getDaysOfWeek(date, locale)
         val dayViews = dayDates.map { dateDay ->
             val listSelections = getSelectionsByDate(dateDay)
-            if (listSelections.isEmpty()) {
-                listSelections.add(
-                    SelectionView(
-                        0,
-                        CategoriesSelection.NonPosed.fullName,
-                        dateDay,
-                        weekOfYear,
-                        false,
-                        mutableListOf()
+            val listSuggest = listOf(
+                CategoriesSelection.NonPosed, CategoriesSelection.Breakfast,
+                CategoriesSelection.Lunch, CategoriesSelection.Snack,
+                CategoriesSelection.Dinner,
+            )
+            for (i in listSuggest) {
+                if (listSelections.find { it.name == i.fullName } == null) {
+                    listSelections.add(
+                        SelectionView(
+                            0,
+                            i.fullName,
+                            dateDay,
+                            weekOfYear,
+                            false,
+                            mutableListOf()
+                        )
                     )
-                )
+                }
             }
             DayView(dateDay, listSelections)
         }
@@ -104,7 +111,7 @@ class WeekRepository @Inject constructor(
         return week
     }
 
-    suspend fun getSelectionsByDate(date:LocalDate):MutableList<SelectionView>{
+    suspend fun getSelectionsByDate(date: LocalDate): MutableList<SelectionView> {
         return selectionDAO.findSelectionsForDay(date).map { sel ->
             mapSelection(sel)
         }.toMutableList()

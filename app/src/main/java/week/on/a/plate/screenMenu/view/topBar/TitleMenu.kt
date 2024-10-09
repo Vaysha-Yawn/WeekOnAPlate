@@ -5,7 +5,6 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,7 +40,7 @@ fun TitleMenu(selection: SelectionView, modifier: Modifier, onEvent: (event: Eve
         )
         PlusButtonTitle() {
             if (selection.id == 0L) {
-                onEvent(MenuEvent.CreateFirstNonPosedPosition(selection.date))
+                onEvent(MenuEvent.CreateFirstNonPosedPosition(selection.date, selection.name))
             } else {
                 onEvent(MenuEvent.CreatePosition(selection.id))
             }
@@ -70,7 +69,7 @@ fun TitleMenuS(selection: SelectionView, modifier: Modifier, onEvent: (event: Ev
         )
         PlusButtonTitle() {
             if (selection.id == 0L) {
-                onEvent(MenuEvent.CreateFirstNonPosedPosition(selection.date))
+                onEvent(MenuEvent.CreateFirstNonPosedPosition(selection.date, selection.name))
             } else {
                 onEvent(MenuEvent.CreatePosition(selection.id))
             }

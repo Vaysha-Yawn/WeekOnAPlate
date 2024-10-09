@@ -14,6 +14,7 @@ class SearchUIState {
     val selectedTags = mutableStateOf<List<RecipeTagView>>(listOf())
     val selectedIngredients = mutableStateOf<List<IngredientView>>(listOf())
     val searched = mutableStateOf(SearchState.none)
+    val modeResultViewIsList = mutableStateOf(true)
 }
 
 enum class SearchState{

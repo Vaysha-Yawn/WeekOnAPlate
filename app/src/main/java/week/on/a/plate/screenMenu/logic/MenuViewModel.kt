@@ -132,7 +132,7 @@ class MenuViewModel @Inject constructor(
             is MenuEvent.NavToAddRecipe -> navToAddRecipe(event.selId)
             is MenuEvent.SearchByDraft -> searchByDraft(event.draft)
             MenuEvent.DeleteSelected -> deleteSelected()
-            is MenuEvent.CreateFirstNonPosedPosition -> createFirstNonPosedPosition(event.date)
+            is MenuEvent.CreateFirstNonPosedPosition -> createFirstNonPosedPosition(event.date, event.name)
             is MenuEvent.EditOrDeleteSelection -> editOrDeleteSelection(event.sel)
             is MenuEvent.CreateSelection -> createSelection(event.date, event.isForWeek)
             MenuEvent.CreateWeekSelIdAndCreatePosition -> createWeekSelIdAndCreatePosition()
@@ -223,12 +223,12 @@ class MenuViewModel @Inject constructor(
         switchEditMode()
     }
 
-    private fun createFirstNonPosedPosition(date: LocalDate) {
+    private fun createFirstNonPosedPosition(date: LocalDate, name: String) {
         viewModelScope.launch {
             val sel = sCRUDRecipeInMenu.menuR.getSelIdOrCreate(
                 date,
                 false,
-                CategoriesSelection.NonPosed.fullName,
+                name,
                 mainViewModel.locale
             )
             onEvent(MenuEvent.CreatePosition(sel))
