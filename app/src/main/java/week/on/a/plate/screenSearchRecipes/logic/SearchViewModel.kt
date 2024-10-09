@@ -1,17 +1,15 @@
 package week.on.a.plate.screenSearchRecipes.logic
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.navigation.MenuScreen
-import week.on.a.plate.data.dataView.example.ingredients
-import week.on.a.plate.data.dataView.example.tags
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.data.dataView.recipe.IngredientView
 import week.on.a.plate.data.dataView.recipe.RecipeStepView
@@ -20,9 +18,6 @@ import week.on.a.plate.data.dataView.recipe.RecipeView
 import week.on.a.plate.data.dataView.recipe.TagCategoryView
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.data.dataView.week.RecipeShortView
-import week.on.a.plate.data.repository.tables.filters.ingredient.IngredientRepository
-import week.on.a.plate.data.repository.tables.filters.ingredientCategory.IngredientCategoryRepository
-import week.on.a.plate.data.repository.tables.filters.recipeTag.RecipeTagRepository
 import week.on.a.plate.data.repository.tables.filters.recipeTagCategory.RecipeTagCategoryRepository
 import week.on.a.plate.data.repository.tables.recipe.recipe.RecipeRepository
 import week.on.a.plate.mainActivity.event.MainEvent
@@ -51,9 +46,8 @@ class SearchViewModel @Inject constructor(
     var state = SearchUIState()
     lateinit var allTagCategories: StateFlow<List<TagCategoryView>>
     private var selId: Long? = null
-    private val _floAllRecipe: MutableStateFlow<List<RecipeView>> = MutableStateFlow(listOf())
-    val floAllRecipe: StateFlow<List<RecipeView>> = _floAllRecipe
-    var resultFlow : MutableStateFlow<RecipeView?>? = null
+    private lateinit var floAllRecipe: StateFlow<List<RecipeView>>
+    var resultFlow: MutableStateFlow<RecipeView?>? = null
 
 
     init {
@@ -61,9 +55,7 @@ class SearchViewModel @Inject constructor(
             allTagCategories =
                 tagCategoryRepository.getAllTagsByCategoriesForFilters().stateIn(viewModelScope)
 
-            recipeRepository.getAllRecipeFlow().collect {
-                _floAllRecipe.value = it
-            }
+            floAllRecipe = recipeRepository.getAllRecipeFlow().stateIn(viewModelScope)
         }
     }
 
@@ -79,9 +71,10 @@ class SearchViewModel @Inject constructor(
     private fun searchAbstract(filter: (RecipeView) -> Boolean) {
         state.searched.value = SearchState.searching
         viewModelScope.launch {
-            recipeRepository.getAllRecipeFlow().collect { recipeViewList ->
-                _floAllRecipe.value = recipeViewList.filter { filter(it) }
-                state.searched.value = SearchState.done
+            state.searched.value = SearchState.done
+
+            floAllRecipe.map { it.filter { t -> filter(t) } }.collect {
+                state.resultSearch.value = it
             }
         }
 
@@ -94,7 +87,8 @@ class SearchViewModel @Inject constructor(
     private fun searchRandom() {
         state.searched.value = SearchState.searching
         viewModelScope.launch {
-            recipeRepository.getAllRecipeFlow().collect { recipeViewList ->
+            state.searched.value = SearchState.done
+            floAllRecipe.map { recipeViewList ->
                 if (recipeViewList.isNotEmpty()) {
                     val mutableRecipeViewList = recipeViewList.toMutableList()
                     val listRandom = mutableListOf<RecipeView>()
@@ -103,9 +97,12 @@ class SearchViewModel @Inject constructor(
                         mutableRecipeViewList.remove(random)
                         listRandom.add(random)
                     }
-                    _floAllRecipe.value = listRandom
-                    state.searched.value = SearchState.done
+                    listRandom
+                }else{
+                    recipeViewList
                 }
+            }.collect {
+                state.resultSearch.value = it
             }
         }
     }
@@ -132,7 +129,9 @@ class SearchViewModel @Inject constructor(
             is SearchScreenEvent.Search -> search()
             SearchScreenEvent.VoiceSearch -> onEvent(MainEvent.VoiceToText() {
                 state.searchText.value = it?.joinToString() ?: ""
-                search()})
+                search()
+            })
+
             SearchScreenEvent.Back -> close()
             is SearchScreenEvent.FlipFavorite -> flipFavorite(event.recipe, event.inFavorite)
             is SearchScreenEvent.AddToMenu -> addToMenu(event.recipeView)
@@ -278,7 +277,11 @@ class SearchViewModel @Inject constructor(
         return flow
     }
 
-    suspend fun launchAndGet( selIde: Long?, filters: Pair<List<RecipeTagView>, List<IngredientView>>?,  use: suspend (RecipeView) -> Unit) {
+    suspend fun launchAndGet(
+        selIde: Long?,
+        filters: Pair<List<RecipeTagView>, List<IngredientView>>?,
+        use: suspend (RecipeView) -> Unit
+    ) {
         selId = selIde
         if (filters != null) {
             state.selectedTags.value = filters.first
@@ -300,7 +303,7 @@ class SearchViewModel @Inject constructor(
             state.selectedIngredients.value.isNotEmpty() ||
             state.searchText.value != "" || state.searched.value == SearchState.done
         ) {
-            state.resultSearch = mutableStateOf(listOf())
+            state.resultSearch.value = listOf()
             state.selectedTags.value = listOf()
             state.selectedIngredients.value = listOf()
             state.searchText.value = ""
@@ -308,5 +311,9 @@ class SearchViewModel @Inject constructor(
         } else {
             mainViewModel.onEvent(MainEvent.NavigateBack)
         }
+    }
+
+    fun clearSearch() {
+        close()
     }
 }

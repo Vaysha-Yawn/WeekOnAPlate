@@ -87,7 +87,7 @@ class MainActivity : ComponentActivity() {
                     .fillMaxSize()
                     .background(ColorBackgroundWhite),
                     bottomBar = {
-                        BottomBar(viewModel.nav, viewModel.isActiveBaseScreen.value)
+                        BottomBar(viewModel.nav, viewModel.isActiveBaseScreen.value, searchViewModel)
                     }, snackbarHost = {
                         SnackbarHost(hostState = viewModel.snackbarHostState) {
                             if (viewModel.snackbarHostState.currentSnackbarData != null) {

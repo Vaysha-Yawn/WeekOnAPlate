@@ -1,11 +1,10 @@
 package week.on.a.plate.screenSearchRecipes.view.main
 
-import androidx.compose.animation.animateContentSize
+
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Modifier
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.uitools.buttons.ActionPlusButton
 import week.on.a.plate.mainActivity.logic.MainViewModel
@@ -25,7 +24,6 @@ fun SearchStart(
     }
 
     viewModel.state.allTagsCategories = viewModel.allTagCategories.collectAsState()
-    viewModel.state.resultSearch = viewModel.floAllRecipe.collectAsState()
 
     Scaffold(
         floatingActionButton = {
@@ -33,7 +31,7 @@ fun SearchStart(
                 onEvent(SearchScreenEvent.CreateRecipe)
             }
         }
-    ) {innerPadding->
+    ) { innerPadding ->
         innerPadding
         Column {
             TopSearchPanel(viewModel.state, onEvent)
@@ -47,7 +45,8 @@ fun SearchStart(
             } else if (viewModel.state.searchText.value != ""
                 || viewModel.state.selectedTags.value.isNotEmpty()
                 || viewModel.state.selectedIngredients.value.isNotEmpty()
-                || viewModel.state.searched.value == SearchState.done) {
+                || viewModel.state.searched.value == SearchState.done
+            ) {
                 SearchNothingFound(viewModel.state, onEvent)
             } else {
                 SearchCategoriesScreen(viewModel.state, onEvent)

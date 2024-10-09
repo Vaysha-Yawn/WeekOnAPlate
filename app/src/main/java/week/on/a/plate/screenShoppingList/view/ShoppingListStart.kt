@@ -38,6 +38,7 @@ import week.on.a.plate.core.uitools.TextSmall
 import week.on.a.plate.core.uitools.TextTitleLarge
 import week.on.a.plate.core.uitools.buttons.ActionPlusButton
 import week.on.a.plate.core.uitools.buttons.CheckButton
+import week.on.a.plate.core.utils.getIngredientCountAndMeasure1000
 import week.on.a.plate.data.dataView.example.Measure
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.screenShoppingList.event.ShoppingListEvent
@@ -135,21 +136,11 @@ fun ShoppingListPosition(
         )
         Spacer(modifier = Modifier.width(12.dp))
 
-        val measure = if (item.count>=1000){
-            if (item.ingredientView.measure== Measure.Grams.small){
-                Measure.Grams.big}else{
-                Measure.Milliliters.big}
-        }else{
-            item.ingredientView.measure
-        }
-
-        val value = if (item.count>=1000){
-            item.count.toDouble()/1000}else{item.count}
-
+        val valueAndMeasure = getIngredientCountAndMeasure1000(item.count, item.ingredientView.measure)
         Column {
             val text = "${item.ingredientView.name} " +
-                    "$value" +
-                    " $measure"
+                    valueAndMeasure.first +
+                    " ${valueAndMeasure.second}"
             Text(
                 text = text,
                 textDecoration = if (checked) TextDecoration.LineThrough else TextDecoration.None,

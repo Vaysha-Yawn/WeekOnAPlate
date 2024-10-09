@@ -25,6 +25,7 @@ import week.on.a.plate.core.theme.ColorTextBlack
 import week.on.a.plate.core.uitools.ImageLoad
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextBodyDisActive
+import week.on.a.plate.core.utils.getIngredientCountAndMeasure1000
 import week.on.a.plate.data.dataView.example.Measure
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 
@@ -65,27 +66,12 @@ fun IngredientInRecipeCard(
             }
         }
         Row {
-            val measure = if ((count ?: ingredient.count) >= 1000) {
-                if (ingredient.ingredientView.measure == Measure.Grams.small) {
-                    Measure.Grams.big
-                } else {
-                    Measure.Milliliters.big
-                }
-            } else {
-                ingredient.ingredientView.measure
-            }
-
-            val value = if ((count ?: ingredient.count) >= 1000) {
-                (count ?: ingredient.count).toDouble() / 1000
-            } else {
-                (count ?: ingredient.count)
-            }
-
+            val valueAndMeasure = getIngredientCountAndMeasure1000(count?:ingredient.count, ingredient.ingredientView.measure)
             TextBody(
-                text = value.toString(), color = ColorTextBlack
+                text = valueAndMeasure.first, color = ColorTextBlack
             )
             Spacer(modifier = Modifier.width(5.dp))
-            TextBody(text = measure, color = ColorTextBlack)
+            TextBody(text = valueAndMeasure.second, color = ColorTextBlack)
         }
     }
     HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.primary)

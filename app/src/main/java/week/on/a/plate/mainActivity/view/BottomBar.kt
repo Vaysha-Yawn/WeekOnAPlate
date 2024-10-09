@@ -3,9 +3,7 @@ package week.on.a.plate.mainActivity.view
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.BottomAppBar
@@ -21,16 +19,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import week.on.a.plate.core.navigation.BottomScreens
 import week.on.a.plate.core.navigation.bottomScreens
-import week.on.a.plate.core.theme.ColorTextBlack
 import week.on.a.plate.core.theme.ColorTransparent
+import week.on.a.plate.screenSearchRecipes.logic.SearchViewModel
 
 
 @Composable
-fun BottomBar(navController: NavHostController, isActiveBaseScreen: Boolean) {
+fun BottomBar(
+    navController: NavHostController,
+    isActiveBaseScreen: Boolean,
+    searchViewModel: SearchViewModel
+) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     if (!isActiveBaseScreen) return
@@ -67,11 +69,9 @@ fun BottomBar(navController: NavHostController, isActiveBaseScreen: Boolean) {
                     selected = isSelected,
                     onClick = {
                         navController.navigate(topLevelRoute.route) {
-                           /* popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
+                            if (topLevelRoute == BottomScreens.Search){
+                                searchViewModel.clearSearch()
                             }
-                            launchSingleTop = true
-                            restoreState = true*/
                         }
                     },
                     colors = NavigationBarItemDefaults.colors(

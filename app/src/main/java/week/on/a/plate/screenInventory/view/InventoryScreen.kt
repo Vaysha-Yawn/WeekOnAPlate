@@ -32,6 +32,7 @@ import week.on.a.plate.core.uitools.TextBodyDisActive
 import week.on.a.plate.core.uitools.TextTitleItalic
 import week.on.a.plate.core.uitools.buttons.CloseButton
 import week.on.a.plate.core.uitools.buttons.DoneButton
+import week.on.a.plate.core.utils.getIngredientCountAndMeasure1000
 import week.on.a.plate.data.dataView.example.Measure
 import week.on.a.plate.screenInventory.event.InventoryEvent
 import week.on.a.plate.screenInventory.state.InventoryPositionData
@@ -93,24 +94,8 @@ fun CardInventory(data: InventoryPositionData, onEvent: (InventoryEvent) -> Unit
         val checkState = remember { mutableStateOf(true) }
         Column(Modifier.weight(1f), horizontalAlignment = Alignment.Start) {
             TextBody(text = data.ingredient.name)
-
-            val measure = if (data.countTarget >= 1000) {
-                if (data.ingredient.measure == Measure.Grams.small) {
-                    Measure.Grams.big
-                } else {
-                    Measure.Milliliters.big
-                }
-            } else {
-                data.ingredient.measure
-            }
-
-            val value = if (data.countTarget >= 1000) {
-                data.countTarget.toDouble() / 1000
-            } else {
-                data.countTarget
-            }
-
-            TextBodyDisActive(text = "$value $measure")
+            val valueAndMeasure = getIngredientCountAndMeasure1000(data.countTarget, data.ingredient.measure)
+            TextBodyDisActive(text = "${valueAndMeasure.first} ${valueAndMeasure.second}")
         }
         Checkbox(
             checked = checkState.value,
