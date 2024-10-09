@@ -5,11 +5,11 @@ import androidx.compose.runtime.mutableStateOf
 import week.on.a.plate.data.dataView.recipe.IngredientCategoryView
 
 class AddIngredientUIState(
-    name: String, measure: String, category: IngredientCategoryView?,
+    name: String, isLiquid: Boolean, category: IngredientCategoryView?,
     photoUri: String,
 ) {
     val name: MutableState<String> = mutableStateOf(name)
-    val measure: MutableState<String> = mutableStateOf(measure)
+    val isLiquid: MutableState<Boolean> = mutableStateOf(false)
     val category: MutableState<IngredientCategoryView?> = mutableStateOf(category)
     val photoUri: MutableState<String> = mutableStateOf(photoUri)
     val show: MutableState<Boolean> = mutableStateOf(true)

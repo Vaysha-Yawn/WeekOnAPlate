@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.dialogExampleStructure.DialogViewModel
+import week.on.a.plate.data.dataView.example.Measure
 import week.on.a.plate.data.dataView.recipe.IngredientCategoryView
 import week.on.a.plate.data.dataView.recipe.IngredientView
 import week.on.a.plate.dialogAddIngredient.event.AddIngredientEvent
@@ -32,7 +33,7 @@ class AddIngredientViewModel() : DialogViewModel() {
     fun done() {
         close()
         resultFlow.value = Pair(
-            IngredientView(0, state.photoUri.value, state.name.value, state.measure.value),
+            IngredientView(0, state.photoUri.value, state.name.value, if (state.isLiquid.value) Measure.Milliliters.small else Measure.Grams.small ),
             state.category.value!!
         )
     }
@@ -79,7 +80,7 @@ class AddIngredientViewModel() : DialogViewModel() {
     ) {
         state = AddIngredientUIState(
             oldIngredient?.name ?: "",
-            oldIngredient?.measure ?: "",
+            oldIngredient?.measure == "мл",
             oldCategory,
             oldIngredient?.img ?: ""
         )

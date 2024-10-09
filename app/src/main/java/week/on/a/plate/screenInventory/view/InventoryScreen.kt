@@ -32,6 +32,7 @@ import week.on.a.plate.core.uitools.TextBodyDisActive
 import week.on.a.plate.core.uitools.TextTitleItalic
 import week.on.a.plate.core.uitools.buttons.CloseButton
 import week.on.a.plate.core.uitools.buttons.DoneButton
+import week.on.a.plate.data.dataView.example.Measure
 import week.on.a.plate.screenInventory.event.InventoryEvent
 import week.on.a.plate.screenInventory.state.InventoryPositionData
 import week.on.a.plate.screenInventory.state.InventoryUIState
@@ -42,47 +43,39 @@ fun InventoryScreen(
     state: InventoryUIState,
     onEvent: (InventoryEvent) -> Unit,
 ) {
-    Scaffold(
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
-        floatingActionButtonPosition = FabPosition.Center,
-        floatingActionButton = {
-            DoneButton(stringResource(id = R.string.done), Modifier.padding(horizontal = 24.dp)) {
-                onEvent(InventoryEvent.Done)
-            }
-        }
-    ) { innerPadding ->
-        Column {
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(24.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                CloseButton { onEvent(InventoryEvent.Back) }
-                TextTitleItalic(
-                    text = "Инвентаризация",
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.End
-                )
-            }
-            TextBodyDisActive(
-                "Выберите позиции для добавления в список покупок",
-                Modifier.padding(start = 24.dp).padding(bottom = 24.dp)
+            .background(MaterialTheme.colorScheme.background)
+    ) {
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .padding(24.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            CloseButton { onEvent(InventoryEvent.Back) }
+            TextTitleItalic(
+                text = "Инвентаризация",
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.End
             )
-
-            LazyColumn {
-                items(state.list.value.size) {
-                    CardInventory(state.list.value[it], onEvent)
-                }
-                item {
-                    Spacer(Modifier.height(100.dp))
-                }
+        }
+        TextBodyDisActive(
+            "Выберите позиции для добавления в список покупок",
+            Modifier
+                .padding(start = 24.dp)
+                .padding(bottom = 24.dp)
+        )
+        LazyColumn(Modifier.weight(1f)) {
+            items(state.list.value.size) {
+                CardInventory(state.list.value[it], onEvent)
             }
         }
-        innerPadding
+        DoneButton(stringResource(id = R.string.done), Modifier.padding(24.dp)) {
+            onEvent(InventoryEvent.Done)
+        }
     }
 }
 
@@ -100,11 +93,31 @@ fun CardInventory(data: InventoryPositionData, onEvent: (InventoryEvent) -> Unit
         val checkState = remember { mutableStateOf(true) }
         Column(Modifier.weight(1f), horizontalAlignment = Alignment.Start) {
             TextBody(text = data.ingredient.name)
-            TextBodyDisActive(text = data.countTarget.toString() + " " + data.ingredient.measure)
+
+            val measure = if (data.countTarget >= 1000) {
+                if (data.ingredient.measure == Measure.Grams.small) {
+                    Measure.Grams.big
+                } else {
+                    Measure.Milliliters.big
+                }
+            } else {
+                data.ingredient.measure
+            }
+
+            val value = if (data.countTarget >= 1000) {
+                data.countTarget.toDouble() / 1000
+            } else {
+                data.countTarget
+            }
+
+            TextBodyDisActive(text = "$value $measure")
         }
         Checkbox(
             checked = checkState.value,
-            colors = CheckboxDefaults.colors(checkedColor = MaterialTheme.colorScheme.secondary, checkmarkColor = MaterialTheme.colorScheme.onBackground),
+            colors = CheckboxDefaults.colors(
+                checkedColor = MaterialTheme.colorScheme.secondary,
+                checkmarkColor = MaterialTheme.colorScheme.onBackground
+            ),
             onCheckedChange = {
                 if (checkState.value) {
                     onEvent(InventoryEvent.PickCount(data, 0))

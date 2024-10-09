@@ -15,7 +15,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,6 +25,7 @@ import week.on.a.plate.core.theme.ColorTextBlack
 import week.on.a.plate.core.uitools.ImageLoad
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextBodyDisActive
+import week.on.a.plate.data.dataView.example.Measure
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -40,7 +40,8 @@ fun IngredientInRecipeCard(
     HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.primary)
     Row(
         Modifier
-            .fillMaxWidth().combinedClickable (
+            .fillMaxWidth()
+            .combinedClickable(
                 onClick = click,
                 onLongClick = longClick
             )
@@ -64,11 +65,27 @@ fun IngredientInRecipeCard(
             }
         }
         Row {
+            val measure = if ((count ?: ingredient.count) >= 1000) {
+                if (ingredient.ingredientView.measure == Measure.Grams.small) {
+                    Measure.Grams.big
+                } else {
+                    Measure.Milliliters.big
+                }
+            } else {
+                ingredient.ingredientView.measure
+            }
+
+            val value = if ((count ?: ingredient.count) >= 1000) {
+                (count ?: ingredient.count).toDouble() / 1000
+            } else {
+                (count ?: ingredient.count)
+            }
+
             TextBody(
-                text = (count?:ingredient.count).toString(), color = ColorTextBlack
+                text = value.toString(), color = ColorTextBlack
             )
             Spacer(modifier = Modifier.width(5.dp))
-            TextBody(text = ingredient.ingredientView.measure, color = ColorTextBlack)
+            TextBody(text = measure, color = ColorTextBlack)
         }
     }
     HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.primary)
