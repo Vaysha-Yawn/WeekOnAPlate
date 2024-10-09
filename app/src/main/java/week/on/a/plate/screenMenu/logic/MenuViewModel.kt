@@ -381,7 +381,7 @@ class MenuViewModel @Inject constructor(
         viewModelScope.launch {
             val vm = mainViewModel.filterViewModel
             vm.mainViewModel.nav.navigate(FilterDestination)
-            vm.launchAndGet(FilterMode.Multiple,FilterEnum.Tag, Pair(oldDraft.tags, oldDraft.ingredients), false) { filters ->
+            vm.launchAndGet(FilterMode.Multiple,FilterEnum.IngredientAndTag, Pair(oldDraft.tags, oldDraft.ingredients), false) { filters ->
                 if (filters.tags?.isEmpty()==true && filters.ingredients?.isEmpty()==true || filters.ingredients==null || filters.tags==null ) {
                     onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.Delete(oldDraft)))
                 } else {

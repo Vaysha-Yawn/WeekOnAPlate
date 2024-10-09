@@ -11,7 +11,7 @@ import week.on.a.plate.data.dataView.week.SelectionView
 
 val positionRecipeExample = Position.PositionRecipeView(0, shortRecipe, 2, 0)
 
-val ingredientTomato = IngredientView(0, "", "Помидор", "штук")
+val ingredientTomato = IngredientView(0, "https://static.1000.menu/res/380/img/content/36406/salat-iz-pomidorov-s-ogurcom-i-lukom_1562165388_5_max.jpg", "Помидор", "штук")
 
 val positionIngredientExample =
     Position.PositionIngredientView(0, IngredientInRecipeView(0, ingredientTomato, "Целые", 6), 0)

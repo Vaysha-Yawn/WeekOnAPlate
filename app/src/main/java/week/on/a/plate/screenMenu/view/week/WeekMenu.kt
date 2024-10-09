@@ -31,7 +31,7 @@ import week.on.a.plate.data.dataView.week.SelectionView
 import week.on.a.plate.data.dataView.week.WeekView
 import week.on.a.plate.screenMenu.event.MenuEvent
 import week.on.a.plate.screenMenu.state.MenuIUState
-import week.on.a.plate.screenMenu.view.day.positions.CardPosition
+import week.on.a.plate.screenMenu.view.day.positionsList.CardPosition
 import week.on.a.plate.screenMenu.view.topBar.TitleMenuS
 
 @Composable

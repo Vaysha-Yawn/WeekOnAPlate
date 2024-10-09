@@ -1,9 +1,8 @@
-package week.on.a.plate.screenMenu.view.week.positions
+package week.on.a.plate.screenMenu.view.week.positionsCard
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,14 +21,14 @@ import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.core.Event
+import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.screenMenu.event.MenuEvent
-import week.on.a.plate.screenSearchRecipes.view.resultScreen.TagListHidden
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun WeekDraftPosition(
-    draft: Position.PositionDraftView,
-    onEvent: (event: Event) -> Unit,
+fun WeekNotePosition(
+    note: Position.PositionNoteView,
+    onEvent: (event: Event) -> Unit
 ) {
     Column(
         Modifier
@@ -37,27 +36,25 @@ fun WeekDraftPosition(
             .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(20.dp))
             .padding(20.dp)
             .combinedClickable(
-                onClick = {onEvent(MenuEvent.EditPosition(draft)) },
+                onClick = { onEvent(MenuEvent.EditPosition(note)) },
                 onLongClick = { onEvent(MenuEvent.SwitchEditMode) },
             ),
         horizontalAlignment = Alignment.Start,
     ) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Image(
-                painter = painterResource(id = R.drawable.search),
+                painter = painterResource(id = R.drawable.note),
                 contentDescription = "",
                 modifier = Modifier
-                    .size(24.dp)
-                    .clickable { onEvent(MenuEvent.SearchByDraft(draft)) },
+                    .size(24.dp),
             )
         }
-        Spacer(modifier = Modifier.size(6.dp))
-        Column(
-            Modifier.fillMaxWidth()
-                .padding(vertical = 5.dp),
-        ) {
-            TagListHidden(draft.tags, draft.ingredients)
-        }
+        Spacer(modifier = Modifier.size(12.dp))
+        TextBody(
+            note.note,
+            modifier = Modifier,
+        )
+
     }
 
 }

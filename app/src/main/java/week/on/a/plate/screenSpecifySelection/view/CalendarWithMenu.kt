@@ -44,9 +44,9 @@ import week.on.a.plate.core.utils.dateToStringShort
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.data.dataView.week.SelectionView
 import week.on.a.plate.dialogDatePicker.view.DatePickerMy
-import week.on.a.plate.screenMenu.view.day.positions.DraftPosition
-import week.on.a.plate.screenMenu.view.day.positions.IngredientPosition
-import week.on.a.plate.screenMenu.view.day.positions.NotePosition
+import week.on.a.plate.screenMenu.view.day.positionsList.DraftPosition
+import week.on.a.plate.screenMenu.view.day.positionsList.IngredientPosition
+import week.on.a.plate.screenMenu.view.day.positionsList.NotePosition
 import week.on.a.plate.screenSpecifySelection.event.SpecifySelectionEvent
 import week.on.a.plate.screenSpecifySelection.state.SpecifySelectionUIState
 import java.time.LocalDate

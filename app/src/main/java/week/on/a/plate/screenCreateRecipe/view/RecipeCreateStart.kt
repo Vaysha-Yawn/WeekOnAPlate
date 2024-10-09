@@ -52,7 +52,7 @@ fun RecipeCreateStart(viewModel: RecipeCreateViewModel) {
                 item {
                     if (viewModel.state.source.value == ""){
                         DoneButtonSmall(text = "Искать по названию рецепта в интернете", Modifier.padding(24.dp)) {
-                            viewModel.state.source.value = "https://www.google.ru/search?q=${viewModel.state.name.value.replace(" ", "+")}"
+                            viewModel.state.source.value = "https://www.google.ru/search?q=Рецепт ${viewModel.state.name.value.replace(" ", "+")}"
                         }
                     }else{
                         WebPage(url = viewModel.state.source, viewModel.state.webview) { event ->

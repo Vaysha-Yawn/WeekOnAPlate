@@ -1,5 +1,6 @@
 package week.on.a.plate.core.uitools.buttons
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
@@ -11,6 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import week.on.a.plate.core.theme.ColorButtonGreen
+import week.on.a.plate.core.theme.ColorDarkButtonGreen
 import week.on.a.plate.core.theme.ColorStrokeBlue
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 
@@ -19,8 +22,8 @@ fun CheckButton(checked: State<Boolean>, actionCheck: () -> Unit) {
     RadioButton(
         selected = checked.value, onClick = {
             actionCheck()
-        }, Modifier.size(24.dp), colors = RadioButtonDefaults.colors(
-            selectedColor = ColorStrokeBlue,
+        }, Modifier.size(24.dp).animateContentSize(), colors = RadioButtonDefaults.colors(
+            selectedColor = ColorDarkButtonGreen,
             unselectedColor = Color.Gray,
             disabledSelectedColor = Color.Gray,
             disabledUnselectedColor = Color.Gray,

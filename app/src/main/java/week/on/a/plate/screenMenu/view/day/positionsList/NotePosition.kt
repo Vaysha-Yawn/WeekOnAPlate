@@ -1,4 +1,4 @@
-package week.on.a.plate.screenMenu.view.day.positions
+package week.on.a.plate.screenMenu.view.day.positionsList
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image

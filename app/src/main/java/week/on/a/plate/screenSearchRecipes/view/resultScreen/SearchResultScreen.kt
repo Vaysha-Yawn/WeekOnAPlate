@@ -39,6 +39,7 @@ import week.on.a.plate.core.uitools.ImageLoad
 import week.on.a.plate.core.uitools.TagSmall
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextSmall
+import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.PlusButtonCard
 import week.on.a.plate.data.dataView.example.recipeTom
 import week.on.a.plate.data.dataView.recipe.IngredientView
@@ -89,7 +90,7 @@ fun RowRecipeResultCard(
                 ImageLoad(
                     recipeView.img, Modifier
                         .size(80.dp)
-                        .clip(RoundedCornerShape(20.dp))
+                        .clip(CircleShape)
                         .scale(1.5f)
                 )
             } else {
@@ -101,8 +102,8 @@ fun RowRecipeResultCard(
             }
             Spacer(modifier = Modifier.width(12.dp))
             Column(Modifier.weight(2f)) {
-                TextBody(text = recipeView.name, Modifier.padding(start = 6.dp))
-                Spacer(modifier = Modifier.height(6.dp))
+                TextTitle(text = recipeView.name, Modifier.padding(start = 6.dp))
+                Spacer(modifier = Modifier.height(12.dp))
                 TagListHidden(recipeView.tags, recipeView.ingredients.map { it -> it.ingredientView })
             }
             Spacer(modifier = Modifier.width(12.dp))

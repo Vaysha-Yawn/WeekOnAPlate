@@ -65,7 +65,7 @@ fun MenuScreenSuccess(
     ) {
         TopBar(uiState.titleTopBar.value, uiState, onEvent)
         if (uiState.itsDayMenu.value) {
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(12.dp))
             BlockCalendar(week.days, LocalDate.now(), uiState.activeDayInd.value) { ind ->
                 uiState.activeDayInd.value = ind
             }

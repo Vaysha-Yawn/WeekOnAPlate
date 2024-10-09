@@ -1,4 +1,4 @@
-package week.on.a.plate.screenMenu.view.day.positions
+package week.on.a.plate.screenMenu.view.day.positionsList
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -15,14 +15,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import week.on.a.plate.data.dataView.example.WeekDataExample
-import week.on.a.plate.data.dataView.week.Position
-import week.on.a.plate.core.uitools.buttons.MoreButton
 import week.on.a.plate.core.Event
+import week.on.a.plate.core.theme.WeekOnAPlateTheme
+import week.on.a.plate.data.dataView.example.ingredientTomato
+import week.on.a.plate.data.dataView.example.ingredients
+import week.on.a.plate.data.dataView.example.shortRecipe
+import week.on.a.plate.data.dataView.example.tags
+import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
+import week.on.a.plate.data.dataView.week.Position
+import week.on.a.plate.data.dataView.week.SelectionView
 import week.on.a.plate.screenMenu.event.MenuEvent
 import week.on.a.plate.screenMenu.state.MenuIUState
 import week.on.a.plate.screenMenu.view.day.BlockSelection
-import week.on.a.plate.core.theme.WeekOnAPlateTheme
+import java.time.LocalDate
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -66,6 +71,7 @@ fun CardPosition(
             }
         }
     }
+
 }
 
 @Preview(showBackground = true)
@@ -73,10 +79,22 @@ fun CardPosition(
 fun PreviewRecipePosition() {
     WeekOnAPlateTheme {
         val menuIUState = MenuIUState.MenuIUStateExample
-        val week = WeekDataExample
+        val posRecipe = Position.PositionRecipeView(0, shortRecipe, 2, 0)
+        val posIngredient = Position.PositionIngredientView(
+            0,
+            IngredientInRecipeView(0, ingredientTomato, "Целый", 0),
+            0
+        )
+        val posDraft =
+            Position.PositionDraftView(0, tags.get(1).tags, ingredients.get(1).ingredientViews, 0)
+        val posNote = Position.PositionNoteView(0, " Кушаю на работе", 0)
         Column {
             BlockSelection(
-                week.days[0].selections[0], menuIUState
+                SelectionView(
+                    0, "Заврак", LocalDate.now(), 0, true, mutableListOf(
+                        posRecipe, posIngredient, posDraft, posNote,
+                    )
+                ), menuIUState
             ) {}
         }
     }

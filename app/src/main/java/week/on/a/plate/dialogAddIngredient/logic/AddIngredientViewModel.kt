@@ -33,7 +33,7 @@ class AddIngredientViewModel() : DialogViewModel() {
     fun done() {
         close()
         resultFlow.value = Pair(
-            IngredientView(0, state.photoUri.value, state.name.value, if (state.isLiquid.value) Measure.Milliliters.small else Measure.Grams.small ),
+            IngredientView(0, state.photoUri.value.lowercase(), state.name.value, if (state.isLiquid.value) Measure.Milliliters.small else Measure.Grams.small ),
             state.category.value!!
         )
     }

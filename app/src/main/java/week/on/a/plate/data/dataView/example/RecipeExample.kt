@@ -139,7 +139,7 @@ val recipeShort = RecipeView(
 )
 
 
-val shortRecipe = RecipeShortView(0, "Салат из помидоров с огурцом и луком", "")
+val shortRecipe = RecipeShortView(0, "Салат из помидоров с огурцом и луком", "https://static.1000.menu/res/380/img/content/36406/salat-iz-pomidorov-s-ogurcom-i-lukom_1562165388_5_max.jpg")
 
 
 val emptyRecipe = RecipeView(

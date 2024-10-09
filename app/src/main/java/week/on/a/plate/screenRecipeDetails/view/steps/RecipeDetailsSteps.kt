@@ -21,6 +21,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -28,28 +30,29 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
-import week.on.a.plate.data.dataView.example.recipeTom
-import week.on.a.plate.core.uitools.TextBody
-import week.on.a.plate.core.uitools.TextInApp
-import week.on.a.plate.core.uitools.TextSmall
-import week.on.a.plate.screenRecipeDetails.event.RecipeDetailsEvent
-import week.on.a.plate.screenRecipeDetails.state.RecipeDetailsState
 import week.on.a.plate.core.theme.ColorBackgroundYellow
-import week.on.a.plate.core.theme.ColorTextBlack
 import week.on.a.plate.core.theme.Typography
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.theme.bodyMediumSemiBold
 import week.on.a.plate.core.uitools.ImageLoad
+import week.on.a.plate.core.uitools.TextBody
+import week.on.a.plate.core.uitools.TextInApp
 import week.on.a.plate.core.utils.timeToString
+import week.on.a.plate.data.dataView.example.recipeTom
+import week.on.a.plate.screenRecipeDetails.event.RecipeDetailsEvent
+import week.on.a.plate.screenRecipeDetails.state.RecipeDetailsState
 
 @Composable
 fun RecipeDetailsSteps(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) -> Unit) {
-    Column {
+    Column(Modifier.background(MaterialTheme.colorScheme.background)) {
         HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.outline)
         Row(
-            horizontalArrangement = Arrangement.SpaceAround, modifier = Modifier
+            horizontalArrangement = Arrangement.SpaceAround,
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.surface)
                 .fillMaxWidth()
-                .padding(vertical = 12.dp), verticalAlignment = Alignment.CenterVertically
+                .padding(vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 TextBody(text = state.recipe.value.prepTime.timeToString())
@@ -63,17 +66,22 @@ fun RecipeDetailsSteps(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) 
         HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.outline)
         Spacer(modifier = Modifier.height(24.dp))
         val listGradient = listOf(Color(0xFFFFEADE), Color(0xFFFFF2DE), Color(0xFFFFFFFF))
+        val brush = Brush.horizontalGradient(listGradient)
         for ((index, step) in state.recipe.value.steps.withIndex()) {
-            HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.primary)
+            //HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.primary)
             Column(
                 Modifier
                     .fillMaxWidth()
-                    .background(Brush.horizontalGradient(listGradient))
+                    .background(MaterialTheme.colorScheme.surface)
                     .padding(horizontal = 24.dp, vertical = 12.dp)
             ) {
-                Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
                     TextInApp(
-                        text = (index+1).toString(),
+                        text = (index + 1).toString(),
                         textStyle = bodyMediumSemiBold,
                         color = Color(0xFF4D2222), modifier = Modifier
                             .background(
@@ -86,17 +94,17 @@ fun RecipeDetailsSteps(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) 
                     TimerButton(step.timer.toInt(), onEvent)
                 }
                 Spacer(modifier = Modifier.height(24.dp))
+                TextBody(text = step.description)
+                Spacer(modifier = Modifier.height(24.dp))
                 if (step.image.startsWith("http")) {
                     ImageLoad(
                         url = step.image, modifier = Modifier
-                            .fillMaxWidth()
                             .height(200.dp)
                     )
                     Spacer(modifier = Modifier.height(24.dp))
                 }
-                TextSmall(text = step.description, color = ColorTextBlack)
             }
-            HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.primary)
+            //HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.primary)
             Spacer(modifier = Modifier.height(24.dp))
         }
     }
@@ -114,7 +122,8 @@ fun TimerButton(timer: Int, onEvent: (RecipeDetailsEvent) -> Unit) {
             }
             .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(50.dp))
             .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(50.dp))
-            .padding(horizontal = 10.dp, vertical = 5.dp), verticalAlignment = Alignment.CenterVertically
+            .padding(horizontal = 10.dp, vertical = 5.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
             painter = painterResource(id = R.drawable.timer),

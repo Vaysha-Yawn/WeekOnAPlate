@@ -40,9 +40,7 @@ class RecipeCreateViewModel @Inject constructor(): ViewModel() {
 
     fun onEvent(event: RecipeCreateEvent) {
         when (event) {
-            RecipeCreateEvent.Close -> {
-                mainViewModel.nav.popBackStack()
-            }
+            RecipeCreateEvent.Close -> mainViewModel.nav.popBackStack()
 
             RecipeCreateEvent.Done -> {
                 resultFlow.value = state
