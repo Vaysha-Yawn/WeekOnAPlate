@@ -46,7 +46,7 @@ sealed class ActionWeekMenuDB {
     ) : ActionWeekMenuDB()
 
     class DeleteSelection(val sel: SelectionView) : ActionWeekMenuDB()
-    class EditSelection(val sel: SelectionView, val newName:String) : ActionWeekMenuDB()
+    class EditSelection(val sel: SelectionView, val newName: String, val time: LocalTime) : ActionWeekMenuDB()
     class CreateSelection(val date: LocalDate, val newName: String, val locale: Locale,
                           val isForWeek: Boolean, val time:LocalTime) : ActionWeekMenuDB()
 }

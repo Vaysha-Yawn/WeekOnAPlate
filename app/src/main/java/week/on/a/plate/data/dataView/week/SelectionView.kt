@@ -9,6 +9,6 @@ data class SelectionView(
     val date:LocalDate,
     val weekOfYear:Int,
     val isForWeek:Boolean,
-    val time: LocalTime,
+    var time: LocalTime,
     val positions: MutableList<Position>
 )

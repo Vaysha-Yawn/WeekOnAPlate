@@ -158,10 +158,13 @@ class WeekRepository @Inject constructor(
         }
     }
 
-    suspend fun editSelection(sel: SelectionView, newName: String) {
+    suspend fun editSelection(sel: SelectionView, newName: String, time: LocalTime) {
         sel.name = newName
+        sel.time = time
         val selRoom = with(selectionMapper) {
-            sel.viewToRoom()
+            sel.viewToRoom().apply {
+                this.id = sel.id
+            }
         }
         selectionDAO.update(selRoom)
     }

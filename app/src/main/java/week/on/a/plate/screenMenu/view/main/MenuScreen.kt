@@ -1,6 +1,7 @@
 package week.on.a.plate.screenMenu.view.main
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -32,13 +33,15 @@ import java.time.LocalDate
 fun MenuScreen(
     vm: MenuViewModel
 ) {
-    vm.updateWeek()
     val uiState = vm.weekState.collectAsStateWithLifecycle().value
     when (uiState) {
         WeekState.EmptyWeek -> {}
         is WeekState.Error -> {}
-        WeekState.Loading -> {}
+        WeekState.Loading -> {
+            Log.e("", "Load")
+        }
         is WeekState.Success -> {
+            Log.e("", "Success")
             if (uiState.week.days.isNotEmpty()) {
                 MenuScreenSuccess(vm.menuUIState, uiState.week) { event: Event ->
                     vm.onEvent(event)

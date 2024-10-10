@@ -124,7 +124,7 @@ class CRUDRecipeInMenu @Inject constructor(
                 menuR.deleteSelection(event.sel)
             }
             is ActionWeekMenuDB.EditSelection -> {
-                menuR.editSelection(event.sel, event.newName)
+                menuR.editSelection(event.sel, event.newName, event.time)
             }
 
             is ActionWeekMenuDB.CreateSelection -> {

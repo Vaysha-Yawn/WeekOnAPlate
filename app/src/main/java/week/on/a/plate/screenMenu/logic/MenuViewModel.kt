@@ -59,7 +59,7 @@ class MenuViewModel @Inject constructor(
     private var activeDay = LocalDate.now()
     lateinit var mainViewModel: MainViewModel
 
-    val weekState: MutableStateFlow<WeekState> = MutableStateFlow(WeekState.Loading)
+    val weekState: MutableStateFlow<WeekState> = MutableStateFlow(WeekState.EmptyWeek)
     val menuUIState = MenuIUState.MenuIUStateExample
 
     init {
@@ -70,6 +70,7 @@ class MenuViewModel @Inject constructor(
     }
 
     fun updateWeek() {
+        weekState.value = WeekState.Loading
         viewModelScope.launch {
             val week = sCRUDRecipeInMenu.menuR.getCurrentWeek(activeDay, Locale.getDefault())
             week.days.forEach { day->
@@ -171,7 +172,7 @@ class MenuViewModel @Inject constructor(
     }
 
     private fun editOrDeleteSelection(sel: SelectionView) {
-        if (sel.isForWeek || sel.name == CategoriesSelection.NonPosed.fullName) return
+        if (sel.isForWeek || CategoriesSelection.entries.find { it.fullName== sel.name }!=null) return
         val vm = EditOrDeleteViewModel()
         vm.mainViewModel = mainViewModel
         mainViewModel.onEvent(MainEvent.OpenDialog(vm))
@@ -187,15 +188,19 @@ class MenuViewModel @Inject constructor(
     }
 
     private suspend fun editSelection(sel: SelectionView) {
-        val vmCategory = EditOneStringViewModel()
+        val vmCategory = EditSelectionViewModel()
         vmCategory.mainViewModel = mainViewModel
         mainViewModel.onEvent(MainEvent.OpenDialog(vmCategory))
-        vmCategory.launchAndGet(EditOneStringUIState(sel.name,  startTitle = "Изменение названия приёма пищи",
-             startPlaceholder = "Завтрак...")) { newName ->
+        vmCategory.launchAndGet(
+            EditSelectionUIState(sel.name,  startTitle = "Изменение названия приёма пищи",
+             startPlaceholder = "Завтрак...").apply {
+                 this.selectedTime.value = sel.time
+            }
+        ) { state ->
             sCRUDRecipeInMenu.onEvent(
                 ActionWeekMenuDB.EditSelection(
                     sel,
-                    newName
+                    state.text.value, state.selectedTime.value
                 )
             )
             updateWeek()
