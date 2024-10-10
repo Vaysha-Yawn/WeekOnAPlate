@@ -5,8 +5,10 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -17,6 +19,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.screenSearchRecipes.event.SearchScreenEvent
+import week.on.a.plate.screenSearchRecipes.state.ResultSortType
+import week.on.a.plate.screenSearchRecipes.state.ResultSortingDirection
 import week.on.a.plate.screenSearchRecipes.state.SearchUIState
 
 @Composable
@@ -73,10 +77,27 @@ fun SearchResultEditRow(state: SearchUIState, onEvent: (SearchScreenEvent) -> Un
             Modifier
                 .weight(1f)
                 .padding(horizontal = 24.dp),
-            horizontalArrangement = Arrangement.SpaceAround
+            horizontalArrangement = Arrangement.Center
         ) {
-            Icon(painterResource(R.drawable.sort), "")
-            Icon(painterResource(R.drawable.sort), "")
+            if (state.resultSortType.value.first == ResultSortType.date){
+                Icon(painterResource(R.drawable.calendar), "", modifier = Modifier.clickable {
+                    onEvent(SearchScreenEvent.ChangeSort(ResultSortType.alphabet, state.resultSortType.value.second))
+                })
+            }else{
+                Icon(painterResource(R.drawable.sort_by_alpha), "", modifier = Modifier.clickable {
+                    onEvent(SearchScreenEvent.ChangeSort(ResultSortType.date, state.resultSortType.value.second))
+                })
+            }
+            Spacer(Modifier.size(6.dp))
+            if (state.resultSortType.value.second == ResultSortingDirection.up){
+                Icon(painterResource(R.drawable.arrow_up), "", modifier = Modifier.clickable {
+                    onEvent(SearchScreenEvent.ChangeSort(state.resultSortType.value.first, ResultSortingDirection.down))
+                })
+            }else{
+                Icon(painterResource(R.drawable.arrow_down), "", modifier = Modifier.clickable {
+                    onEvent(SearchScreenEvent.ChangeSort(state.resultSortType.value.first, ResultSortingDirection.up))
+                })
+            }
         }
     }
 }

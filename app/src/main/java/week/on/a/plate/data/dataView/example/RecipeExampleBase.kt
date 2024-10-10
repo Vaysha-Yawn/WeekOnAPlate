@@ -5,6 +5,8 @@ import week.on.a.plate.data.dataView.recipe.IngredientView
 import week.on.a.plate.data.dataView.recipe.RecipeStepView
 import week.on.a.plate.data.dataView.recipe.RecipeTagView
 import week.on.a.plate.data.dataView.recipe.RecipeView
+import java.time.LocalDate
+import java.time.LocalTime
 
 val recipeExampleBase = listOf(
     RecipeView(
@@ -48,7 +50,7 @@ val recipeExampleBase = listOf(
                         "Приятного аппетита!", image = "https://img1.russianfood.com/dycontent/images_upl/124/sm_123035.jpg", timer = 15)
         ),
         link = "https://www.russianfood.com/recipes/recipe.php?rid=134380",
-        inFavorite = false
+        inFavorite = false, LocalDate.now(), LocalDate.now(), LocalTime.now()
     ),
 
     RecipeView(
@@ -85,7 +87,7 @@ val recipeExampleBase = listOf(
             RecipeStepView(10, "Перед подачей украсить салат зеленью.", "https://example.com/serving.jpg", 0)
         ),
         link = "https://eda.ru/recepty/salaty/seld-pod-shuboy-139942",
-        inFavorite = false
+        inFavorite = false, LocalDate.now(), LocalDate.now(), LocalTime.now()
     ),
     RecipeView(
         0,
@@ -130,7 +132,7 @@ val recipeExampleBase = listOf(
             RecipeStepView(9, "Снять с огня, накрыть крышкой и дать настояться 5–10 минут. Подавать с ломтиком лимона и сметаной.", "https://example.com/serving.jpg", 10)
         ),
         link = "https://eda.ru/recepty/supy/sbornaya-solyanka-139663",
-        inFavorite = false
+        inFavorite = false, LocalDate.now(), LocalDate.now(), LocalTime.now()
     ),
     RecipeView(
         0,
@@ -165,7 +167,7 @@ val recipeExampleBase = listOf(
             RecipeStepView(9, "Сверху снова сбрызнуть оливковым маслом и подавать немедленно.", "https://example.com/serving_final.jpg", 0)
         ),
         link = "https://eda.ru/recepty/salaty/nastojaschij-grecheskij-salat-30893",
-        inFavorite = false
+        inFavorite = false, LocalDate.now(), LocalDate.now(), LocalTime.now()
     ),
     RecipeView(
         0,
@@ -201,6 +203,6 @@ val recipeExampleBase = listOf(
             RecipeStepView(9, "Тушить под крышкой на среднем огне 40 минут. Подавать горячими.", "https://example.com/serving.jpg", 0)
         ),
         link = "https://eda.ru/recepty/osnovnye-blyuda/percy-farshirovannye-myasom-i-risom-26665",
-        inFavorite = false
+        inFavorite = false, LocalDate.now(), LocalDate.now(), LocalTime.now()
     )
 )

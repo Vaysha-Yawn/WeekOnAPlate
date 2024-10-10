@@ -1,6 +1,7 @@
 package week.on.a.plate.dialogAddPosition.view
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,7 +23,7 @@ import week.on.a.plate.core.theme.WeekOnAPlateTheme
 
 @Composable
 fun AddPositionDialogContent(onEvent: (AddPositionEvent) -> Unit) {
-    Column(modifier = Modifier.padding(20.dp)) {
+    Column(modifier = Modifier.background(MaterialTheme.colorScheme.surface).padding(20.dp)) {
         ButtonRowPosition(
             R.drawable.add_recipe,
             stringResource(R.string.add_recipe),

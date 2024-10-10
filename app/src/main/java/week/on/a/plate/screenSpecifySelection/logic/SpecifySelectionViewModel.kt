@@ -18,6 +18,7 @@ import week.on.a.plate.screenMenu.event.MenuEvent
 import week.on.a.plate.screenSpecifySelection.event.SpecifySelectionEvent
 import week.on.a.plate.screenSpecifySelection.state.SpecifySelectionUIState
 import java.time.LocalDate
+import java.time.LocalTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -121,6 +122,7 @@ class SpecifySelectionViewModel @Inject constructor(
         return state.checkDayCategory.value
     }
 
+    //todo возможен баг LocalTime.of(0,0) неуверена
     fun done() {
         close()
         val category = getCategory() ?: return
@@ -130,7 +132,7 @@ class SpecifySelectionViewModel @Inject constructor(
                 state.date.value!!,
                 state.checkWeek.value,
                 category,
-                mainViewModel.locale
+                mainViewModel.locale, LocalTime.of(0,0)
             )
             resultFlow.value =
                 SpecifySelectionResult(selId, state.date.value!!, state.portionsCount.intValue)

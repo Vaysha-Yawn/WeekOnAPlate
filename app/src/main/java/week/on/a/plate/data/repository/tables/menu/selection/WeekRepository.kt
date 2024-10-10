@@ -10,6 +10,7 @@ import week.on.a.plate.data.repository.tables.menu.position.note.PositionNoteRep
 import week.on.a.plate.data.repository.tables.menu.position.positionIngredient.PositionIngredientRepository
 import week.on.a.plate.data.repository.tables.menu.position.positionRecipe.PositionRecipeRepository
 import java.time.LocalDate
+import java.time.LocalTime
 import java.time.temporal.TemporalAdjusters
 import java.time.temporal.WeekFields
 import java.util.Calendar
@@ -32,17 +33,18 @@ class WeekRepository @Inject constructor(
         date: LocalDate,
         isForWeek: Boolean,
         category: String,
-        locale: Locale
+        locale: Locale,
+        time:LocalTime
     ): Long {
         val calendar = Calendar.getInstance(locale)
         calendar.set(date.year, date.monthValue, date.dayOfMonth)
         val week = calendar.get(Calendar.WEEK_OF_YEAR)
         return if (isForWeek) {
             val sel = selectionDAO.findSelectionForWeek(week)
-            sel?.id ?: selectionDAO.insert(SelectionRoom(category, date, week, isForWeek))
+            sel?.id ?: selectionDAO.insert(SelectionRoom(category, date, week, isForWeek,time))
         } else {
             val sel = selectionDAO.findSelectionForDayByName(date, category)
-            sel?.id ?: selectionDAO.insert(SelectionRoom(category, date, week, isForWeek))
+            sel?.id ?: selectionDAO.insert(SelectionRoom(category, date, week, isForWeek, time))
         }
     }
 
@@ -83,8 +85,8 @@ class WeekRepository @Inject constructor(
                             i.fullName,
                             dateDay,
                             weekOfYear,
-                            false,
-                            mutableListOf()
+                            false, i.stdTime,
+                            mutableListOf(),
                         )
                     )
                 }
@@ -102,7 +104,8 @@ class WeekRepository @Inject constructor(
                 date,
                 weekOfYear,
                 true,
-                mutableListOf()
+                CategoriesSelection.ForWeek.stdTime,
+                mutableListOf(),
             )
         }
 
@@ -167,12 +170,13 @@ class WeekRepository @Inject constructor(
         date: LocalDate,
         newName: String,
         locale: Locale,
-        isForWeek: Boolean
+        isForWeek: Boolean,
+        time:LocalTime
     ) {
         val calendar = Calendar.getInstance(locale)
         calendar.set(date.year, date.monthValue, date.dayOfMonth)
         val weekOfYear = calendar.get(Calendar.WEEK_OF_YEAR)
-        val sel = SelectionRoom(newName, date, weekOfYear, isForWeek)
+        val sel = SelectionRoom(newName, date, weekOfYear, isForWeek, time)
         selectionDAO.insert(sel)
     }
 }

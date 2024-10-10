@@ -7,7 +7,7 @@ import java.util.Locale
 
 data class DayView (
     val date:LocalDate,
-    val selections:List<SelectionView>
+    var selections:List<SelectionView>
 ){
     fun getDyInWeekShort(local: Locale):String{
         return date.dayOfWeek.getDisplayName(TextStyle.SHORT, local)

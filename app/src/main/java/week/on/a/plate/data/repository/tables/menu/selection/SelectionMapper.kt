@@ -14,7 +14,8 @@ class SelectionMapper() {
             date = date,
             weekOfYear = weekOfYear,
             isForWeek = isForWeek,
-            positions = positions
+            positions = positions,
+            time = time
         )
 
     fun SelectionView.viewToRoom(): SelectionRoom =
@@ -23,5 +24,6 @@ class SelectionMapper() {
             date = date,
             weekOfYear = weekOfYear,
             isForWeek = isForWeek,
+            time = time
         )
 }

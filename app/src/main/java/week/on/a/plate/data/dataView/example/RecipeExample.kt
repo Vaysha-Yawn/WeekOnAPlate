@@ -6,6 +6,8 @@ import week.on.a.plate.data.dataView.recipe.RecipeStepView
 import week.on.a.plate.data.dataView.recipe.RecipeTagView
 import week.on.a.plate.data.dataView.recipe.RecipeView
 import week.on.a.plate.data.dataView.week.RecipeShortView
+import java.time.LocalDate
+import java.time.LocalTime
 
 val recipeTom =
     RecipeView(
@@ -106,7 +108,7 @@ val recipeTom =
             ),
         ),
         link = "https://eda.ru/media/vopros/zagotovki-tri-prostyh-pravila",
-        false
+        false, LocalDate.now(), LocalDate.now(), LocalTime.now()
     )
 
 val recipeShort = RecipeView(
@@ -135,7 +137,7 @@ val recipeShort = RecipeView(
         ),
     ),
     link = "https://eda.ru/media/vopros/zagotovki-tri-prostyh-pravila",
-    inFavorite = false,
+    inFavorite = false, LocalDate.now(), LocalDate.now(), LocalTime.now()
 )
 
 
@@ -144,7 +146,7 @@ val shortRecipe = RecipeShortView(0, "Салат из помидоров с ог
 
 val emptyRecipe = RecipeView(
     0, "name", "description", "img", listOf<RecipeTagView>(),
-    0, 0, 0, listOf(), listOf(), "", false
+    0, 0, 0, listOf(), listOf(), "", false, LocalDate.now(), LocalDate.now(), LocalTime.now()
 )
 
 fun getSimpleRecipe(names: String, inFavorite: Boolean = false, image: String = ""): RecipeView {
@@ -154,7 +156,7 @@ fun getSimpleRecipe(names: String, inFavorite: Boolean = false, image: String = 
                 RecipeTagView(0, "Избранное")
             )
         } else listOf(),
-        0, 0, 0, listOf(), listOf(), "", false
+        0, 0, 0, listOf(), listOf(), "", false, LocalDate.now(), LocalDate.now(), LocalTime.now()
     )
 }
 

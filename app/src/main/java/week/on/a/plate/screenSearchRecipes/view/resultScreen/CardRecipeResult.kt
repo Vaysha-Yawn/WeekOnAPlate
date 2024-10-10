@@ -112,9 +112,9 @@ fun CardRecipeResult(recipe: RecipeView, onEvent: (SearchScreenEvent) -> Unit, m
             }
             Spacer(Modifier.height(30.dp))
             Column(
-                Modifier
+                Modifier.fillMaxWidth()
                     .background(MaterialTheme.colorScheme.surface)
-                    .padding(12.dp)
+                    .padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 TextTitle(
                     recipe.name

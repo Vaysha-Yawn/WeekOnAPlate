@@ -19,6 +19,7 @@ import week.on.a.plate.core.uitools.buttons.PlusButtonTitle
 import week.on.a.plate.data.dataView.week.SelectionView
 import week.on.a.plate.screenMenu.event.MenuEvent
 import java.time.LocalDate
+import java.time.LocalTime
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -91,7 +92,7 @@ fun PreviewTitleMenu() {
     WeekOnAPlateTheme {
         Column {
             TitleMenu(SelectionView(0L, "Понедельник", LocalDate.now(), 0,
-                false, mutableListOf()), Modifier) {}
+                false, LocalTime.of(0,0),mutableListOf()), Modifier) {}
             TitleMenuSmall("Понедельник") {}
         }
     }

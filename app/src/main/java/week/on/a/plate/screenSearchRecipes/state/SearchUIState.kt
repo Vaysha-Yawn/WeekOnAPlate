@@ -15,6 +15,13 @@ class SearchUIState {
     val selectedIngredients = mutableStateOf<List<IngredientView>>(listOf())
     val searched = mutableStateOf(SearchState.none)
     val modeResultViewIsList = mutableStateOf(true)
+    val resultSortType = mutableStateOf(Pair(ResultSortType.date, ResultSortingDirection.down))
+}
+enum class ResultSortType{
+    date, alphabet
+}
+enum class ResultSortingDirection{
+    up, down
 }
 
 enum class SearchState{

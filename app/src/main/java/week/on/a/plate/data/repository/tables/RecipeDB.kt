@@ -27,6 +27,7 @@ import week.on.a.plate.data.repository.tables.menu.position.positionIngredient.P
 import week.on.a.plate.data.repository.tables.menu.position.positionRecipe.PositionRecipeRoom
 import week.on.a.plate.data.repository.tables.menu.position.positionRecipe.PositionRecipeDAO
 import week.on.a.plate.data.repository.tables.menu.selection.DateTypeConverter
+import week.on.a.plate.data.repository.tables.menu.selection.LocalTimeTypeConverter
 import week.on.a.plate.data.repository.tables.menu.selection.SelectionDAO
 import week.on.a.plate.data.repository.tables.menu.selection.SelectionRoom
 import week.on.a.plate.data.repository.tables.recipe.ingredientInRecipe.IngredientInRecipeDAO
@@ -49,7 +50,7 @@ import week.on.a.plate.data.repository.tables.shoppingList.ShoppingItemRoom
     ], version = 1, exportSchema = false
 )
 @TypeConverters(
-    DateTypeConverter::class
+    DateTypeConverter::class, LocalTimeTypeConverter::class
 )
 abstract class RecipeDB : RoomDatabase() {
     abstract fun daoIngredient(): IngredientDAO

@@ -24,6 +24,8 @@ import week.on.a.plate.screenMenu.logic.useCase.CRUDRecipeInMenu
 import week.on.a.plate.screenRecipeDetails.event.RecipeDetailsEvent
 import week.on.a.plate.screenRecipeDetails.state.RecipeDetailsState
 import week.on.a.plate.screenSpecifySelection.navigation.SpecifySelectionDirection
+import java.time.LocalDate
+import java.time.LocalTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -166,7 +168,7 @@ class RecipeDetailsViewModel @Inject constructor(
                             it.timer.intValue.toLong()
                         )
                     },
-                    link = recipe.source.value, false
+                    link = recipe.source.value, false, state.recipe.value.dateCreated, LocalDate.now(), LocalTime.now()
                 )
                 viewModelScope.launch {
                     recipeRepository.updateRecipe(state.recipe.value, newRecipe)

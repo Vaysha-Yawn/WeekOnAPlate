@@ -1,4 +1,4 @@
-package week.on.a.plate.dialogEditOneString.view
+package week.on.a.plate.dialogEditSelection.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -20,14 +20,25 @@ import week.on.a.plate.R
 import week.on.a.plate.core.uitools.EditTextLine
 import week.on.a.plate.core.uitools.buttons.DoneButton
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
+import week.on.a.plate.core.uitools.SubText
+import week.on.a.plate.core.uitools.TextSmall
 import week.on.a.plate.core.uitools.TextTitle
-import week.on.a.plate.dialogEditOneString.state.EditOneStringUIState
+import week.on.a.plate.core.uitools.buttons.CommonButton
+import week.on.a.plate.core.utils.dateToString
+import week.on.a.plate.dialogEditSelection.event.EditSelectionEvent
+import week.on.a.plate.dialogEditSelection.logic.EditSelectionViewModel
+import week.on.a.plate.dialogEditSelection.state.EditSelectionUIState
+import week.on.a.plate.screenSpecifySelection.event.SpecifySelectionEvent
+import java.time.format.DateTimeFormatter
 
 @Composable
-fun EditOneStringContent(
-    state: EditOneStringUIState,
-    done: () -> Unit
+fun EditSelectionContent(
+    vm:EditSelectionViewModel
 ) {
+    val state = vm.state
+    val onEvent = {event:EditSelectionEvent->
+        vm.onEvent(event)
+    }
     val focusRequester = remember { FocusRequester() }
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
@@ -40,17 +51,25 @@ fun EditOneStringContent(
             state.placeholder.value, modifier = Modifier.focusRequester(focusRequester)
         )
         Spacer(modifier = Modifier.height(24.dp))
-        DoneButton(text = stringResource(R.string.apply)) { done() }
+        TextTitle(text = "Выберите время приема пищи")
+        TextSmall("* Время приема пищи используется для сортировки в меню")
+        Spacer(modifier = Modifier.height(24.dp))
+        CommonButton(
+            state.selectedTime.value.format(DateTimeFormatter.ofPattern("HH:mm")),
+            image = R.drawable.time
+        ) {
+            onEvent(EditSelectionEvent.ChooseTime)
+        }
+        Spacer(modifier = Modifier.height(48.dp))
+
+        DoneButton(text = stringResource(R.string.apply)) {  onEvent(EditSelectionEvent.Done) }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewEditNoteBottomDialog() {
+fun PreviewEditSelectionContent() {
     WeekOnAPlateTheme {
-        val text = remember {
-            mutableStateOf("")
-        }
-        EditOneStringContent(EditOneStringUIState()){}
+        EditSelectionContent(EditSelectionViewModel())
     }
 }

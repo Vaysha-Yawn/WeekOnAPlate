@@ -29,7 +29,7 @@ import week.on.a.plate.core.theme.WeekOnAPlateTheme
 fun ChangePortionsPanel(portionsCount: MutableIntState, done: () -> Unit) {
     Column(
         modifier = Modifier
-            .background(MaterialTheme.colorScheme.background)
+            .background(MaterialTheme.colorScheme.surface)
             .padding(24.dp), verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

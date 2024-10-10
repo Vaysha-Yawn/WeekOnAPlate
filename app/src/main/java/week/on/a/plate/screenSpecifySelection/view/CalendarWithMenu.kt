@@ -50,6 +50,7 @@ import week.on.a.plate.screenMenu.view.day.positionsList.NotePosition
 import week.on.a.plate.screenSpecifySelection.event.SpecifySelectionEvent
 import week.on.a.plate.screenSpecifySelection.state.SpecifySelectionUIState
 import java.time.LocalDate
+import java.time.LocalTime
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -134,7 +135,9 @@ fun PreviewCalendarWithMenu() {
     WeekOnAPlateTheme {
         val list = listOf(
             SelectionView(
-                0, "Завтрак", LocalDate.now(), 0, false, mutableListOf(
+                0, "Завтрак", LocalDate.now(), 0, false,
+                LocalTime.of(0,0),
+                mutableListOf(
                     Position.PositionNoteView(0, "Первое", 0),
                     Position.PositionNoteView(0, "Второе", 0),
                     Position.PositionNoteView(0, "Десерт", 0)

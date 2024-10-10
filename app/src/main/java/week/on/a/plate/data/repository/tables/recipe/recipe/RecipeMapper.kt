@@ -24,7 +24,8 @@ class RecipeMapper() {
             ingredients = ingredients,
             steps = steps,
             link = this.link,
-            inFavorite = this.inFavorite
+            inFavorite = this.inFavorite,
+            dateCreated, dateLastEdit, timeLastEdit
         )
 
     fun RecipeView.viewToRoom(): RecipeRoom =
@@ -36,6 +37,7 @@ class RecipeMapper() {
             allTime = this.allTime,
             standardPortionsCount = this.standardPortionsCount,
             link = this.link,
-            inFavorite = this.inFavorite
+            inFavorite = this.inFavorite,
+            dateCreated, dateLastEdit, timeLastEdit
         )
 }

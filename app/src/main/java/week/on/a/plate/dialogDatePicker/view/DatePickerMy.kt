@@ -44,7 +44,7 @@ fun DatePickerMy(
                 }
             },
             shape = RoundedCornerShape(20.dp),
-            colors = DatePickerDefaults.colors(containerColor = MaterialTheme.colorScheme.background)
+            colors = DatePickerDefaults.colors(containerColor = MaterialTheme.colorScheme.surface)
         ) {
             DatePickerMy(state)
         }
@@ -61,7 +61,7 @@ fun DatePickerMy(state: DatePickerState, modifier: Modifier = Modifier) {
             .fillMaxWidth(),
         title = {},
         colors = DatePickerDefaults.colors(
-            containerColor = MaterialTheme.colorScheme.background,
+            containerColor = MaterialTheme.colorScheme.surface,
             titleContentColor = MaterialTheme.colorScheme.onBackground,
             headlineContentColor = MaterialTheme.colorScheme.onBackground,
             weekdayContentColor = MaterialTheme.colorScheme.onBackground,

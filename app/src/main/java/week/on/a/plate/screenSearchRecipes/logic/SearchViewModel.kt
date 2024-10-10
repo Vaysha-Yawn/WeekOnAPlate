@@ -30,9 +30,13 @@ import week.on.a.plate.screenMenu.event.ActionWeekMenuDB
 import week.on.a.plate.screenMenu.logic.useCase.CRUDRecipeInMenu
 import week.on.a.plate.screenRecipeDetails.navigation.RecipeDetailsDestination
 import week.on.a.plate.screenSearchRecipes.event.SearchScreenEvent
+import week.on.a.plate.screenSearchRecipes.state.ResultSortType
+import week.on.a.plate.screenSearchRecipes.state.ResultSortingDirection
 import week.on.a.plate.screenSearchRecipes.state.SearchState
 import week.on.a.plate.screenSearchRecipes.state.SearchUIState
 import week.on.a.plate.screenSpecifySelection.navigation.SpecifySelectionDirection
+import java.time.LocalDate
+import java.time.LocalTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -74,7 +78,7 @@ class SearchViewModel @Inject constructor(
             state.searched.value = SearchState.done
 
             floAllRecipe.map { it.filter { t -> filter(t) } }.collect {
-                state.resultSearch.value = it
+                state.resultSearch.value = it.sorted()
             }
         }
 
@@ -102,7 +106,7 @@ class SearchViewModel @Inject constructor(
                     recipeViewList
                 }
             }.collect {
-                state.resultSearch.value = it
+                state.resultSearch.value = it.sorted()
             }
         }
     }
@@ -143,8 +147,33 @@ class SearchViewModel @Inject constructor(
             SearchScreenEvent.SearchFavorite -> searchFavorite()
             SearchScreenEvent.SearchAll -> searchAll()
             SearchScreenEvent.SearchRandom -> searchRandom()
+            is SearchScreenEvent.ChangeSort -> changeSort(event.type, event.direction)
         }
     }
+
+    private fun changeSort(type: ResultSortType, direction: ResultSortingDirection) {
+        state.resultSortType.value = Pair(type, direction)
+        state.resultSearch.value = state.resultSearch.value.sorted()
+    }
+
+    private fun List<RecipeView>.sorted():List<RecipeView>{
+        return when(state.resultSortType.value){
+            Pair(ResultSortType.date, ResultSortingDirection.up)->
+                this.sortedWith(compareBy ({it.dateLastEdit},{it.timeLastEdit}))
+
+            Pair(ResultSortType.alphabet, ResultSortingDirection.down)->
+                this.sortedBy { it.name }
+
+            Pair(ResultSortType.date, ResultSortingDirection.down)->
+                this.sortedWith(compareBy<RecipeView> { it.dateLastEdit }.thenByDescending { it.timeLastEdit })
+
+            Pair(ResultSortType.alphabet, ResultSortingDirection.up) ->
+                sortedByDescending { it.name }
+
+            else -> this
+        }
+    }
+
 
     private fun navigateToFullRecipe(id: Long) {
         mainViewModel.recipeDetailsViewModel.launch(id)
@@ -171,7 +200,7 @@ class SearchViewModel @Inject constructor(
                 standardPortionsCount = 4,
                 ingredients = listRecipe,
                 steps = listOf(),
-                link = "", false
+                link = "", false, LocalDate.now(), LocalDate.now(), LocalTime.now()
             )
             vm.launchAndGet(recipeStart) { recipe ->
                 viewModelScope.launch {
@@ -193,7 +222,7 @@ class SearchViewModel @Inject constructor(
                                 it.timer.intValue.toLong()
                             )
                         },
-                        link = recipe.source.value, false
+                        link = recipe.source.value, false, LocalDate.now(), LocalDate.now(), LocalTime.now()
                     )
                     recipeRepository.create(newRecipe)
                 }

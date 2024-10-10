@@ -129,7 +129,7 @@ class CRUDRecipeInMenu @Inject constructor(
 
             is ActionWeekMenuDB.CreateSelection -> {
                 menuR.createSelection(event.date, event.newName,  event.locale,
-                    event.isForWeek)
+                    event.isForWeek, event.time)
             }
         }
     }

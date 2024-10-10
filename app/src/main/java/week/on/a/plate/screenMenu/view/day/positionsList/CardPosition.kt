@@ -28,6 +28,7 @@ import week.on.a.plate.screenMenu.event.MenuEvent
 import week.on.a.plate.screenMenu.state.MenuIUState
 import week.on.a.plate.screenMenu.view.day.BlockSelection
 import java.time.LocalDate
+import java.time.LocalTime
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -91,7 +92,8 @@ fun PreviewRecipePosition() {
         Column {
             BlockSelection(
                 SelectionView(
-                    0, "Заврак", LocalDate.now(), 0, true, mutableListOf(
+                    0, "Заврак", LocalDate.now(), 0, true,
+                    LocalTime.of(0,0), mutableListOf(
                         posRecipe, posIngredient, posDraft, posNote,
                     )
                 ), menuIUState

@@ -16,6 +16,7 @@ import week.on.a.plate.data.repository.tables.filters.ingredient.IngredientRepos
 import week.on.a.plate.data.repository.tables.filters.ingredientCategory.IngredientCategoryRepository
 import week.on.a.plate.data.repository.tables.filters.recipeTag.RecipeTagRepository
 import week.on.a.plate.data.repository.tables.filters.recipeTagCategory.RecipeTagCategoryRepository
+import week.on.a.plate.data.repository.tables.filters.recipeTagCategory.startCategoryName
 import week.on.a.plate.dialogAddIngredient.logic.AddIngredientViewModel
 import week.on.a.plate.dialogAddTag.logic.AddTagViewModel
 import week.on.a.plate.dialogEditOneString.logic.EditOneStringViewModel
@@ -117,13 +118,19 @@ class FilterViewModel @Inject constructor(
                 delete = { deleteTag(event.tag) },
                 edit = { editTag(event.tag) })
 
-            is FilterEvent.EditOrDeleteIngredientCategory -> editOrDelete(
-                delete = { deleteIngredientCategory(event.ingredientCategory) },
-                edit = { editIngredientCategory(event.ingredientCategory) })
+            is FilterEvent.EditOrDeleteIngredientCategory -> {
+                if (event.ingredientCategory.name == startCategoryName) return
+                editOrDelete(
+                    delete = { deleteIngredientCategory(event.ingredientCategory) },
+                    edit = { editIngredientCategory(event.ingredientCategory) })
+            }
 
-            is FilterEvent.EditOrDeleteTagCategory -> editOrDelete(
-                delete = { deleteTagCategory(event.tagCategory) },
-                edit = { editTagCategory(event.tagCategory) })
+            is FilterEvent.EditOrDeleteTagCategory -> {
+                if (event.tagCategory.name == startCategoryName) return
+                editOrDelete(
+                    delete = { deleteTagCategory(event.tagCategory) },
+                    edit = { editTagCategory(event.tagCategory) })
+            }
 
             FilterEvent.CreateActive -> {
                 createFilterElement()

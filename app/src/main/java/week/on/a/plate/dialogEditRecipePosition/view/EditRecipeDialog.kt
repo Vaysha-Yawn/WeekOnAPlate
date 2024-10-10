@@ -1,6 +1,7 @@
 package week.on.a.plate.dialogEditRecipePosition.view
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,7 +22,7 @@ import week.on.a.plate.core.theme.WeekOnAPlateTheme
 
 @Composable
 fun EditRecipePositionDialogContent(onEvent: (EditRecipePositionEvent) -> Unit) {
-    Column(modifier = Modifier.padding(20.dp)) {
+    Column(modifier = Modifier.background(MaterialTheme.colorScheme.surface).padding(20.dp)) {
         ButtonRow(
             R.drawable.add_shopping_cart,
             stringResource(R.string.add_shopping_cart),

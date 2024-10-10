@@ -5,6 +5,7 @@ import week.on.a.plate.data.dataView.recipe.RecipeTagView
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.data.dataView.week.SelectionView
 import java.time.LocalDate
+import java.time.LocalTime
 import java.util.Locale
 
 sealed class ActionWeekMenuDB {
@@ -47,5 +48,5 @@ sealed class ActionWeekMenuDB {
     class DeleteSelection(val sel: SelectionView) : ActionWeekMenuDB()
     class EditSelection(val sel: SelectionView, val newName:String) : ActionWeekMenuDB()
     class CreateSelection(val date: LocalDate, val newName: String, val locale: Locale,
-                          val isForWeek: Boolean) : ActionWeekMenuDB()
+                          val isForWeek: Boolean, val time:LocalTime) : ActionWeekMenuDB()
 }

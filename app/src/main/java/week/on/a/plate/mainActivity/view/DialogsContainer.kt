@@ -50,6 +50,9 @@ import week.on.a.plate.core.uitools.dialogs.BottomDialogContainer
 import week.on.a.plate.dialogEditOrDelete.event.EditOrDeleteEvent
 import week.on.a.plate.dialogEditOrDelete.logic.EditOrDeleteViewModel
 import week.on.a.plate.dialogEditOrDelete.view.EditOrDeleteDialogContent
+import week.on.a.plate.dialogEditSelection.event.EditSelectionEvent
+import week.on.a.plate.dialogEditSelection.logic.EditSelectionViewModel
+import week.on.a.plate.dialogEditSelection.view.EditSelectionContent
 import week.on.a.plate.screenCreateRecipe.timePickDialog.event.TimePickEvent
 import week.on.a.plate.screenCreateRecipe.timePickDialog.logic.TimePickViewModel
 import week.on.a.plate.screenCreateRecipe.timePickDialog.view.TimePickDialog
@@ -218,6 +221,20 @@ fun DialogsContainer(
         is TimePickViewModel -> {
             TimePickDialog(data.state ){event:TimePickEvent->
                 data.onEvent(event)
+            }
+        }
+
+        is EditSelectionViewModel->{
+            val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+            BottomDialogContainer(
+                sheetState,
+                { onEvent(EditSelectionEvent.Close) }) {snackBarState->
+                EditSelectionContent(
+                    data
+                )
+            }
+            LaunchedEffect(true) {
+                sheetState.show()
             }
         }
 
