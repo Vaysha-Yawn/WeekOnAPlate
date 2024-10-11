@@ -27,7 +27,8 @@ import week.on.a.plate.core.uitools.TextBody
 
 @Composable
 fun TopBar(
-    title: String,
+    titleWeek: String,
+    titleDay: String,
     menuIUState: MenuIUState,
     onEvent: (event: Event) -> Unit
 ) {
@@ -61,6 +62,8 @@ fun TopBar(
                         .padding(end = 12.dp)
                 )
                 Row(verticalAlignment = Alignment.CenterVertically) {
+                    val title = if (menuIUState.itsDayMenu.value) {titleDay} else titleWeek
+                    TextBody(text = title, modifier = Modifier.padding(end = 12.dp))
                     Image(
                         painter = painterResource(id = R.drawable.calendar),
                         contentDescription = "",
@@ -71,7 +74,6 @@ fun TopBar(
                             .padding(6.dp)
                             .size(24.dp)
                     )
-                    TextBody(text = title, modifier = Modifier.padding(end = 24.dp))
                 }
             }
         }

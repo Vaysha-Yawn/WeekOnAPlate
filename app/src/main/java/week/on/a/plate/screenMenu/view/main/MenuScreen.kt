@@ -16,14 +16,15 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
+import week.on.a.plate.core.utils.dateToString
 import week.on.a.plate.data.dataView.example.WeekDataExample
 import week.on.a.plate.data.dataView.week.WeekView
+import week.on.a.plate.screenMenu.event.MenuEvent
 import week.on.a.plate.screenMenu.logic.MenuViewModel
 import week.on.a.plate.screenMenu.state.MenuIUState
 import week.on.a.plate.screenMenu.state.WeekState
 import week.on.a.plate.screenMenu.view.calendar.BlockCalendar
 import week.on.a.plate.screenMenu.view.day.DayView
-import week.on.a.plate.screenMenu.view.day.NoDay
 import week.on.a.plate.screenMenu.view.topBar.TopBar
 import week.on.a.plate.screenMenu.view.week.WeekMenu
 import java.time.LocalDate
@@ -66,21 +67,23 @@ fun MenuScreenSuccess(
             .background(MaterialTheme.colorScheme.background)
             .padding(top = 10.dp)
     ) {
-        TopBar(uiState.titleTopBar.value, uiState, onEvent)
+        val curDay = week.days[uiState.activeDayInd.value].date.dateToString()
+        val weekTitle = uiState.titleTopBar.value
+        TopBar(weekTitle, curDay, uiState, onEvent)
         if (uiState.itsDayMenu.value) {
             Spacer(modifier = Modifier.height(12.dp))
-            BlockCalendar(week.days, LocalDate.now(), uiState.activeDayInd.value) { ind ->
+            BlockCalendar(week.days, LocalDate.now(), uiState.activeDayInd.value, changeDay = { ind ->
                 uiState.activeDayInd.value = ind
-            }
+            }, chooseLastWeek = {
+                onEvent(MenuEvent.ChangeWeek(week.days[uiState.activeDayInd.value].date.minusWeeks(1)))
+            }, chooseNextWeek = {
+                onEvent(MenuEvent.ChangeWeek(week.days[uiState.activeDayInd.value].date.plusWeeks(1)))
+            })
             Spacer(Modifier.height(24.dp))
         }
 
         if (uiState.itsDayMenu.value) {
-            if (week.days[uiState.activeDayInd.value].selections.isEmpty()) {
-                NoDay(week.days[uiState.activeDayInd.value].date, onEvent)
-            } else {
-                DayView(week.days[uiState.activeDayInd.value], uiState, onEvent)
-            }
+            DayView(week.days[uiState.activeDayInd.value], uiState, onEvent)
         } else {
             WeekMenu(uiState, onEvent, week)
         }

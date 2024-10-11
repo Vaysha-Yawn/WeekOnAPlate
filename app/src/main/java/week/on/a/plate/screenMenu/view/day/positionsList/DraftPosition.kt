@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
+import week.on.a.plate.core.uitools.buttons.MoreButton
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.screenMenu.event.MenuEvent
 import week.on.a.plate.screenSearchRecipes.view.resultScreen.TagListHidden
@@ -29,7 +30,7 @@ fun DraftPosition(
         Spacer(modifier = Modifier.width(20.dp))
         Row(Modifier
             .weight(3f)
-            .padding(vertical = 5.dp).clickable {  onEvent(MenuEvent.EditPosition(draft)) },
+            .padding(vertical = 5.dp).clickable {  onEvent(MenuEvent.EditOtherPosition(draft)) },
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically) {
             TagListHidden(draft.tags, draft.ingredients)
@@ -42,5 +43,9 @@ fun DraftPosition(
                 .clickable { onEvent(MenuEvent.SearchByDraft(draft)) },
         )
         Spacer(modifier = Modifier.width(10.dp))
+        MoreButton {
+            onEvent(MenuEvent.EditPositionMore(draft))
+        }
+        Spacer(modifier = Modifier.width(12.dp))
     }
 }

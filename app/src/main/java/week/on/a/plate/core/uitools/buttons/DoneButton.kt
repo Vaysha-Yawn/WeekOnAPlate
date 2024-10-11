@@ -35,15 +35,14 @@ fun DoneButton(
 ) {
     Row(
         modifier
-            .fillMaxWidth()
+            .fillMaxWidth().clickable {
+                click()
+            }
             .background(ColorButtonGreen, RoundedCornerShape(20.dp))
             .padding(10.dp)
-            .clickable {
-                click()
-            }, horizontalArrangement = Arrangement.Center
+            , horizontalArrangement = Arrangement.Center
     ) {
         TextBody(text = text, color = ColorTextBlack)
-        //TextInApp(text = text, textStyle = Typography.titleLarge, color = ColorTextBlack)
     }
 }
 
@@ -55,12 +54,12 @@ fun DoneButtonSmall(
 ) {
     Row(
         modifier
-            .fillMaxWidth()
+            .fillMaxWidth().clickable {
+                click()
+            }
             .background(ColorButtonGreen, RoundedCornerShape(20.dp))
             .padding(10.dp)
-            .clickable {
-                click()
-            }, horizontalArrangement = Arrangement.Center
+            , horizontalArrangement = Arrangement.Center
     ) {
         TextInApp(text = text, textStyle = Typography.bodyMedium, color = ColorTextBlack)
     }
@@ -75,14 +74,14 @@ fun CommonButton(
 ) {
     Row(
         modifier
-            .fillMaxWidth()
+            .fillMaxWidth().clickable {
+                click()
+            }
             .background(
                 MaterialTheme.colorScheme.background, RoundedCornerShape(20.dp)
             )
             .padding(10.dp)
-            .clickable {
-                click()
-            },
+            ,
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -90,7 +89,45 @@ fun CommonButton(
         TextInApp(
             text = text,
             textStyle = Typography.bodyMedium,
-            color = ColorTextBlack,
+            color =  MaterialTheme.colorScheme.onBackground,
+            textAlign = TextAlign.Center
+        )
+        if (image == null) {
+            Spacer(modifier = Modifier)
+        } else {
+            Icon(
+                painter = painterResource(id = image),
+                contentDescription = "",
+                modifier = Modifier.size(36.dp),
+                tint = (if (isSystemInDarkTheme()) ColorTextBlack else MaterialTheme.colorScheme.onBackground)
+            )
+        }
+    }
+}
+
+@Composable
+fun TextButton(
+    text: String,
+    modifier: Modifier = Modifier,
+    image: Int? = null,
+    click: () -> Unit
+) {
+    Row(
+        modifier.clickable {
+            click()
+        }
+            .background(
+                MaterialTheme.colorScheme.background, RoundedCornerShape(20.dp)
+            )
+            .padding(10.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Spacer(modifier = Modifier)
+        TextInApp(
+            text = text,
+            textStyle = Typography.bodyMedium,
+            color =  MaterialTheme.colorScheme.onBackground,
             textAlign = TextAlign.Center
         )
         if (image == null) {

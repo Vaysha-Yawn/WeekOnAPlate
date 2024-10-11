@@ -3,7 +3,6 @@ package week.on.a.plate.screenCreateRecipe.view
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,9 +20,7 @@ import androidx.compose.ui.unit.dp
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.SubText
 import week.on.a.plate.core.uitools.TextTitle
-import week.on.a.plate.core.uitools.WebPage
 import week.on.a.plate.core.uitools.buttons.CommonButton
-import week.on.a.plate.core.uitools.buttons.DoneButtonSmall
 import week.on.a.plate.data.dataView.example.recipeTom
 import week.on.a.plate.screenCreateRecipe.event.RecipeCreateEvent
 import week.on.a.plate.screenCreateRecipe.logic.RecipeCreateViewModel
@@ -47,19 +44,14 @@ fun RecipeCreateStart(viewModel: RecipeCreateViewModel) {
             }
             stickyHeader {
                 TabCreateRecipe(viewModel.state, onEvent)
+                if (viewModel.state.activeTabIndex.intValue == 1) {
+                    RowWebActions(viewModel.state)
+                }
             }
             if (viewModel.state.activeTabIndex.intValue == 1) {
                 item {
-                    if (viewModel.state.source.value == ""){
-                        DoneButtonSmall(text = "Искать по названию рецепта в интернете", Modifier.padding(24.dp)) {
-                            viewModel.state.source.value = "https://www.google.ru/search?q=Рецепт ${viewModel.state.name.value.replace(" ", "+")}"
-                        }
-                    }else{
-                        WebPage(url = viewModel.state.source, viewModel.state.webview) { event ->
-                            viewModel.mainViewModel.onEvent(
-                                event
-                            )
-                        }
+                    WebPageCreateRecipe(viewModel.state) { event ->
+                        viewModel.onEvent(event)
                     }
                 }
             } else {
@@ -82,11 +74,14 @@ fun RecipeCreateStart(viewModel: RecipeCreateViewModel) {
                     Column(Modifier.padding(24.dp)) {
                         TextTitle(text = "Ингредиенты")
                         Spacer(modifier = Modifier.size(12.dp))
-                        SubText(text = "Нажмите чтобы редактировать, удерживаете чтобы удалить", textAlign = TextAlign.Start)
+                        SubText(
+                            text = "Нажмите чтобы редактировать, удерживаете чтобы удалить",
+                            textAlign = TextAlign.Start
+                        )
                     }
                 }
                 items(viewModel.state.ingredients.value.size) {
-                    if (viewModel.state.ingredients.value.isNotEmpty()){
+                    if (viewModel.state.ingredients.value.isNotEmpty()) {
                         IngredientRecipeEdit(
                             viewModel.state.ingredients.value[it],
                             viewModel.state,
@@ -99,7 +94,8 @@ fun RecipeCreateStart(viewModel: RecipeCreateViewModel) {
                     Column(
                         Modifier
                             .padding(horizontal = 24.dp)
-                            .fillMaxWidth()) {
+                            .fillMaxWidth()
+                    ) {
                         Spacer(modifier = Modifier.height(12.dp))
                         CommonButton(text = "Добавить ингредиент") {
                             onEvent(RecipeCreateEvent.AddIngredient)

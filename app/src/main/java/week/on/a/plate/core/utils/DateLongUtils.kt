@@ -15,12 +15,12 @@ fun Long.dateToString(): String {
 }
 
 fun LocalDate.dateToString(): String {
-    val formattedDate = this.format(DateTimeFormatter.ofPattern("dd MMMM, yyyy"))
+    val formattedDate = this.format(DateTimeFormatter.ofPattern("d MMMM, yyyy"))
     return formattedDate
 }
 
 fun LocalDate.dateToStringShort(): String {
-    val formattedDate = this.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+    val formattedDate = this.format(DateTimeFormatter.ofPattern("d.MM.yyyy"))
     return formattedDate
 }
 

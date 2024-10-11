@@ -188,11 +188,11 @@ fun FilterScreen(stateUI: FilterUIState, onEvent: (FilterEvent) -> Unit) {
                     }
                 }
             }
-            item { 100.dp }
+            item { 200.dp }
         }
         if (stateUI.filterMode.value == FilterMode.Multiple) {
             DoneButton(
-                modifier = Modifier.padding(horizontal = 20.dp),
+                modifier = Modifier.padding(horizontal = 20.dp).padding(bottom = 50.dp),
                 text = stringResource(R.string.apply),
             ) {
                 onEvent(FilterEvent.Done)

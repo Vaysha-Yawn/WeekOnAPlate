@@ -21,6 +21,7 @@ fun WeekView.getTitle(): String {
     val month = start.format(formatterMonth).capitalize(Locale("ru"))
     val startDay = start.format(formatterDay)
     val endDay = end.format(formatterDay)
+    val endMonth = end.format(formatterMonth).capitalize(Locale("ru"))
 
-    return "$month $startDay-$endDay"
+    return "$startDay $month - $endDay $endMonth"
 }

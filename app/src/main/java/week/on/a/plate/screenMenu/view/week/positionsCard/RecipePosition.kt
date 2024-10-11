@@ -113,7 +113,7 @@ fun WeekRecipePosition(
                 }
             }
             MoreButtonWithBackg {
-                onEvent(MenuEvent.EditPosition(recipe))
+                onEvent(MenuEvent.EditPositionMore(recipe))
             }
         }
         Column {

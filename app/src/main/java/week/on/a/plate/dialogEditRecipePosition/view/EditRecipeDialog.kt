@@ -38,13 +38,6 @@ fun EditRecipePositionDialogContent(onEvent: (EditRecipePositionEvent) -> Unit) 
         }
 
         ButtonRow(
-            R.drawable.delete,
-            stringResource(R.string.delete),
-        ) {
-            onEvent(EditRecipePositionEvent.Delete)
-        }
-
-        ButtonRow(
             R.drawable.find_replace,
             stringResource(R.string.change_recipe),
         ) {
@@ -63,6 +56,13 @@ fun EditRecipePositionDialogContent(onEvent: (EditRecipePositionEvent) -> Unit) 
             stringResource(R.string.move),
         ) {
             onEvent(EditRecipePositionEvent.Move)
+        }
+
+        ButtonRow(
+            R.drawable.delete,
+            stringResource(R.string.delete),
+        ) {
+            onEvent(EditRecipePositionEvent.Delete)
         }
     }
 }

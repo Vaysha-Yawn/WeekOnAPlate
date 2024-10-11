@@ -31,8 +31,8 @@ import week.on.a.plate.dialogEditOrDelete.event.EditOrDeleteEvent
 import week.on.a.plate.dialogEditOrDelete.logic.EditOrDeleteViewModel
 import week.on.a.plate.dialogEditSelection.event.EditSelectionEvent
 import week.on.a.plate.dialogEditSelection.logic.EditSelectionViewModel
-import week.on.a.plate.screenCreateRecipe.timePickDialog.event.TimePickEvent
-import week.on.a.plate.screenCreateRecipe.timePickDialog.logic.TimePickViewModel
+import week.on.a.plate.dialogTimePick.event.TimePickEvent
+import week.on.a.plate.dialogTimePick.logic.TimePickViewModel
 import java.util.Stack
 import javax.inject.Inject
 

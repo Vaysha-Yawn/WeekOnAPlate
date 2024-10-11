@@ -27,7 +27,6 @@ import week.on.a.plate.core.Event
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.ImageLoad
 import week.on.a.plate.core.uitools.SubText
-import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextBodyDisActive
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.MoreButtonWithBackg
@@ -49,7 +48,7 @@ fun WeekIngredientPosition(
             .fillMaxWidth()
             .combinedClickable(
                 onClick = {
-                    onEvent(MenuEvent.EditPosition(ingredient))
+                    onEvent(MenuEvent.EditOtherPosition(ingredient))
                 },
                 onLongClick = { onEvent(MenuEvent.SwitchEditMode) },
             )
@@ -76,7 +75,7 @@ fun WeekIngredientPosition(
         ) {
             Spacer(Modifier)
             MoreButtonWithBackg {
-                onEvent(MenuEvent.EditPosition(ingredient))
+                onEvent(MenuEvent.EditPositionMore(ingredient))
             }
         }
         Column {

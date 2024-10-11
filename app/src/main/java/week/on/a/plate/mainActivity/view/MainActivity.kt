@@ -104,7 +104,7 @@ class MainActivity : ComponentActivity() {
                     }, floatingActionButton = {
                         if (viewModel.isActivePlusButton.value && viewModel.dialogUseCase.activeDialog.value==null){
                             val pad = if ( viewModel.isActiveFilterScreen.value ){
-                                60.dp
+                                110.dp
                             }else {
                                 0.dp
                             }

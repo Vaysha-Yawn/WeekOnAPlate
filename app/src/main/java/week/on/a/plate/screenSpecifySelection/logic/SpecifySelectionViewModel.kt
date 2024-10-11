@@ -2,6 +2,7 @@ package week.on.a.plate.screenSpecifySelection.logic
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,6 +13,8 @@ import week.on.a.plate.data.dataView.week.CategoriesSelection
 import week.on.a.plate.data.repository.tables.menu.selection.WeekRepository
 import week.on.a.plate.dialogEditOneString.logic.EditOneStringViewModel
 import week.on.a.plate.dialogEditOneString.state.EditOneStringUIState
+import week.on.a.plate.dialogEditSelection.logic.EditSelectionViewModel
+import week.on.a.plate.dialogEditSelection.state.EditSelectionUIState
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screenMenu.event.MenuEvent
@@ -71,21 +74,24 @@ class SpecifySelectionViewModel @Inject constructor(
 
     private fun addCustomSelection() {
         viewModelScope.launch {
-            val vm = EditOneStringViewModel()
+            val vm = EditSelectionViewModel()
             vm.mainViewModel = mainViewModel
             mainViewModel.onEvent(MainEvent.OpenDialog(vm))
             vm.launchAndGet(
-                EditOneStringUIState(
+                EditSelectionUIState(
                     startTitle = "Добавить приём пищи",
                     startPlaceholder = "Завтрак..."
                 )
-            ) { note ->
+            ) { selState ->
                 state.allSelectionsIdDay.value =
                     state.allSelectionsIdDay.value.toMutableList().apply {
-                        add(note)
+                        add(selState.text.value)
                     }
+                viewModelScope.launch {
+                    weekRepository.getSelIdOrCreate(state.date.value!!, false, selState.text.value, mainViewModel.locale, selState.selectedTime.value)
+                }
                 state.checkWeek.value = false
-                state.checkDayCategory.value = note
+                state.checkDayCategory.value = selState.text.value
             }
             mainViewModel.onEvent(MainEvent.OpenDialog(vm))
         }
@@ -122,7 +128,6 @@ class SpecifySelectionViewModel @Inject constructor(
         return state.checkDayCategory.value
     }
 
-    //todo возможен баг LocalTime.of(0,0) неуверена
     fun done() {
         close()
         val category = getCategory() ?: return

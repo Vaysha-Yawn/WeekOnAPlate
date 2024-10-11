@@ -96,7 +96,7 @@ fun RecipePosition(
             }
         }
         MoreButton {
-            onEvent(MenuEvent.EditPosition(recipe))
+            onEvent(MenuEvent.EditPositionMore(recipe))
         }
         Spacer(modifier = Modifier.width(12.dp))
     }

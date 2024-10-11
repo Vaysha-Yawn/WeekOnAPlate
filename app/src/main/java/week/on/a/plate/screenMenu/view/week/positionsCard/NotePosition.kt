@@ -22,6 +22,8 @@ import week.on.a.plate.R
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.uitools.TextBody
+import week.on.a.plate.core.uitools.buttons.MoreButton
+import week.on.a.plate.core.uitools.buttons.MoreButtonWithBackg
 import week.on.a.plate.screenMenu.event.MenuEvent
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -36,7 +38,7 @@ fun WeekNotePosition(
             .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(20.dp))
             .padding(20.dp)
             .combinedClickable(
-                onClick = { onEvent(MenuEvent.EditPosition(note)) },
+                onClick = { onEvent(MenuEvent.EditOtherPosition(note)) },
                 onLongClick = { onEvent(MenuEvent.SwitchEditMode) },
             ),
         horizontalAlignment = Alignment.Start,
@@ -48,6 +50,9 @@ fun WeekNotePosition(
                 modifier = Modifier
                     .size(24.dp),
             )
+            MoreButton {
+                onEvent(MenuEvent.EditPositionMore(note))
+            }
         }
         Spacer(modifier = Modifier.size(12.dp))
         TextBody(

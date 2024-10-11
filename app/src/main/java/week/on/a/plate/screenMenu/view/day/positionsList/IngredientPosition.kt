@@ -20,6 +20,7 @@ import week.on.a.plate.core.uitools.ImageLoad
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.core.uitools.SubText
 import week.on.a.plate.core.uitools.TextBody
+import week.on.a.plate.core.uitools.buttons.MoreButton
 import week.on.a.plate.core.utils.getIngredientCountAndMeasure1000
 import week.on.a.plate.screenMenu.event.MenuEvent
 
@@ -35,7 +36,7 @@ fun IngredientPosition(
             Modifier
                 .weight(3f)
                 .combinedClickable(
-                    onClick = {onEvent(MenuEvent.EditPosition(ingredient))},
+                    onClick = {onEvent(MenuEvent.EditOtherPosition(ingredient))},
                     onLongClick =
                     { onEvent(MenuEvent.SwitchEditMode) },
                 ).padding(vertical = 5.dp),
@@ -66,6 +67,10 @@ fun IngredientPosition(
                 ingredientCount.first +" "+ ingredientCount.second
             )
             Spacer(modifier = Modifier.width(20.dp))
+            MoreButton {
+                onEvent(MenuEvent.EditPositionMore(ingredient))
+            }
+            Spacer(modifier = Modifier.width(12.dp))
         }
     }
 }

@@ -95,9 +95,7 @@ fun EditOrAddIngredientBottomDialogContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 24.dp)
-            ) { newnum ->
-                state.count.intValue = newnum
-            }
+            )
         }
         val messageError = stringResource(id = R.string.message_select_ingredient)
         val coroutineScope = rememberCoroutineScope()

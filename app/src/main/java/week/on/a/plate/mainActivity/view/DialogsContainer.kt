@@ -5,7 +5,6 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import week.on.a.plate.dialogAddIngredient.event.AddIngredientEvent
 import week.on.a.plate.dialogAddIngredient.logic.AddIngredientViewModel
 import week.on.a.plate.dialogAddIngredient.view.AddIngredient
@@ -53,9 +52,9 @@ import week.on.a.plate.dialogEditOrDelete.view.EditOrDeleteDialogContent
 import week.on.a.plate.dialogEditSelection.event.EditSelectionEvent
 import week.on.a.plate.dialogEditSelection.logic.EditSelectionViewModel
 import week.on.a.plate.dialogEditSelection.view.EditSelectionContent
-import week.on.a.plate.screenCreateRecipe.timePickDialog.event.TimePickEvent
-import week.on.a.plate.screenCreateRecipe.timePickDialog.logic.TimePickViewModel
-import week.on.a.plate.screenCreateRecipe.timePickDialog.view.TimePickDialog
+import week.on.a.plate.dialogTimePick.event.TimePickEvent
+import week.on.a.plate.dialogTimePick.logic.TimePickViewModel
+import week.on.a.plate.dialogTimePick.view.TimePickDialog
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -111,7 +110,7 @@ fun DialogsContainer(
 
         is EditOneStringViewModel -> {
             val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-            BottomDialogContainer(sheetState, { onEvent(EditOneStringEvent.Close) }) { snackBarState->
+            BottomDialogContainer(sheetState, { onEvent(EditOneStringEvent.Done) }) { snackBarState->
                 EditOneStringContent(data.state) {
                     onEvent(EditOneStringEvent.Done)
                 }

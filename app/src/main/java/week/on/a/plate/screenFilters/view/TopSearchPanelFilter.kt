@@ -23,7 +23,6 @@ import week.on.a.plate.core.theme.ColorStrokeGrey
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.SearchLine
 import week.on.a.plate.screenFilters.event.FilterEvent
-import week.on.a.plate.screenFilters.state.FilterEnum
 import week.on.a.plate.screenFilters.state.FilterMode
 import week.on.a.plate.screenFilters.state.FilterUIState
 import week.on.a.plate.screenRecipeDetails.view.start.ImageButton
@@ -36,17 +35,14 @@ fun TopSearchPanelFilter(stateUI: FilterUIState, onEvent: (FilterEvent) -> Unit)
             .padding(vertical = 24.dp)
             .fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
     ) {
-        if (stateUI.selectedTags.value.isNotEmpty() || stateUI.selectedIngredients.value.isNotEmpty()
-            || stateUI.filterMode.value == FilterMode.One
-        ) {
-            Spacer(modifier = Modifier.width(12.dp))
-            ImageButton(
-                res = R.drawable.close,
-                Modifier
-                    .border(1.dp, ColorStrokeGrey, RoundedCornerShape(10.dp))
-                    .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(10.dp))
-            ) { onEvent(FilterEvent.Back) }
-        }
+        Spacer(modifier = Modifier.width(12.dp))
+        ImageButton(
+            res = R.drawable.close,
+            Modifier
+                .border(1.dp, ColorStrokeGrey, RoundedCornerShape(10.dp))
+                .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(10.dp))
+        ) { onEvent(FilterEvent.Back) }
+
         Spacer(modifier = Modifier.width(12.dp))
 
         val modifier = if (stateUI.filterMode.value == FilterMode.One) {
@@ -71,7 +67,8 @@ fun TopSearchPanelFilter(stateUI: FilterUIState, onEvent: (FilterEvent) -> Unit)
             ImageButton(
                 res = R.drawable.select_all,
                 Modifier
-                    .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(10.dp))
+                    .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(10.dp))
+                    .border(1.dp, ColorStrokeGrey, RoundedCornerShape(10.dp))
             ) { onEvent(FilterEvent.SelectedFilters) }
             Spacer(modifier = Modifier.width(12.dp))
         }

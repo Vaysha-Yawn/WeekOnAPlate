@@ -1,8 +1,7 @@
-package week.on.a.plate.screenCreateRecipe.timePickDialog.event
+package week.on.a.plate.dialogTimePick.event
 
 
 import week.on.a.plate.core.Event
-import week.on.a.plate.core.dialogExampleStructure.dialogAbstract.event.DialogEvent
 
 sealed class TimePickEvent: Event() {
     data object Done: TimePickEvent()

@@ -69,7 +69,7 @@ class MenuViewModel @Inject constructor(
         }
     }
 
-    fun updateWeek() {
+    private fun updateWeek() {
         weekState.value = WeekState.Loading
         viewModelScope.launch {
             val week = sCRUDRecipeInMenu.menuR.getCurrentWeek(activeDay, Locale.getDefault())
@@ -126,9 +126,15 @@ class MenuViewModel @Inject constructor(
 
             MenuEvent.ChooseWeek -> chooseWeek()
             is MenuEvent.CreatePosition -> addPosition(event.selId)
-            is MenuEvent.EditPosition -> {
+            is MenuEvent.EditPositionMore -> {
                 when (event.position) {
                     is Position.PositionRecipeView -> editPositionRecipe(event.position)
+                    else -> editOtherPositionMore(event.position)
+                }
+            }
+            is MenuEvent.EditOtherPosition -> {
+                when (event.position) {
+                    is Position.PositionRecipeView -> {}
                     else -> editOtherPosition(event.position)
                 }
             }
@@ -309,6 +315,7 @@ class MenuViewModel @Inject constructor(
                         recipePosition
                     )
                 )
+                updateWeek()
             }
         }
         mainViewModel.nav.navigate(SearchScreen)
@@ -318,24 +325,34 @@ class MenuViewModel @Inject constructor(
         viewModelScope.launch {
             mainViewModel.nav.navigate(SearchScreen)
             mainViewModel.searchViewModel.launchAndGet(selId, null) { recipe ->
-                val recipePosition = Position.PositionRecipeView(
-                    0,
-                    RecipeShortView(recipe.id, recipe.name, recipe.img),
-                    2,
-                    selId
-                )
-                sCRUDRecipeInMenu.onEvent(
-                    ActionWeekMenuDB.AddRecipePositionInMenuDB(
-                        selId,
-                        recipePosition
+
+                val vm = ChangePortionsCountViewModel()
+                vm.mainViewModel = mainViewModel
+                onEvent(MainEvent.OpenDialog(vm))
+                vm.launchAndGet(2){count->
+                    val recipePosition = Position.PositionRecipeView(
+                        0,
+                        RecipeShortView(recipe.id, recipe.name, recipe.img),
+                        count,
+                        selId
                     )
-                )
+                    viewModelScope.launch {
+                        sCRUDRecipeInMenu.onEvent(
+                            ActionWeekMenuDB.AddRecipePositionInMenuDB(
+                                selId,
+                                recipePosition
+                            )
+                        )
+                        updateWeek()
+                    }
+                }
             }
         }
     }
 
     private fun findReplaceRecipe(positionRecipe: Position.PositionRecipeView) {
         viewModelScope.launch {
+            mainViewModel.nav.navigate(SearchScreen)
             mainViewModel.searchViewModel.launchAndGet(positionRecipe.selectionId, null) { recipe ->
                 val recipePosition = Position.PositionRecipeView(
                     0,
@@ -349,8 +366,13 @@ class MenuViewModel @Inject constructor(
                         recipePosition
                     )
                 )
+                sCRUDRecipeInMenu.onEvent(
+                    ActionWeekMenuDB.Delete(
+                        positionRecipe
+                    )
+                )
+                updateWeek()
             }
-            mainViewModel.nav.navigate(SearchScreen)
         }
     }
 
@@ -412,7 +434,7 @@ class MenuViewModel @Inject constructor(
         }
     }
 
-    private fun editOtherPosition(position: Position) {
+    private fun editOtherPositionMore(position: Position) {
         viewModelScope.launch {
             val vm = EditOtherPositionViewModel()
             vm.mainViewModel = mainViewModel
@@ -427,7 +449,6 @@ class MenuViewModel @Inject constructor(
                             )
                         )
                     )
-
                     EditOtherPositionEvent.Double -> getSelAndDouble(position)
                     EditOtherPositionEvent.Edit -> {
                         when (position) {
@@ -437,10 +458,18 @@ class MenuViewModel @Inject constructor(
                             is Position.PositionRecipeView -> {}
                         }
                     }
-
                     EditOtherPositionEvent.Move -> getSelAndMove(position)
                 }
             }
+        }
+    }
+
+    private fun editOtherPosition(position: Position) {
+        when (position) {
+            is Position.PositionDraftView -> editDraft(position)
+            is Position.PositionIngredientView -> editIngredientPosition(position)
+            is Position.PositionNoteView -> editNote(position)
+            is Position.PositionRecipeView -> {}
         }
     }
 
@@ -491,7 +520,6 @@ class MenuViewModel @Inject constructor(
                             position
                         )
                     )
-
                     EditRecipePositionEvent.Move -> getSelAndMove(position)
                     EditRecipePositionEvent.Close -> {}
                 }

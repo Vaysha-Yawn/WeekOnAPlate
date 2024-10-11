@@ -39,8 +39,8 @@ fun EditOneStringContent(
             state.text,
             state.placeholder.value, modifier = Modifier.focusRequester(focusRequester)
         )
-        Spacer(modifier = Modifier.height(24.dp))
-        DoneButton(text = stringResource(R.string.apply)) { done() }
+        /*Spacer(modifier = Modifier.height(24.dp))
+        DoneButton(text = stringResource(R.string.apply)) { done() }*/
     }
 }
 

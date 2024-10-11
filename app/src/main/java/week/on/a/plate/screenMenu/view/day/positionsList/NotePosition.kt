@@ -16,8 +16,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
-import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.core.uitools.TextBody
+import week.on.a.plate.core.uitools.buttons.MoreButton
+import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.screenMenu.event.MenuEvent
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -27,30 +28,35 @@ fun NotePosition(
     onEvent: (event: MenuEvent) -> Unit,
     rowScope: RowScope
 ) {
-    with(rowScope){
+    with(rowScope) {
         Row(
             Modifier
-                .weight(3f).combinedClickable(
-                onClick = { onEvent(MenuEvent.EditPosition(note))},
-                onLongClick =
-                { onEvent(MenuEvent.SwitchEditMode) },
-            ).padding(vertical = 5.dp),
-        horizontalArrangement = Arrangement.Start,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
+                .weight(3f)
+                .combinedClickable(
+                    onClick = { onEvent(MenuEvent.EditOtherPosition(note)) },
+                    onLongClick =
+                    { onEvent(MenuEvent.SwitchEditMode) },
+                )
+                .padding(vertical = 5.dp),
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Spacer(modifier = Modifier.width(20.dp))
-        Image(
-            painter = painterResource(id = R.drawable.note),
-            contentDescription = "",
-            modifier = Modifier
-                .size(24.dp),
-        )
+            Image(
+                painter = painterResource(id = R.drawable.note),
+                contentDescription = "",
+                modifier = Modifier
+                    .size(24.dp),
+            )
+            Spacer(modifier = Modifier.width(12.dp))
+            TextBody(
+                note.note,
+                modifier = Modifier,
+            )
+        }
+        MoreButton {
+            onEvent(MenuEvent.EditPositionMore(note))
+        }
         Spacer(modifier = Modifier.width(12.dp))
-        TextBody(
-            note.note,
-            modifier = Modifier,
-        )
-
     }
-}
 }

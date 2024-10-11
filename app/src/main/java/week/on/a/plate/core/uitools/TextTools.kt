@@ -258,36 +258,12 @@ private fun TagSmall(text: String, color: Color) {
     )
 }
 
-
-// todo: del
-@Composable
-fun TextInAppColored(
-    text: String,
-    colorBackground: Color,
-    modifier: Modifier = Modifier,
-    maxLines: Int? = null,
-    textStyle: TextStyle = Typography.bodyMedium,
-    color: Color = Typography.bodyMedium.color,
-    textAlign: TextAlign = TextAlign.Left,
-) {
-    TextInApp(
-        text, modifier = modifier
-            .background(
-                colorBackground, RoundedCornerShape(10.dp)
-            )
-            .padding(horizontal = 5.dp), textStyle = textStyle,
-        maxLines = maxLines, color = color,
-        textAlign = textAlign
-    )
-}
-
 @Preview(showBackground = true)
 @Composable
 fun PreviewPlusButton() {
     WeekOnAPlateTheme {
         Column {
             TextInApp("Text 1")
-            TextInAppColored("Text 2", ColorButtonGreen)
             TextDisplayItalic("TextDisplayItalic")
             TextTitleLargeItalic("TextTitleLargeItalic")
             TextTitleLarge("TextTitleLarge")

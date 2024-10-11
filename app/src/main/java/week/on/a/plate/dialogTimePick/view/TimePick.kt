@@ -1,5 +1,7 @@
-package week.on.a.plate.screenCreateRecipe.timePickDialog.view
+package week.on.a.plate.dialogTimePick.view
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -19,11 +21,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimeInput
 import androidx.compose.material3.TimePicker
-import androidx.compose.material3.TimePickerState
-import androidx.compose.material3.rememberTimePickerState
+import androidx.compose.material3.TimePickerDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -31,9 +30,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import week.on.a.plate.R
-import week.on.a.plate.screenCreateRecipe.timePickDialog.event.TimePickEvent
-import week.on.a.plate.screenCreateRecipe.timePickDialog.state.TimePickUIState
-import java.util.Calendar
+import week.on.a.plate.core.theme.ColorSubTextGrey
+import week.on.a.plate.core.uitools.TextBody
+import week.on.a.plate.dialogTimePick.event.TimePickEvent
+import week.on.a.plate.dialogTimePick.state.TimePickUIState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,18 +49,29 @@ fun TimePickDialog(
                 onDisplayModeChange = { state.mode.value = it },
             )
             Spacer(Modifier.weight(1f))
-            TextButton(onClick = { onEvent(TimePickEvent.Close) }) {
-                Text("Отмена")
-            }
-            TextButton(onClick = { onEvent(TimePickEvent.Done) }) {
-                Text("Подтвердить")
-            }
+            TextBody( "Отмена" , modifier = Modifier.clickable{ onEvent(TimePickEvent.Close) }.padding(end = 24.dp), color = ColorSubTextGrey)
+            TextBody( "Подтвердить" , modifier = Modifier.clickable{ onEvent(TimePickEvent.Done) })
         },
     ) {
         val contentModifier = Modifier.padding(horizontal = 24.dp)
+        val colors= TimePickerDefaults.colors(
+            clockDialColor = MaterialTheme.colorScheme.background,
+            clockDialSelectedContentColor = MaterialTheme.colorScheme.onBackground,
+            clockDialUnselectedContentColor = ColorSubTextGrey,
+            selectorColor = MaterialTheme.colorScheme.primary,
+            containerColor = MaterialTheme.colorScheme.background,
+            timeSelectorSelectedContainerColor = MaterialTheme.colorScheme.background,
+            timeSelectorUnselectedContainerColor = MaterialTheme.colorScheme.background,
+            timeSelectorSelectedContentColor = MaterialTheme.colorScheme.onBackground,
+            timeSelectorUnselectedContentColor = ColorSubTextGrey,
+        )
         when (state.mode.value) {
-            DisplayMode.Picker -> TimePicker(modifier = contentModifier, state = state.timeState)
-            DisplayMode.Input -> TimeInput(modifier = contentModifier, state = state.timeState)
+            DisplayMode.Picker -> {
+                TextBody("Выберите часы и минуты")
+                Spacer(Modifier.height(12.dp))
+                TimePicker(modifier = contentModifier, state = state.timeState, colors = colors)
+            }
+            DisplayMode.Input -> TimeInput(modifier = contentModifier, state = state.timeState, colors = colors)
         }
     }
 }
@@ -77,11 +88,11 @@ fun PickerDialog(
         properties = DialogProperties(usePlatformDefaultWidth = false),
     ) {
         Surface(
-            modifier = Modifier,
+            modifier = Modifier.background(MaterialTheme.colorScheme.surface),
             shape = MaterialTheme.shapes.extraLarge,
             tonalElevation = 6.dp,
         ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally, modifier =  Modifier.background(MaterialTheme.colorScheme.surface)) {
                 Spacer(modifier = Modifier.height(24.dp))
                 content()
                 Row(
@@ -113,7 +124,7 @@ private fun DisplayModeToggleButton(
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.keyboard),
-                contentDescription = "",
+                contentDescription = "", tint = MaterialTheme.colorScheme.onBackground
             )
         }
 
@@ -123,7 +134,7 @@ private fun DisplayModeToggleButton(
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.time),
-                contentDescription = "",
+                contentDescription = "", tint = MaterialTheme.colorScheme.onBackground
             )
         }
     }

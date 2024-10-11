@@ -9,6 +9,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -57,16 +59,15 @@ fun EditTextLine(
 fun EditNumberLine(
     num: MutableState<Int>,
     placeholder: String,
-    modifier: Modifier = Modifier,
-    textChangeEvent: (Int) -> Unit,
+    modifier: Modifier = Modifier
 ) {
+    val text = remember {  mutableStateOf(if (num.value ==0) "" else num.value.toString() )}
     OutlinedTextField(
-        value = num.value.toString(),
+        value = text.value,
         onValueChange = { newValue ->
+            text.value = newValue
             val d = newValue.toIntOrNull()
-            if (d != null) {
-                textChangeEvent(d)
-            }
+            num.value = d?:0
         },
         modifier = modifier,
         textStyle = Typography.bodyMedium,

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,7 +30,7 @@ fun TopPanelRecipeDetail(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent
         ImageButton(R.drawable.back) {
             onEvent(RecipeDetailsEvent.Back)
         }
-        Row {
+        Row(verticalAlignment = Alignment.CenterVertically) {
             ImageButton(R.drawable.delete) {
                 onEvent(RecipeDetailsEvent.Delete)
             }
@@ -44,9 +45,16 @@ fun TopPanelRecipeDetail(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent
             ) {
                 onEvent(RecipeDetailsEvent.SwitchFavorite)
             }
-            ImageButton(R.drawable.add) {
-                onEvent(RecipeDetailsEvent.AddToMenu)
-            }
+            Image(
+                painter = painterResource(R.drawable.add_recipe),
+                contentDescription = "",
+                modifier = Modifier
+                    .clickable {
+                        onEvent(RecipeDetailsEvent.AddToMenu)
+                    }
+                    .padding(12.dp)
+                    .size(36.dp)
+            )
         }
     }
     HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.outline)

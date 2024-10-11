@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.core.Event
+import week.on.a.plate.core.uitools.buttons.MoreButton
 import week.on.a.plate.screenMenu.event.MenuEvent
 import week.on.a.plate.screenSearchRecipes.view.resultScreen.TagListHidden
 
@@ -37,7 +38,7 @@ fun WeekDraftPosition(
             .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(20.dp))
             .padding(20.dp)
             .combinedClickable(
-                onClick = {onEvent(MenuEvent.EditPosition(draft)) },
+                onClick = {onEvent(MenuEvent.EditOtherPosition(draft)) },
                 onLongClick = { onEvent(MenuEvent.SwitchEditMode) },
             ),
         horizontalAlignment = Alignment.Start,
@@ -50,6 +51,9 @@ fun WeekDraftPosition(
                     .size(24.dp)
                     .clickable { onEvent(MenuEvent.SearchByDraft(draft)) },
             )
+            MoreButton {
+                onEvent(MenuEvent.EditPositionMore(draft))
+            }
         }
         Spacer(modifier = Modifier.size(6.dp))
         Column(

@@ -1,15 +1,13 @@
-package week.on.a.plate.screenCreateRecipe.timePickDialog.logic
+package week.on.a.plate.dialogTimePick.logic
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import week.on.a.plate.core.dialogExampleStructure.DialogViewModel
-import week.on.a.plate.core.dialogExampleStructure.dialogAbstract.event.DialogEvent
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
-import week.on.a.plate.screenCreateRecipe.timePickDialog.event.TimePickEvent
-import week.on.a.plate.screenCreateRecipe.timePickDialog.state.TimePickUIState
-import java.util.Calendar
+import week.on.a.plate.dialogTimePick.event.TimePickEvent
+import week.on.a.plate.dialogTimePick.state.TimePickUIState
 
 
 class TimePickViewModel() : DialogViewModel() {

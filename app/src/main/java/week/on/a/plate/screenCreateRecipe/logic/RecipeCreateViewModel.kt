@@ -15,7 +15,7 @@ import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screenCreateRecipe.event.RecipeCreateEvent
 import week.on.a.plate.screenCreateRecipe.state.RecipeCreateUIState
 import week.on.a.plate.screenCreateRecipe.state.RecipeStepState
-import week.on.a.plate.screenCreateRecipe.timePickDialog.logic.TimePickViewModel
+import week.on.a.plate.dialogTimePick.logic.TimePickViewModel
 import week.on.a.plate.screenFilters.navigation.FilterDestination
 import week.on.a.plate.screenFilters.state.FilterMode
 import week.on.a.plate.dialogEditOneString.logic.EditOneStringViewModel

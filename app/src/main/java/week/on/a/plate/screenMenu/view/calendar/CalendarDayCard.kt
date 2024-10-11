@@ -34,7 +34,7 @@ fun CalendarDayCard(
 ) {
     Column(
         Modifier
-            .padding(end = 5.dp)
+            .padding(end = 3.dp)
             .border(
                 1.dp, if (active) {
                     MaterialTheme.colorScheme.onBackground
