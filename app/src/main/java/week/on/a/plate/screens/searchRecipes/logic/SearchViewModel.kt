@@ -20,6 +20,8 @@ import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.data.dataView.week.RecipeShortView
 import week.on.a.plate.data.repository.tables.filters.recipeTagCategory.RecipeTagCategoryRepository
 import week.on.a.plate.data.repository.tables.recipe.recipe.RecipeRepository
+import week.on.a.plate.dialogs.sortMore.event.SortMoreEvent
+import week.on.a.plate.dialogs.sortMore.logic.SortMoreViewModel
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screens.createRecipe.navigation.RecipeCreateDestination
@@ -147,6 +149,27 @@ class SearchViewModel @Inject constructor(
             SearchScreenEvent.SearchAll -> searchAll()
             SearchScreenEvent.SearchRandom -> searchRandom()
             is SearchScreenEvent.ChangeSort -> changeSort(event.type, event.direction)
+            SearchScreenEvent.FiltersMore -> TODO()
+            SearchScreenEvent.SavePreset -> TODO()
+            SearchScreenEvent.SortMore -> sortMore()
+        }
+    }
+
+    private fun sortMore() {
+        val vm = SortMoreViewModel()
+        vm.mainViewModel = mainViewModel
+        mainViewModel.onEvent(MainEvent.OpenDialog(vm))
+        viewModelScope.launch {
+            vm.launchAndGet { event->
+                when(event){
+                    SortMoreEvent.AlphabetNormal -> onEvent(SearchScreenEvent.ChangeSort(ResultSortType.alphabet, ResultSortingDirection.down))
+                    SortMoreEvent.AlphabetRevers -> onEvent(SearchScreenEvent.ChangeSort(ResultSortType.alphabet, ResultSortingDirection.up))
+                    SortMoreEvent.Close -> {}
+                    SortMoreEvent.DateFromNewToOld -> onEvent(SearchScreenEvent.ChangeSort(ResultSortType.date, ResultSortingDirection.down))
+                    SortMoreEvent.DateFromOldToNew -> onEvent(SearchScreenEvent.ChangeSort(ResultSortType.date, ResultSortingDirection.up))
+                    SortMoreEvent.Random -> onEvent(SearchScreenEvent.ChangeSort(ResultSortType.randow, ResultSortingDirection.down))
+                }
+            }
         }
     }
 
@@ -160,16 +183,33 @@ class SearchViewModel @Inject constructor(
             Pair(ResultSortType.date, ResultSortingDirection.up)->
                 this.sortedWith(compareBy ({it.dateLastEdit},{it.timeLastEdit}))
 
-            Pair(ResultSortType.alphabet, ResultSortingDirection.down)->
-                this.sortedBy { it.name }
+            Pair(ResultSortType.alphabet, ResultSortingDirection.down)-> this.sortedBy { it.name }
 
             Pair(ResultSortType.date, ResultSortingDirection.down)->
                 this.sortedWith(compareBy<RecipeView> { it.dateLastEdit }.thenByDescending { it.timeLastEdit })
 
-            Pair(ResultSortType.alphabet, ResultSortingDirection.up) ->
-                sortedByDescending { it.name }
+            Pair(ResultSortType.alphabet, ResultSortingDirection.up) -> sortedByDescending { it.name }
+
+            Pair(ResultSortType.randow, ResultSortingDirection.up) -> randomSort(this)
+
+            Pair(ResultSortType.randow, ResultSortingDirection.down) -> randomSort(this)
 
             else -> this
+        }
+    }
+
+    private fun randomSort(list: List<RecipeView>):List<RecipeView>{
+        return if (list.isNotEmpty()) {
+            val mutableRecipeViewList = list.toMutableList()
+            val listRandom = mutableListOf<RecipeView>()
+            while (mutableRecipeViewList.isNotEmpty()) {
+                val random = mutableRecipeViewList.random()
+                mutableRecipeViewList.remove(random)
+                listRandom.add(random)
+            }
+            listRandom
+        }else{
+            list
         }
     }
 

@@ -32,6 +32,8 @@ import week.on.a.plate.dialogs.editSelection.event.EditSelectionEvent
 import week.on.a.plate.dialogs.editSelection.logic.EditSelectionViewModel
 import week.on.a.plate.dialogs.dialogTimePick.event.TimePickEvent
 import week.on.a.plate.dialogs.dialogTimePick.logic.TimePickViewModel
+import week.on.a.plate.dialogs.sortMore.event.SortMoreEvent
+import week.on.a.plate.dialogs.sortMore.logic.SortMoreViewModel
 import java.util.Stack
 import javax.inject.Inject
 
@@ -118,6 +120,9 @@ class DialogUseCase @Inject constructor() {
             }
             is EditSelectionEvent -> if (activeDialog.value is EditSelectionViewModel) {
                 (activeDialog.value as EditSelectionViewModel).onEvent(event)
+            }
+            is SortMoreEvent -> if (activeDialog.value is SortMoreViewModel) {
+                (activeDialog.value as SortMoreViewModel).onEvent(event)
             }
         }
     }

@@ -10,6 +10,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
@@ -44,10 +45,10 @@ fun RecipeBase(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) -> Unit)
             TagList(tags = state.recipe.value.tags, ingredients = listOf())
         }
         Spacer(modifier = Modifier.height(12.dp))
-        SubText(text = "Создано: " + state.recipe.value.dateCreated.dateToStringShort(),)
+        SubText(text = "Создано: " + state.recipe.value.dateCreated.dateToStringShort(), textAlign = TextAlign.Start)
         Spacer(modifier = Modifier.height(6.dp))
         SubText(text = "Последнее редактирование: " + state.recipe.value.dateLastEdit.dateToStringShort() + " в "+ state.recipe.value.timeLastEdit.format(
-            DateTimeFormatter.ofPattern("HH:mm")))
+            DateTimeFormatter.ofPattern("HH:mm")), textAlign = TextAlign.Start)
         if (state.recipe.value.description!=""){
             Spacer(modifier = Modifier.height(12.dp))
             TextBody(text = state.recipe.value.description)

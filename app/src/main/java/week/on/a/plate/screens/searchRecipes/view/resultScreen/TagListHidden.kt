@@ -28,14 +28,14 @@ fun TagListHidden(tags: List<RecipeTagView>, ingredients: List<IngredientView>) 
     Column {
         if (tags.isNotEmpty()) {
             TagsFlowRowWithHidden(sizeList = tags.size) { index ->
-                TagSmall(tag = tags[index])
+                TagSmall(tag = tags[index], Modifier.padding(end = 6.dp, bottom = 6.dp))
                 Spacer(modifier = Modifier.width(6.dp))
             }
         }
         Spacer(modifier = Modifier.height(6.dp))
         if (ingredients.isNotEmpty()) {
             TagsFlowRowWithHidden(ingredients.size) { index ->
-                TagSmall(ingredientView = ingredients[index])
+                TagSmall(ingredientView = ingredients[index], Modifier.padding(end = 6.dp, bottom = 6.dp))
             }
         }
     }

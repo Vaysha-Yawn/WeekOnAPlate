@@ -21,4 +21,7 @@ sealed class SearchScreenEvent : Event(){
     data object SearchFavorite : SearchScreenEvent()
     data object SearchAll : SearchScreenEvent()
     data object SearchRandom : SearchScreenEvent()
+    data object SortMore : SearchScreenEvent()
+    data object SavePreset : SearchScreenEvent()
+    data object FiltersMore : SearchScreenEvent()
 }

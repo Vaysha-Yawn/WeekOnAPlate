@@ -1,4 +1,4 @@
-package week.on.a.plate.screens.searchRecipes.view.categoriesScreen
+package week.on.a.plate.screens.searchRecipes.view.main
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,11 +13,10 @@ import week.on.a.plate.core.uitools.SearchLine
 import week.on.a.plate.core.uitools.buttons.BackButtonOutlined
 import week.on.a.plate.screens.searchRecipes.event.SearchScreenEvent
 import week.on.a.plate.screens.searchRecipes.state.SearchUIState
-import week.on.a.plate.screens.searchRecipes.view.viewTools.FilterButton
 
 @Composable
 fun TopSearchPanel(stateUI: SearchUIState, onEvent: (Event) -> Unit) {
-    Row(Modifier.padding(24.dp), verticalAlignment = Alignment.CenterVertically) {
+    Row(Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
         BackButtonOutlined {
             onEvent(SearchScreenEvent.Back)
         }

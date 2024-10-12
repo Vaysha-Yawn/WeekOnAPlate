@@ -18,7 +18,7 @@ class SearchUIState {
     val resultSortType = mutableStateOf(Pair(ResultSortType.date, ResultSortingDirection.down))
 }
 enum class ResultSortType{
-    date, alphabet
+    date, alphabet, randow
 }
 enum class ResultSortingDirection{
     up, down

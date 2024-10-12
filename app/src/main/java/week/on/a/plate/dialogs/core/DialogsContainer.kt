@@ -54,6 +54,9 @@ import week.on.a.plate.dialogs.editSelection.view.EditSelectionContent
 import week.on.a.plate.dialogs.dialogTimePick.event.TimePickEvent
 import week.on.a.plate.dialogs.dialogTimePick.logic.TimePickViewModel
 import week.on.a.plate.dialogs.dialogTimePick.view.TimePickDialog
+import week.on.a.plate.dialogs.sortMore.event.SortMoreEvent
+import week.on.a.plate.dialogs.sortMore.logic.SortMoreViewModel
+import week.on.a.plate.dialogs.sortMore.view.SortMoreContent
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -230,6 +233,18 @@ fun DialogsContainer(
                 EditSelectionContent(
                     data
                 )
+            }
+            LaunchedEffect(true) {
+                sheetState.show()
+            }
+        }
+
+        is SortMoreViewModel -> {
+            val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+            BottomDialogContainer(
+                sheetState,
+                { onEvent(SortMoreEvent.Close) }) { snackBarState->
+               SortMoreContent(data)
             }
             LaunchedEffect(true) {
                 sheetState.show()

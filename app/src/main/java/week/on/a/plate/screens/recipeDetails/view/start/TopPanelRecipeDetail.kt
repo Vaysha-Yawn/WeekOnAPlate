@@ -37,24 +37,17 @@ fun TopPanelRecipeDetail(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent
             ImageButton(R.drawable.edit) {
                 onEvent(RecipeDetailsEvent.Edit)
             }
-            ImageButton(R.drawable.add_shopping_cart) {
-                onEvent(RecipeDetailsEvent.AddToCart)
-            }
             ImageButton(
                 if (state.recipe.value.inFavorite) R.drawable.bookmark_full else R.drawable.bookmark
             ) {
                 onEvent(RecipeDetailsEvent.SwitchFavorite)
             }
-            Image(
-                painter = painterResource(R.drawable.add_recipe),
-                contentDescription = "",
-                modifier = Modifier
-                    .clickable {
-                        onEvent(RecipeDetailsEvent.AddToMenu)
-                    }
-                    .padding(12.dp)
-                    .size(36.dp)
-            )
+            ImageButton(R.drawable.add_shopping_cart) {
+                onEvent(RecipeDetailsEvent.AddToCart)
+            }
+            ImageButton(R.drawable.menu) {
+                onEvent(RecipeDetailsEvent.AddToMenu)
+            }
         }
     }
     HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.outline)

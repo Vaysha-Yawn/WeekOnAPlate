@@ -232,23 +232,22 @@ fun TagBig(text: String, color: Color, clickable: () -> Unit = {}, longClick: ()
 }
 
 @Composable
-fun TagSmall(tag: RecipeTagView) {
+fun TagSmall(tag: RecipeTagView, modifier: Modifier = Modifier) {
     val backg =
         MaterialTheme.colorScheme.secondary
-    TagSmall(tag.tagName, backg)
+    TagSmall(tag.tagName, backg, modifier)
 }
 
 @Composable
-fun TagSmall(ingredientView: IngredientView) {
+fun TagSmall(ingredientView: IngredientView, modifier: Modifier = Modifier) {
     val backg = MaterialTheme.colorScheme.primary
-    TagSmall(ingredientView.name, backg)
+    TagSmall(ingredientView.name, backg, modifier)
 }
 
 @Composable
-private fun TagSmall(text: String, color: Color) {
+fun TagSmall(text: String, color: Color, modifier: Modifier = Modifier) {
     TextInApp(
-        text, modifier = Modifier
-            .padding(end = 6.dp, bottom = 6.dp)
+        text, modifier = modifier
             .background(
                 color, RoundedCornerShape(10.dp)
             )

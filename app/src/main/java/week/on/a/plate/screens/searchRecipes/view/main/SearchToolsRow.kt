@@ -1,7 +1,6 @@
-package week.on.a.plate.screens.searchRecipes.view.resultScreen
+package week.on.a.plate.screens.searchRecipes.view.main
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -9,7 +8,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -18,6 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
+import week.on.a.plate.core.theme.ColorButtonNegativeGrey
+import week.on.a.plate.core.theme.ColorSubTextGrey
 import week.on.a.plate.screens.searchRecipes.event.SearchScreenEvent
 import week.on.a.plate.screens.searchRecipes.state.ResultSortType
 import week.on.a.plate.screens.searchRecipes.state.ResultSortingDirection
@@ -29,19 +32,16 @@ fun SearchResultEditRow(state: SearchUIState, onEvent: (SearchScreenEvent) -> Un
         Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surface)
-            .border(1.dp, MaterialTheme.colorScheme.outline)
-            .padding(12.dp),
+            .padding(vertical = 12.dp, horizontal = 24.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceAround
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Row(
-            Modifier
-                .weight(1f)
-                .padding(horizontal = 24.dp),
-            horizontalArrangement = Arrangement.SpaceAround
+            Modifier,
+            horizontalArrangement = Arrangement.Center
         ) {
             Icon(
-                painterResource(R.drawable.select_all),
+                painterResource(R.drawable.grid),
                 "",
                 modifier = Modifier
                     .clickable {
@@ -54,10 +54,15 @@ fun SearchResultEditRow(state: SearchUIState, onEvent: (SearchScreenEvent) -> Un
                             MaterialTheme.colorScheme.primary
                         }, CircleShape
                     )
-                    .padding(6.dp)
+                    .padding(6.dp),
+                tint = if (!state.modeResultViewIsList.value){
+                    MaterialTheme.colorScheme.onBackground
+                }else ColorSubTextGrey
+
             )
+            Spacer(Modifier.width(12.dp))
             Icon(
-                painterResource(R.drawable.checklist),
+                painterResource(R.drawable.list),
                 "",
                 modifier = Modifier
                     .clickable {
@@ -70,16 +75,29 @@ fun SearchResultEditRow(state: SearchUIState, onEvent: (SearchScreenEvent) -> Un
                             MaterialTheme.colorScheme.primary
                         }, CircleShape
                     )
-                    .padding(6.dp)
+                    .padding(6.dp),
+                tint = if (state.modeResultViewIsList.value){
+                    MaterialTheme.colorScheme.onBackground
+                }else ColorSubTextGrey
             )
         }
+
+
         Row(
-            Modifier
-                .weight(1f)
-                .padding(horizontal = 24.dp),
-            horizontalArrangement = Arrangement.Center
+            horizontalArrangement = Arrangement.End
         ) {
-            if (state.resultSortType.value.first == ResultSortType.date){
+            Icon(painterResource(R.drawable.sorting), "", modifier = Modifier.clickable {
+                onEvent(SearchScreenEvent.SortMore)
+            }.padding(6.dp))
+            Spacer(Modifier.width(12.dp))
+            Icon(painterResource(R.drawable.bookmark), "", modifier = Modifier.clickable {
+                onEvent(SearchScreenEvent.SavePreset)
+            }.padding(6.dp))
+            Spacer(Modifier.width(12.dp))
+            Icon(painterResource(R.drawable.more), "", modifier = Modifier.clickable {
+                onEvent(SearchScreenEvent.FiltersMore)
+            }.padding(6.dp))
+           /* if (state.resultSortType.value.first == ResultSortType.date){
                 Icon(painterResource(R.drawable.calendar), "", modifier = Modifier.clickable {
                     onEvent(SearchScreenEvent.ChangeSort(ResultSortType.alphabet, state.resultSortType.value.second))
                 })
@@ -97,7 +115,8 @@ fun SearchResultEditRow(state: SearchUIState, onEvent: (SearchScreenEvent) -> Un
                 Icon(painterResource(R.drawable.arrow_down), "", modifier = Modifier.clickable {
                     onEvent(SearchScreenEvent.ChangeSort(state.resultSortType.value.first, ResultSortingDirection.up))
                 })
-            }
+            }*/
         }
     }
+    HorizontalDivider(Modifier, 1.dp, MaterialTheme.colorScheme.outline)
 }

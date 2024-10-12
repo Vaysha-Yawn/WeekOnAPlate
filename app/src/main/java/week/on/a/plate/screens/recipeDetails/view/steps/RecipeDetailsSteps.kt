@@ -62,11 +62,9 @@ fun RecipeDetailsSteps(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) 
             }
         }
         HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.outline)
-        Spacer(modifier = Modifier.height(24.dp))
-        val listGradient = listOf(Color(0xFFFFEADE), Color(0xFFFFF2DE), Color(0xFFFFFFFF))
-        val brush = Brush.horizontalGradient(listGradient)
+
+        Spacer(modifier = Modifier.height(24.dp).fillMaxWidth().background(MaterialTheme.colorScheme.surface))
         for ((index, step) in state.recipe.value.steps.withIndex()) {
-            //HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.primary)
             Column(
                 Modifier
                     .fillMaxWidth()
@@ -102,7 +100,6 @@ fun RecipeDetailsSteps(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) 
                     Spacer(modifier = Modifier.height(24.dp))
                 }
             }
-            //HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.primary)
             Spacer(modifier = Modifier.height(24.dp))
         }
     }

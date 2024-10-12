@@ -25,10 +25,6 @@ fun SearchResultScreen(
     onEvent: (SearchScreenEvent) -> Unit
 ) {
     LazyColumn() {
-        item {
-            SearchResultEditRow(state, onEvent)
-            Spacer(modifier = Modifier.height(24.dp))
-        }
         itemsIndexed(result) { index, recipe ->
             if (state.modeResultViewIsList.value) {
                 RowRecipeResultList(recipe, onEvent)

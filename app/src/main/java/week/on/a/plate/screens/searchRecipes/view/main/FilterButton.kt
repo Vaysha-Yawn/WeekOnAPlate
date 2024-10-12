@@ -1,4 +1,4 @@
-package week.on.a.plate.screens.searchRecipes.view.viewTools
+package week.on.a.plate.screens.searchRecipes.view.main
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
