@@ -1,37 +1,34 @@
 package week.on.a.plate.mainActivity.view
 
-import android.view.SearchEvent
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import week.on.a.plate.core.Event
-import week.on.a.plate.screenSpecifySelection.navigation.SpecifySelectionDirection
-import week.on.a.plate.screenSpecifySelection.view.SpecifySelectionMain
+import week.on.a.plate.screens.specifySelection.navigation.SpecifySelectionDirection
+import week.on.a.plate.screens.specifySelection.view.SpecifySelectionMain
 import week.on.a.plate.core.navigation.SearchScreen
 import week.on.a.plate.core.navigation.MenuScreen
 import week.on.a.plate.core.navigation.SettingsScreen
 import week.on.a.plate.core.navigation.ShoppingListScreen
-import week.on.a.plate.screenFilters.navigation.FilterDestination
-import week.on.a.plate.screenFilters.view.FilterStart
+import week.on.a.plate.screens.filters.navigation.FilterDestination
+import week.on.a.plate.screens.filters.view.FilterStart
 import week.on.a.plate.mainActivity.logic.MainViewModel
-import week.on.a.plate.screenCreateRecipe.navigation.RecipeCreateDestination
-import week.on.a.plate.screenCreateRecipe.view.RecipeCreateStart
-import week.on.a.plate.screenDeleteApply.navigation.DeleteApplyDirection
-import week.on.a.plate.screenDeleteApply.view.DeleteApplyStart
-import week.on.a.plate.screenFilters.event.FilterEvent
-import week.on.a.plate.screenInventory.navigation.InventoryDirection
-import week.on.a.plate.screenInventory.view.InventoryStart
-import week.on.a.plate.screenMenu.event.MenuEvent
-import week.on.a.plate.screenMenu.view.main.MenuScreen
-import week.on.a.plate.screenRecipeDetails.navigation.RecipeDetailsDestination
-import week.on.a.plate.screenRecipeDetails.view.start.RecipeDetailsStart
-import week.on.a.plate.screenSearchRecipes.event.SearchScreenEvent
-import week.on.a.plate.screenSearchRecipes.view.main.SearchStart
-import week.on.a.plate.screenShoppingList.event.ShoppingListEvent
-import week.on.a.plate.screenShoppingList.view.ShoppingListStart
+import week.on.a.plate.screens.createRecipe.navigation.RecipeCreateDestination
+import week.on.a.plate.screens.createRecipe.view.RecipeCreateStart
+import week.on.a.plate.screens.deleteApply.navigation.DeleteApplyDirection
+import week.on.a.plate.screens.deleteApply.view.DeleteApplyStart
+import week.on.a.plate.screens.filters.event.FilterEvent
+import week.on.a.plate.screens.inventory.navigation.InventoryDirection
+import week.on.a.plate.screens.inventory.view.InventoryStart
+import week.on.a.plate.screens.menu.view.main.MenuScreen
+import week.on.a.plate.screens.recipeDetails.navigation.RecipeDetailsDestination
+import week.on.a.plate.screens.recipeDetails.view.start.RecipeDetailsStart
+import week.on.a.plate.screens.searchRecipes.event.SearchScreenEvent
+import week.on.a.plate.screens.searchRecipes.view.main.SearchStart
+import week.on.a.plate.screens.shoppingList.event.ShoppingListEvent
+import week.on.a.plate.screens.shoppingList.view.ShoppingListStart
 
 @Composable
 fun Navigation(
@@ -49,7 +46,7 @@ fun Navigation(
             viewModel.isActivePlusButton.value = true
             viewModel.isActiveFilterScreen.value = false
             viewModel.actionPlusButton.value =
-                { viewModel.menuViewModel.onEvent(MenuEvent.GetSelIdAndCreate) }
+                { viewModel.menuViewModel.onEvent(week.on.a.plate.screens.menu.event.MenuEvent.GetSelIdAndCreate) }
             MenuScreen(
                 viewModel.menuViewModel
             )

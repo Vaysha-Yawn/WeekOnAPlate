@@ -13,7 +13,7 @@ import week.on.a.plate.data.repository.tables.menu.position.positionRecipe.Posit
 import week.on.a.plate.data.repository.tables.recipe.ingredientInRecipe.IngredientInRecipeRepository
 import week.on.a.plate.data.repository.tables.recipe.recipeRecipeTagCrossRef.RecipeTagCrossRefRepository
 import week.on.a.plate.data.repository.tables.recipe.recipeStep.StepRepository
-import week.on.a.plate.data.utils.updateListOfEntity
+import week.on.a.plate.data.repository.utils.updateListOfEntity
 import javax.inject.Inject
 import javax.inject.Singleton
 

@@ -6,7 +6,7 @@ import week.on.a.plate.data.dataView.recipe.RecipeTagView
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.data.repository.tables.filters.ingredient.IngredientMapper
 import week.on.a.plate.data.repository.tables.filters.recipeTag.RecipeTagMapper
-import week.on.a.plate.data.utils.updateListOfEntity
+import week.on.a.plate.data.repository.utils.updateListOfEntity
 import javax.inject.Inject
 
 

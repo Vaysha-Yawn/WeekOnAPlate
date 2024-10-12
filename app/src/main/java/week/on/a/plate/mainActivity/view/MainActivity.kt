@@ -10,7 +10,6 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.FabPosition
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
@@ -25,17 +24,16 @@ import kotlinx.coroutines.launch
 import week.on.a.plate.core.theme.ColorBackgroundWhite
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.buttons.ActionPlusButton
+import week.on.a.plate.dialogs.core.DialogsContainer
 import week.on.a.plate.mainActivity.logic.MainViewModel
-import week.on.a.plate.screenCreateRecipe.logic.RecipeCreateViewModel
-import week.on.a.plate.screenDeleteApply.logic.DeleteApplyViewModel
-import week.on.a.plate.screenFilters.logic.FilterViewModel
-import week.on.a.plate.screenFilters.navigation.FilterDestination
-import week.on.a.plate.screenInventory.logic.InventoryViewModel
-import week.on.a.plate.screenMenu.logic.MenuViewModel
-import week.on.a.plate.screenRecipeDetails.logic.RecipeDetailsViewModel
-import week.on.a.plate.screenSearchRecipes.logic.SearchViewModel
-import week.on.a.plate.screenShoppingList.logic.ShoppingListViewModel
-import week.on.a.plate.screenSpecifySelection.logic.SpecifySelectionViewModel
+import week.on.a.plate.screens.createRecipe.logic.RecipeCreateViewModel
+import week.on.a.plate.screens.deleteApply.logic.DeleteApplyViewModel
+import week.on.a.plate.screens.filters.logic.FilterViewModel
+import week.on.a.plate.screens.inventory.logic.InventoryViewModel
+import week.on.a.plate.screens.recipeDetails.logic.RecipeDetailsViewModel
+import week.on.a.plate.screens.searchRecipes.logic.SearchViewModel
+import week.on.a.plate.screens.shoppingList.logic.ShoppingListViewModel
+import week.on.a.plate.screens.specifySelection.logic.SpecifySelectionViewModel
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -47,7 +45,7 @@ class MainActivity : ComponentActivity() {
     private val recipeDetailsViewModel: RecipeDetailsViewModel by viewModels()
     private val shoppingListViewModel: ShoppingListViewModel by viewModels()
     private val recipeCreateViewModel: RecipeCreateViewModel by viewModels()
-    private val menuViewModel: MenuViewModel by viewModels()
+    private val menuViewModel: week.on.a.plate.screens.menu.logic.MenuViewModel by viewModels()
     private val inventoryViewModel: InventoryViewModel by viewModels()
     private val deleteApplyViewModel: DeleteApplyViewModel by viewModels()
 

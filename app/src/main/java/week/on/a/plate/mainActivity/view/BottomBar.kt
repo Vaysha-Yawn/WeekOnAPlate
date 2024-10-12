@@ -24,7 +24,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import week.on.a.plate.core.navigation.BottomScreens
 import week.on.a.plate.core.navigation.bottomScreens
 import week.on.a.plate.core.theme.ColorTransparent
-import week.on.a.plate.screenSearchRecipes.logic.SearchViewModel
+import week.on.a.plate.screens.searchRecipes.logic.SearchViewModel
 
 
 @Composable

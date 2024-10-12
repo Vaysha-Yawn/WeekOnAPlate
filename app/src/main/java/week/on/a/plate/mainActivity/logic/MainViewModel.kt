@@ -8,18 +8,18 @@ import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.Event
+import week.on.a.plate.dialogs.core.DialogUseCase
 import week.on.a.plate.mainActivity.event.MainEvent
-import week.on.a.plate.screenCreateRecipe.logic.RecipeCreateViewModel
-import week.on.a.plate.screenDeleteApply.logic.DeleteApplyViewModel
-import week.on.a.plate.screenFilters.logic.FilterViewModel
-import week.on.a.plate.screenInventory.logic.InventoryViewModel
-import week.on.a.plate.screenMenu.logic.MenuViewModel
-import week.on.a.plate.screenMenu.logic.useCase.CRUDRecipeInMenu
-import week.on.a.plate.screenRecipeDetails.logic.RecipeDetailsViewModel
-import week.on.a.plate.screenSearchRecipes.logic.SearchViewModel
-import week.on.a.plate.screenSearchRecipes.logic.voice.VoiceInputUseCase
-import week.on.a.plate.screenShoppingList.logic.ShoppingListViewModel
-import week.on.a.plate.screenSpecifySelection.logic.SpecifySelectionViewModel
+import week.on.a.plate.screens.createRecipe.logic.RecipeCreateViewModel
+import week.on.a.plate.screens.deleteApply.logic.DeleteApplyViewModel
+import week.on.a.plate.screens.filters.logic.FilterViewModel
+import week.on.a.plate.screens.inventory.logic.InventoryViewModel
+import week.on.a.plate.screens.menu.logic.useCase.CRUDRecipeInMenu
+import week.on.a.plate.screens.recipeDetails.logic.RecipeDetailsViewModel
+import week.on.a.plate.screens.searchRecipes.logic.SearchViewModel
+import week.on.a.plate.screens.searchRecipes.logic.voice.VoiceInputUseCase
+import week.on.a.plate.screens.shoppingList.logic.ShoppingListViewModel
+import week.on.a.plate.screens.specifySelection.logic.SpecifySelectionViewModel
 import java.util.Locale
 import javax.inject.Inject
 
@@ -29,7 +29,7 @@ class MainViewModel @Inject constructor(
     private val sCRUDRecipeInMenu: CRUDRecipeInMenu,
 ) : ViewModel() {
 
-    lateinit var menuViewModel: MenuViewModel
+    lateinit var menuViewModel: week.on.a.plate.screens.menu.logic.MenuViewModel
     lateinit var specifySelectionViewModel: SpecifySelectionViewModel
     lateinit var filterViewModel: FilterViewModel
     lateinit var searchViewModel: SearchViewModel
@@ -46,7 +46,7 @@ class MainViewModel @Inject constructor(
         recipeDetails: RecipeDetailsViewModel,
         shoppingList: ShoppingListViewModel,
         recipeCreate: RecipeCreateViewModel,
-        menuView: MenuViewModel,
+        menuView: week.on.a.plate.screens.menu.logic.MenuViewModel,
         inventory: InventoryViewModel,
         delete: DeleteApplyViewModel
     ) {
