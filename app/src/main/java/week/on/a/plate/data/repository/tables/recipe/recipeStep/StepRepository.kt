@@ -17,6 +17,9 @@ class StepRepository @Inject constructor(
             with(stepMapper) { it.roomToView() }
         }
     }
+    suspend fun getStep(stepId: Long): RecipeStepView {
+        return  with(stepMapper) { daoStep.getStepById(stepId).roomToView() }
+    }
 
     fun getStepsFlow(recipeId: Long): Flow<List<RecipeStepView>> {
         return daoStep.getRecipeAndRecipeStepsFlow(recipeId).map {recipeAndRecipeSteps->

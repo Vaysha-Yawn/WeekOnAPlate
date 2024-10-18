@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.Event
-import week.on.a.plate.core.navigation.ShoppingListScreen
+import week.on.a.plate.core.navigation.ShoppingListDestination
 import week.on.a.plate.core.utils.getIngredientCountAndMeasure1000
 import week.on.a.plate.data.dataView.ShoppingItemView
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
@@ -19,6 +19,8 @@ import week.on.a.plate.data.repository.tables.shoppingList.ShoppingItemRepositor
 import week.on.a.plate.dialogs.editIngredientInMenu.logic.EditPositionIngredientViewModel
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
+import week.on.a.plate.screens.deleteApply.event.DeleteApplyEvent
+import week.on.a.plate.screens.deleteApply.navigation.DeleteApplyDestination
 import week.on.a.plate.screens.filters.navigation.FilterDestination
 import week.on.a.plate.screens.filters.state.FilterEnum
 import week.on.a.plate.screens.filters.state.FilterMode
@@ -63,6 +65,21 @@ class ShoppingListViewModel @Inject constructor(
             is ShoppingListEvent.Uncheck -> updateCheck(false, event.position)
             is ShoppingListEvent.Edit -> editIngredient(event.ingredient)
             is ShoppingListEvent.Share -> share(event.context)
+            ShoppingListEvent.DeleteAll -> deleteAllApply()
+        }
+    }
+
+    private fun deleteAllApply() {
+        viewModelScope.launch {
+            val vmDel = mainViewModel.deleteApplyViewModel
+            val mes = "Это действие нельзя отменить."
+            mainViewModel.nav.navigate(DeleteApplyDestination)
+            vmDel.launchAndGet(title = "Очистить список покупок?", message = mes) { event ->
+                if (event == DeleteApplyEvent.Apply) {
+                    shoppingItemRepository.deleteAll()
+
+                }
+            }
         }
     }
 
@@ -191,7 +208,7 @@ class ShoppingListViewModel @Inject constructor(
                     FilterMode.Multiple, FilterEnum.Ingredient, Pair(listOf(),
                         allItemsUnChecked.value.map { it.ingredientView }), false
                 ) { res ->
-                    mainViewModel.onEvent(MainEvent.Navigate(ShoppingListScreen))
+                    mainViewModel.onEvent(MainEvent.Navigate(ShoppingListDestination))
                     if (res.ingredients == null) return@launchAndGet
                     res.ingredients.forEach {
                         checkInListToAdd(IngredientInRecipeView(0, it, "", 0))

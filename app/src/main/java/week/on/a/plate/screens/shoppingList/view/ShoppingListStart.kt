@@ -27,10 +27,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import week.on.a.plate.R
+import week.on.a.plate.core.navigation.BottomScreens
 import week.on.a.plate.core.theme.ColorSubTextGrey
 import week.on.a.plate.core.theme.Typography
+import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextSmall
 import week.on.a.plate.core.uitools.TextTitleLarge
@@ -38,39 +42,50 @@ import week.on.a.plate.core.utils.getIngredientCountAndMeasure1000
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.screens.shoppingList.event.ShoppingListEvent
 import week.on.a.plate.screens.shoppingList.logic.ShoppingListViewModel
+import week.on.a.plate.screens.shoppingList.state.ShoppingListUIState
 
 @Composable
 fun ShoppingListStart(viewModel: ShoppingListViewModel) {
-
     viewModel.state.listChecked = viewModel.allItemsChecked.collectAsState()
     viewModel.state.listUnchecked = viewModel.allItemsUnChecked.collectAsState()
+    ShoppingListContent(viewModel.state){event:ShoppingListEvent->
+        viewModel.onEvent(event)
+    }
+}
+
+@Composable
+fun ShoppingListContent(state:ShoppingListUIState, onEvent:(ShoppingListEvent)->Unit){
     val context = LocalContext.current
+
     Column(
         Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.surface)
     ) {
-        Row(Modifier.fillMaxWidth().padding(horizontal = 36.dp, vertical = 12.dp), verticalAlignment = Alignment.CenterVertically , horizontalArrangement = Arrangement.SpaceBetween) {
+        Row(Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 12.dp), verticalAlignment = Alignment.CenterVertically , horizontalArrangement = Arrangement.SpaceBetween) {
             TextTitleLarge(
                 text = "Список покупок",
                 modifier = Modifier
             )
+            Icon(painterResource(R.drawable.delete), "", modifier = Modifier.clickable {
+                onEvent(ShoppingListEvent.DeleteAll)
+            }.size(36.dp))
             Icon(painterResource(R.drawable.share), "", modifier = Modifier.clickable {
-                viewModel.onEvent(ShoppingListEvent.Share(context))
+                onEvent(ShoppingListEvent.Share(context))
             })
         }
         HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.outline)
         Spacer(modifier = Modifier.height(12.dp))
         LazyColumn() {
-            items(viewModel.state.listUnchecked.value.size) { index ->
-                ShoppingListPosition(viewModel.state.listUnchecked.value[index], false, {
-                    viewModel.onEvent(ShoppingListEvent.Edit(it))
+            items(state.listUnchecked.value.size) { index ->
+                ShoppingListPosition(state.listUnchecked.value[index], false, {
+                    onEvent(ShoppingListEvent.Edit(it))
                 }) {
-                    viewModel.onEvent(ShoppingListEvent.Check(viewModel.state.listUnchecked.value[index]))
+                    onEvent(ShoppingListEvent.Check(state.listUnchecked.value[index]))
                 }
             }
             item {
-                if (viewModel.state.listChecked.value.isNotEmpty()) {
+                if (state.listChecked.value.isNotEmpty()) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
@@ -85,18 +100,18 @@ fun ShoppingListStart(viewModel: ShoppingListViewModel) {
                             painter = painterResource(id = R.drawable.delete),
                             contentDescription = "", modifier = Modifier
                                 .clickable {
-                                    viewModel.onEvent(ShoppingListEvent.DeleteChecked)
+                                    onEvent(ShoppingListEvent.DeleteChecked)
                                 }
                                 .size(36.dp)
                         )
                     }
                 }
             }
-            items(viewModel.state.listChecked.value.size) { index ->
-                ShoppingListPosition(viewModel.state.listChecked.value[index], true, {
-                    viewModel.onEvent(ShoppingListEvent.Edit(it))
+            items(state.listChecked.value.size) { index ->
+                ShoppingListPosition(state.listChecked.value[index], true, {
+                    onEvent(ShoppingListEvent.Edit(it))
                 }) {
-                    viewModel.onEvent(ShoppingListEvent.Uncheck(viewModel.state.listChecked.value[index]))
+                    onEvent(ShoppingListEvent.Uncheck(state.listChecked.value[index]))
                 }
             }
         }
@@ -152,4 +167,12 @@ fun ShoppingListPosition(
         }
     }
     Spacer(modifier = Modifier.height(12.dp))
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewShoppingListStart(){
+    WeekOnAPlateTheme {
+        ShoppingListContent(ShoppingListUIState(), {})
+    }
 }

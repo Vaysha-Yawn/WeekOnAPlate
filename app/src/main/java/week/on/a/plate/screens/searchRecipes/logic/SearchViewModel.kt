@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.Event
-import week.on.a.plate.core.navigation.MenuScreen
+import week.on.a.plate.core.navigation.MenuDestination
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.data.dataView.recipe.IngredientView
 import week.on.a.plate.data.dataView.recipe.RecipeStepView
@@ -36,8 +36,9 @@ import week.on.a.plate.screens.searchRecipes.state.ResultSortType
 import week.on.a.plate.screens.searchRecipes.state.ResultSortingDirection
 import week.on.a.plate.screens.searchRecipes.state.SearchState
 import week.on.a.plate.screens.searchRecipes.state.SearchUIState
-import week.on.a.plate.screens.specifySelection.navigation.SpecifySelectionDirection
+import week.on.a.plate.screens.specifySelection.navigation.SpecifySelectionDestination
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 import javax.inject.Inject
 
@@ -199,12 +200,12 @@ class SearchViewModel @Inject constructor(
     private fun List<RecipeView>.sorted():List<RecipeView>{
         return when(state.resultSortType.value){
             Pair(ResultSortType.date, ResultSortingDirection.up)->
-                this.sortedWith(compareBy ({it.dateLastEdit},{it.timeLastEdit}))
+                this.sortedWith(compareBy { it.lastEdit })
 
             Pair(ResultSortType.alphabet, ResultSortingDirection.down)-> this.sortedBy { it.name }
 
             Pair(ResultSortType.date, ResultSortingDirection.down)->
-                this.sortedWith(compareBy<RecipeView> { it.dateLastEdit }.thenByDescending { it.timeLastEdit })
+                this.sortedByDescending { it.lastEdit }
 
             Pair(ResultSortType.alphabet, ResultSortingDirection.up) -> sortedByDescending { it.name }
 
@@ -257,7 +258,7 @@ class SearchViewModel @Inject constructor(
                 standardPortionsCount = 4,
                 ingredients = listRecipe,
                 steps = listOf(),
-                link = "", false, LocalDate.now(), LocalDate.now(), LocalTime.now()
+                link = "", false, LocalDateTime.now()
             )
             vm.launchAndGet(recipeStart, true) { recipe ->
                 viewModelScope.launch {
@@ -276,10 +277,10 @@ class SearchViewModel @Inject constructor(
                                 0,
                                 it.description.value,
                                 it.image.value,
-                                it.timer.intValue.toLong()
+                                it.timer.intValue.toLong(), it.duration.longValue
                             )
                         },
-                        link = recipe.source.value, false, LocalDate.now(), LocalDate.now(), LocalTime.now()
+                        link = recipe.source.value, false, LocalDateTime.now()
                     )
                     recipeRepository.create(newRecipe)
                 }
@@ -299,10 +300,10 @@ class SearchViewModel @Inject constructor(
             if (selId != null) {
                 resultFlow?.value = recipeView
                 selId = null
-                mainViewModel.nav.navigate(MenuScreen)
+                mainViewModel.nav.navigate(MenuDestination)
             } else {
                 val vm = mainViewModel.specifySelectionViewModel
-                mainViewModel.nav.navigate(SpecifySelectionDirection)
+                mainViewModel.nav.navigate(SpecifySelectionDestination)
                 vm.launchAndGet() { res ->
                     viewModelScope.launch {
                         val recipePosition = Position.PositionRecipeView(

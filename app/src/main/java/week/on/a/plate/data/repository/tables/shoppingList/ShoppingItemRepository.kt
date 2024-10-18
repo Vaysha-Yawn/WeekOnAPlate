@@ -125,5 +125,7 @@ class ShoppingItemRepository @Inject constructor(
     suspend fun deleteAllChecked() {
         shoppingItemDAO.deleteAllChecked()
     }
-
+    suspend fun deleteAll() {
+        shoppingItemDAO.deleteAll()
+    }
 }

@@ -22,8 +22,8 @@ fun BlockSelection(
     menuIUState: MenuIUState,
     onEvent: (event: Event) -> Unit,
     ) {
-    if (selection.time.hour>0){
-        SubText(text = selection.time.format(DateTimeFormatter.ofPattern("HH:mm")),
+    if (selection.dateTime.hour>0){
+        SubText(text = selection.dateTime.format(DateTimeFormatter.ofPattern("HH:mm")),
             modifier = Modifier.padding(start = 30.dp))
         Spacer(Modifier.height(6.dp))
     }

@@ -6,39 +6,46 @@ import week.on.a.plate.R
 @Serializable
 sealed class BottomScreens<T>(val icon: Int, val route: T) {
     @Serializable
-    data object ShoppingList : BottomScreens<ShoppingListScreen>(
+    data object ShoppingListBottomNav : BottomScreens<ShoppingListDestination>(
         icon = R.drawable.shopping_cart,
-        route = ShoppingListScreen
+        route = ShoppingListDestination
     )
 
     @Serializable
-    data object Menu : BottomScreens<MenuScreen>(icon = R.drawable.menu, route = MenuScreen)
+    data object MenuBottomNav : BottomScreens<MenuDestination>(icon = R.drawable.menu, route = MenuDestination)
 
     @Serializable
-    data object Search : BottomScreens<SearchScreen>(icon = R.drawable.search, route = SearchScreen)
+    data object SearchBottomNav : BottomScreens<SearchDestination>(icon = R.drawable.search, route = SearchDestination)
 
     @Serializable
-    data object Settings :
-        BottomScreens<SettingsScreen>(icon = R.drawable.settings, route = SettingsScreen)
+    data object SettingsBottomNav :
+        BottomScreens<SettingsDestination>(icon = R.drawable.settings, route = SettingsDestination)
+
+    @Serializable
+    data object CookPlannerBottomNav :
+        BottomScreens<CookPlannerDestination>(icon = R.drawable.cook_cap, route = CookPlannerDestination)
 }
 
 val bottomScreens = listOf(
-    BottomScreens.ShoppingList,
-    BottomScreens.Menu,
-    BottomScreens.Search,
-    BottomScreens.Settings,
+    BottomScreens.ShoppingListBottomNav,
+    BottomScreens.MenuBottomNav,
+    BottomScreens.SearchBottomNav,
+    BottomScreens.SettingsBottomNav,
 )
 
 // destinations
 
 @Serializable
-object ShoppingListScreen
+object ShoppingListDestination
 
 @Serializable
-object MenuScreen
+object MenuDestination
 
 @Serializable
-object SearchScreen
+object SearchDestination
 
 @Serializable
-object SettingsScreen
+object SettingsDestination
+
+@Serializable
+object CookPlannerDestination

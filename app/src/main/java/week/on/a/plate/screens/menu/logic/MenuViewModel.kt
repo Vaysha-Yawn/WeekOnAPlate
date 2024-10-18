@@ -7,7 +7,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.Event
-import week.on.a.plate.core.navigation.SearchScreen
+import week.on.a.plate.core.navigation.SearchDestination
 import week.on.a.plate.data.dataView.week.CategoriesSelection
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.data.dataView.week.RecipeShortView
@@ -34,15 +34,16 @@ import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screens.filters.navigation.FilterDestination
 import week.on.a.plate.screens.filters.state.FilterEnum
 import week.on.a.plate.screens.filters.state.FilterMode
-import week.on.a.plate.screens.inventory.navigation.InventoryDirection
+import week.on.a.plate.screens.inventory.navigation.InventoryDestination
 import week.on.a.plate.screens.menu.logic.useCase.CRUDRecipeInMenu
 import week.on.a.plate.screens.menu.logic.useCase.SelectedRecipeManager
 import week.on.a.plate.screens.menu.state.MenuIUState
 import week.on.a.plate.screens.menu.state.WeekState
 import week.on.a.plate.screens.recipeDetails.navigation.RecipeDetailsDestination
 import week.on.a.plate.screens.specifySelection.logic.SpecifySelectionResult
-import week.on.a.plate.screens.specifySelection.navigation.SpecifySelectionDirection
+import week.on.a.plate.screens.specifySelection.navigation.SpecifySelectionDestination
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 import java.util.Locale
 import javax.inject.Inject
@@ -71,7 +72,7 @@ class MenuViewModel @Inject constructor(
         viewModelScope.launch {
             val week = sCRUDRecipeInMenu.menuR.getCurrentWeek(activeDay, Locale.getDefault())
             week.days.forEach { day->
-                day.selections = day.selections.sortedBy { it.time }
+                day.selections = day.selections.sortedBy { it.dateTime }
             }
             weekState.value = WeekState.Success(week)
             menuUIState.titleTopBar.value = week.getTitle()
@@ -93,7 +94,7 @@ class MenuViewModel @Inject constructor(
                 selectedRecipeManager.clear(menuUIState)
                 when (event.navData) {
                     is week.on.a.plate.screens.menu.event.NavFromMenuData.SpecifySelection -> mainViewModel.nav.navigate(
-                        SpecifySelectionDirection
+                        SpecifySelectionDestination
                     )
 
                     is week.on.a.plate.screens.menu.event.NavFromMenuData.NavToFullRecipe -> navToFullRecipe(event.navData)
@@ -150,7 +151,7 @@ class MenuViewModel @Inject constructor(
 
     private fun createWeekSelIdAndCreatePosition() {
         viewModelScope.launch {
-            val id = sCRUDRecipeInMenu.menuR.getSelIdOrCreate(activeDay, true, CategoriesSelection.ForWeek.fullName, mainViewModel.locale,  CategoriesSelection.ForWeek.stdTime)
+            val id = sCRUDRecipeInMenu.menuR.getSelIdOrCreate( LocalDateTime.of(activeDay, CategoriesSelection.ForWeek.stdTime) , true, CategoriesSelection.ForWeek.fullName, mainViewModel.locale, )
             addPosition(id)
         }
     }
@@ -197,7 +198,7 @@ class MenuViewModel @Inject constructor(
         vmCategory.launchAndGet(
             EditSelectionUIState(sel.name,  startTitle = "Изменение названия приёма пищи",
              startPlaceholder = "Завтрак...").apply {
-                 this.selectedTime.value = sel.time
+                 this.selectedTime.value = sel.dateTime.toLocalTime()
             }
         ) { state ->
             sCRUDRecipeInMenu.onEvent(
@@ -250,10 +251,10 @@ class MenuViewModel @Inject constructor(
                 else-> { LocalTime.of(0,0)}
             }
             val sel = sCRUDRecipeInMenu.menuR.getSelIdOrCreate(
-                date,
+                LocalDateTime.of(date, time),
                 false,
                 name,
-                mainViewModel.locale, time
+                mainViewModel.locale,
             )
             onEvent(week.on.a.plate.screens.menu.event.MenuEvent.CreatePosition(sel))
         }
@@ -270,7 +271,7 @@ class MenuViewModel @Inject constructor(
                 ingredientInRecipeView
             }
             mainViewModel.inventoryViewModel.launchAndGet(ingredients)
-            mainViewModel.nav.navigate(InventoryDirection)
+            mainViewModel.nav.navigate(InventoryDestination)
         }
     }
 
@@ -289,7 +290,7 @@ class MenuViewModel @Inject constructor(
                 }
             }
             mainViewModel.inventoryViewModel.launchAndGetMore(list)
-            mainViewModel.nav.navigate(InventoryDirection)
+            mainViewModel.nav.navigate(InventoryDestination)
         }
     }
 
@@ -315,12 +316,12 @@ class MenuViewModel @Inject constructor(
                 updateWeek()
             }
         }
-        mainViewModel.nav.navigate(SearchScreen)
+        mainViewModel.nav.navigate(SearchDestination)
     }
 
     private fun navToAddRecipe(selId: Long) {
         viewModelScope.launch {
-            mainViewModel.nav.navigate(SearchScreen)
+            mainViewModel.nav.navigate(SearchDestination)
             mainViewModel.searchViewModel.launchAndGet(selId, null) { recipe ->
 
                 val vm = ChangePortionsCountViewModel()
@@ -349,7 +350,7 @@ class MenuViewModel @Inject constructor(
 
     private fun findReplaceRecipe(positionRecipe: Position.PositionRecipeView) {
         viewModelScope.launch {
-            mainViewModel.nav.navigate(SearchScreen)
+            mainViewModel.nav.navigate(SearchDestination)
             mainViewModel.searchViewModel.launchAndGet(positionRecipe.selectionId, null) { recipe ->
                 val recipePosition = Position.PositionRecipeView(
                     0,

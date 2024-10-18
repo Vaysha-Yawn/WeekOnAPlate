@@ -50,6 +50,7 @@ import week.on.a.plate.screens.menu.view.day.positionsList.NotePosition
 import week.on.a.plate.screens.specifySelection.event.SpecifySelectionEvent
 import week.on.a.plate.screens.specifySelection.state.SpecifySelectionUIState
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 
 
@@ -65,7 +66,7 @@ fun CalendarWithMenu(
             text = stringResource(id = R.string.apply),
             Modifier.padding(horizontal = 24.dp)
         ) {
-            onEvent(SpecifySelectionEvent.ApplyDate(stateDatePicker.selectedDateMillis?.dateToLocalDate()))
+            //onEvent(SpecifySelectionEvent.ApplyDate(stateDatePicker.selectedDateMillis?.dateToLocalDate()))
         }
     }) { pad ->
         Column {
@@ -76,12 +77,12 @@ fun CalendarWithMenu(
                         .pointerInput(Unit) {
                             detectTapGestures(
                                 onTap = {
-                                    onEvent(SpecifySelectionEvent.UpdatePreview(stateDatePicker.selectedDateMillis?.dateToLocalDate()))
+                                    //onEvent(SpecifySelectionEvent.UpdatePreview(stateDatePicker.selectedDateMillis?.dateToLocalDate()))
                                 },
                             )
                         })
                 CloseButton {
-                    onEvent(SpecifySelectionEvent.ApplyDate(stateDatePicker.selectedDateMillis?.dateToLocalDate()))
+                    //onEvent(SpecifySelectionEvent.ApplyDate(stateDatePicker.selectedDateMillis?.dateToLocalDate()))
                 }
             }
             Column(Modifier.offset(y = (-50).dp)) {
@@ -100,7 +101,7 @@ fun CalendarWithMenu(
                     TextBody(
                         text = "Обновить",
                         Modifier.clickable {
-                            onEvent(SpecifySelectionEvent.UpdatePreview(stateDatePicker.selectedDateMillis?.dateToLocalDate()))
+                            //onEvent(SpecifySelectionEvent.UpdatePreview(stateDatePicker.selectedDateMillis?.dateToLocalDate()))
                         },
                         textAlign = TextAlign.End
                     )
@@ -135,8 +136,7 @@ fun PreviewCalendarWithMenu() {
     WeekOnAPlateTheme {
         val list = listOf(
             SelectionView(
-                0, "Завтрак", LocalDate.now(), 0, false,
-                LocalTime.of(0,0),
+                0, "Завтрак", LocalDateTime.now(), 0, false,
                 mutableListOf(
                     Position.PositionNoteView(0, "Первое", 0),
                     Position.PositionNoteView(0, "Второе", 0),

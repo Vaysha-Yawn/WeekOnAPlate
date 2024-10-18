@@ -9,7 +9,7 @@ import java.time.LocalDate
 class SpecifySelectionUIState() {
     val checkWeek = mutableStateOf<Boolean>(false)
     val checkDayCategory = mutableStateOf<String?>(null)
-    val date = mutableStateOf<LocalDate?>(null)
+    val date = mutableStateOf<LocalDate>(LocalDate.now())
     val portionsCount = mutableIntStateOf(2)
     val allSelectionsIdDay = mutableStateOf<List<String>>(listOf())
     val dayViewPreview:MutableState<List<SelectionView>> = mutableStateOf(listOf())

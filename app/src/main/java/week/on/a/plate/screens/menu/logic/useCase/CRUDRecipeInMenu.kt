@@ -17,25 +17,25 @@ class CRUDRecipeInMenu @Inject constructor(
     private val recipeRepository: PositionRecipeRepository,
     private val draftRepository: PositionDraftRepository,
 ) {
-    suspend fun onEvent(event: week.on.a.plate.screens.menu.event.ActionWeekMenuDB) {
+    suspend fun onEvent(event: ActionWeekMenuDB) {
         when (event) {
-            is week.on.a.plate.screens.menu.event.ActionWeekMenuDB.AddIngredientPositionDB -> {
+            is ActionWeekMenuDB.AddIngredientPositionDB -> {
                 val ingredient = event.updatedPosition
                 positionIngredientRepository.insert(ingredient, event.selId)
             }
 
-            is week.on.a.plate.screens.menu.event.ActionWeekMenuDB.AddNoteDB -> {
+            is ActionWeekMenuDB.AddNoteDB -> {
                 noteRepository.insert(
                     Position.PositionNoteView(0, event.text, event.selId),
                     event.selId
                 )
             }
 
-            is week.on.a.plate.screens.menu.event.ActionWeekMenuDB.AddRecipePositionInMenuDB -> {
+            is ActionWeekMenuDB.AddRecipePositionInMenuDB -> {
                 recipeRepository.insert(event.recipe, event.selId)
             }
 
-            is week.on.a.plate.screens.menu.event.ActionWeekMenuDB.ChangePortionsCountDB -> {
+            is ActionWeekMenuDB.ChangePortionsCountDB -> {
                 recipeRepository.update(
                     event.recipe.id,
                     event.recipe.recipe,
@@ -44,7 +44,7 @@ class CRUDRecipeInMenu @Inject constructor(
                 )
             }
 
-            is week.on.a.plate.screens.menu.event.ActionWeekMenuDB.Delete -> {
+            is ActionWeekMenuDB.Delete -> {
                 when (event.position) {
                     is Position.PositionDraftView -> draftRepository.delete(event.position.idPos)
                     is Position.PositionIngredientView -> positionIngredientRepository.delete(event.position.idPos)
@@ -123,13 +123,16 @@ class CRUDRecipeInMenu @Inject constructor(
             is week.on.a.plate.screens.menu.event.ActionWeekMenuDB.DeleteSelection -> {
                 menuR.deleteSelection(event.sel)
             }
+
             is week.on.a.plate.screens.menu.event.ActionWeekMenuDB.EditSelection -> {
                 menuR.editSelection(event.sel, event.newName, event.time)
             }
 
             is week.on.a.plate.screens.menu.event.ActionWeekMenuDB.CreateSelection -> {
-                menuR.createSelection(event.date, event.newName,  event.locale,
-                    event.isForWeek, event.time)
+                menuR.createSelection(
+                    event.date, event.newName, event.locale,
+                    event.isForWeek, event.time
+                )
             }
         }
     }

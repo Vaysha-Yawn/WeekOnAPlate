@@ -45,9 +45,7 @@ fun RecipeBase(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) -> Unit)
             TagList(tags = state.recipe.value.tags, ingredients = listOf())
         }
         Spacer(modifier = Modifier.height(12.dp))
-        SubText(text = "Создано: " + state.recipe.value.dateCreated.dateToStringShort(), textAlign = TextAlign.Start)
-        Spacer(modifier = Modifier.height(6.dp))
-        SubText(text = "Последнее редактирование: " + state.recipe.value.dateLastEdit.dateToStringShort() + " в "+ state.recipe.value.timeLastEdit.format(
+        SubText(text = "Последнее редактирование: " + state.recipe.value.lastEdit.toLocalDate().dateToStringShort() + " в "+ state.recipe.value.lastEdit.format(
             DateTimeFormatter.ofPattern("HH:mm")), textAlign = TextAlign.Start)
         if (state.recipe.value.description!=""){
             Spacer(modifier = Modifier.height(12.dp))

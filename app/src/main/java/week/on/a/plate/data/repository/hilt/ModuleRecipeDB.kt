@@ -82,4 +82,11 @@ object ModuleRecipeDB {
     @Singleton
     fun provideShoppingItemDAO(recipeDB: RecipeDB) = recipeDB.daoShoppingItem()
 
+    @Provides
+    @Singleton
+    fun provideCookPlannerStep(recipeDB: RecipeDB) = recipeDB.daoCookPlannerStep()
+
+    @Provides
+    @Singleton
+    fun providePlannerGroup(recipeDB: RecipeDB) = recipeDB.daoCookPlannerGroup()
 }

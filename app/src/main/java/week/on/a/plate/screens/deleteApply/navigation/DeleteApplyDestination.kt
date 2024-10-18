@@ -4,4 +4,4 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-data object DeleteApplyDirection
+data object DeleteApplyDestination

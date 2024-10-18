@@ -4,4 +4,4 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-data object InventoryDirection
+data object InventoryDestination

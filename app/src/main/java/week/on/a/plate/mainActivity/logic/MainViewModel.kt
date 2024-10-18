@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import week.on.a.plate.core.Event
 import week.on.a.plate.dialogs.core.DialogUseCase
 import week.on.a.plate.mainActivity.event.MainEvent
+import week.on.a.plate.screens.cookPlanner.logic.CookPlannerViewModel
 import week.on.a.plate.screens.createRecipe.logic.RecipeCreateViewModel
 import week.on.a.plate.screens.deleteApply.logic.DeleteApplyViewModel
 import week.on.a.plate.screens.filters.logic.FilterViewModel
@@ -38,6 +39,7 @@ class MainViewModel @Inject constructor(
     lateinit var recipeCreateViewModel: RecipeCreateViewModel
     lateinit var inventoryViewModel: InventoryViewModel
     lateinit var deleteApplyViewModel: DeleteApplyViewModel
+    lateinit var cookPlannerViewModel: CookPlannerViewModel
 
     fun initViewModels(
         specifySelection: SpecifySelectionViewModel,
@@ -48,7 +50,8 @@ class MainViewModel @Inject constructor(
         recipeCreate: RecipeCreateViewModel,
         menuView: week.on.a.plate.screens.menu.logic.MenuViewModel,
         inventory: InventoryViewModel,
-        delete: DeleteApplyViewModel
+        delete: DeleteApplyViewModel,
+        cookPlanner:CookPlannerViewModel
     ) {
         specifySelectionViewModel = specifySelection
         filterViewModel = filter
@@ -59,6 +62,7 @@ class MainViewModel @Inject constructor(
         menuViewModel = menuView
         inventoryViewModel = inventory
         deleteApplyViewModel = delete
+        cookPlannerViewModel = cookPlanner
 
         specifySelectionViewModel.mainViewModel = this
         filterViewModel.mainViewModel = this
@@ -69,6 +73,7 @@ class MainViewModel @Inject constructor(
         menuViewModel.mainViewModel = this
         inventoryViewModel.mainViewModel = this
         deleteApplyViewModel.mainViewModel = this
+        cookPlannerViewModel.mainViewModel = this
     }
 
     lateinit var locale: Locale

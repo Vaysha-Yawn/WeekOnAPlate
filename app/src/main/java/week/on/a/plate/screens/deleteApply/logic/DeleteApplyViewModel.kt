@@ -33,7 +33,8 @@ class DeleteApplyViewModel @Inject constructor(
         mainViewModel.onEvent(MainEvent.NavigateBack)
     }
 
-    suspend fun launchAndGet(message: String, use: suspend (DeleteApplyEvent) -> Unit) {
+    suspend fun launchAndGet(title:String?=null, message: String, use: suspend (DeleteApplyEvent) -> Unit) {
+        if (title!=null) state.title.value = title else state.title.value = "Уверены, что хотите удалить?"
         state.message.value = message
         resultFlow.value = null
         resultFlow.collect { value ->

@@ -2,6 +2,7 @@ package week.on.a.plate.screens.createRecipe.state
 
 import android.webkit.WebView
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.data.dataView.recipe.RecipeTagView
@@ -26,4 +27,5 @@ class RecipeStepState {
     val description = mutableStateOf("")
     val image = mutableStateOf("")
     val timer = mutableIntStateOf(0)
+    val duration = mutableLongStateOf(0L)
 }

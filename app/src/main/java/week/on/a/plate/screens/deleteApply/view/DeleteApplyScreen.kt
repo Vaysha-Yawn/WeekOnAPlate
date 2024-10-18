@@ -47,7 +47,7 @@ fun DeleteApplyScreen(
     ) {
         Spacer(modifier = Modifier.height(36.dp))
         TextDisplayItalic(
-            text = "Уверены, что хотите удалить?",
+            text = state.title.value,
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(36.dp))

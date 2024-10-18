@@ -26,6 +26,7 @@ import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.buttons.ActionPlusButton
 import week.on.a.plate.dialogs.core.DialogsContainer
 import week.on.a.plate.mainActivity.logic.MainViewModel
+import week.on.a.plate.screens.cookPlanner.logic.CookPlannerViewModel
 import week.on.a.plate.screens.createRecipe.logic.RecipeCreateViewModel
 import week.on.a.plate.screens.deleteApply.logic.DeleteApplyViewModel
 import week.on.a.plate.screens.filters.logic.FilterViewModel
@@ -48,6 +49,7 @@ class MainActivity : ComponentActivity() {
     private val menuViewModel: week.on.a.plate.screens.menu.logic.MenuViewModel by viewModels()
     private val inventoryViewModel: InventoryViewModel by viewModels()
     private val deleteApplyViewModel: DeleteApplyViewModel by viewModels()
+    private val cookPlannerViewModel: CookPlannerViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,7 +82,8 @@ class MainActivity : ComponentActivity() {
                     recipeCreateViewModel,
                     menuViewModel,
                     inventoryViewModel,
-                    deleteApplyViewModel
+                    deleteApplyViewModel,
+                    cookPlannerViewModel,
                 )
 
                 Scaffold(modifier = Modifier

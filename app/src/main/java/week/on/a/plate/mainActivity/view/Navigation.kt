@@ -6,21 +6,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import week.on.a.plate.screens.specifySelection.navigation.SpecifySelectionDirection
+import week.on.a.plate.core.navigation.CookPlannerDestination
+import week.on.a.plate.screens.specifySelection.navigation.SpecifySelectionDestination
 import week.on.a.plate.screens.specifySelection.view.SpecifySelectionMain
-import week.on.a.plate.core.navigation.SearchScreen
-import week.on.a.plate.core.navigation.MenuScreen
-import week.on.a.plate.core.navigation.SettingsScreen
-import week.on.a.plate.core.navigation.ShoppingListScreen
+import week.on.a.plate.core.navigation.SearchDestination
+import week.on.a.plate.core.navigation.MenuDestination
+import week.on.a.plate.core.navigation.SettingsDestination
+import week.on.a.plate.core.navigation.ShoppingListDestination
 import week.on.a.plate.screens.filters.navigation.FilterDestination
 import week.on.a.plate.screens.filters.view.FilterStart
 import week.on.a.plate.mainActivity.logic.MainViewModel
+import week.on.a.plate.screens.cookPlanner.view.CookPlannerStart
 import week.on.a.plate.screens.createRecipe.navigation.RecipeCreateDestination
 import week.on.a.plate.screens.createRecipe.view.RecipeCreateStart
-import week.on.a.plate.screens.deleteApply.navigation.DeleteApplyDirection
+import week.on.a.plate.screens.deleteApply.navigation.DeleteApplyDestination
 import week.on.a.plate.screens.deleteApply.view.DeleteApplyStart
 import week.on.a.plate.screens.filters.event.FilterEvent
-import week.on.a.plate.screens.inventory.navigation.InventoryDirection
+import week.on.a.plate.screens.inventory.navigation.InventoryDestination
 import week.on.a.plate.screens.inventory.view.InventoryStart
 import week.on.a.plate.screens.menu.view.main.MenuScreen
 import week.on.a.plate.screens.recipeDetails.navigation.RecipeDetailsDestination
@@ -29,6 +31,7 @@ import week.on.a.plate.screens.searchRecipes.event.SearchScreenEvent
 import week.on.a.plate.screens.searchRecipes.view.main.SearchStart
 import week.on.a.plate.screens.shoppingList.event.ShoppingListEvent
 import week.on.a.plate.screens.shoppingList.view.ShoppingListStart
+import week.on.a.plate.screens.specifySelection.view.alt.SpecifySelectionAltStart
 
 @Composable
 fun Navigation(
@@ -37,11 +40,11 @@ fun Navigation(
 ) {
     NavHost(
         navController = viewModel.nav,
-        startDestination = MenuScreen,
+        startDestination = MenuDestination,
         Modifier.padding(innerPadding)
     ) {
         //bottom bar
-        composable<MenuScreen> {
+        composable<MenuDestination> {
             viewModel.isActiveBaseScreen.value = true
             viewModel.isActivePlusButton.value = true
             viewModel.isActiveFilterScreen.value = false
@@ -51,7 +54,7 @@ fun Navigation(
                 viewModel.menuViewModel
             )
         }
-        composable<SearchScreen> {
+        composable<SearchDestination> {
             viewModel.isActiveBaseScreen.value = true
             viewModel.isActivePlusButton.value = true
             viewModel.isActiveFilterScreen.value = false
@@ -59,7 +62,7 @@ fun Navigation(
                 { viewModel.searchViewModel.onEvent(SearchScreenEvent.CreateRecipe) }
             SearchStart( viewModel)
         }
-        composable<ShoppingListScreen> {
+        composable<ShoppingListDestination> {
             viewModel.isActiveBaseScreen.value = true
             viewModel.isActivePlusButton.value = true
             viewModel.isActiveFilterScreen.value = false
@@ -67,18 +70,25 @@ fun Navigation(
                 { viewModel.shoppingListViewModel.onEvent(ShoppingListEvent.Add) }
             ShoppingListStart(viewModel.shoppingListViewModel)
         }
-        composable<SettingsScreen> {
+        composable<SettingsDestination> {
             viewModel.isActivePlusButton.value = false
             viewModel.isActiveBaseScreen.value = true
             viewModel.isActiveFilterScreen.value = false
         }
 
+        composable<CookPlannerDestination> {
+            viewModel.isActivePlusButton.value = false
+            viewModel.isActiveBaseScreen.value = true
+            viewModel.isActiveFilterScreen.value = false
+            CookPlannerStart(viewModel.cookPlannerViewModel)
+        }
+
         //others
-        composable<SpecifySelectionDirection> {
+        composable<SpecifySelectionDestination> {
             viewModel.isActiveBaseScreen.value = false
             viewModel.isActivePlusButton.value = false
             viewModel.isActiveFilterScreen.value = false
-            SpecifySelectionMain(viewModel, viewModel.specifySelectionViewModel)
+            SpecifySelectionAltStart(viewModel.specifySelectionViewModel)
         }
 
         composable<FilterDestination>() {
@@ -104,14 +114,14 @@ fun Navigation(
             RecipeCreateStart(viewModel.recipeCreateViewModel)
         }
 
-        composable<InventoryDirection> {
+        composable<InventoryDestination> {
             viewModel.isActiveBaseScreen.value = false
             viewModel.isActivePlusButton.value = false
             viewModel.isActiveFilterScreen.value = false
             InventoryStart(viewModel.inventoryViewModel)
         }
 
-        composable<DeleteApplyDirection> {
+        composable<DeleteApplyDestination> {
             viewModel.isActiveBaseScreen.value = false
             viewModel.isActivePlusButton.value = false
             viewModel.isActiveFilterScreen.value = false

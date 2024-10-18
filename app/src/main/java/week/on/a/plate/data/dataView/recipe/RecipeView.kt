@@ -1,7 +1,6 @@
 package week.on.a.plate.data.dataView.recipe
 
-import java.time.LocalDate
-import java.time.LocalTime
+import java.time.LocalDateTime
 
 data class RecipeView(
     val id: Long,
@@ -16,7 +15,5 @@ data class RecipeView(
     var steps: List<RecipeStepView>,
     var link: String,
     val inFavorite:Boolean,
-    val dateCreated:LocalDate,
-    val dateLastEdit:LocalDate,
-    val timeLastEdit: LocalTime,
+    val lastEdit:LocalDateTime,
 )

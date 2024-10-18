@@ -69,7 +69,7 @@ fun BottomBar(
                     selected = isSelected,
                     onClick = {
                         navController.navigate(topLevelRoute.route) {
-                            if (topLevelRoute == BottomScreens.Search){
+                            if (topLevelRoute == BottomScreens.SearchBottomNav){
                                 searchViewModel.clearSearch()
                             }
                         }

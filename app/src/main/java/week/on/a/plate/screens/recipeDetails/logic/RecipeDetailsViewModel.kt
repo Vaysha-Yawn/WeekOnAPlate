@@ -20,13 +20,14 @@ import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screens.createRecipe.navigation.RecipeCreateDestination
 import week.on.a.plate.screens.deleteApply.event.DeleteApplyEvent
-import week.on.a.plate.screens.deleteApply.navigation.DeleteApplyDirection
-import week.on.a.plate.screens.inventory.navigation.InventoryDirection
+import week.on.a.plate.screens.deleteApply.navigation.DeleteApplyDestination
+import week.on.a.plate.screens.inventory.navigation.InventoryDestination
 import week.on.a.plate.screens.menu.logic.useCase.CRUDRecipeInMenu
 import week.on.a.plate.screens.recipeDetails.event.RecipeDetailsEvent
 import week.on.a.plate.screens.recipeDetails.state.RecipeDetailsState
-import week.on.a.plate.screens.specifySelection.navigation.SpecifySelectionDirection
+import week.on.a.plate.screens.specifySelection.navigation.SpecifySelectionDestination
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 import javax.inject.Inject
 
@@ -108,7 +109,7 @@ class RecipeDetailsViewModel @Inject constructor(
                 listCopy.forEachIndexed { index, ingredientInRecipeView ->
                     ingredientInRecipeView.count = state.ingredientsCounts.value[index]
                 }
-                mainViewModel.nav.navigate(InventoryDirection)
+                mainViewModel.nav.navigate(InventoryDestination)
                 mainViewModel.inventoryViewModel.launchAndGet(listCopy)
             }
         }
@@ -147,8 +148,8 @@ class RecipeDetailsViewModel @Inject constructor(
             val mes = "Вы уверены, что хотите удалить этот рецепт?\n" +
                     "Внимание, при удалении рецепта так же удалятся все позиции с ним в меню.\n" +
                     "Это действие нельзя отменить."
-            mainViewModel.nav.navigate(DeleteApplyDirection)
-            vm.launchAndGet(mes) { event ->
+            mainViewModel.nav.navigate(DeleteApplyDestination)
+            vm.launchAndGet(message = mes) { event ->
                 if (event == DeleteApplyEvent.Apply) {
                     recipeRepository.delete(state.recipe.value.id)
                     mainViewModel.onEvent(MainEvent.NavigateBack)
@@ -170,7 +171,7 @@ class RecipeDetailsViewModel @Inject constructor(
     private fun addToMenu() {
         viewModelScope.launch {
             val vm = mainViewModel.specifySelectionViewModel
-            mainViewModel.nav.navigate(SpecifySelectionDirection)
+            mainViewModel.nav.navigate(SpecifySelectionDestination)
             vm.launchAndGet() { res ->
                 viewModelScope.launch {
                     sCRUDRecipeInMenu.onEvent(
@@ -213,10 +214,10 @@ class RecipeDetailsViewModel @Inject constructor(
                             0,
                             it.description.value,
                             it.image.value,
-                            it.timer.intValue.toLong()
+                            it.timer.intValue.toLong(), it.duration.longValue
                         )
                     },
-                    link = recipe.source.value, false, state.recipe.value.dateCreated, LocalDate.now(), LocalTime.now()
+                    link = recipe.source.value, false, LocalDateTime.now()
                 )
                 viewModelScope.launch {
                     recipeRepository.updateRecipe(state.recipe.value, newRecipe)

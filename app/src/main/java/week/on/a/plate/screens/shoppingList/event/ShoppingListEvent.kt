@@ -7,6 +7,7 @@ import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 sealed class ShoppingListEvent:Event() {
     data object Add : ShoppingListEvent()
     data object DeleteChecked : ShoppingListEvent()
+    data object DeleteAll : ShoppingListEvent()
     data class Check(val position: IngredientInRecipeView) : ShoppingListEvent()
     data class Uncheck(val position: IngredientInRecipeView) : ShoppingListEvent()
     data class Edit(val ingredient: IngredientInRecipeView) : ShoppingListEvent()

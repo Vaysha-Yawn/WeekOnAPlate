@@ -19,6 +19,7 @@ import week.on.a.plate.core.uitools.buttons.PlusButtonTitle
 import week.on.a.plate.data.dataView.week.SelectionView
 import week.on.a.plate.screens.menu.event.MenuEvent
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -41,7 +42,7 @@ fun TitleMenu(selection: SelectionView, modifier: Modifier, onEvent: (event: Eve
         )
         PlusButtonTitle() {
             if (selection.id == 0L) {
-                onEvent(week.on.a.plate.screens.menu.event.MenuEvent.CreateFirstNonPosedPosition(selection.date, selection.name))
+                onEvent(week.on.a.plate.screens.menu.event.MenuEvent.CreateFirstNonPosedPosition(selection.dateTime.toLocalDate(), selection.name))
             } else {
                 onEvent(week.on.a.plate.screens.menu.event.MenuEvent.CreatePosition(selection.id))
             }
@@ -70,7 +71,7 @@ fun TitleMenuS(selection: SelectionView, modifier: Modifier, onEvent: (event: Ev
         )
         PlusButtonTitle() {
             if (selection.id == 0L) {
-                onEvent(week.on.a.plate.screens.menu.event.MenuEvent.CreateFirstNonPosedPosition(selection.date, selection.name))
+                onEvent(week.on.a.plate.screens.menu.event.MenuEvent.CreateFirstNonPosedPosition(selection.dateTime.toLocalDate(), selection.name))
             } else {
                 onEvent(week.on.a.plate.screens.menu.event.MenuEvent.CreatePosition(selection.id))
             }
@@ -91,8 +92,8 @@ fun TitleMenuSmall(name: String, actionAdd: () -> Unit) {
 fun PreviewTitleMenu() {
     WeekOnAPlateTheme {
         Column {
-            TitleMenu(SelectionView(0L, "Понедельник", LocalDate.now(), 0,
-                false, LocalTime.of(0,0),mutableListOf()), Modifier) {}
+            TitleMenu(SelectionView(0L, "Понедельник", LocalDateTime.now(), 0,
+                false,mutableListOf()), Modifier) {}
             TitleMenuSmall("Понедельник") {}
         }
     }

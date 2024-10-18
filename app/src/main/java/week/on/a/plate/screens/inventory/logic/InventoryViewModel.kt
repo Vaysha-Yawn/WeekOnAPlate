@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.Event
-import week.on.a.plate.core.navigation.ShoppingListScreen
+import week.on.a.plate.core.navigation.ShoppingListDestination
 import week.on.a.plate.data.dataView.ShoppingItemView
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.data.repository.tables.shoppingList.ShoppingItemRepository
@@ -113,7 +113,7 @@ class InventoryViewModel @Inject constructor(
                     }
                 }
             }
-            mainViewModel.nav.navigate(ShoppingListScreen)
+            mainViewModel.nav.navigate(ShoppingListDestination)
         }
     }
 

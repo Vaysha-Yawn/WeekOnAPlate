@@ -7,17 +7,17 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.Event
-import week.on.a.plate.core.navigation.MenuScreen
+import week.on.a.plate.core.navigation.MenuDestination
 import week.on.a.plate.data.dataView.week.CategoriesSelection
 import week.on.a.plate.data.repository.tables.menu.selection.WeekRepository
 import week.on.a.plate.dialogs.editSelection.logic.EditSelectionViewModel
 import week.on.a.plate.dialogs.editSelection.state.EditSelectionUIState
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
-import week.on.a.plate.screens.menu.event.MenuEvent
 import week.on.a.plate.screens.specifySelection.event.SpecifySelectionEvent
 import week.on.a.plate.screens.specifySelection.state.SpecifySelectionUIState
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 import javax.inject.Inject
 
@@ -29,6 +29,10 @@ class SpecifySelectionViewModel @Inject constructor(
     lateinit var mainViewModel: MainViewModel
     val state: SpecifySelectionUIState = SpecifySelectionUIState()
     private lateinit var resultFlow: MutableStateFlow<SpecifySelectionResult?>
+
+    init {
+        updateSelections()
+    }
 
     fun onEvent(event: Event) {
         when (event) {
@@ -49,22 +53,21 @@ class SpecifySelectionViewModel @Inject constructor(
             SpecifySelectionEvent.Done -> done()
             SpecifySelectionEvent.AddCustomSelection -> addCustomSelection()
             is SpecifySelectionEvent.UpdatePreview -> updatePreview(event.date)
+            is SpecifySelectionEvent.UpdateSelections -> updateSelections()
             is SpecifySelectionEvent.ApplyDate -> applyDate(event.date)
         }
     }
 
-    private fun applyDate(date: LocalDate?) {
+    private fun applyDate(date: LocalDate) {
         state.isDateChooseActive.value = false
         state.date.value = date
     }
 
-    private fun updatePreview(date: LocalDate?) {
+    private fun updatePreview(date: LocalDate) {
         state.date.value = date
-        if (date != null) {
-            viewModelScope.launch {
-                val selections = weekRepository.getSelectionsByDate(state.date.value!!)
-                state.dayViewPreview.value = selections
-            }
+        viewModelScope.launch {
+            val selections = weekRepository.getSelectionsByDate(state.date.value!!)
+            state.dayViewPreview.value = selections
         }
 
     }
@@ -85,7 +88,7 @@ class SpecifySelectionViewModel @Inject constructor(
                         add(selState.text.value)
                     }
                 viewModelScope.launch {
-                    weekRepository.getSelIdOrCreate(state.date.value!!, false, selState.text.value, mainViewModel.locale, selState.selectedTime.value)
+                    weekRepository.getSelIdOrCreate(LocalDateTime.of(state.date.value, selState.selectedTime.value), false, selState.text.value, mainViewModel.locale, )
                 }
                 state.checkWeek.value = false
                 state.checkDayCategory.value = selState.text.value
@@ -99,9 +102,8 @@ class SpecifySelectionViewModel @Inject constructor(
     }
 
     fun updateSelections() {
-        if (state.date.value == null) return
         viewModelScope.launch {
-            val allSelections = weekRepository.getSelectionsByDate(state.date.value!!)
+            val allSelections = weekRepository.getSelectionsByDate(state.date.value)
             val listSelName = allSelections.map { it.name }.toMutableList()
             val listSuggest = listOf(
                 CategoriesSelection.NonPosed, CategoriesSelection.Breakfast,
@@ -131,10 +133,10 @@ class SpecifySelectionViewModel @Inject constructor(
         state.date.value ?: return
         mainViewModel.viewModelScope.launch {
             val selId = weekRepository.getSelIdOrCreate(
-                state.date.value!!,
+                LocalDateTime.of(state.date.value, LocalTime.of(0,0)),
                 state.checkWeek.value,
                 category,
-                mainViewModel.locale, LocalTime.of(0,0)
+                mainViewModel.locale,
             )
             resultFlow.value =
                 SpecifySelectionResult(selId, state.date.value!!, state.portionsCount.intValue)
@@ -157,7 +159,7 @@ class SpecifySelectionViewModel @Inject constructor(
             if (value != null) {
                 use(value)
                 mainViewModel.menuViewModel.onEvent(week.on.a.plate.screens.menu.event.MenuEvent.ChangeWeek(value.date))
-                mainViewModel.nav.navigate(MenuScreen)
+                mainViewModel.nav.navigate(MenuDestination)
             }
         }
     }

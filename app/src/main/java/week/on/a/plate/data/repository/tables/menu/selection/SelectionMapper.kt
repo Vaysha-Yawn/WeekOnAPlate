@@ -11,19 +11,17 @@ class SelectionMapper() {
         SelectionView(
             id = id,
             name = name,
-            date = date,
+            dateTime = dateTime,
             weekOfYear = weekOfYear,
             isForWeek = isForWeek,
             positions = positions,
-            time = time
         )
 
     fun SelectionView.viewToRoom(): SelectionRoom =
         SelectionRoom(
             name = name,
-            date = date,
+            dateTime = dateTime,
             weekOfYear = weekOfYear,
             isForWeek = isForWeek,
-            time = time
         )
 }

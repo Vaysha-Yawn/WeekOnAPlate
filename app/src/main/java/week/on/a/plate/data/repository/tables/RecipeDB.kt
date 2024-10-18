@@ -6,6 +6,10 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import week.on.a.plate.data.repository.tables.cookPlanner.CookPlannerGroupDAO
+import week.on.a.plate.data.repository.tables.cookPlanner.CookPlannerGroupRoom
+import week.on.a.plate.data.repository.tables.cookPlanner.CookPlannerStepDAO
+import week.on.a.plate.data.repository.tables.cookPlanner.CookPlannerStepRoom
 import week.on.a.plate.data.repository.tables.filters.ingredient.IngredientDAO
 import week.on.a.plate.data.repository.tables.filters.ingredient.IngredientRoom
 import week.on.a.plate.data.repository.tables.filters.ingredientCategory.IngredientCategoryDAO
@@ -24,9 +28,10 @@ import week.on.a.plate.data.repository.tables.menu.position.note.PositionNoteDAO
 import week.on.a.plate.data.repository.tables.menu.position.note.PositionNoteRoom
 import week.on.a.plate.data.repository.tables.menu.position.positionIngredient.PositionIngredientDAO
 import week.on.a.plate.data.repository.tables.menu.position.positionIngredient.PositionIngredientRoom
-import week.on.a.plate.data.repository.tables.menu.position.positionRecipe.PositionRecipeRoom
 import week.on.a.plate.data.repository.tables.menu.position.positionRecipe.PositionRecipeDAO
+import week.on.a.plate.data.repository.tables.menu.position.positionRecipe.PositionRecipeRoom
 import week.on.a.plate.data.repository.tables.menu.selection.DateTypeConverter
+import week.on.a.plate.data.repository.tables.menu.selection.LocalDateTimeTypeConverter
 import week.on.a.plate.data.repository.tables.menu.selection.LocalTimeTypeConverter
 import week.on.a.plate.data.repository.tables.menu.selection.SelectionDAO
 import week.on.a.plate.data.repository.tables.menu.selection.SelectionRoom
@@ -44,13 +49,13 @@ import week.on.a.plate.data.repository.tables.shoppingList.ShoppingItemRoom
 
 @Database(
     entities = [IngredientRoom::class, IngredientCategoryRoom::class, IngredientInRecipeRoom::class, RecipeRoom::class, RecipeRecipeTagCrossRef::class, RecipeStepRoom::class,
-        RecipeTagRoom::class, RecipeTagCategoryRoom::class,  PositionRecipeRoom::class, SelectionRoom::class,
+        RecipeTagRoom::class, RecipeTagCategoryRoom::class, PositionRecipeRoom::class, SelectionRoom::class,
         PositionIngredientRoom::class, PositionNoteRoom::class, PositionDraftRoom::class, DraftAndIngredientCrossRef::class, DraftAndTagCrossRef::class,
-        ShoppingItemRoom::class
+        ShoppingItemRoom::class, CookPlannerStepRoom::class, CookPlannerGroupRoom::class
     ], version = 1, exportSchema = false
 )
 @TypeConverters(
-    DateTypeConverter::class, LocalTimeTypeConverter::class
+    DateTypeConverter::class, LocalDateTimeTypeConverter::class, LocalTimeTypeConverter::class
 )
 abstract class RecipeDB : RoomDatabase() {
     abstract fun daoIngredient(): IngredientDAO
@@ -69,6 +74,8 @@ abstract class RecipeDB : RoomDatabase() {
     abstract fun daoDraftAndIngredientCrossRef(): DraftAndIngredientCrossRefDAO
     abstract fun daoDraftAndTagCrossRef(): DraftAndTagCrossRefDAO
     abstract fun daoShoppingItem(): ShoppingItemDAO
+    abstract fun daoCookPlannerStep(): CookPlannerStepDAO
+    abstract fun daoCookPlannerGroup(): CookPlannerGroupDAO
 
     companion object {
         fun buildDatabase(context: Context): RecipeDB {

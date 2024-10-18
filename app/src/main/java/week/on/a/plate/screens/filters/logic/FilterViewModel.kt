@@ -26,7 +26,7 @@ import week.on.a.plate.dialogs.editOrDelete.logic.EditOrDeleteViewModel
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screens.deleteApply.event.DeleteApplyEvent
-import week.on.a.plate.screens.deleteApply.navigation.DeleteApplyDirection
+import week.on.a.plate.screens.deleteApply.navigation.DeleteApplyDestination
 import week.on.a.plate.screens.filters.dialogs.filterVoiceApply.logic.FilterVoiceApplyViewModel
 import week.on.a.plate.screens.filters.dialogs.selectedFilters.logic.SelectedFiltersViewModel
 import week.on.a.plate.screens.filters.event.FilterEvent
@@ -175,8 +175,8 @@ class FilterViewModel @Inject constructor(
             val mes = "Вы уверены, что хотите удалить этот ингредиент?\n" +
                     "Внимание, при удалении ингредиента он удалится из рецептов, меню (позиции этого ингредиента, в набросках) и списка покупок.\n" +
                     "Это действие нельзя отменить."
-            mainViewModel.nav.navigate(DeleteApplyDirection)
-            vmDel.launchAndGet(mes) { event ->
+            mainViewModel.nav.navigate(DeleteApplyDestination)
+            vmDel.launchAndGet(message = mes) { event ->
                 if (event == DeleteApplyEvent.Apply) {
                     ingredientRepository.delete(ingredient.ingredientId)
                 }
@@ -190,8 +190,8 @@ class FilterViewModel @Inject constructor(
             val mes = "Вы уверены, что хотите удалить этот тэг?\n" +
                     "Внимание, при удалении тэга он удалится из всех набросков и рецептов.\n" +
                     "Это действие нельзя отменить."
-            mainViewModel.nav.navigate(DeleteApplyDirection)
-            vmDel.launchAndGet(mes) { event ->
+            mainViewModel.nav.navigate(DeleteApplyDestination)
+            vmDel.launchAndGet(message = mes) { event ->
                 if (event == DeleteApplyEvent.Apply) {
                     recipeTagRepository.delete(tag.id)
                 }

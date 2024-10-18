@@ -9,7 +9,8 @@ class RecipeStepMapper() {
             id = this.id,
             description = this.description,
             image = this.image,
-            timer = this.timer
+            timer = this.timer,
+            duration = duration
         )
 
     fun RecipeStepView.viewToRoom(recipeId:Long): RecipeStepRoom =
@@ -17,6 +18,7 @@ class RecipeStepMapper() {
             recipeId = recipeId,
             description = this.description,
             image = this.image,
-            timer = this.timer
+            timer = this.timer,
+            duration = duration
         )
 }
