@@ -1,4 +1,4 @@
-package week.on.a.plate.screens.menu.view.week.positionsCard
+package week.on.a.plate.screens.menu.view.day.positionsCard
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -24,6 +24,7 @@ import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.uitools.buttons.MoreButton
 import week.on.a.plate.screens.menu.event.MenuEvent
+import week.on.a.plate.screens.wrapperDatePicker.event.WrapperDatePickerEvent
 import week.on.a.plate.screens.searchRecipes.view.resultScreen.TagListHidden
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -38,8 +39,8 @@ fun WeekDraftPosition(
             .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(20.dp))
             .padding(20.dp)
             .combinedClickable(
-                onClick = {onEvent(week.on.a.plate.screens.menu.event.MenuEvent.EditOtherPosition(draft)) },
-                onLongClick = { onEvent(week.on.a.plate.screens.menu.event.MenuEvent.SwitchEditMode) },
+                onClick = {onEvent(MenuEvent.EditOtherPosition(draft)) },
+                onLongClick = { onEvent(WrapperDatePickerEvent.SwitchEditMode) },
             ),
         horizontalAlignment = Alignment.Start,
     ) {

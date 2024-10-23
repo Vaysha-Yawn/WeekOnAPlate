@@ -14,15 +14,15 @@ import week.on.a.plate.data.dataView.week.DayView
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.PlusButtonTitle
-import week.on.a.plate.screens.menu.state.MenuIUState
+import week.on.a.plate.screens.menu.state.MenuUIState
 
 
 @Composable
-fun DayView(day: DayView, menuIUState: MenuIUState, onEvent: (event: Event) -> Unit) {
+fun DayView(day: DayView, menuUIState: MenuUIState, onEvent: (event: Event) -> Unit) {
     LazyColumn {
         items(day.selections.size) { index ->
             BlockSelection(
-                selection = day.selections[index], menuIUState = menuIUState, onEvent
+                selection = day.selections[index], menuUIState = menuUIState, onEvent
             )
         }
         item {

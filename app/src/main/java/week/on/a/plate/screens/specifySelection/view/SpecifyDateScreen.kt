@@ -39,7 +39,7 @@ import week.on.a.plate.core.uitools.buttons.DoneButton
 import week.on.a.plate.core.utils.dateToString
 import week.on.a.plate.data.dataView.week.CategoriesSelection
 import week.on.a.plate.mainActivity.event.MainEvent
-import week.on.a.plate.screens.menu.view.topBar.TitleMenuSmall
+import week.on.a.plate.core.uitools.TitleMenuSmall
 import week.on.a.plate.screens.specifySelection.event.SpecifySelectionEvent
 import week.on.a.plate.screens.specifySelection.state.SpecifySelectionUIState
 

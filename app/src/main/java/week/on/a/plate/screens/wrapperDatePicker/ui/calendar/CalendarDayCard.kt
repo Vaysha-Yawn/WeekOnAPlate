@@ -1,4 +1,4 @@
-package week.on.a.plate.screens.menu.view.calendar
+package week.on.a.plate.screens.wrapperDatePicker.ui.calendar
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

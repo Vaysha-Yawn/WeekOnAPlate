@@ -11,15 +11,15 @@ import androidx.compose.ui.unit.dp
 import week.on.a.plate.data.dataView.week.SelectionView
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.uitools.SubText
-import week.on.a.plate.screens.menu.state.MenuIUState
-import week.on.a.plate.screens.menu.view.topBar.TitleMenu
-import week.on.a.plate.screens.menu.view.week.positionsCard.WeekCardPosition
+import week.on.a.plate.screens.menu.state.MenuUIState
+import week.on.a.plate.core.uitools.TitleMenu
+import week.on.a.plate.screens.menu.view.day.positionsCard.WeekCardPosition
 import java.time.format.DateTimeFormatter
 
 @Composable
 fun BlockSelection(
     selection: SelectionView,
-    menuIUState: MenuIUState,
+    menuUIState: MenuUIState,
     onEvent: (event: Event) -> Unit,
     ) {
     if (selection.dateTime.hour>0){
@@ -33,9 +33,9 @@ fun BlockSelection(
     for ((index, i) in selection.positions.withIndex()){
         if (index%2 == 0){
             Row {
-                WeekCardPosition(i, Modifier.fillMaxWidth(0.5f).padding(10.dp),  menuIUState= menuIUState, onEvent)
+                WeekCardPosition(i, Modifier.fillMaxWidth(0.5f).padding(10.dp),  menuUIState= menuUIState, onEvent)
                 if (selection.positions.size>index+1){
-                    WeekCardPosition(selection.positions[index+1], Modifier.fillMaxWidth().padding(10.dp), menuIUState= menuIUState, onEvent)
+                    WeekCardPosition(selection.positions[index+1], Modifier.fillMaxWidth().padding(10.dp), menuUIState= menuUIState, onEvent)
                 }
             }
         }

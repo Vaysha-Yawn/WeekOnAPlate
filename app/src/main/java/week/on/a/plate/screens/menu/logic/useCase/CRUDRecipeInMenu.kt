@@ -53,7 +53,7 @@ class CRUDRecipeInMenu @Inject constructor(
                 }
             }
 
-            is week.on.a.plate.screens.menu.event.ActionWeekMenuDB.DoublePositionInMenuDB -> {
+            is ActionWeekMenuDB.DoublePositionInMenuDB -> {
                 val selId: Long = event.selId
                 when (event.position) {
                     is Position.PositionDraftView -> draftRepository.insert(event.position, selId)
@@ -67,7 +67,7 @@ class CRUDRecipeInMenu @Inject constructor(
                 }
             }
 
-            is week.on.a.plate.screens.menu.event.ActionWeekMenuDB.EditIngredientPositionDB -> {
+            is ActionWeekMenuDB.EditIngredientPositionDB -> {
                 val data = event.updatedPosition
                 positionIngredientRepository.update(
                     data.id,
@@ -79,7 +79,7 @@ class CRUDRecipeInMenu @Inject constructor(
                 )
             }
 
-            is week.on.a.plate.screens.menu.event.ActionWeekMenuDB.EditNoteDB -> {
+            is ActionWeekMenuDB.EditNoteDB -> {
                 val note = event.data
                 noteRepository.update(
                     note.idPos,
@@ -87,48 +87,48 @@ class CRUDRecipeInMenu @Inject constructor(
                 )
             }
 
-            is week.on.a.plate.screens.menu.event.ActionWeekMenuDB.MovePositionInMenuDB -> {
+            is ActionWeekMenuDB.MovePositionInMenuDB -> {
                 val selId: Long = event.selId
                 when (event.position) {
                     is Position.PositionDraftView -> {
-                        onEvent(week.on.a.plate.screens.menu.event.ActionWeekMenuDB.Delete(event.position))
+                        onEvent(ActionWeekMenuDB.Delete(event.position))
                         draftRepository.insert(event.position, selId)
                     }
 
                     is Position.PositionIngredientView -> {
-                        onEvent(week.on.a.plate.screens.menu.event.ActionWeekMenuDB.Delete(event.position))
+                        onEvent(ActionWeekMenuDB.Delete(event.position))
                         positionIngredientRepository.insert(event.position, selId)
                     }
 
                     is Position.PositionNoteView -> {
-                        onEvent(week.on.a.plate.screens.menu.event.ActionWeekMenuDB.Delete(event.position))
+                        onEvent(ActionWeekMenuDB.Delete(event.position))
                         noteRepository.insert(event.position, selId)
                     }
 
                     is Position.PositionRecipeView -> {
-                        onEvent(week.on.a.plate.screens.menu.event.ActionWeekMenuDB.Delete(event.position))
+                        onEvent(ActionWeekMenuDB.Delete(event.position))
                         recipeRepository.insert(event.position, selId)
                     }
                 }
             }
 
-            is week.on.a.plate.screens.menu.event.ActionWeekMenuDB.AddDraft -> {
+            is ActionWeekMenuDB.AddDraft -> {
                 draftRepository.insert(event.draft, event.draft.selectionId)
             }
 
-            is week.on.a.plate.screens.menu.event.ActionWeekMenuDB.EditDraft -> {
+            is ActionWeekMenuDB.EditDraft -> {
                 draftRepository.update(event.oldDraft, event.filters)
             }
 
-            is week.on.a.plate.screens.menu.event.ActionWeekMenuDB.DeleteSelection -> {
+            is ActionWeekMenuDB.DeleteSelection -> {
                 menuR.deleteSelection(event.sel)
             }
 
-            is week.on.a.plate.screens.menu.event.ActionWeekMenuDB.EditSelection -> {
+            is ActionWeekMenuDB.EditSelection -> {
                 menuR.editSelection(event.sel, event.newName, event.time)
             }
 
-            is week.on.a.plate.screens.menu.event.ActionWeekMenuDB.CreateSelection -> {
+            is ActionWeekMenuDB.CreateSelection -> {
                 menuR.createSelection(
                     event.date, event.newName, event.locale,
                     event.isForWeek, event.time

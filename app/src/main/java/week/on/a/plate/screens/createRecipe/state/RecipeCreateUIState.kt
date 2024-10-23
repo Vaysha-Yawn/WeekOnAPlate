@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.data.dataView.recipe.RecipeTagView
+import java.time.LocalTime
 
 class RecipeCreateUIState {
     val activeTabIndex = mutableIntStateOf(0)
@@ -27,5 +28,5 @@ class RecipeStepState {
     val description = mutableStateOf("")
     val image = mutableStateOf("")
     val timer = mutableIntStateOf(0)
-    val duration = mutableLongStateOf(0L)
+    val duration = mutableStateOf(LocalTime.of(0, 0))
 }

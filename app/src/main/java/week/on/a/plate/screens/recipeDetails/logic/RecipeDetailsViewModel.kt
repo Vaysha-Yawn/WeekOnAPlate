@@ -209,12 +209,12 @@ class RecipeDetailsViewModel @Inject constructor(
                     allTime = recipe.allTime.intValue,
                     standardPortionsCount = recipe.portionsCount.intValue,
                     ingredients = recipe.ingredients.value,
-                    steps = recipe.steps.value.map {
+                    steps = recipe.steps.value.map {it->
                         RecipeStepView(
                             0,
                             it.description.value,
                             it.image.value,
-                            it.timer.intValue.toLong(), it.duration.longValue
+                            it.timer.intValue.toLong(), it.duration.value
                         )
                     },
                     link = recipe.source.value, false, LocalDateTime.now()

@@ -277,7 +277,7 @@ class SearchViewModel @Inject constructor(
                                 0,
                                 it.description.value,
                                 it.image.value,
-                                it.timer.intValue.toLong(), it.duration.longValue
+                                it.timer.intValue.toLong(), it.duration.value
                             )
                         },
                         link = recipe.source.value, false, LocalDateTime.now()

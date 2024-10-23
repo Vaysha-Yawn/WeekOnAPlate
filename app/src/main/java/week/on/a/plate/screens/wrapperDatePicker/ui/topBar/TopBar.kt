@@ -1,4 +1,4 @@
-package week.on.a.plate.screens.menu.view.topBar
+package week.on.a.plate.screens.wrapperDatePicker.ui.topBar
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -19,17 +20,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.core.uitools.TextBodyDisActive
-import week.on.a.plate.core.Event
 import week.on.a.plate.core.theme.ColorButtonNegativeGrey
 import week.on.a.plate.core.uitools.TextBody
-import week.on.a.plate.screens.menu.state.MenuIUState
+import week.on.a.plate.screens.wrapperDatePicker.event.WrapperDatePickerEvent
+import week.on.a.plate.screens.wrapperDatePicker.state.WrapperDatePickerUIState
 
 @Composable
 fun TopBar(
     titleWeek: String,
     titleDay: String,
-    menuIUState: MenuIUState,
-    onEvent: (event: Event) -> Unit
+    isEditing: MutableState<Boolean>,
+    wrapperDatePickerUIState: WrapperDatePickerUIState,
+    actionDeleteSelected:()->Unit = {},
+    actionSelectedToShopList:()->Unit = {},
+    onEvent: (event: WrapperDatePickerEvent) -> Unit,
 ) {
     Column {
         Row(
@@ -40,35 +44,35 @@ fun TopBar(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            if (menuIUState.editing.value) {
+            if (isEditing.value) {
                 EditingRow(actionDeleteSelected = {
-                    onEvent(week.on.a.plate.screens.menu.event.MenuEvent.DeleteSelected)
+                    actionDeleteSelected()
                 }, actionSelectedToShopList = {
-                   onEvent(week.on.a.plate.screens.menu.event.MenuEvent.SelectedToShopList)
+                    actionSelectedToShopList()
                 }, actionExit = {
-                    onEvent(week.on.a.plate.screens.menu.event.MenuEvent.SwitchEditMode)
+                    onEvent(WrapperDatePickerEvent.SwitchEditMode)
                 })
             } else {
                 TextBodyDisActive(
-                    text = if (menuIUState.itsDayMenu.value) stringResource(R.string.week_nav) else stringResource(
+                    text = if (wrapperDatePickerUIState.itsDayMenu.value) stringResource(R.string.week_nav) else stringResource(
                         R.string.day_nav
                     ),
                     modifier = Modifier
                         .clickable {
-                            onEvent(week.on.a.plate.screens.menu.event.MenuEvent.SwitchWeekOrDayView)
+                            onEvent(WrapperDatePickerEvent.SwitchWeekOrDayView)
                         }
                         .padding(vertical = 5.dp)
                         .padding(end = 12.dp)
                 )
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    val title = if (menuIUState.itsDayMenu.value) {titleDay} else titleWeek
+                    val title = if (wrapperDatePickerUIState.itsDayMenu.value) {titleDay} else titleWeek
                     TextBody(text = title, modifier = Modifier.padding(end = 12.dp))
                     Image(
                         painter = painterResource(id = R.drawable.calendar),
                         contentDescription = "",
                         modifier = Modifier
                             .clickable {
-                                onEvent(week.on.a.plate.screens.menu.event.MenuEvent.ChooseWeek)
+                                onEvent(WrapperDatePickerEvent.ChooseWeek)
                             }
                             .padding(6.dp)
                             .size(24.dp)

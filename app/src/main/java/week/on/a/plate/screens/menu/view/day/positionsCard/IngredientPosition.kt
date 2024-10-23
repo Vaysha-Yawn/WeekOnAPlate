@@ -1,4 +1,4 @@
-package week.on.a.plate.screens.menu.view.week.positionsCard
+package week.on.a.plate.screens.menu.view.day.positionsCard
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -34,7 +34,8 @@ import week.on.a.plate.core.utils.getIngredientCountAndMeasure1000
 import week.on.a.plate.data.dataView.example.ingredientTomato
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.data.dataView.week.Position
-import week.on.a.plate.screens.menu.state.MenuIUState
+import week.on.a.plate.screens.wrapperDatePicker.event.WrapperDatePickerEvent
+import week.on.a.plate.screens.menu.state.MenuUIState
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -49,7 +50,7 @@ fun WeekIngredientPosition(
                 onClick = {
                     onEvent(week.on.a.plate.screens.menu.event.MenuEvent.EditOtherPosition(ingredient))
                 },
-                onLongClick = { onEvent(week.on.a.plate.screens.menu.event.MenuEvent.SwitchEditMode) },
+                onLongClick = { onEvent(WrapperDatePickerEvent.SwitchEditMode) },
             )
             .clip(RoundedCornerShape(20.dp)),
     ) {
@@ -109,7 +110,7 @@ fun WeekIngredientPosition(
 @Composable
 fun PreviewWeekIngredientPosition() {
     WeekOnAPlateTheme {
-        val menuIUState = MenuIUState.MenuIUStateExample
+        val menuUIState = MenuUIState.MenuUIStateExample
         val posIngredient = Position.PositionIngredientView(
             0,
             IngredientInRecipeView(0, ingredientTomato, "ssss", 0),
@@ -119,13 +120,13 @@ fun PreviewWeekIngredientPosition() {
             item {
                 WeekCardPosition(
                     posIngredient,
-                    menuIUState = menuIUState
+                    menuUIState = menuUIState
                 ) {}
             }
             item {
                 WeekCardPosition(
                     posIngredient,
-                    menuIUState =menuIUState
+                    menuUIState =menuUIState
                 ) {}
             }
         }

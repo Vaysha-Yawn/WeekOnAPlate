@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.time.format.TextStyle
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -31,6 +32,10 @@ fun Long.dateToLocalDate(): LocalDate {
 }
 fun LocalDate.dateToLong(): Long {
     return this.toEpochDay()
+}
+
+fun LocalDate.getDayInWeekShort(local: Locale):String{
+    return this.dayOfWeek.getDisplayName(TextStyle.SHORT, local)
 }
 
 fun Int.timeToString(): String {

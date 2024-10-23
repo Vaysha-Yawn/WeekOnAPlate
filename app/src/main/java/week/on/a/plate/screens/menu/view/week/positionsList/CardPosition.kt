@@ -1,4 +1,4 @@
-package week.on.a.plate.screens.menu.view.day.positionsList
+package week.on.a.plate.screens.menu.view.week.positionsList
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -24,17 +24,16 @@ import week.on.a.plate.data.dataView.example.tags
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.data.dataView.week.SelectionView
-import week.on.a.plate.screens.menu.state.MenuIUState
+import week.on.a.plate.screens.wrapperDatePicker.event.WrapperDatePickerEvent
+import week.on.a.plate.screens.menu.state.MenuUIState
 import week.on.a.plate.screens.menu.view.day.BlockSelection
-import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.LocalTime
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CardPosition(
     position: Position,
-    menuIUState: MenuIUState,
+    menuUIState: MenuUIState,
     onEvent: (event: Event) -> Unit
 ) {
     Card(
@@ -49,7 +48,7 @@ fun CardPosition(
                 .padding(horizontal = 10.dp, vertical = 5.dp)
                 .combinedClickable(
                     onClick = {},
-                    onLongClick = { onEvent(week.on.a.plate.screens.menu.event.MenuEvent.SwitchEditMode) },
+                    onLongClick = { onEvent(WrapperDatePickerEvent.SwitchEditMode) },
                 ),
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -67,7 +66,7 @@ fun CardPosition(
                 }
 
                 is Position.PositionRecipeView -> {
-                    RecipePosition(position, menuIUState, onEvent, this)
+                    RecipePosition(position, menuUIState, onEvent, this)
                 }
             }
         }
@@ -79,7 +78,7 @@ fun CardPosition(
 @Composable
 fun PreviewRecipePosition() {
     WeekOnAPlateTheme {
-        val menuIUState = MenuIUState.MenuIUStateExample
+        val menuUIState = MenuUIState.MenuUIStateExample
         val posRecipe = Position.PositionRecipeView(0, shortRecipe, 2, 0)
         val posIngredient = Position.PositionIngredientView(
             0,
@@ -95,7 +94,7 @@ fun PreviewRecipePosition() {
                     0, "Заврак", LocalDateTime.now(), 0, true, mutableListOf(
                         posRecipe, posIngredient, posDraft, posNote,
                     )
-                ), menuIUState
+                ), menuUIState
             ) {}
         }
     }

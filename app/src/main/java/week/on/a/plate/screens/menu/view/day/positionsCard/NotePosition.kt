@@ -1,4 +1,4 @@
-package week.on.a.plate.screens.menu.view.week.positionsCard
+package week.on.a.plate.screens.menu.view.day.positionsCard
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -23,7 +23,7 @@ import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.buttons.MoreButton
-import week.on.a.plate.screens.menu.event.MenuEvent
+import week.on.a.plate.screens.wrapperDatePicker.event.WrapperDatePickerEvent
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -38,7 +38,7 @@ fun WeekNotePosition(
             .padding(20.dp)
             .combinedClickable(
                 onClick = { onEvent(week.on.a.plate.screens.menu.event.MenuEvent.EditOtherPosition(note)) },
-                onLongClick = { onEvent(week.on.a.plate.screens.menu.event.MenuEvent.SwitchEditMode) },
+                onLongClick = { onEvent(WrapperDatePickerEvent.SwitchEditMode) },
             ),
         horizontalAlignment = Alignment.Start,
     ) {

@@ -30,13 +30,13 @@ import week.on.a.plate.core.uitools.buttons.PlusButtonTitle
 import week.on.a.plate.data.dataView.week.SelectionView
 import week.on.a.plate.data.dataView.week.WeekView
 import week.on.a.plate.screens.menu.event.MenuEvent
-import week.on.a.plate.screens.menu.state.MenuIUState
-import week.on.a.plate.screens.menu.view.day.positionsList.CardPosition
-import week.on.a.plate.screens.menu.view.topBar.TitleMenuS
+import week.on.a.plate.screens.menu.state.MenuUIState
+import week.on.a.plate.screens.menu.view.week.positionsList.CardPosition
+import week.on.a.plate.core.uitools.TitleMenuS
 
 @Composable
 fun WeekMenu(
-    menuIUState: MenuIUState,
+    menuUIState: MenuUIState,
     onEvent: (event: Event) -> Unit,
     week: WeekView
 ) {
@@ -63,7 +63,7 @@ fun WeekMenu(
                     for (pos in week.selectionView.positions) {
                         CardPosition(
                             position = pos,
-                            menuIUState = menuIUState,
+                            menuUIState = menuUIState,
                             onEvent
                         )
                     }
@@ -94,7 +94,7 @@ fun WeekMenu(
                             sel.positions.forEach { pos ->
                                 CardPosition(
                                     position = pos,
-                                    menuIUState = menuIUState,
+                                    menuUIState = menuUIState,
                                     onEvent
                                 )
                             }

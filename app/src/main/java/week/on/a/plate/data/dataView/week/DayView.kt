@@ -9,9 +9,6 @@ data class DayView (
     val date:LocalDate,
     var selections:List<SelectionView>
 ){
-    fun getDyInWeekShort(local: Locale):String{
-        return date.dayOfWeek.getDisplayName(TextStyle.SHORT, local)
-    }
     fun getDyInWeekFull(local: Locale):String{
         return date.dayOfWeek.getDisplayName(TextStyle.FULL, local)
             .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }

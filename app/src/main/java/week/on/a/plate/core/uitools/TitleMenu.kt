@@ -1,4 +1,4 @@
-package week.on.a.plate.screens.menu.view.topBar
+package week.on.a.plate.core.uitools
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -13,14 +13,9 @@ import androidx.compose.ui.unit.dp
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.theme.ColorSubTextGrey
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
-import week.on.a.plate.core.uitools.TextBody
-import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.PlusButtonTitle
 import week.on.a.plate.data.dataView.week.SelectionView
-import week.on.a.plate.screens.menu.event.MenuEvent
-import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.LocalTime
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

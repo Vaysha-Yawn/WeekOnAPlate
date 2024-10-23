@@ -1,4 +1,4 @@
-package week.on.a.plate.screens.menu.view.week.positionsCard
+package week.on.a.plate.screens.menu.view.day.positionsCard
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateIntAsState
@@ -43,13 +43,14 @@ import week.on.a.plate.data.dataView.example.shortRecipe
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.screens.menu.event.MenuEvent
 import week.on.a.plate.screens.menu.event.NavFromMenuData
-import week.on.a.plate.screens.menu.state.MenuIUState
+import week.on.a.plate.screens.wrapperDatePicker.event.WrapperDatePickerEvent
+import week.on.a.plate.screens.menu.state.MenuUIState
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun WeekRecipePosition(
     recipe: Position.PositionRecipeView,
-    menuIUState: MenuIUState,
+    menuUIState: MenuUIState,
     onEvent: (event: Event) -> Unit,
 ) {
     Box(
@@ -65,7 +66,7 @@ fun WeekRecipePosition(
                         )
                     )
                 },
-                onLongClick = { onEvent(MenuEvent.SwitchEditMode) },
+                onLongClick = { onEvent(WrapperDatePickerEvent.SwitchEditMode) },
             )
             .clip(RoundedCornerShape(20.dp)),
     ) {
@@ -90,15 +91,15 @@ fun WeekRecipePosition(
         ) {
             val sizeCheckBox = remember { mutableIntStateOf(0) }
             val animatedSize = animateIntAsState(sizeCheckBox.intValue)
-            if (menuIUState.editing.value) {
+            if (menuUIState.wrapperDatePickerUIState.isGroupSelectedModeActive.value) {
                 sizeCheckBox.intValue = 48
             } else {
                 sizeCheckBox.intValue = 0
             }
-            var state = menuIUState.chosenRecipes[recipe]
+            var state = menuUIState.chosenRecipes[recipe]
             if (state == null) {
                 state = remember { mutableStateOf(false) }
-                menuIUState.chosenRecipes[recipe] = state
+                menuUIState.chosenRecipes[recipe] = state
             }
             Box(
                 Modifier
@@ -146,19 +147,19 @@ fun WeekRecipePosition(
 @Composable
 fun PreviewWeekRecipePosition() {
     WeekOnAPlateTheme {
-        val menuIUState = MenuIUState.MenuIUStateExample
+        val menuUIState = MenuUIState.MenuUIStateExample
         val posRecipe = Position.PositionRecipeView(0, shortRecipe, 2, 0)
         LazyVerticalGrid(GridCells.Fixed(2), Modifier.fillMaxWidth()) {
             item {
                 WeekCardPosition(
                     posRecipe,
-                    menuIUState = menuIUState
+                    menuUIState = menuUIState
                 ) {}
             }
             item {
                 WeekCardPosition(
                     posRecipe,
-                    menuIUState = menuIUState
+                    menuUIState = menuUIState
                 ) {}
             }
         }

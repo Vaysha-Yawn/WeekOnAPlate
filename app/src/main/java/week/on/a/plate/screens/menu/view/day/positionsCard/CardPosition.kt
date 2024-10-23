@@ -1,6 +1,5 @@
-package week.on.a.plate.screens.menu.view.week.positionsCard
+package week.on.a.plate.screens.menu.view.day.positionsCard
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,13 +18,13 @@ import week.on.a.plate.data.dataView.example.shortRecipe
 import week.on.a.plate.data.dataView.example.tags
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.data.dataView.week.Position
-import week.on.a.plate.screens.menu.state.MenuIUState
+import week.on.a.plate.screens.menu.state.MenuUIState
 
 
 @Composable
 fun WeekCardPosition(
     position: Position, modifier: Modifier = Modifier,
-    menuIUState: MenuIUState,
+    menuUIState: MenuUIState,
     onEvent: (event: Event) -> Unit
 ) {
     Card(
@@ -46,7 +45,7 @@ fun WeekCardPosition(
             }
 
             is Position.PositionRecipeView -> {
-                WeekRecipePosition(position, menuIUState, onEvent)
+                WeekRecipePosition(position, menuUIState, onEvent)
             }
         }
     }
@@ -56,7 +55,7 @@ fun WeekCardPosition(
 @Composable
 fun PreviewWeekCards() {
     WeekOnAPlateTheme {
-        val menuIUState = MenuIUState.MenuIUStateExample
+        val menuUIState = MenuUIState.MenuUIStateExample
         val posRecipe = Position.PositionRecipeView(0, shortRecipe, 2, 0)
         val posIngredient = Position.PositionIngredientView(
             0,
@@ -67,13 +66,13 @@ fun PreviewWeekCards() {
         val posNote = Position.PositionNoteView(0, " Кушаю на работе",0)
         Column {
             WeekCardPosition(posRecipe,
-                menuIUState= menuIUState, ){}
+                menuUIState= menuUIState, ){}
             WeekCardPosition(posIngredient,
-                menuIUState=  menuIUState, ){}
+                menuUIState=  menuUIState, ){}
             WeekCardPosition(posDraft,
-                menuIUState= menuIUState, ){}
+                menuUIState= menuUIState, ){}
             WeekCardPosition(posNote,
-                menuIUState=  menuIUState, ){}
+                menuUIState=  menuUIState, ){}
         }
     }
 }

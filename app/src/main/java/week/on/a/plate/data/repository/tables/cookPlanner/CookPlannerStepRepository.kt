@@ -47,7 +47,7 @@ class CookPlannerStepRepository @Inject constructor(
     suspend fun insertGroupByEnd(recipe:RecipeView, end:LocalDateTime ) {
         val groupId = groupRepo.insert(CookPlannerGroupRoom(recipe.id))
         var time = end
-        recipe.steps.fastForEachReversed {stepView->
+        recipe.steps.fastForEachReversed { stepView ->
             val startTime =  time.minusHours(stepView.duration.hour.toLong()).minusMinutes(stepView.duration.minute.toLong())
             val stepRoom = CookPlannerStepRoom(recipe.id, groupId, stepView.id, false,startTime, time)
             time = startTime

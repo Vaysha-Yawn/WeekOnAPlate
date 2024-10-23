@@ -14,6 +14,7 @@ import week.on.a.plate.dialogs.editSelection.logic.EditSelectionViewModel
 import week.on.a.plate.dialogs.editSelection.state.EditSelectionUIState
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
+import week.on.a.plate.screens.wrapperDatePicker.event.WrapperDatePickerEvent
 import week.on.a.plate.screens.specifySelection.event.SpecifySelectionEvent
 import week.on.a.plate.screens.specifySelection.state.SpecifySelectionUIState
 import java.time.LocalDate
@@ -158,7 +159,7 @@ class SpecifySelectionViewModel @Inject constructor(
         flow.collect { value ->
             if (value != null) {
                 use(value)
-                mainViewModel.menuViewModel.onEvent(week.on.a.plate.screens.menu.event.MenuEvent.ChangeWeek(value.date))
+                mainViewModel.menuViewModel.onEvent(WrapperDatePickerEvent.ChangeWeek(value.date))
                 mainViewModel.nav.navigate(MenuDestination)
             }
         }

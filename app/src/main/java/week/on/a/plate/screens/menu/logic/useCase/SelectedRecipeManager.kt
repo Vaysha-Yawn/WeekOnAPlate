@@ -1,29 +1,29 @@
 package week.on.a.plate.screens.menu.logic.useCase
 
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import week.on.a.plate.data.dataView.week.Position
-import week.on.a.plate.screens.menu.state.MenuIUState
+import week.on.a.plate.screens.menu.event.SelectedEvent
+import week.on.a.plate.screens.menu.state.MenuUIState
 import javax.inject.Inject
 
 class SelectedRecipeManager @Inject constructor() {
 
-    fun clear(menuUIState: MenuIUState) {
+    fun clear(menuUIState: MenuUIState) {
         menuUIState.isAllSelected.value = false
-        menuUIState.chosenRecipes = mutableMapOf<Position.PositionRecipeView, MutableState<Boolean>>()
+        menuUIState.chosenRecipes = mutableMapOf()
     }
 
-    private fun actionCheckRecipe(menuUIState: MenuIUState, id: Position.PositionRecipeView) {
+    private fun actionCheckRecipe(menuUIState: MenuUIState, id: Position.PositionRecipeView) {
         val check = menuUIState.chosenRecipes[id] ?: return
         check.value = !check.value
     }
 
-    private fun addNewState(menuUIState: MenuIUState, id: Position.PositionRecipeView) {
+    private fun addNewState(menuUIState: MenuUIState, id: Position.PositionRecipeView) {
         val state = mutableStateOf(false)
         menuUIState.chosenRecipes[id] = state
     }
 
-    fun getSelected(menuUIState: MenuIUState): List<Position.PositionRecipeView> {
+    fun getSelected(menuUIState: MenuUIState): List<Position.PositionRecipeView> {
         val list = mutableListOf<Position.PositionRecipeView>()
         menuUIState.chosenRecipes.entries.forEach {
             val id = it.key
@@ -35,10 +35,10 @@ class SelectedRecipeManager @Inject constructor() {
         return list
     }
 
-    fun onEvent(selectedEvent: week.on.a.plate.screens.menu.event.SelectedEvent, menuUIState: MenuIUState) {
+    fun onEvent(selectedEvent: SelectedEvent, menuUIState: MenuUIState) {
         when (selectedEvent) {
-            is week.on.a.plate.screens.menu.event.SelectedEvent.AddCheckState -> addNewState(menuUIState, selectedEvent.recipe)
-            is week.on.a.plate.screens.menu.event.SelectedEvent.CheckRecipe -> actionCheckRecipe(menuUIState, selectedEvent.recipe)
+            is SelectedEvent.AddCheckState -> addNewState(menuUIState, selectedEvent.recipe)
+            is SelectedEvent.CheckRecipe -> actionCheckRecipe(menuUIState, selectedEvent.recipe)
         }
     }
 

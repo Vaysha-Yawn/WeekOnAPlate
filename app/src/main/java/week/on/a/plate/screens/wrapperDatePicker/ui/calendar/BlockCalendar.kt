@@ -1,4 +1,4 @@
-package week.on.a.plate.screens.menu.view.calendar
+package week.on.a.plate.screens.wrapperDatePicker.ui.calendar
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -11,14 +11,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import week.on.a.plate.R
-import week.on.a.plate.data.dataView.week.DayView
+import week.on.a.plate.core.utils.getDayInWeekShort
+import week.on.a.plate.screens.wrapperDatePicker.state.WrapperDatePickerUIState
 import java.time.LocalDate
 
 @Composable
 fun BlockCalendar(
-    days: List<DayView>,
-    today: LocalDate,
-    activeDayInd: Int,
+    daysAndIsPlanned: List<Pair<LocalDate, Boolean>>,
+    state: WrapperDatePickerUIState,
     changeDay: (i: Int) -> Unit,
     chooseLastWeek:()->Unit,
     chooseNextWeek:()->Unit,
@@ -31,14 +31,14 @@ fun BlockCalendar(
         Icon(painterResource(R.drawable.back), "", modifier = Modifier.clickable {
             chooseLastWeek()
         })
-        for ((ind, day) in days.withIndex()) {
+        for ((ind, day) in daysAndIsPlanned.withIndex()) {
             CalendarDayCard(
-                day.date,
-                day.getDyInWeekShort(LocalContext.current.resources.configuration.locales[0]),
-                itToday = (day.date == today),
-                itPlanned = (day.selections.any { sel -> sel.positions.isNotEmpty() }),
-                if (days.size == 7) {
-                    (day == days[activeDayInd])
+                day.first,
+                day.first.getDayInWeekShort(LocalContext.current.resources.configuration.locales[0]),
+                itToday = (day.first == LocalDate.now()),
+                itPlanned = day.second,
+                if (daysAndIsPlanned.size == 7) {
+                    (state.activeDayInd.value == ind)
                 } else false,
                 ind,
                 changeDay

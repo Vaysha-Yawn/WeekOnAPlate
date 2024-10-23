@@ -1,4 +1,4 @@
-package week.on.a.plate.screens.menu.view.day.positionsList
+package week.on.a.plate.screens.menu.view.week.positionsList
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -16,19 +16,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.unit.dp
+import week.on.a.plate.core.Event
 import week.on.a.plate.core.uitools.ImageLoad
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.core.uitools.SubText
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.buttons.MoreButton
 import week.on.a.plate.core.utils.getIngredientCountAndMeasure1000
-import week.on.a.plate.screens.menu.event.MenuEvent
+import week.on.a.plate.screens.wrapperDatePicker.event.WrapperDatePickerEvent
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun IngredientPosition(
     ingredient: Position.PositionIngredientView,
-    onEvent: (event: week.on.a.plate.screens.menu.event.MenuEvent) -> Unit,
+    onEvent: (event: Event) -> Unit,
     rowScope: RowScope
 ) {
     with(rowScope){
@@ -38,7 +39,7 @@ fun IngredientPosition(
                 .combinedClickable(
                     onClick = {onEvent(week.on.a.plate.screens.menu.event.MenuEvent.EditOtherPosition(ingredient))},
                     onLongClick =
-                    { onEvent(week.on.a.plate.screens.menu.event.MenuEvent.SwitchEditMode) },
+                    { onEvent(WrapperDatePickerEvent.SwitchEditMode) },
                 ).padding(vertical = 5.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
