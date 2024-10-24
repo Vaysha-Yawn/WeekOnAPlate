@@ -81,8 +81,8 @@ fun WrapperDatePicker(
             .background(MaterialTheme.colorScheme.background)
             .padding(top = 10.dp)
     ) {
-        val curDay = week.days[uiState.activeDayInd.value].date.dateToString()
         val weekTitle = uiState.titleTopBar.value
+        val curDay = week.days[uiState.activeDayInd.value].date.dateToString()
         TopBar(weekTitle, curDay, editing, uiState,
             actionDeleteSelected = {onEvent(MenuEvent.DeleteSelected)},
             actionSelectedToShopList = {onEvent(MenuEvent.SelectedToShopList)}, onEvent)

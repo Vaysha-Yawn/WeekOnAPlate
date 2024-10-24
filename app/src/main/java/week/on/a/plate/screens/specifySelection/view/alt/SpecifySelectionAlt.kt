@@ -27,9 +27,8 @@ import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.screens.specifySelection.event.SpecifySelectionEvent
 import week.on.a.plate.screens.specifySelection.logic.SpecifySelectionViewModel
 import week.on.a.plate.screens.specifySelection.state.SpecifySelectionUIState
-import week.on.a.plate.screens.specifySelection.view.ChangePotionsCountSpecifySel
+import week.on.a.plate.screens.specifySelection.state.StateCalendarMy
 import week.on.a.plate.screens.specifySelection.view.ChooseSelectionSpecifySelection
-import java.time.LocalDate
 
 @Composable
 fun SpecifySelectionAltStart(vm: SpecifySelectionViewModel){

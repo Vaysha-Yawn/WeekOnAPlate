@@ -1,5 +1,6 @@
 package week.on.a.plate.data.dataView.week
 
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
@@ -10,18 +11,14 @@ data class WeekView(
     val days: List<DayView>,
 )
 
-fun WeekView.getTitle(): String {
-    val weekView = this
-    val formatterMonth = DateTimeFormatter.ofPattern("MMMM")
+fun getTitleWeek(start:LocalDate, end:LocalDate): String {
+    val formatterMonth = DateTimeFormatter.ofPattern("MM")
     val formatterDay = DateTimeFormatter.ofPattern("d")
-
-    val start = weekView.days[0].date
-    val end = weekView.days[6].date
 
     val month = start.format(formatterMonth).capitalize(Locale("ru"))
     val startDay = start.format(formatterDay)
     val endDay = end.format(formatterDay)
     val endMonth = end.format(formatterMonth).capitalize(Locale("ru"))
 
-    return "$startDay $month - $endDay $endMonth"
+    return "$startDay.$month - $endDay.$endMonth"
 }

@@ -24,6 +24,7 @@ import week.on.a.plate.screens.deleteApply.view.DeleteApplyStart
 import week.on.a.plate.screens.filters.event.FilterEvent
 import week.on.a.plate.screens.inventory.navigation.InventoryDestination
 import week.on.a.plate.screens.inventory.view.InventoryStart
+import week.on.a.plate.screens.menu.event.MenuEvent
 import week.on.a.plate.screens.menu.view.main.MenuScreen
 import week.on.a.plate.screens.recipeDetails.navigation.RecipeDetailsDestination
 import week.on.a.plate.screens.recipeDetails.view.start.RecipeDetailsStart
@@ -49,7 +50,7 @@ fun Navigation(
             viewModel.isActivePlusButton.value = true
             viewModel.isActiveFilterScreen.value = false
             viewModel.actionPlusButton.value =
-                { viewModel.menuViewModel.onEvent(week.on.a.plate.screens.menu.event.MenuEvent.GetSelIdAndCreate) }
+                { viewModel.menuViewModel.onEvent(MenuEvent.GetSelIdAndCreate) }
             MenuScreen(
                 viewModel.menuViewModel
             )

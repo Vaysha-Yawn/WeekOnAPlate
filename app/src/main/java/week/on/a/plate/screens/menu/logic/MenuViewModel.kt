@@ -12,7 +12,7 @@ import week.on.a.plate.data.dataView.week.CategoriesSelection
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.data.dataView.week.RecipeShortView
 import week.on.a.plate.data.dataView.week.SelectionView
-import week.on.a.plate.data.dataView.week.getTitle
+import week.on.a.plate.data.dataView.week.getTitleWeek
 import week.on.a.plate.data.repository.tables.recipe.recipe.RecipeRepository
 import week.on.a.plate.dialogs.addPositionChoose.event.AddPositionEvent
 import week.on.a.plate.dialogs.addPositionChoose.logic.AddPositionViewModel
@@ -80,14 +80,15 @@ class MenuViewModel @Inject constructor(
                 day.selections = day.selections.sortedBy { it.dateTime }
             }
             weekState.value = WeekState.Success(week)
-            menuUIState.wrapperDatePickerUIState.titleTopBar.value = week.getTitle()
+            menuUIState.wrapperDatePickerUIState.titleTopBar.value = getTitleWeek(week.days[0].date, week.days[6].date)
         }
     }
 
     fun onEvent(event: Event) {
         when (event) {
-            is MainEvent -> mainViewModel.onEvent(event)
             is MenuEvent -> onEvent(event)
+            is MainEvent -> mainViewModel.onEvent(event)
+            is WrapperDatePickerEvent -> onEvent(MenuEvent.ActionWrapperDatePicker(event))
         }
     }
 
@@ -465,7 +466,7 @@ class MenuViewModel @Inject constructor(
     private fun specifyDate(use: (SpecifySelectionResult) -> Unit) {
         viewModelScope.launch {
             val vm = mainViewModel.specifySelectionViewModel
-            MenuEvent.NavigateFromMenu(NavFromMenuData.SpecifySelection)
+            onEvent(MenuEvent.NavigateFromMenu(NavFromMenuData.SpecifySelection))
             vm.launchAndGet(use)
         }
     }

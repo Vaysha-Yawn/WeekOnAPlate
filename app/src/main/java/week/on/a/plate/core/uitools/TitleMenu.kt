@@ -15,6 +15,7 @@ import week.on.a.plate.core.theme.ColorSubTextGrey
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.buttons.PlusButtonTitle
 import week.on.a.plate.data.dataView.week.SelectionView
+import week.on.a.plate.screens.menu.event.MenuEvent
 import java.time.LocalDateTime
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -31,15 +32,15 @@ fun TitleMenu(selection: SelectionView, modifier: Modifier, onEvent: (event: Eve
                 .combinedClickable(
                     onClick = {},
                     onLongClick = {
-                        onEvent(week.on.a.plate.screens.menu.event.MenuEvent.EditOrDeleteSelection(selection))
+                        onEvent(MenuEvent.EditOrDeleteSelection(selection))
                     }
                 ),
         )
         PlusButtonTitle() {
             if (selection.id == 0L) {
-                onEvent(week.on.a.plate.screens.menu.event.MenuEvent.CreateFirstNonPosedPosition(selection.dateTime.toLocalDate(), selection.name))
+                onEvent(MenuEvent.CreateFirstNonPosedPosition(selection.dateTime.toLocalDate(), selection.name))
             } else {
-                onEvent(week.on.a.plate.screens.menu.event.MenuEvent.CreatePosition(selection.id))
+                onEvent(MenuEvent.CreatePosition(selection.id))
             }
         }
     }
