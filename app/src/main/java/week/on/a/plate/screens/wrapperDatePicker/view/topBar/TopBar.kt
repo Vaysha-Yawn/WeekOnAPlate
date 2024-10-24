@@ -1,4 +1,4 @@
-package week.on.a.plate.screens.wrapperDatePicker.ui.topBar
+package week.on.a.plate.screens.wrapperDatePicker.view.topBar
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

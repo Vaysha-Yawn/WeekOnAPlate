@@ -10,46 +10,64 @@ import week.on.a.plate.data.repository.tables.recipe.recipe.RecipeRepository
 import week.on.a.plate.data.repository.tables.recipe.recipeStep.StepRepository
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.LocalTime
 import javax.inject.Inject
 
 
 class CookPlannerStepRepository @Inject constructor(
-    private val groupRepo:CookPlannerGroupDAO,
-    private val stepRepo:CookPlannerStepDAO,
-    private val stepRecipeRepo:StepRepository,
-    private val recipeRepo:RecipeRepository,
+    private val groupRepo: CookPlannerGroupDAO,
+    private val stepRepo: CookPlannerStepDAO,
+    private val stepRecipeRepo: StepRepository,
+    private val recipeRepo: RecipeRepository,
 ) {
     private val cookPlannerStepMapper = CookPlannerStepMapper()
 
-    fun getAllByDate(date:LocalDate): Flow<List<CookPlannerStepView>> {
-        return stepRepo.getAllFlowByDateStart(date.toString()).map {listCookPlannerStepRoom->
-            listCookPlannerStepRoom.map {cookPlannerStepRoom->
+    fun getAllByDate(date: LocalDate): Flow<List<CookPlannerStepView>> {
+        return stepRepo.getAllFlowByDateStart(date.toString()).map { listCookPlannerStepRoom ->
+            listCookPlannerStepRoom.map { cookPlannerStepRoom ->
                 val recipeName = recipeRepo.getRecipe(cookPlannerStepRoom.recipeId).name
                 val step = stepRecipeRepo.getStep(cookPlannerStepRoom.originalStepId)
-                with(cookPlannerStepMapper){
+                with(cookPlannerStepMapper) {
                     cookPlannerStepRoom.roomToView(recipeName, step)
                 }
             }.sortedBy { it.start }
         }
     }
 
-    suspend fun insertGroupByStart(recipe:RecipeView, start:LocalDateTime ) {
+    suspend fun getAllByDateNoFlow(date: LocalDate): List<CookPlannerStepView> {
+        return stepRepo.getAllFlowByDateStartNoFlow(date.toString()).map { cookPlannerStepRoom ->
+            val recipeName = recipeRepo.getRecipe(cookPlannerStepRoom.recipeId).name
+            val step = stepRecipeRepo.getStep(cookPlannerStepRoom.originalStepId)
+            with(cookPlannerStepMapper) {
+                cookPlannerStepRoom.roomToView(recipeName, step)
+            }
+        }.sortedBy { it.start }
+    }
+
+    suspend fun insertGroupByStart(recipe: RecipeView, start: LocalDateTime) {
         val groupId = groupRepo.insert(CookPlannerGroupRoom(recipe.id))
         var time = start
-        recipe.steps.forEach {stepView->
-            val stepRoom = CookPlannerStepRoom(recipe.id, groupId, stepView.id, false, time, time.with(stepView.duration))
+        recipe.steps.forEach { stepView ->
+            val stepRoom = CookPlannerStepRoom(
+                recipe.id,
+                groupId,
+                stepView.id,
+                false,
+                time,
+                time.with(stepView.duration)
+            )
             time = time.with(stepView.duration)
             stepRepo.insert(stepRoom)
         }
     }
 
-    suspend fun insertGroupByEnd(recipe:RecipeView, end:LocalDateTime ) {
+    suspend fun insertGroupByEnd(recipe: RecipeView, end: LocalDateTime) {
         val groupId = groupRepo.insert(CookPlannerGroupRoom(recipe.id))
         var time = end
         recipe.steps.fastForEachReversed { stepView ->
-            val startTime =  time.minusHours(stepView.duration.hour.toLong()).minusMinutes(stepView.duration.minute.toLong())
-            val stepRoom = CookPlannerStepRoom(recipe.id, groupId, stepView.id, false,startTime, time)
+            val startTime = time.minusHours(stepView.duration.hour.toLong())
+                .minusMinutes(stepView.duration.minute.toLong())
+            val stepRoom =
+                CookPlannerStepRoom(recipe.id, groupId, stepView.id, false, startTime, time)
             time = startTime
             stepRepo.insert(stepRoom)
         }
@@ -74,8 +92,8 @@ class CookPlannerStepRepository @Inject constructor(
             })*/
     }
 
-    suspend fun reduceStepToNow(){}
-    suspend fun check(nowChecked:Boolean){
+    suspend fun reduceStepToNow() {}
+    suspend fun check(nowChecked: Boolean) {
 
     }
 

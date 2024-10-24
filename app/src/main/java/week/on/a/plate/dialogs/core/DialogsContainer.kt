@@ -1,10 +1,19 @@
 package week.on.a.plate.dialogs.core
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import week.on.a.plate.dialogs.editOrCreateIngredient.event.AddIngredientEvent
 import week.on.a.plate.dialogs.editOrCreateIngredient.logic.AddIngredientViewModel
 import week.on.a.plate.dialogs.editOrCreateIngredient.view.AddIngredient
@@ -20,9 +29,9 @@ import week.on.a.plate.dialogs.addPositionChoose.view.AddPositionDialogContent
 import week.on.a.plate.dialogs.changePortions.event.ChangePortionsCountEvent
 import week.on.a.plate.dialogs.changePortions.logic.ChangePortionsCountViewModel
 import week.on.a.plate.dialogs.changePortions.view.ChangePortionsPanel
-import week.on.a.plate.dialogs.dialogChooseWeekInMenu.event.ChooseWeekDialogEvent
-import week.on.a.plate.dialogs.dialogChooseWeekInMenu.logic.ChooseWeekViewModel
-import week.on.a.plate.dialogs.dialogChooseWeekInMenu.state.ChooseWeekUIState
+import week.on.a.plate.dialogs.chooseWeekInMenu.event.ChooseWeekDialogEvent
+import week.on.a.plate.dialogs.chooseWeekInMenu.logic.ChooseWeekViewModel
+import week.on.a.plate.dialogs.chooseWeekInMenu.state.ChooseWeekUIState
 import week.on.a.plate.dialogs.dialogDatePicker.event.DatePickerEvent
 import week.on.a.plate.dialogs.dialogDatePicker.logic.DatePickerViewModel
 import week.on.a.plate.dialogs.dialogDatePicker.state.DatePickerUIState
@@ -60,6 +69,8 @@ import week.on.a.plate.dialogs.filtersMore.view.FilterMoreContent
 import week.on.a.plate.dialogs.sortMore.event.SortMoreEvent
 import week.on.a.plate.dialogs.sortMore.logic.SortMoreViewModel
 import week.on.a.plate.dialogs.sortMore.view.SortMoreContent
+import week.on.a.plate.screens.calendarMy.logic.CalendarMyUseCase
+import week.on.a.plate.screens.calendarMy.view.CalendarMy
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -73,11 +84,17 @@ fun DialogsContainer(
             val datePickerState = rememberDatePickerState()
             val state = ChooseWeekUIState(datePickerState)
             data.state = state
-            DatePickerMy(
-                state = data.state.state,
-                showState = data.state.show,
-                onClose = { onEvent(ChooseWeekDialogEvent.Close) }) {
-                onEvent(ChooseWeekDialogEvent.Done)
+            BaseDialogContainer(data.state.show, { onEvent(ChooseWeekDialogEvent.Close) }) {
+                Box(
+                    Modifier
+                        .background(MaterialTheme.colorScheme.background, RoundedCornerShape(20.dp))
+                        .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(20.dp))
+                        .padding(vertical = 36.dp)
+                ) {
+                    CalendarMy(data.stateCalendar, { event -> data.onEvent(event) }) {
+                        onEvent(ChooseWeekDialogEvent.Done)
+                    }
+                }
             }
         }
 
@@ -115,7 +132,9 @@ fun DialogsContainer(
 
         is EditOneStringViewModel -> {
             val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-            BottomDialogContainer(sheetState, { onEvent(EditOneStringEvent.Done) }) { snackBarState->
+            BottomDialogContainer(
+                sheetState,
+                { onEvent(EditOneStringEvent.Done) }) { snackBarState ->
                 EditOneStringContent(data.state) {
                     onEvent(EditOneStringEvent.Done)
                 }
@@ -129,7 +148,7 @@ fun DialogsContainer(
             val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
             BottomDialogContainer(
                 sheetState,
-                { onEvent(ChangePortionsCountEvent.Close) }) { snackBarState->
+                { onEvent(ChangePortionsCountEvent.Close) }) { snackBarState ->
                 ChangePortionsPanel(data.state.portionsCount) { onEvent(ChangePortionsCountEvent.Done) }
             }
             LaunchedEffect(true) {
@@ -141,7 +160,7 @@ fun DialogsContainer(
             val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
             BottomDialogContainer(
                 sheetState,
-                { onEvent(EditPositionIngredientEvent.Close) }) { snackBarState->
+                { onEvent(EditPositionIngredientEvent.Close) }) { snackBarState ->
                 EditOrAddIngredientBottomDialogContent(
                     snackBarState,
                     data.state
@@ -168,7 +187,7 @@ fun DialogsContainer(
             val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
             BottomDialogContainer(
                 sheetState,
-                { onEvent(AddTagEvent.Close) }) { snackBarState->
+                { onEvent(AddTagEvent.Close) }) { snackBarState ->
                 AddTag(
                     snackBarState,
                     state = data.state
@@ -183,7 +202,7 @@ fun DialogsContainer(
             val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
             BottomDialogContainer(
                 sheetState,
-                { onEvent(AddIngredientEvent.Close) }) { snackBarState->
+                { onEvent(AddIngredientEvent.Close) }) { snackBarState ->
                 AddIngredient(
                     snackBarState,
                     state = data.state
@@ -198,7 +217,7 @@ fun DialogsContainer(
             val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
             BottomDialogContainer(
                 sheetState,
-                { onEvent(SelectedFiltersEvent.Close) }) { snackBarState->
+                { onEvent(SelectedFiltersEvent.Close) }) { snackBarState ->
                 DialogSelectedTags(
                     data.state
                 ) { event: SelectedFiltersEvent -> onEvent(event) }
@@ -212,7 +231,7 @@ fun DialogsContainer(
             val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
             BottomDialogContainer(
                 sheetState,
-                { onEvent(FilterVoiceApplyEvent.Close) }) { snackBarState->
+                { onEvent(FilterVoiceApplyEvent.Close) }) { snackBarState ->
                 DialogVoiceApplyTags(
                     data.state
                 ) { event: FilterVoiceApplyEvent -> onEvent(event) }
@@ -223,16 +242,16 @@ fun DialogsContainer(
         }
 
         is TimePickViewModel -> {
-            TimePickDialog(data.state ){event:TimePickEvent->
+            TimePickDialog(data.state) { event: TimePickEvent ->
                 data.onEvent(event)
             }
         }
 
-        is EditSelectionViewModel ->{
+        is EditSelectionViewModel -> {
             val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
             BottomDialogContainer(
                 sheetState,
-                { onEvent(EditSelectionEvent.Close) }) { snackBarState->
+                { onEvent(EditSelectionEvent.Close) }) { snackBarState ->
                 EditSelectionContent(
                     data
                 )
@@ -246,8 +265,8 @@ fun DialogsContainer(
             val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
             BottomDialogContainer(
                 sheetState,
-                { onEvent(SortMoreEvent.Close) }) { snackBarState->
-               SortMoreContent(data)
+                { onEvent(SortMoreEvent.Close) }) { snackBarState ->
+                SortMoreContent(data)
             }
             LaunchedEffect(true) {
                 sheetState.show()
@@ -258,7 +277,7 @@ fun DialogsContainer(
             val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
             BottomDialogContainer(
                 sheetState,
-                { onEvent(FiltersMoreEvent.Close) }) { snackBarState->
+                { onEvent(FiltersMoreEvent.Close) }) { snackBarState ->
                 FilterMoreContent(data)
             }
             LaunchedEffect(true) {

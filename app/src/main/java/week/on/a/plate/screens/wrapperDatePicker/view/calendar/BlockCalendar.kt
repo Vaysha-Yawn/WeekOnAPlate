@@ -1,4 +1,4 @@
-package week.on.a.plate.screens.wrapperDatePicker.ui.calendar
+package week.on.a.plate.screens.wrapperDatePicker.view.calendar
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement

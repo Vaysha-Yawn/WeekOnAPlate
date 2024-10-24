@@ -1,4 +1,4 @@
-package week.on.a.plate.screens.wrapperDatePicker.ui.calendar
+package week.on.a.plate.screens.wrapperDatePicker.view.calendar
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -51,14 +52,21 @@ fun CalendarDayCard(
         TextInApp(
             dayNumber.dayOfMonth.toString(), modifier = Modifier
                 .background(
+                    if (active ) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        ColorTransparent
+                    }, CircleShape
+                )
+                .border(
+                    2.dp,
                     if (itToday) {
                         MaterialTheme.colorScheme.primary
                     } else if (itPlanned) {
                         MaterialTheme.colorScheme.secondary
                     } else {
                         ColorTransparent
-                    }, androidx.compose.foundation.shape.CircleShape
-                )
+                    }, CircleShape)
                 .padding(5.dp), color = MaterialTheme.colorScheme.onBackground
         )
     }

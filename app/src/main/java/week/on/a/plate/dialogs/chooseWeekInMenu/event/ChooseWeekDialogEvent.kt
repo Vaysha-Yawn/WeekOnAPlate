@@ -1,4 +1,4 @@
-package week.on.a.plate.dialogs.dialogChooseWeekInMenu.event
+package week.on.a.plate.dialogs.chooseWeekInMenu.event
 
 import week.on.a.plate.core.Event
 

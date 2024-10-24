@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -27,16 +29,18 @@ import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.screens.specifySelection.event.SpecifySelectionEvent
 import week.on.a.plate.screens.specifySelection.logic.SpecifySelectionViewModel
 import week.on.a.plate.screens.specifySelection.state.SpecifySelectionUIState
-import week.on.a.plate.screens.specifySelection.state.StateCalendarMy
+import week.on.a.plate.screens.calendarMy.state.StateCalendarMy
+import week.on.a.plate.screens.calendarMy.view.CalendarMy
 import week.on.a.plate.screens.specifySelection.view.ChooseSelectionSpecifySelection
+import java.time.LocalDate
 
 @Composable
 fun SpecifySelectionAltStart(vm: SpecifySelectionViewModel){
-    SpecifySelectionAltContent(vm.state) { vm.onEvent(it) }
+    SpecifySelectionAltContent(vm.state, vm.stateCalendar, ) { vm.onEvent(it) }
 }
 
 @Composable
-fun SpecifySelectionAltContent(state: SpecifySelectionUIState, onEvent:(Event)->Unit){
+fun SpecifySelectionAltContent(state: SpecifySelectionUIState, stateCalendarMy: StateCalendarMy, onEvent:(Event)->Unit){
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -57,7 +61,7 @@ fun SpecifySelectionAltContent(state: SpecifySelectionUIState, onEvent:(Event)->
             )
         }
         Spacer(modifier = Modifier.height(24.dp))
-        CalendarMy(StateCalendarMy(state.date)){
+        CalendarMy(stateCalendarMy, onEvent){
             onEvent(SpecifySelectionEvent.UpdateSelections)
         }
         Spacer(modifier = Modifier.height(24.dp))
@@ -84,6 +88,20 @@ fun SpecifySelectionAltContent(state: SpecifySelectionUIState, onEvent:(Event)->
 @Preview(showBackground = true)
 @Composable fun PreviewSpecifySelectionAlt(){
     WeekOnAPlateTheme {
-        SpecifySelectionAltContent(SpecifySelectionUIState()){}
+        val st = remember { mutableStateOf(LocalDate.now()) }
+        val allDays = remember {
+            mutableStateOf(
+                listOf(
+                    Pair(LocalDate.of(2024, 10, 1), false),
+                    Pair(LocalDate.of(2024, 10, 2), false),
+                    Pair(LocalDate.of(2024, 10, 3), false),
+                    Pair(LocalDate.of(2024, 10, 4), false),
+                    Pair(LocalDate.of(2024, 10, 5), false),
+                    Pair(LocalDate.of(2024, 10, 6), false),
+                )
+            )
+        }
+        val firstRow = remember { mutableStateOf(listOf("Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс")) }
+        SpecifySelectionAltContent(SpecifySelectionUIState(), StateCalendarMy(st, allDays, firstRow,)){}
     }
 }

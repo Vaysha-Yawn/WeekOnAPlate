@@ -2,16 +2,22 @@ package week.on.a.plate.screens.wrapperDatePicker.logic
 
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import week.on.a.plate.dialogs.dialogChooseWeekInMenu.logic.ChooseWeekViewModel
+import week.on.a.plate.data.repository.tables.cookPlanner.CookPlannerStepRepository
+import week.on.a.plate.data.repository.tables.menu.selection.WeekRepository
+import week.on.a.plate.dialogs.chooseWeekInMenu.logic.ChooseWeekViewModel
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
+import week.on.a.plate.screens.calendarMy.logic.CalendarMyUseCase
 import week.on.a.plate.screens.wrapperDatePicker.event.WrapperDatePickerEvent
 import week.on.a.plate.screens.wrapperDatePicker.state.WrapperDatePickerUIState
 import java.time.LocalDate
 import javax.inject.Inject
 
 
-class WrapperDatePickerManager @Inject constructor() {
+class WrapperDatePickerManager @Inject constructor(
+    private val repository: WeekRepository,
+    private val cookRepository: CookPlannerStepRepository
+) {
 
     fun onEvent(event: WrapperDatePickerEvent, wrapperDatePickerUIState: WrapperDatePickerUIState) {
         when (event) {
@@ -25,14 +31,13 @@ class WrapperDatePickerManager @Inject constructor() {
 
     fun chooseWeek(
         mainViewModel: MainViewModel,
-        wrapperDatePickerUIState: WrapperDatePickerUIState, use:(date: LocalDate)->Unit
+        wrapperDatePickerUIState: WrapperDatePickerUIState, isForMenu:Boolean, use:(date: LocalDate)->Unit
     ) {
         mainViewModel.viewModelScope.launch {
 
-            val vm = ChooseWeekViewModel()
-            vm.mainViewModel = mainViewModel
+            val vm = ChooseWeekViewModel(CalendarMyUseCase(repository, cookRepository), mainViewModel)
             mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-            vm.launchAndGet() { date ->
+            vm.launchAndGet(isForMenu) { date ->
                 changeWeek(date, wrapperDatePickerUIState, use)
             }
         }

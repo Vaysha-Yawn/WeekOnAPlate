@@ -11,8 +11,8 @@ import week.on.a.plate.dialogs.addPositionChoose.event.AddPositionEvent
 import week.on.a.plate.dialogs.addPositionChoose.logic.AddPositionViewModel
 import week.on.a.plate.dialogs.changePortions.event.ChangePortionsCountEvent
 import week.on.a.plate.dialogs.changePortions.logic.ChangePortionsCountViewModel
-import week.on.a.plate.dialogs.dialogChooseWeekInMenu.event.ChooseWeekDialogEvent
-import week.on.a.plate.dialogs.dialogChooseWeekInMenu.logic.ChooseWeekViewModel
+import week.on.a.plate.dialogs.chooseWeekInMenu.event.ChooseWeekDialogEvent
+import week.on.a.plate.dialogs.chooseWeekInMenu.logic.ChooseWeekViewModel
 import week.on.a.plate.dialogs.dialogDatePicker.event.DatePickerEvent
 import week.on.a.plate.dialogs.dialogDatePicker.logic.DatePickerViewModel
 import week.on.a.plate.dialogs.editOneString.event.EditOneStringEvent
@@ -36,6 +36,7 @@ import week.on.a.plate.dialogs.filtersMore.event.FiltersMoreEvent
 import week.on.a.plate.dialogs.filtersMore.logic.FiltersMoreViewModel
 import week.on.a.plate.dialogs.sortMore.event.SortMoreEvent
 import week.on.a.plate.dialogs.sortMore.logic.SortMoreViewModel
+import week.on.a.plate.screens.calendarMy.event.CalendarMyEvent
 import java.util.Stack
 import javax.inject.Inject
 
@@ -79,6 +80,9 @@ class DialogUseCase @Inject constructor() {
     fun onEvent(event: Event) {
         when (event) {
             is ChooseWeekDialogEvent -> if (activeDialog.value is ChooseWeekViewModel) {
+                (activeDialog.value as ChooseWeekViewModel).onEvent(event)
+            }
+            is CalendarMyEvent -> if (activeDialog.value is ChooseWeekViewModel) {
                 (activeDialog.value as ChooseWeekViewModel).onEvent(event)
             }
             is EditRecipePositionEvent -> if (activeDialog.value is EditRecipePositionViewModel) {

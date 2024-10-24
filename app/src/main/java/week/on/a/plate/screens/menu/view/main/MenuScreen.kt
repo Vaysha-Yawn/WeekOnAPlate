@@ -25,9 +25,9 @@ import week.on.a.plate.screens.wrapperDatePicker.event.WrapperDatePickerEvent
 import week.on.a.plate.screens.menu.state.MenuUIState
 import week.on.a.plate.screens.menu.state.WeekState
 import week.on.a.plate.screens.wrapperDatePicker.state.WrapperDatePickerUIState
-import week.on.a.plate.screens.wrapperDatePicker.ui.calendar.BlockCalendar
+import week.on.a.plate.screens.wrapperDatePicker.view.calendar.BlockCalendar
 import week.on.a.plate.screens.menu.view.day.DayView
-import week.on.a.plate.screens.wrapperDatePicker.ui.topBar.TopBar
+import week.on.a.plate.screens.wrapperDatePicker.view.topBar.TopBar
 import week.on.a.plate.screens.menu.view.week.WeekMenu
 
 @SuppressLint("StateFlowValueCalledInComposition")

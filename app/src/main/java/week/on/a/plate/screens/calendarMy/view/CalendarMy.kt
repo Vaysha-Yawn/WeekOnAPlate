@@ -1,6 +1,7 @@
-package week.on.a.plate.screens.specifySelection.view.alt
+package week.on.a.plate.screens.calendarMy.view
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -28,15 +30,19 @@ import week.on.a.plate.R
 import week.on.a.plate.core.theme.ColorTransparent
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.TextBody
-import week.on.a.plate.screens.specifySelection.state.StateCalendarMy
+import week.on.a.plate.screens.calendarMy.event.CalendarMyEvent
+import week.on.a.plate.screens.calendarMy.state.StateCalendarMy
 import java.time.LocalDate
 import java.time.Month
 import java.time.format.TextStyle
 
 @Composable
-fun CalendarMy(state: StateCalendarMy,  clickToDay:(date:LocalDate)->Unit) {
+fun CalendarMy(
+    state: StateCalendarMy,
+    onEvent: (CalendarMyEvent) -> Unit,
+    clickToDay: (date: LocalDate) -> Unit
+) {
     val locale = LocalContext.current.resources.configuration.locales[0]
-    val firstRow = StateCalendarMy.getFirstRow(locale)
     val dayInWeek = 7
     val cardWidth = 36.dp
     Column(
@@ -48,34 +54,39 @@ fun CalendarMy(state: StateCalendarMy,  clickToDay:(date:LocalDate)->Unit) {
             Month.of(state.currentMonth.intValue).getDisplayName(TextStyle.FULL_STANDALONE, locale)
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Icon(painterResource(R.drawable.back), "", Modifier.clickable {
-                state.lastMonth()
+                onEvent(CalendarMyEvent.LastMonth)
             })
-            TextBody(month.capitalize()+", "+state.currentYear.intValue.toString(), textAlign = TextAlign.Center)
+            TextBody(
+                month.capitalize() + ", " + state.currentYear.intValue.toString(),
+                textAlign = TextAlign.Center
+            )
             Icon(painterResource(R.drawable.forward), "", Modifier.clickable {
-                state.nextMonth()
+                onEvent(CalendarMyEvent.NextMonth)
             })
         }
         Spacer(Modifier.size(24.dp))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
-            for (day in firstRow) {
+            for (day in state.firstRow.value) {
                 Box(Modifier.size(cardWidth), contentAlignment = Alignment.Center) {
                     TextBody(day.capitalize(), textAlign = TextAlign.Center)
                 }
             }
         }
         var curDay = 0
-        for (week in 1..(state.allMonthLocalDate.value.size / dayInWeek) + 1) {
+        for (week in 1..(state.allMonthDayAndIsPlanned.value.size / dayInWeek) + 1) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
                 for (day in 1..dayInWeek) {
-                    if (curDay >= state.allMonthLocalDate.value.size) {
+                    if (curDay >= state.allMonthDayAndIsPlanned.value.size) {
                         EmptyCardDayCalendar(cardWidth)
-                    } else if (state.allMonthLocalDate.value[curDay].dayOfWeek.value == day) {
+                    } else if (state.allMonthDayAndIsPlanned.value[curDay].first.dayOfWeek.value == day) {
                         CardDayCalendar(
-                            state.allMonthLocalDate.value[curDay],
+                            state.allMonthDayAndIsPlanned.value[curDay].first,
                             cardWidth,
-                            state.activeDate.value
+                            state.activeDate.value,
+                            state.allMonthDayAndIsPlanned.value[curDay].second,
+                            day==dayInWeek
                         ) {
-                            state.changeActiveDate(it)
+                            onEvent(CalendarMyEvent.ChangeActiveDate(it))
                             clickToDay(it)
                         }
                         curDay++
@@ -98,34 +109,63 @@ fun CardDayCalendar(
     day: LocalDate,
     size: Dp,
     activeDate: LocalDate,
+    isPlanned: Boolean,
+    isEndOfWeek:Boolean,
     clickToDay: (date: LocalDate) -> Unit
 ) {
     Box(
-        Modifier
+        Modifier.padding(end = if(!isEndOfWeek) {
+            5.dp
+        }else{0.dp}, bottom = 5.dp)
             .size(size)
             .background(
-                if (activeDate == day) {
+               if (activeDate == day) {
                     MaterialTheme.colorScheme.primary
                 } else {
                     ColorTransparent
                 }, CircleShape
-            ).clickable {
-
+            )
+            .border(
+                2.dp,
+                if (LocalDate.now() == day) {
+                    MaterialTheme.colorScheme.primary
+                } else if (isPlanned) {
+                    MaterialTheme.colorScheme.secondary
+                } else {
+                    ColorTransparent
+                }, CircleShape
+            )
+            .clickable {
                 clickToDay(day)
             }, contentAlignment = Alignment.Center
     ) {
         TextBody(
             day.dayOfMonth.toString(),
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            overflow = TextOverflow.Visible
         )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewCalendarMy() {
+fun PreviewCalendarMy(
+) {
     WeekOnAPlateTheme {
         val st = remember { mutableStateOf(LocalDate.now()) }
-        CalendarMy(StateCalendarMy(st), {})
+        val allDays = remember {
+            mutableStateOf(
+                listOf(
+                    Pair(LocalDate.of(2024, 10, 1), false),
+                    Pair(LocalDate.of(2024, 10, 2), false),
+                    Pair(LocalDate.of(2024, 10, 3), false),
+                    Pair(LocalDate.of(2024, 10, 4), false),
+                    Pair(LocalDate.of(2024, 10, 5), false),
+                    Pair(LocalDate.of(2024, 10, 6), false),
+                )
+            )
+        }
+        val firstRow = remember { mutableStateOf(listOf("Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс")) }
+        CalendarMy(StateCalendarMy(st, allDays, firstRow), {}, {})
     }
 }

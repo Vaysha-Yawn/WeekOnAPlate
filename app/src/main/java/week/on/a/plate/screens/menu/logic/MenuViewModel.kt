@@ -57,10 +57,10 @@ class MenuViewModel @Inject constructor(
     private val sCRUDRecipeInMenu: CRUDRecipeInMenu,
     private val selectedRecipeManager: SelectedRecipeManager,
     private val recipeRepository: RecipeRepository,
+    private val wrapperDatePickerManager: WrapperDatePickerManager,
 ) : ViewModel() {
 
     lateinit var mainViewModel: MainViewModel
-    private val wrapperDatePickerManager = WrapperDatePickerManager()
     val weekState: MutableStateFlow<WeekState> = MutableStateFlow(WeekState.EmptyWeek)
     val menuUIState = MenuUIState.MenuUIStateExample
     private val activeDay = menuUIState.wrapperDatePickerUIState.activeDay
@@ -147,7 +147,7 @@ class MenuViewModel @Inject constructor(
                     is WrapperDatePickerEvent.ChooseWeek ->
                         wrapperDatePickerManager.chooseWeek(
                             mainViewModel,
-                            menuUIState.wrapperDatePickerUIState
+                            menuUIState.wrapperDatePickerUIState, isForMenu = true
                         ) {
                             activeDay.value = it
                             updateWeek()
@@ -333,7 +333,7 @@ class MenuViewModel @Inject constructor(
                 name,
                 mainViewModel.locale,
             )
-            MenuEvent.CreatePosition(sel)
+            onEvent(MenuEvent.CreatePosition(sel))
         }
     }
 

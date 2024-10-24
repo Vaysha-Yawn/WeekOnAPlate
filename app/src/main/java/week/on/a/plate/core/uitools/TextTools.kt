@@ -34,12 +34,13 @@ fun TextInApp(
     maxLines: Int? = null,
     textStyle: TextStyle = Typography.bodyMedium,
     color: Color = MaterialTheme.colorScheme.onBackground,
-    textAlign: TextAlign = TextAlign.Left
+    textAlign: TextAlign = TextAlign.Left,
+    overflow:TextOverflow = TextOverflow.Ellipsis,
 ) {
     Text(
         text = text,
         color = color,
-        overflow = TextOverflow.Ellipsis,
+        overflow = overflow,
         maxLines = maxLines ?: 20,
         modifier = modifier,
         style = textStyle,
@@ -167,7 +168,8 @@ fun TextBody(
     modifier: Modifier = Modifier,
     textAlign: TextAlign = TextAlign.Start,
     maxLines: Int? = null,
-    color: Color = MaterialTheme.colorScheme.onBackground
+    color: Color = MaterialTheme.colorScheme.onBackground,
+    overflow:TextOverflow = TextOverflow.Ellipsis,
 ) {
     TextInApp(
         text,
@@ -175,7 +177,8 @@ fun TextBody(
         textStyle = Typography.bodyMedium,
         color = color,
         textAlign = textAlign,
-        maxLines = maxLines
+        maxLines = maxLines,
+        overflow = overflow
     )
 }
 

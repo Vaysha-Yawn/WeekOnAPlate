@@ -1,5 +1,6 @@
 package week.on.a.plate.screens.specifySelection.logic
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,24 +15,36 @@ import week.on.a.plate.dialogs.editSelection.logic.EditSelectionViewModel
 import week.on.a.plate.dialogs.editSelection.state.EditSelectionUIState
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
+import week.on.a.plate.screens.calendarMy.event.CalendarMyEvent
+import week.on.a.plate.screens.calendarMy.logic.CalendarMyUseCase
 import week.on.a.plate.screens.wrapperDatePicker.event.WrapperDatePickerEvent
 import week.on.a.plate.screens.specifySelection.event.SpecifySelectionEvent
 import week.on.a.plate.screens.specifySelection.state.SpecifySelectionUIState
+import week.on.a.plate.screens.calendarMy.state.StateCalendarMy
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
 class SpecifySelectionViewModel @Inject constructor(
     private val weekRepository: WeekRepository,
-
+    private val calendarMyUseCase : CalendarMyUseCase,
     ) : ViewModel() {
-    lateinit var mainViewModel: MainViewModel
+     lateinit var mainViewModel: MainViewModel
     val state: SpecifySelectionUIState = SpecifySelectionUIState()
     private lateinit var resultFlow: MutableStateFlow<SpecifySelectionResult?>
+    var stateCalendar : StateCalendarMy = StateCalendarMy.emptyState
 
     init {
+        val firstRow =  calendarMyUseCase.getFirstRow(Locale.getDefault())
+        stateCalendar.firstRow.value = firstRow
+        val now = LocalDate.now()
+        viewModelScope.launch {
+            val allMonthDay = calendarMyUseCase.getAllMonthDays(now.year, now.monthValue, true)
+            stateCalendar.allMonthDayAndIsPlanned.value = allMonthDay
+        }
         updateSelections()
     }
 
@@ -40,7 +53,9 @@ class SpecifySelectionViewModel @Inject constructor(
             is MainEvent -> {
                 mainViewModel.onEvent(event)
             }
-
+            is CalendarMyEvent -> {
+                calendarMyUseCase.onEvent(event, stateCalendar, true)
+            }
             is SpecifySelectionEvent -> {
                 onEvent(event)
             }

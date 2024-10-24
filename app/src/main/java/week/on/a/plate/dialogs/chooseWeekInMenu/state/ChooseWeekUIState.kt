@@ -1,4 +1,4 @@
-package week.on.a.plate.dialogs.dialogChooseWeekInMenu.state
+package week.on.a.plate.dialogs.chooseWeekInMenu.state
 
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
