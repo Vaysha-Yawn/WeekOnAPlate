@@ -26,6 +26,8 @@ import week.on.a.plate.dialogs.editPositionRecipeMore.logic.EditRecipePositionVi
 import week.on.a.plate.screens.filters.dialogs.selectedFilters.event.SelectedFiltersEvent
 import week.on.a.plate.screens.filters.dialogs.selectedFilters.logic.SelectedFiltersViewModel
 import week.on.a.plate.core.Event
+import week.on.a.plate.dialogs.cookStepMore.event.CookStepMoreEvent
+import week.on.a.plate.dialogs.cookStepMore.logic.CookStepMoreDialogViewModel
 import week.on.a.plate.dialogs.editOrDelete.event.EditOrDeleteEvent
 import week.on.a.plate.dialogs.editOrDelete.logic.EditOrDeleteViewModel
 import week.on.a.plate.dialogs.editSelection.event.EditSelectionEvent
@@ -132,6 +134,9 @@ class DialogUseCase @Inject constructor() {
             }
             is FiltersMoreEvent -> if (activeDialog.value is FiltersMoreViewModel) {
                 (activeDialog.value as FiltersMoreViewModel).onEvent(event)
+            }
+            is CookStepMoreEvent -> if (activeDialog.value is CookStepMoreDialogViewModel) {
+                (activeDialog.value as CookStepMoreDialogViewModel).onEvent(event)
             }
         }
     }

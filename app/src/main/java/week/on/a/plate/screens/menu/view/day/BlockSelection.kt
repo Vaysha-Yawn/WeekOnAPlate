@@ -1,5 +1,6 @@
 package week.on.a.plate.screens.menu.view.day
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,23 +23,25 @@ fun BlockSelection(
     menuUIState: MenuUIState,
     onEvent: (event: Event) -> Unit,
     ) {
-    if (selection.dateTime.hour>0){
-        SubText(text = selection.dateTime.format(DateTimeFormatter.ofPattern("HH:mm")),
-            modifier = Modifier.padding(start = 30.dp))
-        Spacer(Modifier.height(6.dp))
-    }
-    TitleMenu(selection, Modifier.padding(horizontal = 10.dp)
-        .padding(start = 20.dp), onEvent)
-    Spacer(Modifier.height(10.dp))
-    for ((index, i) in selection.positions.withIndex()){
-        if (index%2 == 0){
-            Row {
-                WeekCardPosition(i, Modifier.fillMaxWidth(0.5f).padding(10.dp),  menuUIState= menuUIState, onEvent)
-                if (selection.positions.size>index+1){
-                    WeekCardPosition(selection.positions[index+1], Modifier.fillMaxWidth().padding(10.dp), menuUIState= menuUIState, onEvent)
+    Column(Modifier.fillMaxWidth()) {
+        if (selection.dateTime.hour>0){
+            SubText(text = selection.dateTime.format(DateTimeFormatter.ofPattern("HH:mm")),
+                modifier = Modifier.padding(start = 30.dp))
+            Spacer(Modifier.height(6.dp))
+        }
+        TitleMenu(selection, Modifier.padding(horizontal = 10.dp)
+            .padding(start = 20.dp), onEvent)
+        Spacer(Modifier.height(10.dp))
+        for ((index, i) in selection.positions.withIndex()){
+            if (index%2 == 0){
+                Row {
+                    WeekCardPosition(i, Modifier.fillMaxWidth(0.5f).padding(10.dp),  menuUIState= menuUIState, onEvent)
+                    if (selection.positions.size>index+1){
+                        WeekCardPosition(selection.positions[index+1], Modifier.fillMaxWidth().padding(10.dp), menuUIState= menuUIState, onEvent)
+                    }
                 }
             }
         }
+        Spacer(Modifier.height(10.dp))
     }
-    Spacer(Modifier.height(10.dp))
 }

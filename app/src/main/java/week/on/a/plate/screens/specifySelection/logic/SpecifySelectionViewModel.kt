@@ -170,6 +170,7 @@ class SpecifySelectionViewModel @Inject constructor(
     }
 
     suspend fun launchAndGet(use: suspend (SpecifySelectionResult) -> Unit) {
+        calendarMyUseCase.updateMonthValue(stateCalendar, true)
         val flow = start()
         flow.collect { value ->
             if (value != null) {

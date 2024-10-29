@@ -37,15 +37,16 @@ import week.on.a.plate.screens.inventory.navigation.InventoryDestination
 import week.on.a.plate.screens.menu.event.ActionWeekMenuDB
 import week.on.a.plate.screens.menu.event.MenuEvent
 import week.on.a.plate.screens.menu.event.NavFromMenuData
-import week.on.a.plate.screens.wrapperDatePicker.event.WrapperDatePickerEvent
 import week.on.a.plate.screens.menu.logic.useCase.CRUDRecipeInMenu
 import week.on.a.plate.screens.menu.logic.useCase.SelectedRecipeManager
-import week.on.a.plate.screens.wrapperDatePicker.logic.WrapperDatePickerManager
 import week.on.a.plate.screens.menu.state.MenuUIState
 import week.on.a.plate.screens.menu.state.WeekState
 import week.on.a.plate.screens.recipeDetails.navigation.RecipeDetailsDestination
+import week.on.a.plate.screens.specifyRecipeToCookPlan.navigation.SpecifyForCookPlanDestination
 import week.on.a.plate.screens.specifySelection.logic.SpecifySelectionResult
 import week.on.a.plate.screens.specifySelection.navigation.SpecifySelectionDestination
+import week.on.a.plate.screens.wrapperDatePicker.event.WrapperDatePickerEvent
+import week.on.a.plate.screens.wrapperDatePicker.logic.WrapperDatePickerManager
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -68,7 +69,8 @@ class MenuViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             updateWeek()
-            menuUIState.wrapperDatePickerUIState.activeDayInd.value = menuUIState.wrapperDatePickerUIState.activeDay.value.dayOfWeek.ordinal
+            menuUIState.wrapperDatePickerUIState.activeDayInd.value =
+                menuUIState.wrapperDatePickerUIState.activeDay.value.dayOfWeek.ordinal
         }
     }
 
@@ -80,7 +82,8 @@ class MenuViewModel @Inject constructor(
                 day.selections = day.selections.sortedBy { it.dateTime }
             }
             weekState.value = WeekState.Success(week)
-            menuUIState.wrapperDatePickerUIState.titleTopBar.value = getTitleWeek(week.days[0].date, week.days[6].date)
+            menuUIState.wrapperDatePickerUIState.titleTopBar.value =
+                getTitleWeek(week.days[0].date, week.days[6].date)
         }
     }
 
@@ -644,9 +647,15 @@ class MenuViewModel @Inject constructor(
 
                     EditRecipePositionEvent.Move -> getSelAndMove(position)
                     EditRecipePositionEvent.Close -> {}
+                    EditRecipePositionEvent.CookPlan -> specifyPlanDetailsAndAddToPlan(position)
                 }
             }
         }
+    }
+
+    private fun specifyPlanDetailsAndAddToPlan(position: Position.PositionRecipeView) {
+        mainViewModel.specifyRecipeToCookPlanViewModel.launchAndGet(position)
+        mainViewModel.nav.navigate(SpecifyForCookPlanDestination)
     }
 
     private fun addIngredientPosition(selId: Long) {

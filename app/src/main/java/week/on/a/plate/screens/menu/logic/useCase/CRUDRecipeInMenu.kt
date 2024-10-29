@@ -19,30 +19,27 @@ class CRUDRecipeInMenu @Inject constructor(
 ) {
     suspend fun onEvent(event: ActionWeekMenuDB) {
         when (event) {
-            is ActionWeekMenuDB.AddIngredientPositionDB -> {
-                val ingredient = event.updatedPosition
-                positionIngredientRepository.insert(ingredient, event.selId)
-            }
+            is ActionWeekMenuDB.AddIngredientPositionDB ->
+                positionIngredientRepository.insert(event.updatedPosition, event.selId)
 
-            is ActionWeekMenuDB.AddNoteDB -> {
+            is ActionWeekMenuDB.AddNoteDB ->
                 noteRepository.insert(
                     Position.PositionNoteView(0, event.text, event.selId),
                     event.selId
                 )
-            }
 
-            is ActionWeekMenuDB.AddRecipePositionInMenuDB -> {
+            is ActionWeekMenuDB.AddRecipePositionInMenuDB ->
                 recipeRepository.insert(event.recipe, event.selId)
-            }
 
-            is ActionWeekMenuDB.ChangePortionsCountDB -> {
+
+            is ActionWeekMenuDB.ChangePortionsCountDB ->
                 recipeRepository.update(
                     event.recipe.id,
                     event.recipe.recipe,
                     event.count,
                     event.recipe.selectionId
                 )
-            }
+
 
             is ActionWeekMenuDB.Delete -> {
                 when (event.position) {
@@ -79,13 +76,12 @@ class CRUDRecipeInMenu @Inject constructor(
                 )
             }
 
-            is ActionWeekMenuDB.EditNoteDB -> {
-                val note = event.data
+            is ActionWeekMenuDB.EditNoteDB ->
                 noteRepository.update(
-                    note.idPos,
-                    note.note, note.selectionId
+                    event.data.idPos,
+                    event.data.note, event.data.selectionId
                 )
-            }
+
 
             is ActionWeekMenuDB.MovePositionInMenuDB -> {
                 val selId: Long = event.selId
@@ -112,28 +108,27 @@ class CRUDRecipeInMenu @Inject constructor(
                 }
             }
 
-            is ActionWeekMenuDB.AddDraft -> {
+            is ActionWeekMenuDB.AddDraft ->
                 draftRepository.insert(event.draft, event.draft.selectionId)
-            }
 
-            is ActionWeekMenuDB.EditDraft -> {
+
+            is ActionWeekMenuDB.EditDraft ->
                 draftRepository.update(event.oldDraft, event.filters)
-            }
 
-            is ActionWeekMenuDB.DeleteSelection -> {
+
+            is ActionWeekMenuDB.DeleteSelection ->
                 menuR.deleteSelection(event.sel)
-            }
 
-            is ActionWeekMenuDB.EditSelection -> {
+
+            is ActionWeekMenuDB.EditSelection ->
                 menuR.editSelection(event.sel, event.newName, event.time)
-            }
 
-            is ActionWeekMenuDB.CreateSelection -> {
+
+            is ActionWeekMenuDB.CreateSelection ->
                 menuR.createSelection(
                     event.date, event.newName, event.locale,
                     event.isForWeek, event.time
                 )
-            }
         }
     }
 }

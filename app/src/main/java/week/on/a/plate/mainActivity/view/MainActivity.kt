@@ -34,6 +34,7 @@ import week.on.a.plate.screens.inventory.logic.InventoryViewModel
 import week.on.a.plate.screens.recipeDetails.logic.RecipeDetailsViewModel
 import week.on.a.plate.screens.searchRecipes.logic.SearchViewModel
 import week.on.a.plate.screens.shoppingList.logic.ShoppingListViewModel
+import week.on.a.plate.screens.specifyRecipeToCookPlan.logic.SpecifyRecipeToCookPlanViewModel
 import week.on.a.plate.screens.specifySelection.logic.SpecifySelectionViewModel
 
 @AndroidEntryPoint
@@ -50,6 +51,8 @@ class MainActivity : ComponentActivity() {
     private val inventoryViewModel: InventoryViewModel by viewModels()
     private val deleteApplyViewModel: DeleteApplyViewModel by viewModels()
     private val cookPlannerViewModel: CookPlannerViewModel by viewModels()
+    private val specifyRecipeToCookPlanViewModel: SpecifyRecipeToCookPlanViewModel by viewModels()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,6 +87,7 @@ class MainActivity : ComponentActivity() {
                     inventoryViewModel,
                     deleteApplyViewModel,
                     cookPlannerViewModel,
+                    specifyRecipeToCookPlanViewModel
                 )
 
                 Scaffold(modifier = Modifier

@@ -8,6 +8,7 @@ import week.on.a.plate.data.dataView.CookPlannerStepView
 import week.on.a.plate.data.dataView.recipe.RecipeView
 import week.on.a.plate.data.repository.tables.recipe.recipe.RecipeRepository
 import week.on.a.plate.data.repository.tables.recipe.recipeStep.StepRepository
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -21,7 +22,17 @@ class CookPlannerStepRepository @Inject constructor(
 ) {
     private val cookPlannerStepMapper = CookPlannerStepMapper()
 
-    fun getAllByDate(date: LocalDate): Flow<List<CookPlannerStepView>> {
+    fun getWeek(activeDate: LocalDate): MutableMap<LocalDate, Flow<List<CookPlannerStepView>>> {
+        val week = mutableMapOf<LocalDate, Flow<List<CookPlannerStepView>>>()
+        for (dayInWeek in DayOfWeek.entries) {
+            val date =
+                activeDate.plusDays(dayInWeek.ordinal.toLong() - activeDate.dayOfWeek.ordinal.toLong())
+            val list = getAllByDate(date)
+            week[date] = list
+        }
+        return week
+    }
+    private fun getAllByDate(date: LocalDate): Flow<List<CookPlannerStepView>> {
         return stepRepo.getAllFlowByDateStart(date.toString()).map { listCookPlannerStepRoom ->
             listCookPlannerStepRoom.map { cookPlannerStepRoom ->
                 val recipeName = recipeRepo.getRecipe(cookPlannerStepRoom.recipeId).name
@@ -53,9 +64,9 @@ class CookPlannerStepRepository @Inject constructor(
                 stepView.id,
                 false,
                 time,
-                time.with(stepView.duration)
+                time.plusHours(stepView.duration.hour.toLong()).minusMinutes(stepView.duration.minute.toLong())
             )
-            time = time.with(stepView.duration)
+            time = time.plusHours(stepView.duration.hour.toLong()).minusMinutes(stepView.duration.minute.toLong())
             stepRepo.insert(stepRoom)
         }
     }
@@ -93,8 +104,15 @@ class CookPlannerStepRepository @Inject constructor(
     }
 
     suspend fun reduceStepToNow() {}
-    suspend fun check(nowChecked: Boolean) {
 
+    suspend fun check(step: CookPlannerStepView) {
+        val stepRoom = with(cookPlannerStepMapper){
+            step.viewToRoom()
+        }.apply {
+            id = step.id
+            checked = !step.checked
+        }
+        stepRepo.update(stepRoom)
     }
 
     suspend fun deleteGroup(idGroup: Long) {

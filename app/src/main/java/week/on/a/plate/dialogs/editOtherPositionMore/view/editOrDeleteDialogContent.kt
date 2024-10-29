@@ -11,7 +11,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.dialogs.editOtherPositionMore.event.EditOtherPositionEvent
-import week.on.a.plate.dialogs.editPositionRecipeMore.view.ButtonRow
+import week.on.a.plate.core.uitools.ButtonRow
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 
 @Composable
@@ -19,7 +19,7 @@ fun EditOtherPositionDialogContent( onEvent: (EditOtherPositionEvent) -> Unit) {
     Column(modifier = Modifier.background(MaterialTheme.colorScheme.surface).padding(20.dp)) {
         ButtonRow(
             R.drawable.edit,
-            stringResource(R.string.edit),
+            text=stringResource(R.string.edit),
         ){
             onEvent(EditOtherPositionEvent.Edit)
 
@@ -27,21 +27,21 @@ fun EditOtherPositionDialogContent( onEvent: (EditOtherPositionEvent) -> Unit) {
 
         ButtonRow(
             R.drawable.back_key,
-            stringResource(R.string.move),
+            text=stringResource(R.string.move),
         ){
             onEvent(EditOtherPositionEvent.Move)
         }
 
         ButtonRow(
             R.drawable.add,
-            stringResource(R.string.doubleR),
+            text=stringResource(R.string.doubleR),
         ){
             onEvent(EditOtherPositionEvent.Double)
         }
 
         ButtonRow(
             R.drawable.delete,
-            stringResource(R.string.delete),
+            text=stringResource(R.string.delete),
         ){
             onEvent(EditOtherPositionEvent.Delete)
         }

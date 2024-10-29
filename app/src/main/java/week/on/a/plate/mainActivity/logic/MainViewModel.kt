@@ -20,6 +20,7 @@ import week.on.a.plate.screens.recipeDetails.logic.RecipeDetailsViewModel
 import week.on.a.plate.screens.searchRecipes.logic.SearchViewModel
 import week.on.a.plate.screens.searchRecipes.logic.voice.VoiceInputUseCase
 import week.on.a.plate.screens.shoppingList.logic.ShoppingListViewModel
+import week.on.a.plate.screens.specifyRecipeToCookPlan.logic.SpecifyRecipeToCookPlanViewModel
 import week.on.a.plate.screens.specifySelection.logic.SpecifySelectionViewModel
 import java.util.Locale
 import javax.inject.Inject
@@ -40,6 +41,8 @@ class MainViewModel @Inject constructor(
     lateinit var inventoryViewModel: InventoryViewModel
     lateinit var deleteApplyViewModel: DeleteApplyViewModel
     lateinit var cookPlannerViewModel: CookPlannerViewModel
+    lateinit var specifyRecipeToCookPlanViewModel: SpecifyRecipeToCookPlanViewModel
+
 
     fun initViewModels(
         specifySelection: SpecifySelectionViewModel,
@@ -51,7 +54,8 @@ class MainViewModel @Inject constructor(
         menuView: week.on.a.plate.screens.menu.logic.MenuViewModel,
         inventory: InventoryViewModel,
         delete: DeleteApplyViewModel,
-        cookPlanner:CookPlannerViewModel
+        cookPlanner:CookPlannerViewModel,
+        specifyRecipeToCookPlan:SpecifyRecipeToCookPlanViewModel
     ) {
         specifySelectionViewModel = specifySelection
         filterViewModel = filter
@@ -63,6 +67,7 @@ class MainViewModel @Inject constructor(
         inventoryViewModel = inventory
         deleteApplyViewModel = delete
         cookPlannerViewModel = cookPlanner
+        specifyRecipeToCookPlanViewModel = specifyRecipeToCookPlan
 
         specifySelectionViewModel.mainViewModel = this
         filterViewModel.mainViewModel = this
@@ -74,6 +79,7 @@ class MainViewModel @Inject constructor(
         inventoryViewModel.mainViewModel = this
         deleteApplyViewModel.mainViewModel = this
         cookPlannerViewModel.mainViewModel = this
+        specifyRecipeToCookPlanViewModel.mainViewModel = this
     }
 
     lateinit var locale: Locale

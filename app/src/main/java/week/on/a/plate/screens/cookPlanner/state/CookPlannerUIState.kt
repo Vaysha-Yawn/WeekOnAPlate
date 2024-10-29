@@ -3,15 +3,17 @@ package week.on.a.plate.screens.cookPlanner.state
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import week.on.a.plate.data.dataView.week.SelectionView
+import week.on.a.plate.data.dataView.CookPlannerStepView
+import week.on.a.plate.screens.wrapperDatePicker.state.WrapperDatePickerUIState
 import java.time.LocalDate
 
 class CookPlannerUIState() {
-    val checkWeek = mutableStateOf<Boolean>(false)
-    val checkDayCategory = mutableStateOf<String?>(null)
-    val date = mutableStateOf<LocalDate?>(null)
-    val portionsCount = mutableIntStateOf(2)
-    val allSelectionsIdDay = mutableStateOf<List<String>>(listOf())
-    val dayViewPreview:MutableState<List<SelectionView>> = mutableStateOf(listOf())
-    val isDateChooseActive:MutableState<Boolean> = mutableStateOf(false)
+    val week: MutableState<Map<LocalDate, List<CookPlannerStepView>>> = mutableStateOf(mapOf())
+    val wrapperDatePickerUIState: WrapperDatePickerUIState = WrapperDatePickerUIState(
+         activeDay = mutableStateOf(LocalDate.now()),
+         itsDayMenu = mutableStateOf(true),
+         activeDayInd = mutableIntStateOf(LocalDate.now().dayOfWeek.ordinal),
+         titleTopBar = mutableStateOf(""),
+         isGroupSelectedModeActive = mutableStateOf(false)
+    )
 }

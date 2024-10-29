@@ -38,6 +38,7 @@ import week.on.a.plate.core.uitools.TextInApp
 import week.on.a.plate.core.utils.timeToString
 import week.on.a.plate.data.dataView.example.recipeTom
 import week.on.a.plate.screens.recipeDetails.event.RecipeDetailsEvent
+import week.on.a.plate.screens.recipeDetails.logic.setTimer
 import week.on.a.plate.screens.recipeDetails.state.RecipeDetailsState
 
 @Composable
@@ -87,7 +88,7 @@ fun RecipeDetailsSteps(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) 
                             .padding(horizontal = 12.dp, vertical = 5.dp)
                     )
                     Spacer(modifier = Modifier.width(24.dp))
-                    TimerButton(step.timer.toInt(), onEvent)
+                    TimerButton(step.timer.toInt())
                 }
                 Spacer(modifier = Modifier.height(24.dp))
                 TextBody(text = step.description)
@@ -107,13 +108,13 @@ fun RecipeDetailsSteps(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) 
 }
 
 @Composable
-fun TimerButton(timer: Int, onEvent: (RecipeDetailsEvent) -> Unit) {
+fun TimerButton(timer: Int) {
     if (timer == 0) return
     val act = LocalContext.current
     Row(
         Modifier
             .clickable {
-                onEvent(RecipeDetailsEvent.StartTimerForStep(timer, act))
+                setTimer(act, timer)
             }
             .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(50.dp))
             .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(50.dp))

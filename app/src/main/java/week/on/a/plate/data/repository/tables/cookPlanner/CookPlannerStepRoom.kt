@@ -11,7 +11,7 @@ data class CookPlannerStepRoom(
     val recipeId: Long,
     val plannerGroupId: Long,
     val originalStepId: Long,
-    val checked: Boolean,
+    var checked: Boolean,
     @TypeConverters(LocalDateTimeTypeConverter::class)
     val start: LocalDateTime,
     @TypeConverters(LocalDateTimeTypeConverter::class)

@@ -54,6 +54,9 @@ import week.on.a.plate.screens.filters.dialogs.selectedFilters.view.DialogSelect
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.uitools.dialogs.BaseDialogContainer
 import week.on.a.plate.core.uitools.dialogs.BottomDialogContainer
+import week.on.a.plate.dialogs.cookStepMore.event.CookStepMoreEvent
+import week.on.a.plate.dialogs.cookStepMore.logic.CookStepMoreDialogViewModel
+import week.on.a.plate.dialogs.cookStepMore.view.CookStepMoreContent
 import week.on.a.plate.dialogs.editOrDelete.event.EditOrDeleteEvent
 import week.on.a.plate.dialogs.editOrDelete.logic.EditOrDeleteViewModel
 import week.on.a.plate.dialogs.editOrDelete.view.EditOrDeleteDialogContent
@@ -282,6 +285,14 @@ fun DialogsContainer(
             }
             LaunchedEffect(true) {
                 sheetState.show()
+            }
+        }
+
+        is CookStepMoreDialogViewModel -> {
+            BaseDialogContainer(data.state.show, { onEvent(CookStepMoreEvent.Close) }) {
+                CookStepMoreContent() { event: CookStepMoreEvent ->
+                    onEvent(event)
+                }
             }
         }
 

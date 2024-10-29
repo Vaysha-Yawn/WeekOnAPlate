@@ -28,6 +28,7 @@ sealed class BottomScreens<T>(val icon: Int, val route: T) {
 
 val bottomScreens = listOf(
     BottomScreens.ShoppingListBottomNav,
+    BottomScreens.CookPlannerBottomNav,
     BottomScreens.MenuBottomNav,
     BottomScreens.SearchBottomNav,
     BottomScreens.SettingsBottomNav,

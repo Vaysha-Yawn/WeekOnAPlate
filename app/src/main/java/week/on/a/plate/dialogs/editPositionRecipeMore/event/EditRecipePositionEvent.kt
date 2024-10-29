@@ -10,4 +10,5 @@ sealed class EditRecipePositionEvent: Event() {
     data object ChangePotionsCount: EditRecipePositionEvent()
     data object Move: EditRecipePositionEvent()
     data object Close: EditRecipePositionEvent()
+    data object CookPlan : EditRecipePositionEvent()
 }

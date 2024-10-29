@@ -3,29 +3,52 @@ package week.on.a.plate.screens.cookPlanner.logic
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.Event
-import week.on.a.plate.core.navigation.MenuDestination
-import week.on.a.plate.data.dataView.week.CategoriesSelection
-import week.on.a.plate.dialogs.editSelection.logic.EditSelectionViewModel
-import week.on.a.plate.dialogs.editSelection.state.EditSelectionUIState
+import week.on.a.plate.data.dataView.week.getTitleWeek
+import week.on.a.plate.data.repository.tables.cookPlanner.CookPlannerStepRepository
+import week.on.a.plate.dialogs.cookStepMore.event.CookStepMoreEvent
+import week.on.a.plate.dialogs.cookStepMore.logic.CookStepMoreDialogViewModel
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screens.cookPlanner.event.CookPlannerEvent
 import week.on.a.plate.screens.cookPlanner.state.CookPlannerUIState
-import week.on.a.plate.screens.specifySelection.event.SpecifySelectionEvent
-import week.on.a.plate.screens.specifySelection.logic.SpecifySelectionResult
-import week.on.a.plate.screens.specifySelection.state.SpecifySelectionUIState
-import java.time.LocalDate
-import java.time.LocalTime
+import week.on.a.plate.screens.recipeDetails.navigation.RecipeDetailsDestination
+import week.on.a.plate.screens.wrapperDatePicker.event.WrapperDatePickerEvent
+import week.on.a.plate.screens.wrapperDatePicker.logic.WrapperDatePickerManager
 import javax.inject.Inject
 
 @HiltViewModel
-class CookPlannerViewModel @Inject constructor() : ViewModel() {
+class CookPlannerViewModel @Inject constructor(
+    private val wrapperDatePickerManager: WrapperDatePickerManager,
+    private val repository: CookPlannerStepRepository
+) : ViewModel() {
     lateinit var mainViewModel: MainViewModel
     val state: CookPlannerUIState = CookPlannerUIState()
+
+    init {
+        val activeDate = state.wrapperDatePickerUIState.activeDay.value
+        val startWeek = activeDate.minusDays(activeDate.dayOfWeek.ordinal.toLong())
+        val endWeek = activeDate.plusDays(6 - activeDate.dayOfWeek.ordinal.toLong())
+        state.wrapperDatePickerUIState.titleTopBar.value = getTitleWeek(startWeek, endWeek)
+        update()
+    }
+
+    fun update() {
+        state.week.value = mapOf()
+
+        val week = repository.getWeek(state.wrapperDatePickerUIState.activeDay.value)
+        week.entries.forEach { dateAndList ->
+            viewModelScope.launch {
+                dateAndList.value.stateIn(viewModelScope).collect {
+                    state.week.value = state.week.value.toMutableMap().apply {
+                        this[dateAndList.key] = it
+                    }.toMap().toSortedMap(comparator = compareBy { it }).toMap()
+                }
+            }
+        }
+    }
 
     fun onEvent(event: Event) {
         when (event) {
@@ -33,21 +56,80 @@ class CookPlannerViewModel @Inject constructor() : ViewModel() {
                 mainViewModel.onEvent(event)
             }
 
-            is SpecifySelectionEvent -> {
-                onEvent(event)
+            is WrapperDatePickerEvent -> {
+                wrapperDatePickerManager.onEvent(event, state.wrapperDatePickerUIState)
+                when (event) {
+                    is WrapperDatePickerEvent.ChangeWeek -> {
+                        wrapperDatePickerManager.changeWeek(
+                            event.date,
+                            state.wrapperDatePickerUIState
+                        ) { date ->
+                            state.wrapperDatePickerUIState.activeDay.value = date
+                            state.wrapperDatePickerUIState.activeDayInd.value =
+                                date.dayOfWeek.ordinal
+                            update()
+                        }
+                    }
+
+                    WrapperDatePickerEvent.ChooseWeek -> {
+                        wrapperDatePickerManager.chooseWeek(
+                            mainViewModel,
+                            state.wrapperDatePickerUIState,
+                            false
+                        ) { date ->
+                            state.wrapperDatePickerUIState.activeDay.value = date
+                            state.wrapperDatePickerUIState.activeDayInd.value =
+                                date.dayOfWeek.ordinal
+                            update()
+                        }
+                    }
+
+                    WrapperDatePickerEvent.SwitchEditMode -> {}
+                    WrapperDatePickerEvent.SwitchWeekOrDayView -> {}
+                }
             }
+            is CookPlannerEvent->onEvent(event)
         }
     }
 
     fun onEvent(event: CookPlannerEvent) {
         when (event) {
-            is CookPlannerEvent.AddTimeStep -> TODO()
-            is CookPlannerEvent.ChangeTimeEndRecipe -> TODO()
-            is CookPlannerEvent.ChangeTimeStartRecipe -> TODO()
-            is CookPlannerEvent.CheckStep -> TODO()
-            is CookPlannerEvent.MoveTimeStep -> TODO()
-            is CookPlannerEvent.ShowStepMore -> TODO()
-            is CookPlannerEvent.StartTimer -> TODO()
+            is CookPlannerEvent.CheckStep -> {
+                viewModelScope.launch {
+                    repository.check(event.step)
+                }
+            }
+            is CookPlannerEvent.ShowStepMore -> {
+                val vm = CookStepMoreDialogViewModel()
+                vm.mainViewModel = mainViewModel
+                viewModelScope.launch {
+                    mainViewModel.onEvent(MainEvent.OpenDialog(vm))
+                    vm.launchAndGet {
+                        when (it) {
+                            CookStepMoreEvent.ChangeEndRecipeTime -> {
+
+                            }
+                            CookStepMoreEvent.ChangeStartRecipeTime -> {
+
+                            }
+                            CookStepMoreEvent.Close -> {}
+                            CookStepMoreEvent.IncreaseStepTime -> {
+
+                            }
+                            CookStepMoreEvent.MoveStepByTimeStart -> {
+
+                            }
+                        }
+                    }
+                }
+            }
+
+            is CookPlannerEvent.NavToFullStep -> {
+                mainViewModel.recipeDetailsViewModel.launch(event.step.recipeId)
+                viewModelScope.launch {
+                    mainViewModel.nav.navigate(RecipeDetailsDestination)
+                }
+            }
         }
     }
 

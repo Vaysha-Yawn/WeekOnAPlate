@@ -74,7 +74,6 @@ fun SpecifySelectionAltContent(state: SpecifySelectionUIState, stateCalendarMy: 
             stringResource(id = R.string.message_non_validate_place_position_in_menu)
         DoneButton(
             stringResource(id = R.string.apply),
-            modifier = Modifier.padding(horizontal = 24.dp)
         ) {
             if (state.checkWeek.value || state.checkDayCategory.value != null) {
                 onEvent(SpecifySelectionEvent.Done)

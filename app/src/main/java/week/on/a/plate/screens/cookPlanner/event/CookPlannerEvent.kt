@@ -9,10 +9,6 @@ import java.time.LocalTime
 
 sealed class CookPlannerEvent : Event() {
     data class CheckStep(val step:CookPlannerStepView):CookPlannerEvent()
-    data class StartTimer(val time:Long):CookPlannerEvent()
     data class ShowStepMore(val step:CookPlannerStepView):CookPlannerEvent()
-    data class ChangeTimeStartRecipe(val step:CookPlannerStepView):CookPlannerEvent()
-    data class ChangeTimeEndRecipe(val step:CookPlannerStepView):CookPlannerEvent()
-    data class AddTimeStep(val step:CookPlannerStepView):CookPlannerEvent()//продлить
-    data class MoveTimeStep(val step:CookPlannerStepView):CookPlannerEvent()//отложить
+    data class NavToFullStep(val step: CookPlannerStepView) : CookPlannerEvent()
 }

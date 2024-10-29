@@ -32,6 +32,8 @@ import week.on.a.plate.screens.searchRecipes.event.SearchScreenEvent
 import week.on.a.plate.screens.searchRecipes.view.main.SearchStart
 import week.on.a.plate.screens.shoppingList.event.ShoppingListEvent
 import week.on.a.plate.screens.shoppingList.view.ShoppingListStart
+import week.on.a.plate.screens.specifyRecipeToCookPlan.navigation.SpecifyForCookPlanDestination
+import week.on.a.plate.screens.specifyRecipeToCookPlan.view.SpecifyForCookPlanStart
 import week.on.a.plate.screens.specifySelection.view.alt.SpecifySelectionAltStart
 
 @Composable
@@ -127,6 +129,13 @@ fun Navigation(
             viewModel.isActivePlusButton.value = false
             viewModel.isActiveFilterScreen.value = false
             DeleteApplyStart(viewModel.deleteApplyViewModel)
+        }
+
+        composable<SpecifyForCookPlanDestination> {
+            viewModel.isActiveBaseScreen.value = false
+            viewModel.isActivePlusButton.value = false
+            viewModel.isActiveFilterScreen.value = false
+            SpecifyForCookPlanStart(viewModel.specifyRecipeToCookPlanViewModel)
         }
     }
 }

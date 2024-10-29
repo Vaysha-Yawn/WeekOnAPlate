@@ -50,7 +50,6 @@ class RecipeDetailsViewModel @Inject constructor(
             RecipeDetailsEvent.Edit -> editRecipe()
             RecipeDetailsEvent.MinusPortionsView -> minusPortionsView()
             RecipeDetailsEvent.PlusPortionsView -> plusPortionsView()
-            is RecipeDetailsEvent.StartTimerForStep -> startTimerForStep(event.time, event.act)
             RecipeDetailsEvent.SwitchFavorite -> switchFavorite()
             RecipeDetailsEvent.Delete -> delete()
             is RecipeDetailsEvent.Share -> share(event.context)
@@ -225,10 +224,6 @@ class RecipeDetailsViewModel @Inject constructor(
                 }
             }
         }
-    }
-
-    private fun startTimerForStep(time: Int, act: Context) {
-        setTimer(act, time)
     }
 
     fun launch(recipeId: Long, portionsCount: Int? = null) {

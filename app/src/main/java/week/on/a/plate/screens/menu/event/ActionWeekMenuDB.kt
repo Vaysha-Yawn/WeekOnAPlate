@@ -5,6 +5,7 @@ import week.on.a.plate.data.dataView.recipe.RecipeTagView
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.data.dataView.week.SelectionView
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 import java.util.Locale
 
@@ -12,15 +13,16 @@ sealed class ActionWeekMenuDB {
     class EditNoteDB(val data: Position.PositionNoteView) : ActionWeekMenuDB()
 
     class AddNoteDB(val text: String, val selId: Long,) : ActionWeekMenuDB()
+
     class AddRecipePositionInMenuDB(
         val selId: Long,
         val recipe: Position.PositionRecipeView
     ) : ActionWeekMenuDB()
+
     class AddIngredientPositionDB(
         val updatedPosition: Position.PositionIngredientView,
         val selId: Long,
     ) : ActionWeekMenuDB()
-
 
     class EditIngredientPositionDB(val updatedPosition: Position.PositionIngredientView) :
         ActionWeekMenuDB()

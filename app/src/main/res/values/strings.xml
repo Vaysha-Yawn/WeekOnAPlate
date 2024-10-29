@@ -41,8 +41,12 @@
     <string name="selected_positions">Выбранные позиции</string>
     <string name="add_positions_voice_apply">Добавить позиции</string>
     <string name="selected_tags"><![CDATA[Выбранные >]]></string>
-    <string name="specify_selection">Уточните раздел</string>
+    <string name="specify_selection">Добавить рецепт: выберите приём пищи</string>
     <string name="add_category">Добавить категорию</string>
     <string name="enter_category_name">Введите название категории здесь</string>
     <string name="error_enter_title">Пожалуйста введите название</string>
+    <string name="change_start_recipe_time">Изменить время старта рецепта</string>
+    <string name="change_end_recipe_time">Изменить время окончания рецепта</string>
+    <string name="increase_step_time">Продлить время шага</string>
+    <string name="move_step_by_time_start">Отложить время начала этого шага</string>
 </resources>

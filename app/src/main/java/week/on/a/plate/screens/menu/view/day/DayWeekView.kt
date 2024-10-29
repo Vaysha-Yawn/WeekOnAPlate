@@ -3,6 +3,7 @@ package week.on.a.plate.screens.menu.view.day
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -19,7 +20,7 @@ import week.on.a.plate.screens.menu.state.MenuUIState
 
 @Composable
 fun DayView(day: DayView, menuUIState: MenuUIState, onEvent: (event: Event) -> Unit) {
-    LazyColumn {
+    LazyColumn(Modifier.fillMaxWidth()) {
         items(day.selections.size) { index ->
             BlockSelection(
                 selection = day.selections[index], menuUIState = menuUIState, onEvent
