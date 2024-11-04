@@ -8,12 +8,16 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.navigation.SearchDestination
+import week.on.a.plate.core.navigation.ShoppingListDestination
+import week.on.a.plate.data.dataView.ShoppingItemView
+import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.data.dataView.week.CategoriesSelection
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.data.dataView.week.RecipeShortView
 import week.on.a.plate.data.dataView.week.SelectionView
 import week.on.a.plate.data.dataView.week.getTitleWeek
 import week.on.a.plate.data.repository.tables.recipe.recipe.RecipeRepository
+import week.on.a.plate.data.repository.tables.shoppingList.ShoppingItemRepository
 import week.on.a.plate.dialogs.addPositionChoose.event.AddPositionEvent
 import week.on.a.plate.dialogs.addPositionChoose.logic.AddPositionViewModel
 import week.on.a.plate.dialogs.changePortions.logic.ChangePortionsCountViewModel
@@ -59,10 +63,10 @@ class MenuViewModel @Inject constructor(
     private val selectedRecipeManager: SelectedRecipeManager,
     private val recipeRepository: RecipeRepository,
     private val wrapperDatePickerManager: WrapperDatePickerManager,
+    private val shoppingItemRepository: ShoppingItemRepository
 ) : ViewModel() {
 
     lateinit var mainViewModel: MainViewModel
-    val weekState: MutableStateFlow<WeekState> = MutableStateFlow(WeekState.EmptyWeek)
     val menuUIState = MenuUIState.MenuUIStateExample
     private val activeDay = menuUIState.wrapperDatePickerUIState.activeDay
 
@@ -75,15 +79,14 @@ class MenuViewModel @Inject constructor(
     }
 
     private fun updateWeek() {
-        weekState.value = WeekState.Loading
         viewModelScope.launch {
             val week = sCRUDRecipeInMenu.menuR.getCurrentWeek(activeDay.value, Locale.getDefault())
             week.days.forEach { day ->
                 day.selections = day.selections.sortedBy { it.dateTime }
             }
-            weekState.value = WeekState.Success(week)
             menuUIState.wrapperDatePickerUIState.titleTopBar.value =
                 getTitleWeek(week.days[0].date, week.days[6].date)
+            menuUIState.week.value = week
         }
     }
 
@@ -556,7 +559,7 @@ class MenuViewModel @Inject constructor(
             val vm = EditOtherPositionViewModel()
             vm.mainViewModel = mainViewModel
             mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-            vm.launchAndGet() { event ->
+            vm.launchAndGet(position is Position.PositionIngredientView) { event ->
                 when (event) {
                     EditOtherPositionEvent.Close -> {}
                     EditOtherPositionEvent.Delete -> onEvent(
@@ -578,8 +581,51 @@ class MenuViewModel @Inject constructor(
                     }
 
                     EditOtherPositionEvent.Move -> getSelAndMove(position)
+                    EditOtherPositionEvent.AddToShopList -> {
+                        if (position is Position.PositionIngredientView) {
+                            val ingredientNew = IngredientInRecipeView(
+                                0,
+                                position.ingredient.ingredientView,
+                                position.ingredient.description,
+                                position.ingredient.count
+                            )
+                            addToBd(ingredientNew)
+                        }
+                    }
                 }
             }
+        }
+    }
+
+    private fun addToBd(ingredientInRecipe: IngredientInRecipeView) {
+        viewModelScope.launch {
+            val allList = shoppingItemRepository.getAll()
+            val haveItem =
+                allList.find { it -> it.ingredientInRecipe.ingredientView.ingredientId == ingredientInRecipe.ingredientView.ingredientId }
+            if (haveItem == null) {
+                shoppingItemRepository.insert(ShoppingItemView(0, ingredientInRecipe, false))
+            } else {
+                if (haveItem.checked) {
+                    shoppingItemRepository.update(
+                        haveItem.id,
+                        haveItem.ingredientInRecipe.id,
+                        false,
+                        haveItem.ingredientInRecipe.ingredientView.ingredientId,
+                        haveItem.ingredientInRecipe.description,
+                        ingredientInRecipe.count.toDouble()
+                    )
+                } else {
+                    shoppingItemRepository.update(
+                        haveItem.id,
+                        haveItem.ingredientInRecipe.id,
+                        false,
+                        haveItem.ingredientInRecipe.ingredientView.ingredientId,
+                        haveItem.ingredientInRecipe.description,
+                        ingredientInRecipe.count.toDouble() + haveItem.ingredientInRecipe.count.toDouble()
+                    )
+                }
+            }
+            mainViewModel.nav.navigate(ShoppingListDestination)
         }
     }
 

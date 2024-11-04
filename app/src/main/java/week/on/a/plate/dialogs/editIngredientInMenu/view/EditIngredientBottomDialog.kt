@@ -13,6 +13,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,6 +29,7 @@ import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.EditNumberLine
 import week.on.a.plate.core.uitools.EditTextLine
 import week.on.a.plate.core.uitools.TextBody
+import week.on.a.plate.core.uitools.animate.AnimateErrorBox
 import week.on.a.plate.core.uitools.buttons.CommonButton
 import week.on.a.plate.core.uitools.buttons.DoneButton
 import week.on.a.plate.core.uitools.ingredientCard.CardIngredient
@@ -35,10 +39,10 @@ import week.on.a.plate.dialogs.editIngredientInMenu.state.EditPositionIngredient
 
 @Composable
 fun EditOrAddIngredientBottomDialogContent(
-    snackBarState: SnackbarHostState,
     state: EditPositionIngredientUIState,
     onEvent: (EditPositionIngredientEvent) -> Unit,
 ) {
+    val isError: MutableState<Boolean> = remember { mutableStateOf(false) }
     Column(
         modifier = Modifier.background(MaterialTheme.colorScheme.surface)
             .padding(vertical = 24.dp)
@@ -62,14 +66,16 @@ fun EditOrAddIngredientBottomDialogContent(
                 onEvent(EditPositionIngredientEvent.ChooseIngredient)
             }
         } else {
-            CommonButton(
-                stringResource(R.string.Specify_ingredient),
-                image = R.drawable.search, modifier = Modifier.padding(horizontal = 24.dp)
-            ) {
-                onEvent(EditPositionIngredientEvent.ChooseIngredient)
+            AnimateErrorBox(isError) {
+                CommonButton(
+                    stringResource(R.string.Specify_ingredient),
+                    image = R.drawable.search, modifier = Modifier.padding(horizontal = 24.dp)
+                ) {
+                    onEvent(EditPositionIngredientEvent.ChooseIngredient)
+                }
             }
         }
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(12.dp))
         TextBody(
             text = "Описание",
             modifier = Modifier.padding(horizontal = 36.dp)
@@ -80,7 +86,7 @@ fun EditOrAddIngredientBottomDialogContent(
             stringResource(R.string.Pieces),
             modifier = Modifier.padding(horizontal = 24.dp)
         )
-        Spacer(modifier = Modifier.height(24.dp))
+
         TextBody(
             text = "Колличество" + if (state.ingredientState.value != null) {
                 ", " + state.ingredientState.value!!.measure
@@ -97,8 +103,6 @@ fun EditOrAddIngredientBottomDialogContent(
                     .padding(horizontal = 24.dp)
             )
         }
-        val messageError = stringResource(id = R.string.message_select_ingredient)
-        val coroutineScope = rememberCoroutineScope()
         Spacer(modifier = Modifier.height(36.dp))
         DoneButton(
             text = stringResource(id = R.string.apply),
@@ -107,9 +111,7 @@ fun EditOrAddIngredientBottomDialogContent(
             if (state.ingredientState.value != null) {
                 onEvent(EditPositionIngredientEvent.Done)
             } else {
-                coroutineScope.launch {
-                    snackBarState.showSnackbar(messageError)
-                }
+                isError.value = true
             }
         }
     }
@@ -120,9 +122,8 @@ fun EditOrAddIngredientBottomDialogContent(
 @Composable
 fun PreviewEditIngredientBottomDialog() {
     WeekOnAPlateTheme {
-        val snackBar = SnackbarHostState()
         EditOrAddIngredientBottomDialogContent(
-            snackBar, EditPositionIngredientUIState(positionIngredientExample)
+            EditPositionIngredientUIState(positionIngredientExample)
         ) {}
     }
 }

@@ -1,5 +1,6 @@
 package week.on.a.plate.mainActivity.logic
 
+import android.util.Log
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -8,20 +9,27 @@ import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.Event
+import week.on.a.plate.data.dataView.example.emptyRecipe
+import week.on.a.plate.data.dataView.recipe.RecipeStepView
+import week.on.a.plate.data.dataView.recipe.RecipeView
+import week.on.a.plate.data.repository.tables.recipe.recipe.RecipeRepository
 import week.on.a.plate.dialogs.core.DialogUseCase
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.screens.cookPlanner.logic.CookPlannerViewModel
 import week.on.a.plate.screens.createRecipe.logic.RecipeCreateViewModel
+import week.on.a.plate.screens.createRecipe.navigation.RecipeCreateDestination
 import week.on.a.plate.screens.deleteApply.logic.DeleteApplyViewModel
 import week.on.a.plate.screens.filters.logic.FilterViewModel
 import week.on.a.plate.screens.inventory.logic.InventoryViewModel
 import week.on.a.plate.screens.menu.logic.useCase.CRUDRecipeInMenu
 import week.on.a.plate.screens.recipeDetails.logic.RecipeDetailsViewModel
+import week.on.a.plate.screens.searchRecipes.event.SearchScreenEvent
 import week.on.a.plate.screens.searchRecipes.logic.SearchViewModel
 import week.on.a.plate.screens.searchRecipes.logic.voice.VoiceInputUseCase
 import week.on.a.plate.screens.shoppingList.logic.ShoppingListViewModel
 import week.on.a.plate.screens.specifyRecipeToCookPlan.logic.SpecifyRecipeToCookPlanViewModel
 import week.on.a.plate.screens.specifySelection.logic.SpecifySelectionViewModel
+import java.time.LocalDateTime
 import java.util.Locale
 import javax.inject.Inject
 
@@ -29,6 +37,7 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     val dialogUseCase: DialogUseCase,
     private val sCRUDRecipeInMenu: CRUDRecipeInMenu,
+    private val recipeRepository: RecipeRepository,
 ) : ViewModel() {
 
     lateinit var menuViewModel: week.on.a.plate.screens.menu.logic.MenuViewModel
@@ -54,8 +63,8 @@ class MainViewModel @Inject constructor(
         menuView: week.on.a.plate.screens.menu.logic.MenuViewModel,
         inventory: InventoryViewModel,
         delete: DeleteApplyViewModel,
-        cookPlanner:CookPlannerViewModel,
-        specifyRecipeToCookPlan:SpecifyRecipeToCookPlanViewModel
+        cookPlanner: CookPlannerViewModel,
+        specifyRecipeToCookPlan: SpecifyRecipeToCookPlanViewModel
     ) {
         specifySelectionViewModel = specifySelection
         filterViewModel = filter
@@ -91,6 +100,9 @@ class MainViewModel @Inject constructor(
     val isActivePlusButton = mutableStateOf(true)
     val isActiveFilterScreen = mutableStateOf(false)
 
+    var isCheckedSharedAction = false
+    var sharedLink = ""
+
     fun onEvent(event: Event) {
         when (event) {
             is MainEvent -> onEvent(event)
@@ -105,6 +117,7 @@ class MainViewModel @Inject constructor(
                     sCRUDRecipeInMenu.onEvent(event.actionMenuDBData)
                 }
             }
+
             MainEvent.CloseDialog -> dialogUseCase.closeDialog()
             is MainEvent.OpenDialog -> dialogUseCase.openDialog(event.dialog)
             is MainEvent.ShowSnackBar -> showSnackBar(event.message)
@@ -113,6 +126,44 @@ class MainViewModel @Inject constructor(
             MainEvent.HideDialog -> dialogUseCase.hide()
             is MainEvent.ShowDialog -> dialogUseCase.show()
             is MainEvent.VoiceToText -> voiceToText(event.use)
+            is MainEvent.UseSharedLink -> useSharedLink(event.link)
+        }
+    }
+
+    private fun useSharedLink(text: String) {
+        if (!isCheckedSharedAction && ::nav.isInitialized ) {
+            nav.navigate(RecipeCreateDestination)
+            isCheckedSharedAction = true
+            val recipeBase = emptyRecipe.apply {
+                link = text
+            }
+            viewModelScope.launch {
+                recipeCreateViewModel.launchAndGet(recipeBase, true) { recipe ->
+                    viewModelScope.launch {
+                        val newRecipe = RecipeView(
+                            id = 0,
+                            name = recipe.name.value,
+                            description = recipe.description.value,
+                            img = recipe.photoLink.value,
+                            tags = recipe.tags.value,
+                            prepTime = recipe.prepTime.intValue,
+                            allTime = recipe.allTime.intValue,
+                            standardPortionsCount = recipe.portionsCount.intValue,
+                            ingredients = recipe.ingredients.value,
+                            steps = recipe.steps.value.map {
+                                RecipeStepView(
+                                    0,
+                                    it.description.value,
+                                    it.image.value,
+                                    it.timer.intValue.toLong(), it.duration.value
+                                )
+                            },
+                            link = recipe.source.value, false, LocalDateTime.now()
+                        )
+                        recipeRepository.create(newRecipe)
+                    }
+                }
+            }
         }
     }
 

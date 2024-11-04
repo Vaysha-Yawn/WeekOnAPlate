@@ -41,19 +41,18 @@ class InventoryViewModel @Inject constructor(
             InventoryEvent.Back -> close()
             InventoryEvent.Done -> done()
             is InventoryEvent.PickCount -> {
-                event.inventoryCategory.answer.intValue = event.count
+                event.inventoryCategory.answer.value = ! event.inventoryCategory.answer.value
             }
         }
     }
 
     fun done() {
         close()
-        val result = state.list.value.map { pos ->
+        val result = state.list.value.filter { it.answer.value }.map { pos ->
             IngredientInRecipeView(
-                0, pos.ingredient, "", pos.answer.intValue
+                0, pos.ingredient, "", pos.countTarget
             )
-        }.filter { it.count > 0 }
-
+        }
         addToBd(result)
     }
 

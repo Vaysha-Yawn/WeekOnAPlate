@@ -12,47 +12,63 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.core.theme.ColorPanelLightGrey
 import week.on.a.plate.core.theme.ColorTextBlack
+import week.on.a.plate.core.theme.ColorTransparent
 import week.on.a.plate.core.theme.Typography
+import week.on.a.plate.core.uitools.animate.AnimateErrorBox
 
 @Composable
 fun EditTextLine(
     text: MutableState<String>,
     placeholder: String,
     modifier : Modifier = Modifier,
+    isError:MutableState<Boolean> = mutableStateOf(false) ,
+    isRequired:Boolean = false
 ) {
-    OutlinedTextField(
-        value = text.value,
-        onValueChange = { newValue ->
-            text.value = if (newValue.length<2){newValue}else{
-                newValue[0].uppercaseChar()+newValue.substring(1 until newValue.length)
-            }
-        },
-        modifier = modifier.fillMaxWidth(),
-        textStyle = Typography.bodyMedium,
-        placeholder = {
-            TextBodyDisActive(text = placeholder)
-        },
-        singleLine = false,
-        shape = RoundedCornerShape(20.dp),
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedTextColor = MaterialTheme.colorScheme.onBackground,
-            unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
-            disabledTextColor = MaterialTheme.colorScheme.onBackground,
-            errorTextColor = MaterialTheme.colorScheme.onBackground,
-            focusedContainerColor = if (isSystemInDarkTheme()) ColorTextBlack else ColorPanelLightGrey,
-            unfocusedContainerColor = if (isSystemInDarkTheme()) ColorTextBlack else ColorPanelLightGrey,
-            disabledContainerColor = if (isSystemInDarkTheme()) ColorTextBlack else ColorPanelLightGrey,
-            focusedBorderColor = MaterialTheme.colorScheme.outline,
-            unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-            disabledBorderColor = MaterialTheme.colorScheme.outline,
-            errorBorderColor = MaterialTheme.colorScheme.outline,
+    AnimateErrorBox(isError){
+        OutlinedTextField(
+            value = text.value,
+            onValueChange = { newValue ->
+                text.value = if (newValue.length<2){newValue}else{
+                    newValue[0].uppercaseChar()+newValue.substring(1 until newValue.length)
+                }
+                if (isRequired && newValue==""){
+                    isError.value = true
+                }
+            },
+            modifier = modifier.fillMaxWidth(),
+            textStyle = Typography.bodyMedium,
+            placeholder = {
+                TextBodyDisActive(text = placeholder)
+            },
+            supportingText = {
+                if (isRequired && text.value=="") {
+                    TextSmall(text = "* это поле обязательное", color = MaterialTheme.colorScheme.onBackground)
+                }
+            },
+            singleLine = false,
+            shape = RoundedCornerShape(20.dp),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                focusedBorderColor = MaterialTheme.colorScheme.outline,
+                focusedContainerColor = if (isSystemInDarkTheme()) ColorTextBlack else ColorPanelLightGrey,
+
+                unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                unfocusedContainerColor = if (isSystemInDarkTheme()) ColorTextBlack else ColorPanelLightGrey,
+
+                errorTextColor = Color.Red,
+                errorPlaceholderColor = Color.Red,
+                errorBorderColor = Color.Red,
+                errorContainerColor = ColorTransparent
+            )
         )
-    )
+    }
 }
 
 @Composable

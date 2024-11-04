@@ -27,15 +27,15 @@ import week.on.a.plate.core.Event
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.ImageLoad
 import week.on.a.plate.core.uitools.SubText
+import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextBodyDisActive
-import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.MoreButtonWithBackg
 import week.on.a.plate.core.utils.getIngredientCountAndMeasure1000
 import week.on.a.plate.data.dataView.example.ingredientTomato
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.data.dataView.week.Position
-import week.on.a.plate.screens.wrapperDatePicker.event.WrapperDatePickerEvent
 import week.on.a.plate.screens.menu.state.MenuUIState
+import week.on.a.plate.screens.wrapperDatePicker.event.WrapperDatePickerEvent
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -48,23 +48,31 @@ fun WeekIngredientPosition(
             .fillMaxWidth()
             .combinedClickable(
                 onClick = {
-                    onEvent(week.on.a.plate.screens.menu.event.MenuEvent.EditOtherPosition(ingredient))
+                    onEvent(
+                        week.on.a.plate.screens.menu.event.MenuEvent.EditOtherPosition(
+                            ingredient
+                        )
+                    )
                 },
                 onLongClick = { onEvent(WrapperDatePickerEvent.SwitchEditMode) },
             )
             .clip(RoundedCornerShape(20.dp)),
     ) {
+        val height =
+            if (ingredient.ingredient.ingredientView.img.startsWith("http")){
+            150.dp
+        }else{50.dp}
         if (ingredient.ingredient.ingredientView.img.startsWith("http")) {
             ImageLoad(
                 ingredient.ingredient.ingredientView.img,
                 Modifier
                     .clipToBounds()
                     .fillMaxWidth()
-                    .height(150.dp)
+                    .height(height)
                     .scale(2f)
             )
         } else {
-            Spacer(Modifier.height(150.dp))
+            Spacer(Modifier.height(height))
         }
         Row(
             Modifier
@@ -79,7 +87,7 @@ fun WeekIngredientPosition(
             }
         }
         Column {
-            Spacer(Modifier.height(150.dp))
+            Spacer(Modifier.height(height))
             Column(
                 Modifier
                     .fillMaxWidth()
@@ -87,7 +95,7 @@ fun WeekIngredientPosition(
                     .background(MaterialTheme.colorScheme.surface)
                     .padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                TextTitle(
+                TextBody(
                     ingredient.ingredient.ingredientView.name
                 )
                 if (ingredient.ingredient.description != "") {
@@ -96,11 +104,16 @@ fun WeekIngredientPosition(
                         ingredient.ingredient.description,
                     )
                 }
-                val ingredientCount = getIngredientCountAndMeasure1000(ingredient.ingredient.count, ingredient.ingredient.ingredientView.measure)
-                Spacer(Modifier.height(6.dp))
-                SubText(
-                    ingredientCount.first +" "+ ingredientCount.second
-                )
+                if (ingredient.ingredient.count != 0) {
+                    val ingredientCount = getIngredientCountAndMeasure1000(
+                        ingredient.ingredient.count,
+                        ingredient.ingredient.ingredientView.measure
+                    )
+                    Spacer(Modifier.height(6.dp))
+                    SubText(
+                        ingredientCount.first + " " + ingredientCount.second
+                    )
+                }
             }
         }
     }
@@ -126,7 +139,7 @@ fun PreviewWeekIngredientPosition() {
             item {
                 WeekCardPosition(
                     posIngredient,
-                    menuUIState =menuUIState
+                    menuUIState = menuUIState
                 ) {}
             }
         }

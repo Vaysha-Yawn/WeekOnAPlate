@@ -11,6 +11,7 @@ import week.on.a.plate.mainActivity.logic.MainViewModel
 
 class EditOtherPositionViewModel (): DialogViewModel() {
 
+    var isForIngredient: Boolean = false
     lateinit var mainViewModel: MainViewModel
     val state = EditOtherPositionUIState()
     private lateinit var resultFlow: MutableStateFlow< EditOtherPositionEvent?>
@@ -38,7 +39,8 @@ class EditOtherPositionViewModel (): DialogViewModel() {
         }
     }
 
-    suspend fun launchAndGet(use: (EditOtherPositionEvent) -> Unit) {
+    suspend fun launchAndGet(isForIngrediente:Boolean, use: (EditOtherPositionEvent) -> Unit) {
+        isForIngredient = isForIngrediente
         val flow = start()
         flow.collect { value ->
             if (value != null) {

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
@@ -43,7 +44,7 @@ import week.on.a.plate.screens.filters.state.FilterUIState
 
 @Composable
 fun FilterScreen(stateUI: FilterUIState, onEvent: (FilterEvent) -> Unit) {
-    Column(Modifier.background(MaterialTheme.colorScheme.surface)) {
+    Column(Modifier.background(MaterialTheme.colorScheme.surface).imePadding()) {
         if (stateUI.filterEnum.value == FilterEnum.IngredientAndTag) {
             TabRowFilter(
                 stateUI.activeFilterTabIndex,
@@ -192,7 +193,7 @@ fun FilterScreen(stateUI: FilterUIState, onEvent: (FilterEvent) -> Unit) {
         }
         if (stateUI.filterMode.value == FilterMode.Multiple) {
             DoneButton(
-                modifier = Modifier.padding(horizontal = 20.dp).padding(bottom = 50.dp),
+                modifier = Modifier.padding(horizontal = 24.dp).padding(bottom = 12.dp).padding(top = 6.dp),
                 text = stringResource(R.string.apply),
             ) {
                 onEvent(FilterEvent.Done)

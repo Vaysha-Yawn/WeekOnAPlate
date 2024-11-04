@@ -146,8 +146,8 @@ val shortRecipe = RecipeShortView(0, "Салат из помидоров с ог
 
 
 val emptyRecipe = RecipeView(
-    0, "name", "description", "img", listOf<RecipeTagView>(),
-    0, 0, 0, listOf(), listOf(), "", false,LocalDateTime.now(),
+    0, "", "", "", listOf<RecipeTagView>(),
+    0, 0, 0, listOf(), listOf(), "", false, LocalDateTime.now(),
 )
 
 fun getSimpleRecipe(names: String, inFavorite: Boolean = false, image: String = ""): RecipeView {

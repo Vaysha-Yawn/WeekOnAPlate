@@ -58,7 +58,7 @@ class RecipeDetailsViewModel @Inject constructor(
 
     private fun share(context: Context) {
         val text = recipeToText(state.recipe.value)
-        val intent =Intent().apply {
+        val intent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_TEXT, text)
             type = "text/plain"
@@ -83,7 +83,7 @@ class RecipeDetailsViewModel @Inject constructor(
         for (ingredient in recipeView.ingredients){
             text+= "\n"
             val tet = getIngredientCountAndMeasure1000(ingredient.count, ingredient.ingredientView.measure)
-            text+= "- "+ingredient.ingredientView.name + " " + tet.first + " " + tet.second
+            text+= "- "+ingredient.ingredientView.name + " " + ingredient.description + " " + tet.first + " " + tet.second
         }
         text+= "\n"
         text+= "\n"
@@ -102,7 +102,7 @@ class RecipeDetailsViewModel @Inject constructor(
     }
 
     private fun addToCart() {
-        if (state.recipe.value.ingredients.isNotEmpty() && state.recipe.value.ingredients.find { it.count > 0 } != null) {
+        if (state.recipe.value.ingredients.isNotEmpty()) {
             viewModelScope.launch {
                 val listCopy = state.recipe.value.ingredients.toList()
                 listCopy.forEachIndexed { index, ingredientInRecipeView ->
@@ -111,6 +111,8 @@ class RecipeDetailsViewModel @Inject constructor(
                 mainViewModel.nav.navigate(InventoryDestination)
                 mainViewModel.inventoryViewModel.launchAndGet(listCopy)
             }
+        }else{
+            mainViewModel.onEvent(MainEvent.ShowSnackBar("Нет ингредиентов в составе."))
         }
     }
 

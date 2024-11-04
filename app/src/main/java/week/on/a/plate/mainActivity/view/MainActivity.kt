@@ -1,5 +1,6 @@
 package week.on.a.plate.mainActivity.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import androidx.activity.ComponentActivity
@@ -9,6 +10,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -25,6 +27,7 @@ import week.on.a.plate.core.theme.ColorBackgroundWhite
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.buttons.ActionPlusButton
 import week.on.a.plate.dialogs.core.DialogsContainer
+import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screens.cookPlanner.logic.CookPlannerViewModel
 import week.on.a.plate.screens.createRecipe.logic.RecipeCreateViewModel
@@ -53,7 +56,6 @@ class MainActivity : ComponentActivity() {
     private val cookPlannerViewModel: CookPlannerViewModel by viewModels()
     private val specifyRecipeToCookPlanViewModel: SpecifyRecipeToCookPlanViewModel by viewModels()
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -70,6 +72,7 @@ class MainActivity : ComponentActivity() {
             }
         }
         viewModel.voiceInputUseCase.voiceInputLauncher = voiceInputLauncher
+
         setContent {
             WeekOnAPlateTheme {
                 viewModel.locale = LocalContext.current.resources.configuration.locales[0]
@@ -92,9 +95,14 @@ class MainActivity : ComponentActivity() {
 
                 Scaffold(modifier = Modifier
                     .fillMaxSize()
+                    .imePadding()
                     .background(ColorBackgroundWhite),
                     bottomBar = {
-                        BottomBar(viewModel.nav, viewModel.isActiveBaseScreen.value, searchViewModel)
+                        BottomBar(
+                            viewModel.nav,
+                            viewModel.isActiveBaseScreen.value,
+                            searchViewModel
+                        )
                     }, snackbarHost = {
                         SnackbarHost(hostState = viewModel.snackbarHostState) {
                             if (viewModel.snackbarHostState.currentSnackbarData != null) {
@@ -107,10 +115,10 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     }, floatingActionButton = {
-                        if (viewModel.isActivePlusButton.value && viewModel.dialogUseCase.activeDialog.value==null){
-                            val pad = if ( viewModel.isActiveFilterScreen.value ){
-                                110.dp
-                            }else {
+                        if (viewModel.isActivePlusButton.value && viewModel.dialogUseCase.activeDialog.value == null) {
+                            val pad = if (viewModel.isActiveFilterScreen.value) {
+                                50.dp
+                            } else {
                                 0.dp
                             }
                             ActionPlusButton(Modifier.padding(bottom = pad)) {
@@ -128,6 +136,21 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
+        }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        if (intent.action == Intent.ACTION_SEND) {
+            val text = intent.getStringExtra(Intent.EXTRA_TEXT) ?: return
+            viewModel.sharedLink = text
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (viewModel.sharedLink != "" && !viewModel.isCheckedSharedAction) {
+            viewModel.onEvent(MainEvent.UseSharedLink(viewModel.sharedLink))
         }
     }
 }

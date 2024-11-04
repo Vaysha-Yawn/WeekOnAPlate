@@ -73,11 +73,6 @@ fun RecipeCreateStart(viewModel: RecipeCreateViewModel) {
                 item {
                     Column(Modifier.padding(24.dp)) {
                         TextTitle(text = "Ингредиенты")
-                        Spacer(modifier = Modifier.size(12.dp))
-                        SubText(
-                            text = "Нажмите чтобы редактировать, удерживаете чтобы удалить",
-                            textAlign = TextAlign.Start
-                        )
                     }
                 }
                 items(viewModel.state.ingredients.value.size) {

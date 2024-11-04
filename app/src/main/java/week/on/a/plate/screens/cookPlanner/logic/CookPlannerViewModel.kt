@@ -37,7 +37,6 @@ class CookPlannerViewModel @Inject constructor(
 
     fun update() {
         state.week.value = mapOf()
-
         val week = repository.getWeek(state.wrapperDatePickerUIState.activeDay.value)
         week.entries.forEach { dateAndList ->
             viewModelScope.launch {
@@ -88,7 +87,8 @@ class CookPlannerViewModel @Inject constructor(
                     WrapperDatePickerEvent.SwitchWeekOrDayView -> {}
                 }
             }
-            is CookPlannerEvent->onEvent(event)
+
+            is CookPlannerEvent -> onEvent(event)
         }
     }
 
@@ -99,6 +99,7 @@ class CookPlannerViewModel @Inject constructor(
                     repository.check(event.step)
                 }
             }
+
             is CookPlannerEvent.ShowStepMore -> {
                 val vm = CookStepMoreDialogViewModel()
                 vm.mainViewModel = mainViewModel
@@ -107,17 +108,28 @@ class CookPlannerViewModel @Inject constructor(
                     vm.launchAndGet {
                         when (it) {
                             CookStepMoreEvent.ChangeEndRecipeTime -> {
-
+                                //todo
                             }
+
                             CookStepMoreEvent.ChangeStartRecipeTime -> {
-
+                               //todo
                             }
+
                             CookStepMoreEvent.Close -> {}
                             CookStepMoreEvent.IncreaseStepTime -> {
-
+                                //todo
                             }
-                            CookStepMoreEvent.MoveStepByTimeStart -> {
 
+                            CookStepMoreEvent.MoveStepByTimeStart -> {
+                                //todo
+                            }
+
+                            CookStepMoreEvent.ChangeNumberOfServings -> {
+                                //todo
+                            }
+
+                            CookStepMoreEvent.Delete -> {
+                                //todo
                             }
                         }
                     }

@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 fun BottomDialogContainer(
     state: SheetState,
     onClose: () -> Unit,
-    content: @Composable (snackBar:SnackbarHostState) -> Unit
+    content: @Composable () -> Unit
 ) {
     if (state.isVisible) {
         ModalBottomSheet(
@@ -32,24 +32,7 @@ fun BottomDialogContainer(
                 WindowInsets.ime
             }
         ) {
-            val snackbarHostState = SnackbarHostState()
-            Scaffold(
-                snackbarHost = {
-                    SnackbarHost(hostState = snackbarHostState) {
-                        if (snackbarHostState.currentSnackbarData != null) {
-                            Snackbar(
-                                snackbarData = snackbarHostState.currentSnackbarData!!,
-                                modifier = Modifier.padding(bottom = 80.dp),
-                                containerColor = MaterialTheme.colorScheme.surface,
-                                contentColor = MaterialTheme.colorScheme.onBackground
-                            )
-                        }
-                    }
-                }
-            ) { innerPadding ->
-                content(snackbarHostState)
-                innerPadding
-            }
+            content()
         }
     }
 }

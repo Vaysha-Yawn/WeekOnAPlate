@@ -8,4 +8,5 @@ sealed class EditOtherPositionEvent: Event() {
     data object Delete: EditOtherPositionEvent()
     data object Move: EditOtherPositionEvent()
     data object Close: EditOtherPositionEvent()
+    data object AddToShopList: EditOtherPositionEvent()
 }

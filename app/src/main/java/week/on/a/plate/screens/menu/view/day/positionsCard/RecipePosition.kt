@@ -36,6 +36,7 @@ import week.on.a.plate.core.Event
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.ImageLoad
 import week.on.a.plate.core.uitools.SubText
+import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.CheckButton
 import week.on.a.plate.core.uitools.buttons.MoreButtonWithBackg
@@ -70,17 +71,18 @@ fun WeekRecipePosition(
             )
             .clip(RoundedCornerShape(20.dp)),
     ) {
+        val height = if (recipe.recipe.image.startsWith("http")) 150.dp else 50.dp
         if (recipe.recipe.image.startsWith("http")) {
             ImageLoad(
                 recipe.recipe.image,
                 Modifier
                     .clipToBounds()
                     .fillMaxWidth()
-                    .height(150.dp)
+                    .height(height)
                     .scale(2f)
             )
         } else {
-            Spacer(Modifier.height(150.dp))
+            Spacer(Modifier.height(height))
         }
         Row(
             Modifier
@@ -123,7 +125,7 @@ fun WeekRecipePosition(
             }
         }
         Column {
-            Spacer(Modifier.height(150.dp))
+            Spacer(Modifier.height(height))
             Column(
                 Modifier
                     .fillMaxWidth()
@@ -131,7 +133,7 @@ fun WeekRecipePosition(
                     .background(MaterialTheme.colorScheme.surface)
                     .padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                TextTitle(
+                TextBody(
                     recipe.recipe.name
                 )
                 Spacer(modifier = Modifier.size(10.dp))

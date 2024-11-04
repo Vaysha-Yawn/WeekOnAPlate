@@ -38,7 +38,7 @@ fun MoreButtonWithBackg(actionEdit: () -> Unit) {
         contentDescription = "",
         modifier = Modifier
             .background(MaterialTheme.colorScheme.surfaceVariant, CircleShape)
-            .size(48.dp)
+            .size(36.dp)
             .clickable { actionEdit() },
     )
 }

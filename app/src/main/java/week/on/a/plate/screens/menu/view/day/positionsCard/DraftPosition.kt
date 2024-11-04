@@ -59,7 +59,7 @@ fun WeekDraftPosition(
         Spacer(modifier = Modifier.size(6.dp))
         Column(
             Modifier.fillMaxWidth()
-                .padding(vertical = 5.dp),
+                .padding(top = 12.dp),
         ) {
             TagListHidden(draft.tags, draft.ingredients)
         }

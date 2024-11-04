@@ -50,9 +50,6 @@ fun TopPanelRecipeDetail(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent
             ImageButton(R.drawable.add_shopping_cart) {
                 onEvent(RecipeDetailsEvent.AddToCart)
             }
-            ImageButton(R.drawable.menu) {
-                onEvent(RecipeDetailsEvent.AddToMenu)
-            }
         }
     }
     HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.outline)

@@ -26,9 +26,9 @@ fun SearchStart(
     viewModel.state.allTagsCategories = viewModel.allTagCategories.collectAsState()
     Column {
         SearchResultEditRow(viewModel.state, onEvent)
-        Spacer(modifier = Modifier.size(12.dp))
+        Spacer(modifier = Modifier.size(6.dp))
         TopSearchPanel(viewModel.state, onEvent)
-        Spacer(modifier = Modifier.size(12.dp))
+        Spacer(modifier = Modifier.size(6.dp))
         if (viewModel.state.resultSearch.value.isNotEmpty() &&
             (viewModel.state.searchText.value != ""
                     || viewModel.state.selectedTags.value.isNotEmpty()

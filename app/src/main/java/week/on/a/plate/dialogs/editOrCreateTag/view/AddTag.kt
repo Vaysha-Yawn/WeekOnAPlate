@@ -10,6 +10,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -29,13 +32,13 @@ import week.on.a.plate.core.uitools.TextBody
 
 @Composable
 fun AddTag(
-    snackBarState: SnackbarHostState,
     state: AddTagUIState,
     onEvent: (AddTagEvent) -> Unit,
 ) {
+    val isError: MutableState<Boolean> = remember { mutableStateOf(false) }
     Column(modifier = Modifier.background(MaterialTheme.colorScheme.surface).padding(24.dp)) {
         TextTitleItalic(
-            text = "Добавить тэг",
+            text = "Создать тэг",
             modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(24.dp))
@@ -49,7 +52,7 @@ fun AddTag(
         EditTextLine(
             state.text,
             "Введите название тэга здесь",
-            modifier = Modifier
+            modifier = Modifier, isRequired = true, isError = isError
         )
         Spacer(modifier = Modifier.height(24.dp))
         TextBody(
@@ -65,8 +68,6 @@ fun AddTag(
         ) {
             onEvent(AddTagEvent.ChooseCategory)
         }
-        val messageError = "Пожалуйста введите название и выберите категорию"
-        val coroutineScope = rememberCoroutineScope()
         Spacer(modifier = Modifier.height(36.dp))
         DoneButton(
             text = stringResource(id = R.string.add),
@@ -75,23 +76,17 @@ fun AddTag(
             if (state.text.value != "" && state.category.value != null) {
                 onEvent(AddTagEvent.Done)
             } else {
-                coroutineScope.launch {
-                    snackBarState.showSnackbar(messageError)
-                }
+                isError.value = true
             }
         }
     }
 }
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun PreviewAddTag() {
     WeekOnAPlateTheme {
         val state = AddTagUIState()
-        val snackBar = SnackbarHostState()
-        AddTag(snackBar, state) {}
-
+        AddTag(state) {}
     }
 }

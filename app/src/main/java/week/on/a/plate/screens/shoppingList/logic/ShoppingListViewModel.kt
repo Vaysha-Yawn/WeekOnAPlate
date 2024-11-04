@@ -100,7 +100,7 @@ class ShoppingListViewModel @Inject constructor(
         for (item in listToShop){
             text+= "\n"
             val tet = getIngredientCountAndMeasure1000(item.count, item.ingredientView.measure)
-            text+= "- "+ item.ingredientView.name + " " + tet.first + " " + tet.second
+            text+= "- "+ item.ingredientView.name +  " " + item.description +" " + tet.first + " " + tet.second
         }
         text+= "\n"
         text+= "\n"

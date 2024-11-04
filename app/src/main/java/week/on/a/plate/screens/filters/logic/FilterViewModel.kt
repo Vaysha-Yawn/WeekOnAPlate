@@ -58,7 +58,6 @@ class FilterViewModel @Inject constructor(
                 .stateIn(viewModelScope)
             allTags = recipeTagCategoryRepository.getAllTagsByCategoriesForFilters()
                 .stateIn(viewModelScope)
-
         }
     }
 
@@ -74,21 +73,20 @@ class FilterViewModel @Inject constructor(
 
         this.isForCategory = isForCategory
         if (isForCategory){
-            resultFlowCategory = MutableStateFlow<FilterResult?>(null)
+            resultFlowCategory = MutableStateFlow(null)
             resultFlowCategory!!.collect { value ->
                 if (value != null) {
                     use(value)
                 }
             }
         }else{
-            resultFlow = MutableStateFlow<FilterResult?>(null)
+            resultFlow = MutableStateFlow(null)
             resultFlow!!.collect { value ->
                 if (value != null) {
                     use(value)
                 }
             }
         }
-
     }
 
     fun onEvent(event: FilterEvent) {

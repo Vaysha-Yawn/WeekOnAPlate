@@ -17,10 +17,12 @@ import week.on.a.plate.screens.searchRecipes.state.SearchUIState
 @Composable
 fun TopSearchPanel(stateUI: SearchUIState, onEvent: (Event) -> Unit) {
     Row(Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
-        BackButtonOutlined {
-            onEvent(SearchScreenEvent.Back)
+        if (stateUI.resultSearch.value.isNotEmpty()) {
+            BackButtonOutlined {
+                onEvent(SearchScreenEvent.Back)
+            }
+            Spacer(modifier = Modifier.width(12.dp))
         }
-        Spacer(modifier = Modifier.width(12.dp))
         SearchLine(
             textSearch = stateUI.searchText,
             modifier = Modifier.weight(1f),
@@ -30,8 +32,6 @@ fun TopSearchPanel(stateUI: SearchUIState, onEvent: (Event) -> Unit) {
                     SearchScreenEvent.VoiceSearch
                 )
             }, {onEvent(SearchScreenEvent.Clear)})
-        Spacer(modifier = Modifier.width(12.dp))
-        FilterButton(stateUI.selectedTags.value.size + stateUI.selectedIngredients.value.size) { onEvent(SearchScreenEvent.ToFilter)}
     }
 }
 

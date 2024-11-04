@@ -15,15 +15,13 @@ data class InventoryPositionData(
     val ingredient: IngredientView,
     val countTarget: Int,
 ) {
-    val answer: MutableIntState = mutableIntStateOf(0)
+    val answer: MutableState<Boolean> = mutableStateOf(false)
     companion object {
         fun getByIngredientInRecipe(ingredient: IngredientInRecipeView): InventoryPositionData {
             return InventoryPositionData(
                 ingredient.ingredientView,
                 ingredient.count,
-            ).apply {
-                answer.intValue = ingredient.count
-            }
+            )
         }
     }
 }

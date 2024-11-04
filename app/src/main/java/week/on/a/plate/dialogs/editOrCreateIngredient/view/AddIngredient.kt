@@ -14,6 +14,9 @@ import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,14 +37,14 @@ import week.on.a.plate.dialogs.editOrCreateIngredient.state.AddIngredientUIState
 
 @Composable
 fun AddIngredient(
-    snackBarState: SnackbarHostState,
     state: AddIngredientUIState,
     onEvent: (AddIngredientEvent) -> Unit,
 ) {
+    val isError: MutableState<Boolean> = remember { mutableStateOf(false) }
     LazyColumn(modifier = Modifier.background(MaterialTheme.colorScheme.surface).padding(24.dp)) {
         item {
             TextTitleItalic(
-                text = "Добавить ингредиент",
+                text = "Создать ингредиент",
                 modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center
             )
             Spacer(modifier = Modifier.height(36.dp))
@@ -54,7 +57,7 @@ fun AddIngredient(
             EditTextLine(
                 state.name,
                 "Введите название ингредиента",
-                modifier = Modifier
+                modifier = Modifier, isRequired = true, isError = isError
             )
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -111,9 +114,7 @@ fun AddIngredient(
                 "Введите ссылку на изображение",
                 modifier = Modifier
             )
-            val messageError = "Пожалуйста введите название, меру и выберите категорию"
-            val coroutineScope = rememberCoroutineScope()
-            Spacer(modifier = Modifier.height(48.dp))
+            Spacer(modifier = Modifier.height(24.dp))
             DoneButton(
                 text = stringResource(id = R.string.add),
                 modifier = Modifier
@@ -121,12 +122,9 @@ fun AddIngredient(
                 if (state.name.value != "" && state.category.value != null) {
                     onEvent(AddIngredientEvent.Done)
                 } else {
-                    coroutineScope.launch {
-                        snackBarState.showSnackbar(messageError)
-                    }
+                    isError.value = true
                 }
             }
-            Spacer(modifier = Modifier.height(200.dp))
         }
     }
 }
@@ -136,8 +134,7 @@ fun AddIngredient(
 @Composable
 fun PreviewAddIngredient() {
     WeekOnAPlateTheme {
-        val snackBar = SnackbarHostState()
         val state = AddIngredientUIState("", false, null, "")
-        AddIngredient(snackBar, state) {}
+        AddIngredient( state) {}
     }
 }

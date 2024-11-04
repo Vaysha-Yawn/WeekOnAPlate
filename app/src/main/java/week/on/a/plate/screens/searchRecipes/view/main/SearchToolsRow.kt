@@ -91,15 +91,13 @@ fun SearchResultEditRow(state: SearchUIState, onEvent: (SearchScreenEvent) -> Un
                 }
                 .padding(6.dp))
             Spacer(Modifier.width(12.dp))
-            /*Icon(painterResource(R.drawable.bookmark), "", modifier = Modifier.clickable {
-                onEvent(SearchScreenEvent.SavePreset)
-            }.padding(6.dp))*/
-            Spacer(Modifier.width(12.dp))
             Icon(painterResource(R.drawable.filter_alt), "", modifier = Modifier
                 .clickable {
                     onEvent(SearchScreenEvent.FiltersMore)
                 }
                 .padding(6.dp))
+            Spacer(Modifier.width(12.dp))
+            FilterButton(state.selectedTags.value.size + state.selectedIngredients.value.size) { onEvent(SearchScreenEvent.ToFilter)}
         }
     }
     HorizontalDivider(Modifier, 1.dp, MaterialTheme.colorScheme.outline)

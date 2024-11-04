@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,15 +28,12 @@ import week.on.a.plate.core.theme.WeekOnAPlateTheme
 @Composable
 fun FilterButton(filterCount: Int, actionFilter: () -> Unit) {
     Box(contentAlignment = Alignment.TopEnd) {
-        Image(
+        Icon(
             painter = painterResource(id = R.drawable.sort),
             contentDescription = "",
             modifier = Modifier
                 .clickable { actionFilter() }
-                .border(1.dp, ColorStrokeGrey, RoundedCornerShape(10.dp))
-                .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(10.dp))
-                .padding(12.dp)
-                .size(24.dp),
+                .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(10.dp)).padding(6.dp),
         )
         IndicatorFilter(filterCount)
     }
@@ -49,7 +47,7 @@ fun IndicatorFilter(filterCount: Int) {
             Modifier
                 .offset(10.dp, (-8).dp)
                 .background(MaterialTheme.colorScheme.primary, CircleShape)
-                .padding(horizontal = 10.dp, vertical = 4.dp),
+                .padding(horizontal = 8.dp, vertical = 3.dp),
             textStyle = Typography.bodySmall,
             color = MaterialTheme.colorScheme.onBackground
         )

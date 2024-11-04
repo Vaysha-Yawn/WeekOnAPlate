@@ -29,15 +29,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import week.on.a.plate.R
-import week.on.a.plate.core.navigation.BottomScreens
 import week.on.a.plate.core.theme.ColorSubTextGrey
 import week.on.a.plate.core.theme.Typography
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.TextBody
+import week.on.a.plate.core.uitools.TextDisplayItalic
 import week.on.a.plate.core.uitools.TextSmall
 import week.on.a.plate.core.uitools.TextTitleLarge
+import week.on.a.plate.core.uitools.TextTitleLargeItalic
 import week.on.a.plate.core.utils.getIngredientCountAndMeasure1000
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.screens.shoppingList.event.ShoppingListEvent
@@ -48,13 +48,13 @@ import week.on.a.plate.screens.shoppingList.state.ShoppingListUIState
 fun ShoppingListStart(viewModel: ShoppingListViewModel) {
     viewModel.state.listChecked = viewModel.allItemsChecked.collectAsState()
     viewModel.state.listUnchecked = viewModel.allItemsUnChecked.collectAsState()
-    ShoppingListContent(viewModel.state){event:ShoppingListEvent->
+    ShoppingListContent(viewModel.state) { event: ShoppingListEvent ->
         viewModel.onEvent(event)
     }
 }
 
 @Composable
-fun ShoppingListContent(state:ShoppingListUIState, onEvent:(ShoppingListEvent)->Unit){
+fun ShoppingListContent(state: ShoppingListUIState, onEvent: (ShoppingListEvent) -> Unit) {
     val context = LocalContext.current
 
     Column(
@@ -62,17 +62,28 @@ fun ShoppingListContent(state:ShoppingListUIState, onEvent:(ShoppingListEvent)->
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.surface)
     ) {
-        Row(Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 12.dp), verticalAlignment = Alignment.CenterVertically , horizontalArrangement = Arrangement.SpaceBetween) {
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
             TextTitleLarge(
                 text = "Список покупок",
                 modifier = Modifier
             )
-            Icon(painterResource(R.drawable.delete), "", modifier = Modifier.clickable {
-                onEvent(ShoppingListEvent.DeleteAll)
-            }.size(36.dp))
-            Icon(painterResource(R.drawable.share), "", modifier = Modifier.clickable {
-                onEvent(ShoppingListEvent.Share(context))
-            })
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(painterResource(R.drawable.delete), "", modifier = Modifier
+                    .clickable {
+                        onEvent(ShoppingListEvent.DeleteAll)
+                    }
+                    .size(30.dp))
+                Spacer(Modifier.width(12.dp))
+                Icon(painterResource(R.drawable.share), "", modifier = Modifier.clickable {
+                    onEvent(ShoppingListEvent.Share(context))
+                })
+            }
         }
         HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.outline)
         Spacer(modifier = Modifier.height(12.dp))
@@ -113,6 +124,11 @@ fun ShoppingListContent(state:ShoppingListUIState, onEvent:(ShoppingListEvent)->
                 }) {
                     onEvent(ShoppingListEvent.Uncheck(state.listChecked.value[index]))
                 }
+            }
+        }
+        if (state.listChecked.value.isEmpty() && state.listUnchecked.value.isEmpty()){
+            Column(Modifier.padding(24.dp)) {
+                TextTitleLargeItalic("Похоже здесь пусто, нажмите + чтобы добавить.")
             }
         }
     }
@@ -171,7 +187,7 @@ fun ShoppingListPosition(
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewShoppingListStart(){
+fun PreviewShoppingListStart() {
     WeekOnAPlateTheme {
         ShoppingListContent(ShoppingListUIState(), {})
     }

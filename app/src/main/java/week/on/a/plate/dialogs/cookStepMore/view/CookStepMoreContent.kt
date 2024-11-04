@@ -49,6 +49,20 @@ fun CookStepMoreContent( onEvent: (CookStepMoreEvent) -> Unit) {
         ){
             onEvent(CookStepMoreEvent.MoveStepByTimeStart)
         }
+
+        ButtonRow(
+            R.drawable.numbers,
+            text = stringResource(R.string.Change_number_of_servings),
+        ){
+            onEvent(CookStepMoreEvent.MoveStepByTimeStart)
+        }
+
+        ButtonRow(
+            R.drawable.delete,
+            text= stringResource(R.string.delete),
+        ){
+            onEvent(CookStepMoreEvent.MoveStepByTimeStart)
+        }
     }
 }
 

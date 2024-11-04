@@ -17,7 +17,7 @@ fun IngredientRecipeEdit(
 ) {
     IngredientInRecipeCard(ingredient, null, {
         onEvent(RecipeCreateEvent.EditIngredient(ingredient))
-    }){onEvent(RecipeCreateEvent.DeleteIngredient(ingredient)) }
+    }, true){onEvent(RecipeCreateEvent.DeleteIngredient(ingredient)) }
 }
 
 @Preview(showBackground = true)

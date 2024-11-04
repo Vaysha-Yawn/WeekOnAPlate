@@ -15,7 +15,7 @@ import week.on.a.plate.core.uitools.ButtonRow
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 
 @Composable
-fun EditOtherPositionDialogContent( onEvent: (EditOtherPositionEvent) -> Unit) {
+fun EditOtherPositionDialogContent( isForIngredient:Boolean, onEvent: (EditOtherPositionEvent) -> Unit) {
     Column(modifier = Modifier.background(MaterialTheme.colorScheme.surface).padding(20.dp)) {
         ButtonRow(
             R.drawable.edit,
@@ -23,6 +23,15 @@ fun EditOtherPositionDialogContent( onEvent: (EditOtherPositionEvent) -> Unit) {
         ){
             onEvent(EditOtherPositionEvent.Edit)
 
+        }
+
+        if (isForIngredient){
+            ButtonRow(
+                R.drawable.add_shopping_cart,
+                text=stringResource(R.string.add_shopping_cart),
+            ){
+                onEvent(EditOtherPositionEvent.AddToShopList)
+            }
         }
 
         ButtonRow(
@@ -52,6 +61,6 @@ fun EditOtherPositionDialogContent( onEvent: (EditOtherPositionEvent) -> Unit) {
 @Composable
 fun PreviewEditOtherPanel() {
     WeekOnAPlateTheme {
-        EditOtherPositionDialogContent {}
+        EditOtherPositionDialogContent(true) {}
     }
 }

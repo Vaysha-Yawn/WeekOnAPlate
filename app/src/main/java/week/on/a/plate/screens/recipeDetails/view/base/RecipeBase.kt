@@ -13,15 +13,19 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import week.on.a.plate.R
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.ImageLoad
 import week.on.a.plate.core.uitools.SubText
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextTitleLarge
+import week.on.a.plate.core.uitools.buttons.CommonButton
+import week.on.a.plate.core.uitools.buttons.DoneButton
 import week.on.a.plate.core.utils.dateToStringShort
 import week.on.a.plate.data.dataView.example.recipeTom
 import week.on.a.plate.screens.recipeDetails.event.RecipeDetailsEvent
 import week.on.a.plate.screens.recipeDetails.state.RecipeDetailsState
+import week.on.a.plate.screens.recipeDetails.view.start.ImageButton
 import week.on.a.plate.screens.searchRecipes.view.resultScreen.TagList
 import java.time.format.DateTimeFormatter
 
@@ -52,6 +56,10 @@ fun RecipeBase(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) -> Unit)
             TextBody(text = state.recipe.value.description)
         }
     }
+    Spacer(modifier = Modifier.height(36.dp))
+    CommonButton ("Добавить рецепт в меню", modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp))
+    { onEvent(RecipeDetailsEvent.AddToMenu) }
+    Spacer(modifier = Modifier.height(24.dp))
 }
 
 @Preview(showBackground = true)

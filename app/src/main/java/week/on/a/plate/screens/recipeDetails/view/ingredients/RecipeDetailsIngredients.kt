@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -44,7 +45,7 @@ fun RecipeDetailsIngredients(state: RecipeDetailsState, onEvent: (RecipeDetailsE
         Spacer(modifier = Modifier.height(12.dp))
 
         for ((index, ingredient) in state.recipe.value.ingredients.withIndex()) {
-            IngredientInRecipeCard(ingredient, state.ingredientsCounts.value[index], )
+            IngredientInRecipeCard(ingredient, state.ingredientsCounts.value[index],  isDeletable = false)
             Spacer(modifier = Modifier.height(12.dp))
         }
     }

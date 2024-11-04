@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -24,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.core.theme.ColorStrokeGrey
+import week.on.a.plate.core.theme.Typography
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 
 
@@ -38,6 +40,7 @@ fun SearchLine(
     OutlinedTextField(
         modifier = modifier,
         value = textSearch.value,
+        textStyle = Typography.bodyMedium,
         onValueChange = { value: String ->
             textSearch.value = if (value.length<2){value}else{
                 value[0].uppercaseChar()+value.substring(1 until value.length)

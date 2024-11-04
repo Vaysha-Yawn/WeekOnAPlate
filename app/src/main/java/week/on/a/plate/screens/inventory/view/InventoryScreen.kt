@@ -87,7 +87,7 @@ fun CardInventory(data: InventoryPositionData, onEvent: (InventoryEvent) -> Unit
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        val checkState = remember { mutableStateOf(true) }
+        val checkState = data.answer
         Column(Modifier.weight(1f), horizontalAlignment = Alignment.Start) {
             TextBody(text = data.ingredient.name)
             val valueAndMeasure = getIngredientCountAndMeasure1000(data.countTarget, data.ingredient.measure)

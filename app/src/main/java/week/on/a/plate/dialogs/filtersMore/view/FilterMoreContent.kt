@@ -64,10 +64,10 @@ fun FilterMoreContent(vm: FiltersMoreViewModel) {
         Spacer(Modifier.height(24.dp))
 
         val listTime = listOf(
-            Pair("до 15 м", 15),
-            Pair("до 30 м", 30),
+            Pair("до 15 мин", 15),
+            Pair("до 30 мин", 30),
             Pair("до 1 ч", 60),
-            Pair("до 1 ч и 30 м", 90),
+            Pair("до 1 ч и 30 мин", 90),
             Pair("до 2 ч", 120),
         )
 
