@@ -36,19 +36,19 @@ val recipeExampleBase = listOf(
             IngredientInRecipeView(id = 9, ingredientView = IngredientView(ingredientId = 9, img = "https://example.com/laurel_leaf.jpg", name = "Лавровый лист", measure = "шт"), description = "Для аромата", count = 2)
         ),
         steps = listOf(
-            RecipeStepView(id = 0, description = "Поставьте вариться курицу в холодной воде, доведите до кипения, снимите пену, посолите и варите 30 минут.", image = "https://img1.russianfood.com/dycontent/images_upl/124/sm_123025.jpg", timer = 30, LocalTime.of(0, 0)),
-            RecipeStepView(id = 1, description = "Натрите свеклу и морковь, мелко нарежьте лук.", image = "https://img1.russianfood.com/dycontent/images_upl/124/sm_123026.jpg", timer = 0, LocalTime.of(0, 0)),
-            RecipeStepView(id = 1, description = "Лук обжарить на подсолнечном масле до мягкости.", image = "https://img1.russianfood.com/dycontent/images_upl/124/sm_123028.jpg", timer = 0, LocalTime.of(0, 0)),
-            RecipeStepView(id = 1, description = "Затем добавить морковь, обжарить минуты 3.\n" + "Добавить свеклу и влить немного бульона из кастрюли (можно добавить 1 ч. ложку сахара). Тушить овощи под крышкой до тех пор, пока они не станут мягкими (около 15 минут). В конце добавить томатную пасту или кетчуп, перемешать и потушить еще 3 минуты.", image = "https://img1.russianfood.com/dycontent/images_upl/124/sm_123032.jpg", timer = 3, LocalTime.of(0, 0)),
-            RecipeStepView(id = 2, description = "Добавьте немного бульона и тушите овощи под крышкой 15 минут. Затем добавьте томатную пасту и тушите еще 3 минуты.", image = "https://img1.russianfood.com/dycontent/images_upl/124/sm_123027.jpg", timer = 15, LocalTime.of(0, 0)),
-            RecipeStepView(id = 3, description = "Нашинковать капусту.", image = "https://img1.russianfood.com/dycontent/images_upl/124/sm_123031.jpg", timer = 0, LocalTime.of(0, 0)
+            RecipeStepView(id = 0, description = "Поставьте вариться курицу в холодной воде, доведите до кипения, снимите пену, посолите и варите 30 минут.", image = "https://img1.russianfood.com/dycontent/images_upl/124/sm_123025.jpg", timer = 30, 0, 0, listOf()),
+            RecipeStepView(id = 1, description = "Натрите свеклу и морковь, мелко нарежьте лук.", image = "https://img1.russianfood.com/dycontent/images_upl/124/sm_123026.jpg", timer = 0, 0, 0, listOf()),
+            RecipeStepView(id = 1, description = "Лук обжарить на подсолнечном масле до мягкости.", image = "https://img1.russianfood.com/dycontent/images_upl/124/sm_123028.jpg", timer = 0, 0, 0, listOf()),
+            RecipeStepView(id = 1, description = "Затем добавить морковь, обжарить минуты 3.\n" + "Добавить свеклу и влить немного бульона из кастрюли (можно добавить 1 ч. ложку сахара). Тушить овощи под крышкой до тех пор, пока они не станут мягкими (около 15 минут). В конце добавить томатную пасту или кетчуп, перемешать и потушить еще 3 минуты.", image = "https://img1.russianfood.com/dycontent/images_upl/124/sm_123032.jpg", timer = 3,0, 0, listOf()),
+            RecipeStepView(id = 2, description = "Добавьте немного бульона и тушите овощи под крышкой 15 минут. Затем добавьте томатную пасту и тушите еще 3 минуты.", image = "https://img1.russianfood.com/dycontent/images_upl/124/sm_123027.jpg", timer = 15, 0, 0, listOf()),
+            RecipeStepView(id = 3, description = "Нашинковать капусту.", image = "https://img1.russianfood.com/dycontent/images_upl/124/sm_123031.jpg", timer = 0, 0, 0, listOf()
             ),
             RecipeStepView(id = 4, description = "\n" +
                         "Когда курица будет готова, вынуть ее из бульона, отделить мясо от кости.\n" +
-                        "В бульон выложить картофель, нарезанный брусками либо кубиками. После закипания добавить капусту и куриное мясо. Варить борщ минут 15, до готовности картофеля и капусты. (Молодую капусту добавлять позже, минут за 5 до окончания приготовления борща.)", image = "https://img1.russianfood.com/dycontent/images_upl/124/sm_123033.jpg", timer = 15, LocalTime.of(0, 0)),
-            RecipeStepView(id = 5, description = "Добавить овощную заправку и лавровый лист. Варить борщ на малом огне еще 4-5 минут. Посолить, поперчить. При желании добавить в борщ выдавленный через пресс или мелко нарезанный чеснок.", image = "https://img1.russianfood.com/dycontent/images_upl/124/sm_123034.jpg", timer = 5, LocalTime.of(0, 0)),
+                        "В бульон выложить картофель, нарезанный брусками либо кубиками. После закипания добавить капусту и куриное мясо. Варить борщ минут 15, до готовности картофеля и капусты. (Молодую капусту добавлять позже, минут за 5 до окончания приготовления борща.)", image = "https://img1.russianfood.com/dycontent/images_upl/124/sm_123033.jpg", timer = 15, 0, 0, listOf()),
+            RecipeStepView(id = 5, description = "Добавить овощную заправку и лавровый лист. Варить борщ на малом огне еще 4-5 минут. Посолить, поперчить. При желании добавить в борщ выдавленный через пресс или мелко нарезанный чеснок.", image = "https://img1.russianfood.com/dycontent/images_upl/124/sm_123034.jpg", timer = 5, 0, 0, listOf()),
             RecipeStepView(id = 5, description = "Готовому борщу дать настояться минут 15 и разлить по тарелкам. Подавать борщ со сметаной.\n" +
-                        "Приятного аппетита!", image = "https://img1.russianfood.com/dycontent/images_upl/124/sm_123035.jpg", timer = 15, LocalTime.of(0, 0))
+                        "Приятного аппетита!", image = "https://img1.russianfood.com/dycontent/images_upl/124/sm_123035.jpg", timer = 15, 0, 0, listOf())
         ),
         link = "https://www.russianfood.com/recipes/recipe.php?rid=134380",
         inFavorite = false, LocalDateTime.now(),
@@ -75,17 +75,17 @@ val recipeExampleBase = listOf(
             IngredientInRecipeView(8, IngredientView(ingredientId = 9, img = "https://example.com/sol.jpg", name = "Соль", measure = "по вкусу"), "по вкусу", 0)
         ),
         steps = listOf(
-            RecipeStepView(0, "Подготовить все ингредиенты.", "https://example.com/preparation.jpg", 0, LocalTime.of(0, 0)),
-            RecipeStepView(1, "Обернуть картошку, свеклу и морковь фольгой.", "https://example.com/wrapping.jpg", 0, LocalTime.of(0, 0)),
-            RecipeStepView(2, "Выложить овощи на противень и отправить в духовку, разогретую до 200 градусов. Запекать до мягкости: картошке и моркови понадобится около 40 минут, а свекле — час.", "https://example.com/baking.jpg", 40, LocalTime.of(0, 0)),
-            RecipeStepView(3, "В кипящую воду положить яйца и варить их 11 минут. Затем охладить.", "https://example.com/boiling_eggs.jpg", 11, LocalTime.of(0, 0)),
-            RecipeStepView(4, "Очистить яйца и натереть их на крупной терке.", "https://example.com/grating_eggs.jpg", 0, LocalTime.of(0, 0)),
-            RecipeStepView(5, "Картошку и морковь очистить и нарезать мелким кубиком. Рыбу очистить, разделить на филе и нарезать таким же кубиком.", "https://example.com/chopping.jpg", 0, LocalTime.of(0, 0)),
-            RecipeStepView(6, "Лук и яблоки нарезать чуть мельче.", "https://example.com/chopping_onions_apples.jpg", 0, LocalTime.of(0, 0)),
-            RecipeStepView(7, "Свеклу натереть на крупной терке.", "https://example.com/grating_beetroot.jpg", 0, LocalTime.of(0, 0)),
-            RecipeStepView(8, "Выложить салат на блюдо слоями, промазывая каждый майонезом: картошка, селедка, лук, яблоки, яйца, морковь, свекла.", "https://example.com/layering.jpg", 0, LocalTime.of(0, 0)),
-            RecipeStepView(9, "Завершающий слой свеклы также смазать майонезом. Готовый салат отправить в холодильник на пару-тройку часов, чтобы дать ему пропитаться.", "https://example.com/refrigerating.jpg", 120, LocalTime.of(0, 0)),
-            RecipeStepView(10, "Перед подачей украсить салат зеленью.", "https://example.com/serving.jpg", 0, LocalTime.of(0, 0))
+            RecipeStepView(0, "Подготовить все ингредиенты.", "https://example.com/preparation.jpg", 0, 0, 0, listOf()),
+            RecipeStepView(1, "Обернуть картошку, свеклу и морковь фольгой.", "https://example.com/wrapping.jpg", 0, 0, 0, listOf()),
+            RecipeStepView(2, "Выложить овощи на противень и отправить в духовку, разогретую до 200 градусов. Запекать до мягкости: картошке и моркови понадобится около 40 минут, а свекле — час.", "https://example.com/baking.jpg", 40, 0, 0, listOf()),
+            RecipeStepView(3, "В кипящую воду положить яйца и варить их 11 минут. Затем охладить.", "https://example.com/boiling_eggs.jpg", 11, 0, 0, listOf()),
+            RecipeStepView(4, "Очистить яйца и натереть их на крупной терке.", "https://example.com/grating_eggs.jpg", 0, 0, 0, listOf()),
+            RecipeStepView(5, "Картошку и морковь очистить и нарезать мелким кубиком. Рыбу очистить, разделить на филе и нарезать таким же кубиком.", "https://example.com/chopping.jpg", 0, 0, 0, listOf()),
+            RecipeStepView(6, "Лук и яблоки нарезать чуть мельче.", "https://example.com/chopping_onions_apples.jpg", 0, 0, 0, listOf()),
+            RecipeStepView(7, "Свеклу натереть на крупной терке.", "https://example.com/grating_beetroot.jpg", 0, 0, 0, listOf()),
+            RecipeStepView(8, "Выложить салат на блюдо слоями, промазывая каждый майонезом: картошка, селедка, лук, яблоки, яйца, морковь, свекла.", "https://example.com/layering.jpg", 0, 0, 0, listOf()),
+            RecipeStepView(9, "Завершающий слой свеклы также смазать майонезом. Готовый салат отправить в холодильник на пару-тройку часов, чтобы дать ему пропитаться.", "https://example.com/refrigerating.jpg", 120, 0, 0, listOf()),
+            RecipeStepView(10, "Перед подачей украсить салат зеленью.", "https://example.com/serving.jpg", 0, 0, 0, listOf())
         ),
         link = "https://eda.ru/recepty/salaty/seld-pod-shuboy-139942",
         inFavorite = false, LocalDateTime.now(),
@@ -121,16 +121,16 @@ val recipeExampleBase = listOf(
             IngredientInRecipeView(18, IngredientView(ingredientId = 19, img = "https://example.com/perets_chernyy.jpg", name = "Молотый черный перец", measure = "по вкусу"), "по вкусу", 0)
         ),
         steps = listOf(
-            RecipeStepView(0, "Подготовить необходимые ингредиенты.", "https://example.com/preparation.jpg", 0, LocalTime.of(0, 0)),
-            RecipeStepView(1, "Мясо залить двумя литрами воды и довести до кипения, затем убавить огонь, снять пенку, добавить целую луковицу и морковь, лавровый лист и перец-горошек. Оставить вариться на час-полтора.", "https://example.com/boiling.jpg", 90, LocalTime.of(0, 0)),
-            RecipeStepView(2, "Измельчить лук и обжарить его на смеси растительного и сливочного масла до прозрачности.", "https://example.com/frying_onion.jpg", 0, LocalTime.of(0, 0)),
-            RecipeStepView(3, "Добавить томатную пасту и жарить еще пару минут.", "https://example.com/adding_tomato_paste.jpg", 0, LocalTime.of(0, 0)),
-            RecipeStepView(4, "Мясо из бульона и остальные мясные продукты нарезать небольшими кусочками.", "https://example.com/chopping_meat.jpg", 0, LocalTime.of(0, 0)),
-            RecipeStepView(5, "Нарезать кубиками соленые огурцы.", "https://example.com/chopping_pickles.jpg", 0, LocalTime.of(0, 0)),
-            RecipeStepView(6, "Нарезать колечками маслины и измельчить петрушку.", "https://example.com/chopping_olives.jpg", 0, LocalTime.of(0, 0)),
-            RecipeStepView(7, "Бульон процедить, вернуть на плиту и добавить к нему все мясо, луковую зажарку и нарезанные кубиком соленые огурцы. Варить 15–20 минут на слабом огне.", "https://example.com/simmering.jpg", 20, LocalTime.of(0, 0)),
-            RecipeStepView(8, "В конце добавить нарезанные маслины и петрушку.", "https://example.com/adding_olives_parsley.jpg", 0, LocalTime.of(0, 0)),
-            RecipeStepView(9, "Снять с огня, накрыть крышкой и дать настояться 5–10 минут. Подавать с ломтиком лимона и сметаной.", "https://example.com/serving.jpg", 10, LocalTime.of(0, 0))
+            RecipeStepView(0, "Подготовить необходимые ингредиенты.", "https://example.com/preparation.jpg", 0, 0, 0, listOf()),
+            RecipeStepView(1, "Мясо залить двумя литрами воды и довести до кипения, затем убавить огонь, снять пенку, добавить целую луковицу и морковь, лавровый лист и перец-горошек. Оставить вариться на час-полтора.", "https://example.com/boiling.jpg", 90, 0, 0, listOf()),
+            RecipeStepView(2, "Измельчить лук и обжарить его на смеси растительного и сливочного масла до прозрачности.", "https://example.com/frying_onion.jpg", 0, 0, 0, listOf()),
+            RecipeStepView(3, "Добавить томатную пасту и жарить еще пару минут.", "https://example.com/adding_tomato_paste.jpg", 0, 0, 0, listOf()),
+            RecipeStepView(4, "Мясо из бульона и остальные мясные продукты нарезать небольшими кусочками.", "https://example.com/chopping_meat.jpg", 0, 0, 0, listOf()),
+            RecipeStepView(5, "Нарезать кубиками соленые огурцы.", "https://example.com/chopping_pickles.jpg", 0, 0, 0, listOf()),
+            RecipeStepView(6, "Нарезать колечками маслины и измельчить петрушку.", "https://example.com/chopping_olives.jpg", 0, 0, 0, listOf()),
+            RecipeStepView(7, "Бульон процедить, вернуть на плиту и добавить к нему все мясо, луковую зажарку и нарезанные кубиком соленые огурцы. Варить 15–20 минут на слабом огне.", "https://example.com/simmering.jpg", 20, 0, 0, listOf()),
+            RecipeStepView(8, "В конце добавить нарезанные маслины и петрушку.", "https://example.com/adding_olives_parsley.jpg", 0, 0, 0, listOf()),
+            RecipeStepView(9, "Снять с огня, накрыть крышкой и дать настояться 5–10 минут. Подавать с ломтиком лимона и сметаной.", "https://example.com/serving.jpg", 10, 0, 0, listOf())
         ),
         link = "https://eda.ru/recepty/supy/sbornaya-solyanka-139663",
         inFavorite = false, LocalDateTime.now(),
@@ -156,16 +156,16 @@ val recipeExampleBase = listOf(
             IngredientInRecipeView(8, IngredientView(ingredientId = 9, img = "https://example.com/luk.jpg", name = "Красный лук", measure = "шт"), "1", 1)
         ),
         steps = listOf(
-            RecipeStepView(0, "Подготовить необходимые ингредиенты.", "https://example.com/preparation.jpg", 0, LocalTime.of(0, 0)),
-            RecipeStepView(1, "Огурцы тщательно очистить от кожи и нарезать крупными полукруглыми ломтиками. Сложить в глубокий салатник.", "https://example.com/cutting_cucumbers.jpg", 0, LocalTime.of(0, 0)),
-            RecipeStepView(2, "Помидоры нарезать крупными дольками. Добавить в салатник к огурцам и перемешать, подливая оливковое масло.", "https://example.com/cutting_tomatoes.jpg", 0, LocalTime.of(0, 0)),
-            RecipeStepView(3, "Сладкий зеленый перец очистить от семян и нарезать крупными кубиками. Добавить в салатник и перемешать.", "https://example.com/cutting_green_pepper.jpg", 0, LocalTime.of(0, 0)),
-            RecipeStepView(4, "Красный лук нарезать тонкими полукольцами и разделить на лепестки. Переложить в салатник и снова перемешать.", "https://example.com/cutting_red_onion.jpg", 0, LocalTime.of(0, 0)),
-            RecipeStepView(5, "Добавить маслины без косточек в салатник.", "https://example.com/adding_olives.jpg", 0, LocalTime.of(0, 0)),
-            RecipeStepView(6, "Фету нарезать на прямоугольные ломтики толщиной в 1 см. Чтобы сыр не прилипал, нож можно окунуть в теплую воду.", "https://example.com/cutting_feta.jpg", 0, LocalTime.of(0, 0)),
-            RecipeStepView(7, "Разложить салат по тарелкам и сверху положить по 2 ломтика феты. Щедро полить оливковым маслом.", "https://example.com/serving_salad.jpg", 0, LocalTime.of(0, 0)),
-            RecipeStepView(8, "Слегка посолить салат и посыпать сушеным орегано.", "https://example.com/adding_oregano.jpg", 0, LocalTime.of(0, 0)),
-            RecipeStepView(9, "Сверху снова сбрызнуть оливковым маслом и подавать немедленно.", "https://example.com/serving_final.jpg", 0, LocalTime.of(0, 0))
+            RecipeStepView(0, "Подготовить необходимые ингредиенты.", "https://example.com/preparation.jpg", 0, 0, 0, listOf()),
+            RecipeStepView(1, "Огурцы тщательно очистить от кожи и нарезать крупными полукруглыми ломтиками. Сложить в глубокий салатник.", "https://example.com/cutting_cucumbers.jpg", 0, 0, 0, listOf()),
+            RecipeStepView(2, "Помидоры нарезать крупными дольками. Добавить в салатник к огурцам и перемешать, подливая оливковое масло.", "https://example.com/cutting_tomatoes.jpg", 0, 0, 0, listOf()),
+            RecipeStepView(3, "Сладкий зеленый перец очистить от семян и нарезать крупными кубиками. Добавить в салатник и перемешать.", "https://example.com/cutting_green_pepper.jpg", 0, 0, 0, listOf()),
+            RecipeStepView(4, "Красный лук нарезать тонкими полукольцами и разделить на лепестки. Переложить в салатник и снова перемешать.", "https://example.com/cutting_red_onion.jpg", 0, 0, 0, listOf()),
+            RecipeStepView(5, "Добавить маслины без косточек в салатник.", "https://example.com/adding_olives.jpg", 0, 0, 0, listOf()),
+            RecipeStepView(6, "Фету нарезать на прямоугольные ломтики толщиной в 1 см. Чтобы сыр не прилипал, нож можно окунуть в теплую воду.", "https://example.com/cutting_feta.jpg", 0, 0, 0, listOf()),
+            RecipeStepView(7, "Разложить салат по тарелкам и сверху положить по 2 ломтика феты. Щедро полить оливковым маслом.", "https://example.com/serving_salad.jpg", 0, 0, 0, listOf()),
+            RecipeStepView(8, "Слегка посолить салат и посыпать сушеным орегано.", "https://example.com/adding_oregano.jpg", 0, 0, 0, listOf()),
+            RecipeStepView(9, "Сверху снова сбрызнуть оливковым маслом и подавать немедленно.", "https://example.com/serving_final.jpg", 0, 0, 0, listOf())
         ),
         link = "https://eda.ru/recepty/salaty/nastojaschij-grecheskij-salat-30893",
         inFavorite = false, LocalDateTime.now(),
@@ -192,16 +192,16 @@ val recipeExampleBase = listOf(
             IngredientInRecipeView(9, IngredientView(ingredientId = 10, img = "https://example.com/black_pepper.jpg", name = "Молотый черный перец", measure = "по вкусу"), "по вкусу", 0)
         ),
         steps = listOf(
-            RecipeStepView(0, "Лук мелко нарезать, морковь натереть.", "https://example.com/preparation.jpg", 0, LocalTime.of(0, 0)),
-            RecipeStepView(1, "Половину лука и моркови обжарить на сковороде.", "https://example.com/frying_vegetables.jpg", 0, LocalTime.of(0, 0)),
-            RecipeStepView(2, "Рис отварить до полуготовности.", "https://example.com/cooking_rice.jpg", 0, LocalTime.of(0, 0)),
-            RecipeStepView(3, "Смешать рис с фаршем и обжаренной морковью и луком. Посолить и поперчить по вкусу.", "https://example.com/mixing_filling.jpg", 0, LocalTime.of(0, 0)),
-            RecipeStepView(4, "У перца срезать верхушку и очистить от семян.", "https://example.com/preparing_peppers.jpg", 0, LocalTime.of(0, 0)),
-            RecipeStepView(5, "Начинить перец фаршем.", "https://example.com/stuffing_peppers.jpg", 0, LocalTime.of(0, 0)),
-            RecipeStepView(6, "Сметану с томатной пастой смешать, посолить и поперчить.", "https://example.com/making_sauce.jpg", 0, LocalTime.of(0, 0)),
-            RecipeStepView(7, "Полученную массу выложить на дно кастрюли, добавить оставшуюся половину тертой моркови и лука.", "https://example.com/layering_casserole.jpg", 0, LocalTime.of(0, 0)),
-            RecipeStepView(8, "Сверху выложить перцы и залить водой на высоту половины перца.", "https://example.com/adding_peppers.jpg", 0, LocalTime.of(0, 0)),
-            RecipeStepView(9, "Тушить под крышкой на среднем огне 40 минут. Подавать горячими.", "https://example.com/serving.jpg", 0, LocalTime.of(0, 0))
+            RecipeStepView(0, "Лук мелко нарезать, морковь натереть.", "https://example.com/preparation.jpg", 0, 0, 0, listOf()),
+            RecipeStepView(1, "Половину лука и моркови обжарить на сковороде.", "https://example.com/frying_vegetables.jpg", 0, 0, 0, listOf()),
+            RecipeStepView(2, "Рис отварить до полуготовности.", "https://example.com/cooking_rice.jpg", 0, 0, 0, listOf()),
+            RecipeStepView(3, "Смешать рис с фаршем и обжаренной морковью и луком. Посолить и поперчить по вкусу.", "https://example.com/mixing_filling.jpg", 0, 0, 0, listOf()),
+            RecipeStepView(4, "У перца срезать верхушку и очистить от семян.", "https://example.com/preparing_peppers.jpg", 0, 0, 0, listOf()),
+            RecipeStepView(5, "Начинить перец фаршем.", "https://example.com/stuffing_peppers.jpg", 0, 0, 0, listOf()),
+            RecipeStepView(6, "Сметану с томатной пастой смешать, посолить и поперчить.", "https://example.com/making_sauce.jpg", 0, 0, 0, listOf()),
+            RecipeStepView(7, "Полученную массу выложить на дно кастрюли, добавить оставшуюся половину тертой моркови и лука.", "https://example.com/layering_casserole.jpg", 0, 0, 0, listOf()),
+            RecipeStepView(8, "Сверху выложить перцы и залить водой на высоту половины перца.", "https://example.com/adding_peppers.jpg", 0, 0, 0, listOf()),
+            RecipeStepView(9, "Тушить под крышкой на среднем огне 40 минут. Подавать горячими.", "https://example.com/serving.jpg", 0, 0, 0, listOf())
         ),
         link = "https://eda.ru/recepty/osnovnye-blyuda/percy-farshirovannye-myasom-i-risom-26665",
         inFavorite = false, LocalDateTime.now(),

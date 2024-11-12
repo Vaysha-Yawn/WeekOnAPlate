@@ -8,5 +8,4 @@ sealed class WrapperDatePickerEvent:Event() {
     data object ChooseWeek: WrapperDatePickerEvent()
     data object SwitchEditMode : WrapperDatePickerEvent()
     data class ChangeWeek(val date: LocalDate) : WrapperDatePickerEvent()
-
 }

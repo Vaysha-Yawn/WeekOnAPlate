@@ -25,4 +25,10 @@ interface CookPlannerGroupDAO {
 
     @Query("DELETE FROM CookPlannerGroupRoom WHERE id = :id")
     suspend fun deleteById(id: Long)
+
+    @Query("SELECT * FROM CookPlannerGroupRoom  WHERE id = :id")
+    suspend fun getById(id: Long) : CookPlannerGroupRoom
+
+    @Query("SELECT * FROM CookPlannerGroupRoom  WHERE recipeId = :id")
+    suspend fun getAllByRecipeId(id: Long):List<CookPlannerGroupRoom>
 }

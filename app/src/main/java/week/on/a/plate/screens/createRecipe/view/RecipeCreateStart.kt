@@ -14,11 +14,9 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
-import week.on.a.plate.core.uitools.SubText
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.CommonButton
 import week.on.a.plate.data.dataView.example.recipeTom
@@ -40,6 +38,9 @@ fun RecipeCreateStart(viewModel: RecipeCreateViewModel) {
                 .fillMaxSize(),
         ) {
             item {
+                Spacer(modifier = Modifier.height(24.dp))
+                NameRecipeEdit(viewModel.state, onEvent)
+                Spacer(modifier = Modifier.height(24.dp))
                 SourceRecipeEdit(viewModel.state, onEvent)
             }
             stickyHeader {
@@ -58,8 +59,6 @@ fun RecipeCreateStart(viewModel: RecipeCreateViewModel) {
                 item {
                     Column(Modifier.padding(24.dp)) {
                         PhotoRecipeEdit(viewModel.state, onEvent)
-                        Spacer(modifier = Modifier.height(24.dp))
-                        NameRecipeEdit(viewModel.state, onEvent)
                         Spacer(modifier = Modifier.height(24.dp))
                         DescriptionRecipeEdit(viewModel.state, onEvent)
                         Spacer(modifier = Modifier.height(24.dp))
@@ -92,7 +91,7 @@ fun RecipeCreateStart(viewModel: RecipeCreateViewModel) {
                             .fillMaxWidth()
                     ) {
                         Spacer(modifier = Modifier.size(24.dp))
-                        CommonButton(text = "Добавить несколько ингредиентов") {
+                        CommonButton(text = "Редактировать ингредиенты") {
                             onEvent(RecipeCreateEvent.AddManyIngredients)
                         }
                     }
@@ -103,13 +102,14 @@ fun RecipeCreateStart(viewModel: RecipeCreateViewModel) {
                     }
                 }
                 items(viewModel.state.steps.value.size) {
-                    Column(Modifier.padding(24.dp)) {
+                    Column(Modifier.padding( horizontal = 24.dp)) {
                         StepRecipeEdit(
                             it,
                             viewModel.state.steps.value[it],
                             viewModel.state,
                             onEvent
                         )
+                        Spacer(Modifier.height(48.dp))
                     }
                 }
                 item {
@@ -118,7 +118,14 @@ fun RecipeCreateStart(viewModel: RecipeCreateViewModel) {
                             onEvent(RecipeCreateEvent.AddStep)
                         }
                     }
-                    Spacer(modifier = Modifier.height(400.dp))
+                    if (viewModel.state.steps.value.isNotEmpty()) {
+                        Column(Modifier.padding(24.dp)) {
+                            CommonButton("Управление временем шагов") {
+                                onEvent(RecipeCreateEvent.SetTimeline)
+                            }
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(300.dp))
                 }
             }
         }

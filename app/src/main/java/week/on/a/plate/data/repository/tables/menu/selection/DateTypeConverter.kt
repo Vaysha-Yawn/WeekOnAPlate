@@ -26,3 +26,30 @@ class LocalDateTimeTypeConverter {
     @TypeConverter
     fun fromState(value: LocalDateTime) = value.toString()
 }
+
+class ListIntConverter {
+    @TypeConverter
+    fun toState(value: String): List<Long> {
+        var start = value
+        val result = mutableListOf<Long>()
+        while (start!=""){
+            val n = start.substringBefore(' ').toLongOrNull()
+            val firstB = start.indexOfFirst {it == ' '}
+            if (n!=null){
+                result.add(n)
+            }
+            start = start.substring(firstB+1 until start.length)
+        }
+        return result
+    }
+
+    @TypeConverter
+    fun fromState(value: List<Long>): String {
+        var out = ""
+        value.forEach {
+            out+=it.toString()
+            out+=" "
+        }
+        return out
+    }
+}

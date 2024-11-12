@@ -28,4 +28,13 @@ interface CookPlannerStepDAO {
 
     @Query("DELETE FROM CookPlannerStepRoom WHERE plannerGroupId = :idGroup")
     suspend fun deleteByIdGroup(idGroup: Long)
+
+    @Query("SELECT * FROM CookPlannerStepRoom  WHERE id = :id")
+    suspend fun getById(id: Long) : CookPlannerStepRoom
+
+    @Query("SELECT * FROM CookPlannerStepRoom  WHERE originalStepId = :stepId")
+    suspend fun getAllByOriginalStepId(stepId: Long) : List<CookPlannerStepRoom>
+
+    @Query("SELECT * FROM CookPlannerStepRoom  WHERE plannerGroupId = :plannerGroupId")
+    suspend fun getByGroupId(plannerGroupId: Long) : List<CookPlannerStepRoom>
 }

@@ -14,10 +14,10 @@ class TimePickViewModel() : DialogViewModel() {
 
     lateinit var mainViewModel: MainViewModel
     val state: TimePickUIState = TimePickUIState()
-    private lateinit var resultFlow: MutableStateFlow<Int?>
+    private lateinit var resultFlow: MutableStateFlow<Long?>
 
-    fun start(): Flow<Int?> {
-        val flow = MutableStateFlow<Int?>(null)
+    fun start(): Flow<Long?> {
+        val flow = MutableStateFlow<Long?>(null)
         resultFlow = flow
         return flow
     }
@@ -25,7 +25,7 @@ class TimePickViewModel() : DialogViewModel() {
     @OptIn(ExperimentalMaterial3Api::class)
     fun done() {
         close()
-        val sec = state.timeState.hour*60*60 + state.timeState.minute*60
+        val sec = state.timeState.hour.toLong()*60*60 + state.timeState.minute.toLong()*60
         resultFlow.value = sec
     }
 
@@ -41,7 +41,8 @@ class TimePickViewModel() : DialogViewModel() {
         }
     }
 
-    suspend fun launchAndGet(use: (Int) -> Unit) {
+    suspend fun launchAndGet(title:String, use: (Long) -> Unit) {
+        state.title.value = title
         val flow = start()
         flow.collect { value ->
             if (value != null) {

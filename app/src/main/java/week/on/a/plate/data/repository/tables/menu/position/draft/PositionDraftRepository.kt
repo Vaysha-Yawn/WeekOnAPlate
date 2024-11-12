@@ -76,29 +76,45 @@ class PositionDraftRepository @Inject constructor(
         updateListOfEntity(
             oldList = oldDraft.tags,
             newList = filters.first,
-            insertAction = { listTagsAdd ->
-                listTagsAdd.forEach {
-                    val tagRefs = PositionDraftMapper().genTagCrossRef(oldDraft.id, it.id)
-                    positionDraftDAO.insertDraftAndTagCrossRef(tagRefs)
-                }
+            findSameInList = { tagView, list ->
+                list.find { tag -> tag.id == tagView.id }
             },
-            deleteAction = { tag ->
+            insertAction = { tags ->
+                val tagRefs = PositionDraftMapper().genTagCrossRef(oldDraft.id, tags.id)
+                positionDraftDAO.insertDraftAndTagCrossRef(tagRefs)
+            },
+            deleteAction = { tag -> positionDraftDAO.deleteByIdTag(tag.id) },
+            updateAction = { tag ->
                 positionDraftDAO.deleteByIdTag(tag.id)
-            }
+                val tagRefs = PositionDraftMapper().genTagCrossRef(oldDraft.id, tag.id)
+                positionDraftDAO.insertDraftAndTagCrossRef(tagRefs)
+            },
         )
 
         updateListOfEntity(
             oldList = oldDraft.ingredients,
             newList = filters.second,
-            insertAction = { listIngredientsAdd ->
-                listIngredientsAdd.forEach {
-                    val ingredientRefs = PositionDraftMapper().genIngredientCrossRef(oldDraft.id, it.ingredientId)
-                    positionDraftDAO.insertDraftAndIngredientCrossRef(ingredientRefs)
-                }
+            findSameInList = { ingredient, list ->
+                list.find { ingredientView -> ingredientView.ingredientId == ingredient.ingredientId }
+            },
+            insertAction = { ingredient ->
+                val ingredientRefs = PositionDraftMapper().genIngredientCrossRef(
+                    oldDraft.id,
+                    ingredient.ingredientId
+                )
+                positionDraftDAO.insertDraftAndIngredientCrossRef(ingredientRefs)
             },
             deleteAction = { ingredient ->
                 positionDraftDAO.deleteByIdIngredient(ingredient.ingredientId)
-            }
+            },
+            updateAction = { ingredient ->
+                positionDraftDAO.deleteByIdIngredient(ingredient.ingredientId)
+                val ingredientRefs = PositionDraftMapper().genIngredientCrossRef(
+                    oldDraft.id,
+                    ingredient.ingredientId
+                )
+                positionDraftDAO.insertDraftAndIngredientCrossRef(ingredientRefs)
+            },
         )
     }
 }

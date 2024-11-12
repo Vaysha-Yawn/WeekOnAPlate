@@ -9,6 +9,6 @@ sealed class CookStepMoreEvent: Event() {
     data object IncreaseStepTime: CookStepMoreEvent()
     data object MoveStepByTimeStart: CookStepMoreEvent()
     data object Close: CookStepMoreEvent()
-    data object ChangeNumberOfServings: CookStepMoreEvent()
+    data object ChangePortionsCount: CookStepMoreEvent()
     data object Delete: CookStepMoreEvent()
 }

@@ -23,6 +23,7 @@ import week.on.a.plate.screens.filters.logic.FilterViewModel
 import week.on.a.plate.screens.inventory.logic.InventoryViewModel
 import week.on.a.plate.screens.menu.logic.useCase.CRUDRecipeInMenu
 import week.on.a.plate.screens.recipeDetails.logic.RecipeDetailsViewModel
+import week.on.a.plate.screens.recipeTimeline.logic.RecipeTimelineViewModel
 import week.on.a.plate.screens.searchRecipes.event.SearchScreenEvent
 import week.on.a.plate.screens.searchRecipes.logic.SearchViewModel
 import week.on.a.plate.screens.searchRecipes.logic.voice.VoiceInputUseCase
@@ -51,7 +52,7 @@ class MainViewModel @Inject constructor(
     lateinit var deleteApplyViewModel: DeleteApplyViewModel
     lateinit var cookPlannerViewModel: CookPlannerViewModel
     lateinit var specifyRecipeToCookPlanViewModel: SpecifyRecipeToCookPlanViewModel
-
+    lateinit var recipeTimelineViewModel: RecipeTimelineViewModel
 
     fun initViewModels(
         specifySelection: SpecifySelectionViewModel,
@@ -64,7 +65,8 @@ class MainViewModel @Inject constructor(
         inventory: InventoryViewModel,
         delete: DeleteApplyViewModel,
         cookPlanner: CookPlannerViewModel,
-        specifyRecipeToCookPlan: SpecifyRecipeToCookPlanViewModel
+        specifyRecipeToCookPlan: SpecifyRecipeToCookPlanViewModel,
+        recipeTimeline: RecipeTimelineViewModel,
     ) {
         specifySelectionViewModel = specifySelection
         filterViewModel = filter
@@ -77,6 +79,7 @@ class MainViewModel @Inject constructor(
         deleteApplyViewModel = delete
         cookPlannerViewModel = cookPlanner
         specifyRecipeToCookPlanViewModel = specifyRecipeToCookPlan
+        recipeTimelineViewModel = recipeTimeline
 
         specifySelectionViewModel.mainViewModel = this
         filterViewModel.mainViewModel = this
@@ -89,6 +92,7 @@ class MainViewModel @Inject constructor(
         deleteApplyViewModel.mainViewModel = this
         cookPlannerViewModel.mainViewModel = this
         specifyRecipeToCookPlanViewModel.mainViewModel = this
+        recipeTimelineViewModel.mainViewModel = this
     }
 
     lateinit var locale: Locale
@@ -146,8 +150,8 @@ class MainViewModel @Inject constructor(
                             description = recipe.description.value,
                             img = recipe.photoLink.value,
                             tags = recipe.tags.value,
-                            prepTime = recipe.prepTime.intValue,
-                            allTime = recipe.allTime.intValue,
+                            prepTime = recipe.prepTime.longValue,
+                            allTime = recipe.allTime.longValue,
                             standardPortionsCount = recipe.portionsCount.intValue,
                             ingredients = recipe.ingredients.value,
                             steps = recipe.steps.value.map {
@@ -155,7 +159,7 @@ class MainViewModel @Inject constructor(
                                     0,
                                     it.description.value,
                                     it.image.value,
-                                    it.timer.intValue.toLong(), it.duration.value
+                                    it.timer.longValue.toLong(), it.start.toLong(), it.duration.toLong(),it.pinnedIngredientsInd.value
                                 )
                             },
                             link = recipe.source.value, false, LocalDateTime.now()

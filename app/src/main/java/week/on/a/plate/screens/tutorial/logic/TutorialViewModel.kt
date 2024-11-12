@@ -8,10 +8,11 @@ import week.on.a.plate.screens.tutorial.event.TutorialEvent
 import week.on.a.plate.screens.tutorial.getFromAssetUtils.tutorialMap
 import week.on.a.plate.screens.tutorial.state.TutorialDestination
 import week.on.a.plate.screens.tutorial.state.TutorialStateUI
+import javax.inject.Inject
 
 //todo
 @HiltViewModel
-class TutorialViewModel : ViewModel() {
+class TutorialViewModel @Inject constructor() : ViewModel() {
 
     lateinit var stateUI: TutorialStateUI
 

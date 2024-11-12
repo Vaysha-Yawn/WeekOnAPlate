@@ -151,14 +151,14 @@ fun SubText(text: String, modifier: Modifier = Modifier, textAlign: TextAlign = 
 @Composable
 fun TextSmall(
     text: String, modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colorScheme.onBackground
+    color: Color = MaterialTheme.colorScheme.onBackground, textAlign: TextAlign = TextAlign.Start,
 ) {
     TextInApp(
         text,
         modifier,
         textStyle = Typography.bodySmall,
         color = color,
-        textAlign = TextAlign.Start
+        textAlign = textAlign
     )
 }
 

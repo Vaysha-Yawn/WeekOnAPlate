@@ -17,8 +17,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimeInput
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TimePickerDefaults
@@ -41,7 +39,7 @@ fun TimePickDialog(
     state: TimePickUIState,
     onEvent: (TimePickEvent)->Unit
 ) {
-    PickerDialog(
+    PickerDialog(state,
         onDismissRequest = { onEvent(TimePickEvent.Close) },
         buttons = {
             DisplayModeToggleButton(
@@ -79,9 +77,10 @@ fun TimePickDialog(
 
 @Composable
 fun PickerDialog(
+    state: TimePickUIState,
     onDismissRequest: () -> Unit,
-    buttons: @Composable RowScope.() -> Unit,
-    content: @Composable ColumnScope.() -> Unit,
+    buttons: @Composable() (RowScope.() -> Unit),
+    content: @Composable() (ColumnScope.() -> Unit),
 ) {
     Dialog(
         onDismissRequest = onDismissRequest,
@@ -93,7 +92,9 @@ fun PickerDialog(
             tonalElevation = 6.dp,
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally, modifier =  Modifier.background(MaterialTheme.colorScheme.surface)) {
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(12.dp))
+                TextBody(state.title.value)
+                Spacer(modifier = Modifier.height(12.dp))
                 content()
                 Row(
                     modifier = Modifier

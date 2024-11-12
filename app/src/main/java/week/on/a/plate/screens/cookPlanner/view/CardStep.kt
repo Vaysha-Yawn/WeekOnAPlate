@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
@@ -27,27 +26,35 @@ import week.on.a.plate.core.Event
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.ImageLoad
 import week.on.a.plate.core.uitools.TextBody
-import week.on.a.plate.core.uitools.TextTitle
+import week.on.a.plate.core.uitools.TextBodyDisActive
+import week.on.a.plate.core.uitools.TextSmall
 import week.on.a.plate.core.uitools.buttons.MoreButton
 import week.on.a.plate.data.dataView.CookPlannerStepView
 import week.on.a.plate.data.dataView.recipe.RecipeStepView
 import week.on.a.plate.screens.cookPlanner.event.CookPlannerEvent
+import week.on.a.plate.screens.createRecipe.view.PinnedIngredientsForStep
 import week.on.a.plate.screens.recipeDetails.view.steps.TimerButton
 import java.time.LocalDateTime
-import java.time.LocalTime
 
 @Composable
-fun CardStep(step: CookPlannerStepView, onEvent:(Event)->Unit) {
+fun CardStep(step: CookPlannerStepView, onEvent: (Event) -> Unit) {
     Row(
         Modifier
             .clickable {
                 onEvent(CookPlannerEvent.NavToFullStep(step))
             }
-            .padding(horizontal = 12.dp).fillMaxWidth().background(MaterialTheme.colorScheme.surface, RoundedCornerShape(20.dp))
-            .padding(bottom = 24.dp, top = 12.dp).padding( horizontal = 24.dp)
+            .padding(horizontal = 12.dp)
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(20.dp))
+            .padding(bottom = 24.dp, top = 12.dp)
+            .padding(horizontal = 24.dp)
     ) {
         Column(Modifier.fillMaxWidth()) {
-            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+            Row(
+                Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 Checkbox(
                     checked = step.checked,
                     modifier = Modifier.padding(0.dp),
@@ -67,42 +74,56 @@ fun CardStep(step: CookPlannerStepView, onEvent:(Event)->Unit) {
                     onEvent(CookPlannerEvent.ShowStepMore(step))
                 }
             }
-            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
-                if (step.stepView.image.startsWith("http")){
+            if (step.stepView.image.startsWith("http")) {
+                Spacer(modifier = Modifier.height(12.dp))
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                     ImageLoad(
                         step.stepView.image,
                         Modifier
-                            .clip(RoundedCornerShape(20.dp))
+                            .clip(RoundedCornerShape(10.dp))
                             .clipToBounds()
-                            .size(40.dp)
-                            .scale(1.6f)
+                            .size(200.dp)
+                            .scale(1.4f)
                     )
-                    Spacer(modifier = Modifier.width(12.dp))
                 }
-                Column(
-                    Modifier,
-                    horizontalAlignment = Alignment.Start,
-                ) {
-                    Spacer(modifier = Modifier.height(12.dp))
-                    TextTitle(
-                        step.recipeName
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
-                    TextBody(
-                        step.stepView.description
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
-                    TimerButton(step.stepView.timer.toInt())
-                }
+                Spacer(modifier = Modifier.height(24.dp))
+            }
+            TextBodyDisActive(
+                step.recipeName + ", ${step.portionsCount}" + " порции"
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            TextSmall(
+                step.stepView.description
+            )
+            if (step.stepView.ingredientsPinnedId.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(12.dp))
+                PinnedIngredientsForStep(
+                    step.stepView.ingredientsPinnedId.map { id ->
+                        //todo move to logic layer
+                        val ingr = step.allRecipeIngredientsByPortions.find { it.id == id }!!
+                        val startIngredientCount = ingr.count
+                        val stdPortions = step.stdPortionsCount
+                        val newCountPortions = step.portionsCount
+                        if (startIngredientCount > 0) {
+                            ingr.count =
+                                (startIngredientCount.toFloat() / stdPortions.toFloat() * newCountPortions).toInt()
+                        }
+                        ingr
+                    }
+                )
+            }
+            if (step.stepView.timer.toInt() != 0) {
+                Spacer(modifier = Modifier.height(6.dp))
+                TimerButton(step.stepView.timer.toInt())
             }
         }
     }
 }
 
-fun Int.normalizeTimeToText():String{
-    return if(this<10){
+fun Int.normalizeTimeToText(): String {
+    return if (this < 10) {
         "0$this"
-    }else{
+    } else {
         this.toString()
     }
 }
@@ -113,9 +134,16 @@ fun PreviewCardStep() {
     WeekOnAPlateTheme {
         CardStep(
             CookPlannerStepView(
-                0, 0, 0, "Паэлья", LocalDateTime.of(2024, 10, 24, 10, 45),
+                0,
+                0,
+                0,
+                "Паэлья",
+                LocalDateTime.of(2024, 10, 24, 10, 45),
                 LocalDateTime.of(2024, 10, 24, 11, 0),
-                RecipeStepView(0, "Паэлью жарим до готовности", "", 15, LocalTime.of(0, 15)), false
+                RecipeStepView(0, "Паэлью жарим до готовности", "", 15, 0, 0, listOf()),
+                listOf(),
+                false,
+                3, 4
             )
         ) {}
     }

@@ -27,6 +27,7 @@ import week.on.a.plate.core.uitools.EditTextLine
 import week.on.a.plate.core.uitools.ImageLoad
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextTitleItalic
+import week.on.a.plate.core.uitools.buttons.CommonButton
 import week.on.a.plate.data.dataView.example.recipeTom
 import week.on.a.plate.screens.createRecipe.event.RecipeCreateEvent
 import week.on.a.plate.screens.createRecipe.logic.RecipeCreateViewModel
@@ -60,43 +61,18 @@ fun StepRecipeEdit(
             Spacer(modifier = Modifier.width(6.dp))
         }
         if (recipeStepState.image.value == "") {
-            Row(
-                Modifier
-                    .clickable {
-                        onEvent(RecipeCreateEvent.EditImage(recipeStepState))
-                    }
-                    .background(MaterialTheme.colorScheme.background, RoundedCornerShape(20.dp))
-                    .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(20.dp))
-                    .padding(horizontal = 12.dp, vertical = 5.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(painter = painterResource(id = R.drawable.photo), contentDescription = "")
-                Spacer(modifier = Modifier.width(5.dp))
-                TextBody(text = "Фото")
-            }
-            Spacer(modifier = Modifier.width(6.dp))
+            ImageStepButton(recipeStepState, onEvent)
         }
-        if (recipeStepState.timer.intValue == 0) {
-            Row(
-                Modifier
-                    .clickable {
-                        onEvent(RecipeCreateEvent.EditTimer(recipeStepState))
-                    }
-                    .background(MaterialTheme.colorScheme.background, RoundedCornerShape(20.dp))
-                    .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(20.dp))
-                    .padding(horizontal = 12.dp, vertical = 5.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(painter = painterResource(id = R.drawable.timer), contentDescription = "")
-                Spacer(modifier = Modifier.width(5.dp))
-                TextBody(text = "Таймер")
-            }
+        if (recipeStepState.timer.longValue == 0L) {
+            TimerStep(recipeStepState, onEvent)
         }
     }
+
     Spacer(modifier = Modifier.height(12.dp))
     EditTextLine(text = recipeStepState.description, placeholder = "Введите описание шага")
+
     if (recipeStepState.image.value != "") {
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(12.dp))
         Row {
             Icon(
                 painter = painterResource(id = R.drawable.close),
@@ -112,8 +88,9 @@ fun StepRecipeEdit(
                 })
         }
     }
-    if (recipeStepState.timer.intValue != 0) {
-        Spacer(modifier = Modifier.height(24.dp))
+
+    if (recipeStepState.timer.longValue != 0L) {
+        Spacer(modifier = Modifier.height(12.dp))
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 painter = painterResource(id = R.drawable.close),
@@ -122,10 +99,59 @@ fun StepRecipeEdit(
                     onEvent(RecipeCreateEvent.ClearTime(recipeStepState))
                 })
             Spacer(modifier = Modifier.width(12.dp))
-            TimerButton(recipeStepState.timer.intValue) {
+            TimerButton(recipeStepState.timer.longValue.toInt()) {
                 onEvent(RecipeCreateEvent.EditTimer(recipeStepState))
             }
         }
+    }
+    if (recipeStepState.pinnedIngredientsInd.value.isNotEmpty()){
+        Spacer(modifier = Modifier.height(12.dp))
+        PinnedIngredientsForStep(
+            recipeStepState.pinnedIngredientsInd.value.map {id->
+                state.ingredients.value.find {it.id == id }!!
+            }
+        )
+    }
+    Spacer(modifier = Modifier.height(12.dp))
+    CommonButton("Редактировать прикреплённые ингредиенты") {
+        onEvent(RecipeCreateEvent.EditPinnedIngredients(recipeStepState))
+    }
+}
+
+@Composable
+fun ImageStepButton(recipeStepState: RecipeStepState, onEvent: (RecipeCreateEvent) -> Unit) {
+    Row(
+        Modifier
+            .clickable {
+                onEvent(RecipeCreateEvent.EditImage(recipeStepState))
+            }
+            .background(MaterialTheme.colorScheme.background, RoundedCornerShape(20.dp))
+            .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(20.dp))
+            .padding(horizontal = 12.dp, vertical = 5.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(painter = painterResource(id = R.drawable.photo), contentDescription = "")
+        Spacer(modifier = Modifier.width(5.dp))
+        TextBody(text = "Фото")
+    }
+    Spacer(modifier = Modifier.width(6.dp))
+}
+
+@Composable
+fun TimerStep(recipeStepState: RecipeStepState, onEvent: (RecipeCreateEvent) -> Unit) {
+    Row(
+        Modifier
+            .clickable {
+                onEvent(RecipeCreateEvent.EditTimer(recipeStepState))
+            }
+            .background(MaterialTheme.colorScheme.background, RoundedCornerShape(20.dp))
+            .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(20.dp))
+            .padding(horizontal = 12.dp, vertical = 5.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(painter = painterResource(id = R.drawable.timer), contentDescription = "")
+        Spacer(modifier = Modifier.width(5.dp))
+        TextBody(text = "Таймер")
     }
 }
 
@@ -136,6 +162,9 @@ fun PreviewStepRecipeEdit() {
         val vm = RecipeCreateViewModel()
         vm.setStateByOldRecipe(recipeTom)
         Column {
+            PinnedIngredientsForStep(vm.state.steps.value[0].pinnedIngredientsInd.value.map {id->
+                vm.state.ingredients.value.find {it.id == id }!!
+            })
             StepRecipeEdit(0, vm.state.steps.value[0], vm.state) {}
             StepRecipeEdit(1, vm.state.steps.value[1], vm.state) {}
         }

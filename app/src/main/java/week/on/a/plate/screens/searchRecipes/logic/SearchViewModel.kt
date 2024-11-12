@@ -268,8 +268,8 @@ class SearchViewModel @Inject constructor(
                         description = recipe.description.value,
                         img = recipe.photoLink.value,
                         tags = recipe.tags.value,
-                        prepTime = recipe.prepTime.intValue,
-                        allTime = recipe.allTime.intValue,
+                        prepTime = recipe.prepTime.longValue,
+                        allTime = recipe.allTime.longValue,
                         standardPortionsCount = recipe.portionsCount.intValue,
                         ingredients = recipe.ingredients.value,
                         steps = recipe.steps.value.map {
@@ -277,7 +277,7 @@ class SearchViewModel @Inject constructor(
                                 0,
                                 it.description.value,
                                 it.image.value,
-                                it.timer.intValue.toLong(), it.duration.value
+                                it.timer.longValue, it.start.toLong(), it.duration.toLong(), it.pinnedIngredientsInd.value
                             )
                         },
                         link = recipe.source.value, false, LocalDateTime.now()

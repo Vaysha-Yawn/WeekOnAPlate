@@ -111,7 +111,6 @@ fun FilterScreen(stateUI: FilterUIState, onEvent: (FilterEvent) -> Unit) {
                                 onEvent(FilterEvent.EditOrDeleteIngredient(stateUI.resultSearchIngredients.value[it]))
                             }
                         )
-                        Spacer(modifier = Modifier.height(24.dp))
                     }
                 } else {
                     items(stateUI.allIngredientsCategories.value.size) {

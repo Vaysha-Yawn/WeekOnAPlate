@@ -33,14 +33,14 @@ fun TimeCookRecipeEdit(state: RecipeCreateUIState, onEvent: (RecipeCreateEvent) 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             TextBody(text = "Активное время")
             Spacer(modifier = Modifier.height(5.dp))
-            TimerButton(state.prepTime.intValue){
+            TimerButton(state.prepTime.longValue.toInt()){
                 onEvent(RecipeCreateEvent.EditActiveTime)
             }
         }
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             TextBody(text = "Время всего")
             Spacer(modifier = Modifier.height(5.dp))
-            TimerButton(state.allTime.intValue){
+            TimerButton(state.allTime.longValue.toInt()){
                 onEvent(RecipeCreateEvent.EditAllTime)
             }
         }

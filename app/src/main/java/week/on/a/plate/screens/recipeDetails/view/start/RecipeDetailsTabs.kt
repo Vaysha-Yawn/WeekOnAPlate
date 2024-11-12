@@ -39,7 +39,7 @@ fun RecipeDetailsTabs(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) -
                         TextSmall(
                             text =
                             when (index) {
-                                0 -> state.recipe.value.allTime.timeToString()
+                                0 -> state.recipe.value.allTime.toInt().timeToString()
                                 1 -> state.recipe.value.ingredients.size.toString()
                                 2 -> ""
                                 else -> ""

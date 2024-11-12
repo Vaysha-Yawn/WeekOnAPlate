@@ -25,9 +25,9 @@ class RecipeTagCrossRefRepository @Inject constructor(
         }
     }
 
-    suspend fun insertTagRef(list: List<RecipeTagView>, recipeId: Long) {
-        val tagsCrossRef = list.map { RecipeRecipeTagCrossRef(recipeId, it.id) }
-        tagsCrossRef.forEach { daoTags.insert(it) }
+    suspend fun insertTagRef(tag: RecipeTagView, recipeId: Long) {
+        val tagCrossRef =  RecipeRecipeTagCrossRef(recipeId, tag.id)
+        daoTags.insert(tagCrossRef)
     }
 
     suspend fun deleteTagRef(recipe: RecipeTagView, recipeId: Long) {
@@ -36,5 +36,10 @@ class RecipeTagCrossRefRepository @Inject constructor(
 
     suspend fun deleteByRecipeId(recipeId: Long) {
         daoTags.deleteByRecipeId(recipeId)
+    }
+
+    suspend fun update(tag: RecipeTagView, recipeId: Long) {
+        val tagCrossRef =  RecipeRecipeTagCrossRef(recipeId, tag.id)
+        daoTags.update(tagCrossRef)
     }
 }

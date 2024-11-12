@@ -47,7 +47,7 @@ class EditSelectionViewModel() : DialogViewModel() {
             val vm = TimePickViewModel()
             vm.mainViewModel = mainViewModel
             mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-            vm.launchAndGet(){
+            vm.launchAndGet("Укажите время для приёма пищи"){
                 state.selectedTime.value = LocalTime.ofSecondOfDay((it).toLong())
             }
         }

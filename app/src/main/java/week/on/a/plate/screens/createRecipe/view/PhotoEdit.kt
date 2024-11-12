@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.ImageLoad
+import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.screens.createRecipe.event.RecipeCreateEvent
 import week.on.a.plate.screens.createRecipe.state.RecipeCreateUIState
@@ -39,7 +40,7 @@ fun PhotoRecipeEdit(state: RecipeCreateUIState, onEvent: (RecipeCreateEvent) -> 
         ) {
             Icon(painter = painterResource(id = R.drawable.photo), contentDescription = "")
             Spacer(modifier = Modifier.width(5.dp))
-            TextTitle(text = "Добавить фото")
+            TextBody(text = "Добавить фото")
         }
         Spacer(modifier = Modifier.width(24.dp))
     }

@@ -24,6 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.core.uitools.ImageLoad
+import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.PlusButtonCard
 import week.on.a.plate.data.dataView.recipe.RecipeView
@@ -116,7 +117,7 @@ fun CardRecipeResult(recipe: RecipeView, onEvent: (SearchScreenEvent) -> Unit, m
                     .background(MaterialTheme.colorScheme.surface)
                     .padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                TextTitle(
+                TextBody(
                     recipe.name
                 )
                 Spacer(modifier = Modifier.size(12.dp))

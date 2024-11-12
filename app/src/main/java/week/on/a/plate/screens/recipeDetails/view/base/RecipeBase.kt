@@ -57,9 +57,9 @@ fun RecipeBase(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) -> Unit)
         }
     }
     Spacer(modifier = Modifier.height(36.dp))
-    CommonButton ("Добавить рецепт в меню", modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp))
+    DoneButton("Добавить рецепт в меню", modifier = Modifier.fillMaxWidth().padding(horizontal = 36.dp))
     { onEvent(RecipeDetailsEvent.AddToMenu) }
-    Spacer(modifier = Modifier.height(24.dp))
+    Spacer(modifier = Modifier.height(12.dp))
 }
 
 @Preview(showBackground = true)

@@ -1,6 +1,5 @@
 package week.on.a.plate.screens.recipeDetails.view.ingredients
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,8 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
@@ -32,7 +29,6 @@ import week.on.a.plate.core.utils.getIngredientCountAndMeasure1000
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun IngredientInRecipeCard(
     ingredient: IngredientInRecipeView,
@@ -41,13 +37,11 @@ fun IngredientInRecipeCard(
     isDeletable:Boolean,
     delete: () -> Unit = {},
 ) {
-    val listGradient = listOf(Color(0xFFFFEADE), Color(0xFFFFF2DE), Color(0xFFFFFFFF))
-    HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.primary)
     Row(
         Modifier
             .fillMaxWidth()
             .clickable { click() }
-            .background(Brush.horizontalGradient(listGradient))
+            .background(MaterialTheme.colorScheme.background)
             .padding(horizontal = 24.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
@@ -61,7 +55,7 @@ fun IngredientInRecipeCard(
             Spacer(modifier = Modifier.width(24.dp))
         }
         Column(Modifier.weight(1f)) {
-            TextBody(text = ingredient.ingredientView.name, color = ColorTextBlack)
+            TextBody(text = ingredient.ingredientView.name, color = MaterialTheme.colorScheme.onBackground)
             if (ingredient.description != "") {
                 TextBodyDisActive(text = ingredient.description)
             }
@@ -69,21 +63,19 @@ fun IngredientInRecipeCard(
         Row {
             val valueAndMeasure = getIngredientCountAndMeasure1000(count?:ingredient.count, ingredient.ingredientView.measure)
             TextBody(
-                text = valueAndMeasure.first, color = ColorTextBlack
+                text = valueAndMeasure.first, color = MaterialTheme.colorScheme.onBackground
             )
             Spacer(modifier = Modifier.width(5.dp))
-            TextBody(text = valueAndMeasure.second, color = ColorTextBlack)
+            TextBody(text = valueAndMeasure.second, color = MaterialTheme.colorScheme.onBackground)
         }
         if (isDeletable) {
             Spacer(modifier = Modifier.width(5.dp))
             Icon(
                 painterResource(R.drawable.delete),
                 "",
-                tint = ColorTextBlack,
                 modifier = Modifier.clickable {
                     delete()
                 })
         }
     }
-    HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.primary)
 }

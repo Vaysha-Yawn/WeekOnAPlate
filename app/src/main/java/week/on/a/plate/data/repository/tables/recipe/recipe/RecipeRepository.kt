@@ -1,14 +1,15 @@
 package week.on.a.plate.data.repository.tables.recipe.recipe
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flatMap
-import kotlinx.coroutines.flow.flatMapConcat
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.zip
+import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
+import week.on.a.plate.data.dataView.recipe.RecipeStepView
 import week.on.a.plate.data.dataView.recipe.RecipeView
+import week.on.a.plate.data.repository.tables.cookPlanner.CookPlannerGroupDAO
+import week.on.a.plate.data.repository.tables.cookPlanner.CookPlannerStepDAO
+import week.on.a.plate.data.repository.tables.cookPlanner.CookPlannerStepRepository
+import week.on.a.plate.data.repository.tables.cookPlanner.CookPlannerStepRoom
 import week.on.a.plate.data.repository.tables.menu.position.positionRecipe.PositionRecipeRepository
 import week.on.a.plate.data.repository.tables.recipe.ingredientInRecipe.IngredientInRecipeRepository
 import week.on.a.plate.data.repository.tables.recipe.recipeRecipeTagCrossRef.RecipeTagCrossRefRepository
@@ -24,6 +25,9 @@ class RecipeRepository @Inject constructor(
     private val tagCrossRefRepository: RecipeTagCrossRefRepository,
     private val ingredientInRecipeRepository: IngredientInRecipeRepository,
     private val positionRecipeRepository: PositionRecipeRepository,
+
+    private val groupRepo: CookPlannerGroupDAO,
+    private val stepRepo: CookPlannerStepDAO,
 ) {
     private val recipeMapper = RecipeMapper()
 
@@ -72,15 +76,21 @@ class RecipeRepository @Inject constructor(
         }
     }
 
-     private fun <A, B, C, D, E> zip(flowA:Flow<A>, flowB:Flow<B>, flowC:Flow<C>, flowD:Flow<D>, transform:(A, B, C, D)->E):Flow<E> {
-         return flowA.zip(flowB){a, b->
-             Pair(a,b)
-         }.zip(flowC){pairab, c->
-             Pair(pairab, c)
-         }.zip(flowD){pairabc, d->
-             transform(pairabc.first.first, pairabc.first.second, pairabc.second, d)
-         }
-     }
+    private fun <A, B, C, D, E> zip(
+        flowA: Flow<A>,
+        flowB: Flow<B>,
+        flowC: Flow<C>,
+        flowD: Flow<D>,
+        transform: (A, B, C, D) -> E
+    ): Flow<E> {
+        return flowA.zip(flowB) { a, b ->
+            Pair(a, b)
+        }.zip(flowC) { pairab, c ->
+            Pair(pairab, c)
+        }.zip(flowD) { pairabc, d ->
+            transform(pairabc.first.first, pairabc.first.second, pairabc.second, d)
+        }
+    }
 
 
     suspend fun create(recipeView: RecipeView): Long {
@@ -89,11 +99,20 @@ class RecipeRepository @Inject constructor(
         }
         val recipeId = dao.insert(recipe)
 
-        stepRepository.insertSteps(recipeView.steps, recipeId)
+        recipeView.steps.forEach {
+            stepRepository.insertStep(it, recipeId)
+        }
 
-        tagCrossRefRepository.insertTagRef(recipeView.tags, recipeId)
+        recipeView.tags.forEach {
+            tagCrossRefRepository.insertTagRef(it, recipeId)
+        }
 
-        ingredientInRecipeRepository.insertIngredients(recipeView.ingredients, recipeId)
+        recipeView.ingredients.forEach {
+            ingredientInRecipeRepository.insertIngredient(
+                it,
+                recipeId
+            )
+        }
 
         return recipeId
     }
@@ -106,33 +125,100 @@ class RecipeRepository @Inject constructor(
         dao.update(updatedRoomRecipe)
 
         updateListOfEntity(
+            oldList = oldRecipe.ingredients,
+            newList = updatedRecipe.ingredients,
+            findSameInList = { ingr, list ->
+                list.find { ingrFind -> ingrFind.id == ingr.id }
+            },
+            insertAction = { insertIngredient(it, recipeId) },
+            deleteAction = {
+                deleteIngredient(it)
+            },
+            updateAction = { updateIngredient(it, recipeId) }
+        )
+
+
+        updateListOfEntity(
             oldList = oldRecipe.steps,
             newList = updatedRecipe.steps,
-            insertAction = { steps -> stepRepository.insertSteps(steps, recipeId) },
-            deleteAction = { step -> stepRepository.deleteStep(step) }
+            findSameInList = { stepView, list ->
+                list.find { stepFind -> stepFind.id == stepView.id }
+            },
+            insertAction = { step ->
+                stepRepository.insertStep(step, recipeId)
+                addStepForUpdateRecipe(step, recipeId)
+            },
+            deleteAction = { step ->
+                stepRepository.deleteStep(step)
+                deleteStepForUpdateRecipe(step)
+            },
+            updateAction = { step ->
+                stepRepository.update(step, recipeId)
+            }
         )
 
         updateListOfEntity(
             oldList = oldRecipe.tags,
             newList = updatedRecipe.tags,
-            insertAction = { tags -> tagCrossRefRepository.insertTagRef(tags, recipeId) },
-            deleteAction = { tag -> tagCrossRefRepository.deleteTagRef(tag, recipeId) }
-        )
-
-        updateListOfEntity(
-            oldList = oldRecipe.ingredients,
-            newList = updatedRecipe.ingredients,
-            insertAction = { ingredients ->
-                ingredientInRecipeRepository.insertIngredients(
-                    ingredients,
-                    recipeId
-                )
+            findSameInList = { tagView, list ->
+                list.find { tag -> tag.id == tagView.id }
             },
-            deleteAction = { ingredients ->
-                ingredientInRecipeRepository.deleteIngredients(
-                    ingredients
-                )
-            }
+            insertAction = { tags -> tagCrossRefRepository.insertTagRef(tags, recipeId) },
+            deleteAction = { tag -> tagCrossRefRepository.deleteTagRef(tag, recipeId) },
+            updateAction = { tag -> tagCrossRefRepository.update(tag, recipeId) },
+        )
+    }
+
+    ///
+    private suspend fun deleteGroupByRecipeId(id: Long) {
+        val allGroups = groupRepo.getAllByRecipeId(id)
+        allGroups.forEach {
+            val groupId = it.id
+            groupRepo.deleteById(groupId)
+            stepRepo.deleteByIdGroup(groupId)
+        }
+    }
+
+    private suspend fun addStepForUpdateRecipe(step: RecipeStepView, recipeId: Long) {
+        val groups = groupRepo.getAllByRecipeId(recipeId)
+        groups.forEach { group->
+            val allHave = stepRepo.getByGroupId(group.id)
+            val start = allHave.minOf { it.start }
+            val stepRoom = CookPlannerStepRoom(
+                group.id,
+                step.id,
+                false,
+                start.plusSeconds(step.start),
+                start.plusSeconds(step.duration).plusSeconds(step.start),
+            )
+            stepRepo.insert(stepRoom)
+        }
+    }
+
+    private suspend fun deleteStepForUpdateRecipe(step: RecipeStepView) {
+        val stepsForDel = stepRepo.getAllByOriginalStepId(step.id)
+        stepsForDel.forEach { stepDel->
+            stepRepo.deleteById(stepDel.id)
+        }
+    }
+    //
+
+    private suspend fun updateIngredient(new: IngredientInRecipeView, recipeId: Long) {
+        ingredientInRecipeRepository.update(
+            new, recipeId
+        )
+    }
+
+    private suspend fun deleteIngredient(ingredient: IngredientInRecipeView) {
+        ingredientInRecipeRepository.deleteIngredients(
+            ingredient
+        )
+    }
+
+    private suspend fun insertIngredient(list: IngredientInRecipeView, recipeId: Long) {
+        ingredientInRecipeRepository.insertIngredient(
+            list,
+            recipeId
         )
     }
 
@@ -151,9 +237,6 @@ class RecipeRepository @Inject constructor(
         tagCrossRefRepository.deleteByRecipeId(id)
         ingredientInRecipeRepository.deleteByRecipeId(id)
         positionRecipeRepository.deleteByRecipeId(id)
+        deleteGroupByRecipeId(id)
     }
 }
-
-
-
-

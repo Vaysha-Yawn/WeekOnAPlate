@@ -17,28 +17,34 @@ class StepRepository @Inject constructor(
             with(stepMapper) { it.roomToView() }
         }
     }
+
     suspend fun getStep(stepId: Long): RecipeStepView {
-        return  with(stepMapper) { daoStep.getStepById(stepId).roomToView() }
+        return with(stepMapper) { daoStep.getStepById(stepId).roomToView() }
     }
 
     fun getStepsFlow(recipeId: Long): Flow<List<RecipeStepView>> {
-        return daoStep.getRecipeAndRecipeStepsFlow(recipeId).map {recipeAndRecipeSteps->
-            recipeAndRecipeSteps.recipeStepRoom.map {stepRoom->
+        return daoStep.getRecipeAndRecipeStepsFlow(recipeId).map { recipeAndRecipeSteps ->
+            recipeAndRecipeSteps.recipeStepRoom.map { stepRoom ->
                 with(stepMapper) { stepRoom.roomToView() }
             }
         }
     }
 
-    suspend fun insertSteps(list: List<RecipeStepView>, recipeId: Long) {
-        val steps = list.map { with(stepMapper) { it.viewToRoom(recipeId) } }
-        steps.forEach { daoStep.insert(it) }
+    suspend fun insertStep(stepView: RecipeStepView, recipeId: Long) {
+        val stepRoom = with(stepMapper) { stepView.viewToRoom(recipeId) }
+        daoStep.insert(stepRoom)
     }
 
     suspend fun deleteStep(recipe: RecipeStepView) {
-         daoStep.deleteByIdStep(recipe.id)
+        daoStep.deleteByIdStep(recipe.id)
     }
 
     suspend fun deleteByRecipeId(recipeId: Long) {
         daoStep.deleteByIdStep(recipeId)
+    }
+
+    suspend fun update(step: RecipeStepView, recipeId: Long) {
+        val stepRoom = with(stepMapper) { step.viewToRoom(recipeId) }.apply { this.id = step.id}
+        daoStep.update(stepRoom)
     }
 }

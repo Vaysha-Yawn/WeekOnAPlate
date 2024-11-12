@@ -24,7 +24,7 @@ import week.on.a.plate.screens.createRecipe.state.RecipeCreateUIState
 
 @Composable
 fun SourceRecipeEdit(state: RecipeCreateUIState, onEvent: (RecipeCreateEvent) -> Unit) {
-    Column(Modifier.padding(24.dp)) {
+    Column(Modifier.padding(horizontal =  24.dp)) {
         TextBody(text = "Источник рецепта, ссылка")
         Spacer(modifier = Modifier.height(12.dp))
         EditTextLine(text = state.source, placeholder = "Введите ссылку на рецепт")
@@ -33,7 +33,7 @@ fun SourceRecipeEdit(state: RecipeCreateUIState, onEvent: (RecipeCreateEvent) ->
 
 @Composable
 fun TabCreateRecipe(state: RecipeCreateUIState, onEvent: (RecipeCreateEvent) -> Unit){
-    val tabTitles = listOf("Информация", "Источник")
+    val tabTitles = listOf("Рецепт", "Источник")
     TabRow( modifier = Modifier.fillMaxWidth(),
         selectedTabIndex = state.activeTabIndex.intValue,
         indicator = { tabPositions ->

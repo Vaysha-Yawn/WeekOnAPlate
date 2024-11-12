@@ -1,16 +1,26 @@
 package week.on.a.plate.data.repository.utils
 
-import week.on.a.plate.core.utils.ListComparator
-
 suspend fun <T> updateListOfEntity(
     oldList: List<T>,
     newList: List<T>,
-    insertAction: suspend (List<T>) -> Unit,
-    deleteAction: suspend (T) -> Unit
+    findSameInList: suspend (T, List<T>) -> T?,
+    insertAction: suspend (T) -> Unit,
+    deleteAction: suspend (T) -> Unit,
+    updateAction: suspend (T) -> Unit,
 ) {
-    val itemsToAdd = ListComparator.addComparator(oldList, newList)
-    val itemsToRemove = ListComparator.removedComparator(oldList, newList)
+    oldList.forEach { old ->
+        val new = findSameInList(old, newList)
+        if (new == null){
+            deleteAction(old)
+        }else if (new!=old){
+            updateAction(new)
+        }
+    }
 
-    if (itemsToAdd.isNotEmpty()) insertAction(itemsToAdd)
-    if (itemsToRemove.isNotEmpty()) itemsToRemove.forEach { deleteAction(it) }
+    newList.forEach { new->
+        val old = findSameInList(new, oldList)
+        if (old == null){
+            insertAction(new)
+        }
+    }
 }

@@ -50,6 +50,7 @@ val Typography = Typography(
         fontSize = 14.sp,
         lineHeight = 18.sp,
     ),
+
 )
 
 val bodyMediumSemiBold = TextStyle(

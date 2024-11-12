@@ -54,6 +54,9 @@ import week.on.a.plate.screens.filters.dialogs.selectedFilters.view.DialogSelect
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.uitools.dialogs.BaseDialogContainer
 import week.on.a.plate.core.uitools.dialogs.BottomDialogContainer
+import week.on.a.plate.dialogs.chooseIngredientsForStep.event.ChooseIngredientsForStepEvent
+import week.on.a.plate.dialogs.chooseIngredientsForStep.logic.ChooseIngredientsForStepViewModel
+import week.on.a.plate.dialogs.chooseIngredientsForStep.view.ChooseIngredientsForStep
 import week.on.a.plate.dialogs.cookStepMore.event.CookStepMoreEvent
 import week.on.a.plate.dialogs.cookStepMore.logic.CookStepMoreDialogViewModel
 import week.on.a.plate.dialogs.cookStepMore.view.CookStepMoreContent
@@ -69,6 +72,9 @@ import week.on.a.plate.dialogs.dialogTimePick.view.TimePickDialog
 import week.on.a.plate.dialogs.filtersMore.event.FiltersMoreEvent
 import week.on.a.plate.dialogs.filtersMore.logic.FiltersMoreViewModel
 import week.on.a.plate.dialogs.filtersMore.view.FilterMoreContent
+import week.on.a.plate.dialogs.selectNStep.event.SelectNStepEvent
+import week.on.a.plate.dialogs.selectNStep.logic.SelectNStepViewModel
+import week.on.a.plate.dialogs.selectNStep.view.SelectNStep
 import week.on.a.plate.dialogs.sortMore.event.SortMoreEvent
 import week.on.a.plate.dialogs.sortMore.logic.SortMoreViewModel
 import week.on.a.plate.dialogs.sortMore.view.SortMoreContent
@@ -293,6 +299,29 @@ fun DialogsContainer(
             }
         }
 
+        is SelectNStepViewModel -> {
+            val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+            BottomDialogContainer(
+                sheetState,
+                { onEvent(SelectNStepEvent.Close) }) {
+                SelectNStep(data)
+            }
+            LaunchedEffect(true) {
+                sheetState.show()
+            }
+        }
+
+        is ChooseIngredientsForStepViewModel -> {
+            val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+            BottomDialogContainer(
+                sheetState,
+                { onEvent(ChooseIngredientsForStepEvent.Close) }) {
+                ChooseIngredientsForStep(data)
+            }
+            LaunchedEffect(true) {
+                sheetState.show()
+            }
+        }
         null -> {}
     }
 }

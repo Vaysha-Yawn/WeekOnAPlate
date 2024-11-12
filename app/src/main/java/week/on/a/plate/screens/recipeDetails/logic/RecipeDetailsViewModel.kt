@@ -72,9 +72,9 @@ class RecipeDetailsViewModel @Inject constructor(
         text+= "Рецепт: "+recipeView.name
         text+= "\n"
         text+= "\n"
-        text+= "Активное время приготовления: " + recipeView.prepTime.timeToString()
+        text+= "Активное время приготовления: " + recipeView.prepTime.toInt().timeToString()
         text+= "\n"
-        text+= "Общее время приготовления: " + recipeView.allTime.timeToString()
+        text+= "Общее время приготовления: " + recipeView.allTime.toInt().timeToString()
         text+= "\n"
         text+= "Колличество порций: " + recipeView.standardPortionsCount
         text+= "\n"
@@ -201,24 +201,24 @@ class RecipeDetailsViewModel @Inject constructor(
             mainViewModel.nav.navigate(RecipeCreateDestination)
             vm.launchAndGet(state.recipe.value, false) { recipe ->
                 val newRecipe = RecipeView(
-                    id = 0,
+                    id = state.recipe.value.id,
                     name = recipe.name.value,
                     description = recipe.description.value,
                     img = recipe.photoLink.value,
                     tags = recipe.tags.value,
-                    prepTime = recipe.prepTime.intValue,
-                    allTime = recipe.allTime.intValue,
+                    prepTime = recipe.prepTime.longValue,
+                    allTime = recipe.allTime.longValue,
                     standardPortionsCount = recipe.portionsCount.intValue,
                     ingredients = recipe.ingredients.value,
-                    steps = recipe.steps.value.map {it->
+                    steps = recipe.steps.value.map {
                         RecipeStepView(
-                            0,
+                            it.id,
                             it.description.value,
                             it.image.value,
-                            it.timer.intValue.toLong(), it.duration.value
+                            it.timer.longValue, it.start, it.duration, it.pinnedIngredientsInd.value
                         )
                     },
-                    link = recipe.source.value, false, LocalDateTime.now()
+                    link = recipe.source.value, state.recipe.value.inFavorite, LocalDateTime.now()
                 )
                 viewModelScope.launch {
                     recipeRepository.updateRecipe(state.recipe.value, newRecipe)

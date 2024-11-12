@@ -3,6 +3,7 @@ package week.on.a.plate.screens.filters.view
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -28,6 +29,7 @@ import week.on.a.plate.core.uitools.SearchLine
 import week.on.a.plate.screens.filters.event.FilterEvent
 import week.on.a.plate.screens.filters.state.FilterMode
 import week.on.a.plate.screens.filters.state.FilterUIState
+import week.on.a.plate.screens.searchRecipes.view.main.IndicatorFilter
 
 @Composable
 fun TopSearchPanelFilter(stateUI: FilterUIState, onEvent: (FilterEvent) -> Unit) {
@@ -51,10 +53,13 @@ fun TopSearchPanelFilter(stateUI: FilterUIState, onEvent: (FilterEvent) -> Unit)
                         .padding(6.dp)
                     )
                     Spacer(Modifier.width(24.dp))
-                    Icon(painterResource(R.drawable.select_all), "", modifier = Modifier
-                        .clickable { onEvent(FilterEvent.SelectedFilters) }
-                        .padding(6.dp)
-                    )
+                    Box(contentAlignment = Alignment.TopEnd) {
+                        Icon(painterResource(R.drawable.select_all), "", modifier = Modifier
+                            .clickable { onEvent(FilterEvent.SelectedFilters) }
+                            .padding(6.dp)
+                        )
+                        IndicatorFilter(stateUI.selectedIngredients.value.size + stateUI.selectedTags.value.size)
+                    }
                 }
             }
         }

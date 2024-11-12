@@ -11,6 +11,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
+import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.ButtonsCounterSmall
 import week.on.a.plate.screens.createRecipe.event.RecipeCreateEvent
@@ -18,7 +19,7 @@ import week.on.a.plate.screens.createRecipe.state.RecipeCreateUIState
 
 @Composable
 fun PortionsRecipeEdit(state: RecipeCreateUIState, onEvent: (RecipeCreateEvent) -> Unit) {
-    TextTitle(text = "Колличество порций", Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
+    TextBody(text = "Колличество порций", Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
     Spacer(modifier = Modifier.height(12.dp))
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
         ButtonsCounterSmall(

@@ -1,6 +1,7 @@
 package week.on.a.plate.screens.createRecipe.state
 
 import android.webkit.WebView
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -14,8 +15,8 @@ class RecipeCreateUIState {
     val photoLink = mutableStateOf("")
     val name = mutableStateOf("")
     val description = mutableStateOf("")
-    val prepTime = mutableIntStateOf(0)
-    val allTime = mutableIntStateOf(0)
+    val prepTime = mutableLongStateOf(0)
+    val allTime = mutableLongStateOf(0)
     val portionsCount = mutableIntStateOf(0)
     val tags = mutableStateOf(listOf<RecipeTagView>())
     val ingredients = mutableStateOf(listOf<IngredientInRecipeView>())
@@ -24,9 +25,9 @@ class RecipeCreateUIState {
     val isForCreate = mutableStateOf<Boolean>(true)
 }
 
-class RecipeStepState {
+class RecipeStepState (val id:Long, var start: Long, var duration: Long) {
     val description = mutableStateOf("")
     val image = mutableStateOf("")
-    val timer = mutableIntStateOf(0)
-    val duration = mutableStateOf(LocalTime.of(0, 0))
+    val timer = mutableLongStateOf(0)
+    val pinnedIngredientsInd:MutableState<List<Long>> = mutableStateOf(listOf())
 }

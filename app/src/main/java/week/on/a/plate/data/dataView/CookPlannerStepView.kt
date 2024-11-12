@@ -1,5 +1,6 @@
 package week.on.a.plate.data.dataView
 
+import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.data.dataView.recipe.RecipeStepView
 import java.time.LocalDateTime
 
@@ -11,5 +12,8 @@ data class CookPlannerStepView(
     val start: LocalDateTime,
     val end: LocalDateTime,
     val stepView: RecipeStepView,
-    val checked: Boolean
+    val allRecipeIngredientsByPortions: List<IngredientInRecipeView>,
+    val checked: Boolean,
+    val portionsCount:Int,
+    val stdPortionsCount:Int
 )

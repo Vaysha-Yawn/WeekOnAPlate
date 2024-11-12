@@ -26,6 +26,8 @@ import week.on.a.plate.dialogs.editPositionRecipeMore.logic.EditRecipePositionVi
 import week.on.a.plate.screens.filters.dialogs.selectedFilters.event.SelectedFiltersEvent
 import week.on.a.plate.screens.filters.dialogs.selectedFilters.logic.SelectedFiltersViewModel
 import week.on.a.plate.core.Event
+import week.on.a.plate.dialogs.chooseIngredientsForStep.event.ChooseIngredientsForStepEvent
+import week.on.a.plate.dialogs.chooseIngredientsForStep.logic.ChooseIngredientsForStepViewModel
 import week.on.a.plate.dialogs.cookStepMore.event.CookStepMoreEvent
 import week.on.a.plate.dialogs.cookStepMore.logic.CookStepMoreDialogViewModel
 import week.on.a.plate.dialogs.editOrDelete.event.EditOrDeleteEvent
@@ -36,6 +38,8 @@ import week.on.a.plate.dialogs.dialogTimePick.event.TimePickEvent
 import week.on.a.plate.dialogs.dialogTimePick.logic.TimePickViewModel
 import week.on.a.plate.dialogs.filtersMore.event.FiltersMoreEvent
 import week.on.a.plate.dialogs.filtersMore.logic.FiltersMoreViewModel
+import week.on.a.plate.dialogs.selectNStep.event.SelectNStepEvent
+import week.on.a.plate.dialogs.selectNStep.logic.SelectNStepViewModel
 import week.on.a.plate.dialogs.sortMore.event.SortMoreEvent
 import week.on.a.plate.dialogs.sortMore.logic.SortMoreViewModel
 import week.on.a.plate.screens.calendarMy.event.CalendarMyEvent
@@ -137,6 +141,12 @@ class DialogUseCase @Inject constructor() {
             }
             is CookStepMoreEvent -> if (activeDialog.value is CookStepMoreDialogViewModel) {
                 (activeDialog.value as CookStepMoreDialogViewModel).onEvent(event)
+            }
+            is SelectNStepEvent -> if (activeDialog.value is SelectNStepViewModel) {
+                (activeDialog.value as SelectNStepViewModel).onEvent(event)
+            }
+            is ChooseIngredientsForStepEvent -> if (activeDialog.value is ChooseIngredientsForStepViewModel) {
+                (activeDialog.value as ChooseIngredientsForStepViewModel).onEvent(event)
             }
         }
     }

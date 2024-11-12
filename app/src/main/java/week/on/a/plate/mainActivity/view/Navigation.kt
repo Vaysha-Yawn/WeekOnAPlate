@@ -28,6 +28,8 @@ import week.on.a.plate.screens.menu.event.MenuEvent
 import week.on.a.plate.screens.menu.view.main.MenuScreen
 import week.on.a.plate.screens.recipeDetails.navigation.RecipeDetailsDestination
 import week.on.a.plate.screens.recipeDetails.view.start.RecipeDetailsStart
+import week.on.a.plate.screens.recipeTimeline.navigation.RecipeTimelineDestination
+import week.on.a.plate.screens.recipeTimeline.view.RecipeTimelineStart
 import week.on.a.plate.screens.searchRecipes.event.SearchScreenEvent
 import week.on.a.plate.screens.searchRecipes.view.main.SearchStart
 import week.on.a.plate.screens.shoppingList.event.ShoppingListEvent
@@ -92,6 +94,13 @@ fun Navigation(
             viewModel.isActivePlusButton.value = false
             viewModel.isActiveFilterScreen.value = false
             SpecifySelectionAltStart(viewModel.specifySelectionViewModel)
+        }
+
+        composable<RecipeTimelineDestination> {
+            viewModel.isActiveBaseScreen.value = false
+            viewModel.isActivePlusButton.value = false
+            viewModel.isActiveFilterScreen.value = false
+            RecipeTimelineStart(viewModel.recipeTimelineViewModel)
         }
 
         composable<FilterDestination>() {

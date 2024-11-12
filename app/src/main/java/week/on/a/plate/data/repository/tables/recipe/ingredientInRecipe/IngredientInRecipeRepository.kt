@@ -45,15 +45,14 @@ class IngredientInRecipeRepository @Inject constructor(
     }
 
 
-    suspend fun insertIngredients(list: List<IngredientInRecipeView>, recipeId: Long) {
-        val ingredients = list.map {
+    suspend fun insertIngredient(ingredientInRecipe: IngredientInRecipeView, recipeId: Long) {
+        val ingredientRoom =
             with(ingredientMapper) {
-                it.viewToRoom(
+                ingredientInRecipe.viewToRoom(
                     recipeId,
                 )
             }
-        }
-        ingredients.forEach { dao.insert(it) }
+        dao.insert(ingredientRoom)
     }
 
     suspend fun deleteByRecipeId(recipeId: Long) {
@@ -62,5 +61,15 @@ class IngredientInRecipeRepository @Inject constructor(
 
     suspend fun deleteIngredients(ingredientInRecipe: IngredientInRecipeView) {
         dao.deleteById(ingredientInRecipe.id)
+    }
+
+    suspend fun update(ingredient: IngredientInRecipeView, recipeId: Long) {
+        val ingredientRoom =
+            with(ingredientMapper) {
+                ingredient.viewToRoom(
+                    recipeId,
+                )
+            }.apply { this.id = ingredient.id }
+       dao.update(ingredientRoom)
     }
 }

@@ -146,7 +146,6 @@ class SpecifySelectionViewModel @Inject constructor(
     fun done() {
         close()
         val category = getCategory() ?: return
-        state.date.value ?: return
         mainViewModel.viewModelScope.launch {
             val selId = weekRepository.getSelIdOrCreate(
                 LocalDateTime.of(state.date.value, LocalTime.of(0,0)),
@@ -155,7 +154,7 @@ class SpecifySelectionViewModel @Inject constructor(
                 mainViewModel.locale,
             )
             resultFlow.value =
-                SpecifySelectionResult(selId, state.date.value!!, state.portionsCount.intValue)
+                SpecifySelectionResult(selId, state.date.value, state.portionsCount.intValue)
         }
     }
 
@@ -176,6 +175,7 @@ class SpecifySelectionViewModel @Inject constructor(
             if (value != null) {
                 use(value)
                 mainViewModel.menuViewModel.onEvent(WrapperDatePickerEvent.ChangeWeek(value.date))
+                mainViewModel.menuViewModel.updateWeek()
                 mainViewModel.nav.navigate(MenuDestination)
             }
         }
