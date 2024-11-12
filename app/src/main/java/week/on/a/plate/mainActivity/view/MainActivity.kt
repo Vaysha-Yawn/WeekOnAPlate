@@ -3,6 +3,7 @@ package week.on.a.plate.mainActivity.view
 import android.content.Intent
 import android.os.Bundle
 import android.speech.RecognizerIntent
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -20,6 +21,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -27,10 +30,13 @@ import week.on.a.plate.core.theme.ColorBackgroundWhite
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.buttons.ActionPlusButton
 import week.on.a.plate.dialogs.core.DialogsContainer
+import week.on.a.plate.dialogs.exitApply.event.ExitApplyEvent
+import week.on.a.plate.dialogs.exitApply.logic.ExitApplyViewModel
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screens.cookPlanner.logic.CookPlannerViewModel
 import week.on.a.plate.screens.createRecipe.logic.RecipeCreateViewModel
+import week.on.a.plate.screens.createRecipe.navigation.RecipeCreateDestination
 import week.on.a.plate.screens.deleteApply.logic.DeleteApplyViewModel
 import week.on.a.plate.screens.filters.logic.FilterViewModel
 import week.on.a.plate.screens.inventory.logic.InventoryViewModel
@@ -134,11 +140,21 @@ class MainActivity : ComponentActivity() {
                         viewModel,
                         innerPadding,
                     )
-                    DialogsContainer(viewModel.dialogUseCase.activeDialog.value) { event ->
+                    DialogsContainer (viewModel.dialogUseCase.activeDialog.value) { event ->
                         viewModel.onEvent(event)
                     }
                 }
             }
+        }
+    }
+
+    override fun onBackPressed() {
+        val destination = viewModel.nav.currentBackStackEntry?.destination
+        val isCreateRecipe = destination?.hierarchy?.any { it.route?.substringBefore("?") == RecipeCreateDestination::class.qualifiedName } == true
+        if (isCreateRecipe){
+            viewModel.onEvent(MainEvent.OpenDialogExitApplyFromCreateRecipe)
+        }else{
+            super.onBackPressed()
         }
     }
 

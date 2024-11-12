@@ -16,8 +16,5 @@ sealed class MainEvent : Event() {
     class ShowDialog(val dialog: DialogViewModel) : MainEvent()
     class UseSharedLink(val link: String) : MainEvent()
     class VoiceToText(val use:(ArrayList<String>?)->Unit) : MainEvent()
+    data object OpenDialogExitApplyFromCreateRecipe : MainEvent()
 }
-
-
-
-

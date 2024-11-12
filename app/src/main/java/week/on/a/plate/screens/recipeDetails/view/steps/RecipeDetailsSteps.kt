@@ -44,32 +44,43 @@ fun RecipeDetailsSteps(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) 
     Column(Modifier.background(MaterialTheme.colorScheme.background)) {
         HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.outline)
         Row(
-            horizontalArrangement = Arrangement.SpaceAround,
+            horizontalArrangement = Arrangement.Center,
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.surface)
                 .fillMaxWidth()
                 .padding(vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            //todo?
+
+            /*Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 TextBody(text = state.recipe.value.prepTime.toInt().timeToString())
                 TextBody(text = "Активное время")
             }
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 TextBody(text = state.recipe.value.allTime.toInt().timeToString())
                 TextBody(text = "Всё время")
+            }*/
+            TextBody(text = "Время приготовления: ")
+            if (state.recipe.value.steps.isNotEmpty()) {
+                TextBody(
+                    text = state.recipe.value.steps.maxOf { it.start + it.duration }.toInt()
+                        .timeToString()
+                )
             }
         }
         HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.outline)
 
-        Spacer(modifier = Modifier.height(24.dp).fillMaxWidth()
+        Spacer(modifier = Modifier
+            .height(24.dp)
+            .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surface))
         for ((index, step) in state.recipe.value.steps.withIndex()) {
             Column(
                 Modifier
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.surface)
-                    .padding(horizontal = 24.dp, vertical = 12.dp), horizontalAlignment = Alignment.CenterHorizontally
+                    .padding(horizontal = 24.dp, vertical = 12.dp), horizontalAlignment = Alignment.Start
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -80,7 +91,10 @@ fun RecipeDetailsSteps(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) 
                         text = (index + 1).toString(),
                         textStyle = bodyMediumSemiBold,
                         color = MaterialTheme.colorScheme.onBackground, modifier = Modifier
-                            .background(MaterialTheme.colorScheme.background, RoundedCornerShape(5.dp))
+                            .background(
+                                MaterialTheme.colorScheme.background,
+                                RoundedCornerShape(5.dp)
+                            )
                             .padding(horizontal = 12.dp, vertical = 5.dp)
                     )
                     Spacer(modifier = Modifier.width(24.dp))
@@ -89,12 +103,13 @@ fun RecipeDetailsSteps(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) 
                 Spacer(modifier = Modifier.height(12.dp))
                 if (step.image.startsWith("http")) {
                     ImageLoad(
-                        url = step.image, modifier = Modifier.align(Alignment.CenterHorizontally)
+                        url = step.image, modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
                             .height(200.dp)
                     )
                 }
                 Spacer(modifier = Modifier.height(12.dp))
-                TextBody(text = step.description)
+                TextBody(text = step.description, modifier = Modifier.padding(start = 12.dp))
                 Spacer(modifier = Modifier.height(12.dp))
                 val listPinned = remember {
                     step.ingredientsPinnedId.map { id->

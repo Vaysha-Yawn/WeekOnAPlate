@@ -36,6 +36,8 @@ import week.on.a.plate.dialogs.editSelection.event.EditSelectionEvent
 import week.on.a.plate.dialogs.editSelection.logic.EditSelectionViewModel
 import week.on.a.plate.dialogs.dialogTimePick.event.TimePickEvent
 import week.on.a.plate.dialogs.dialogTimePick.logic.TimePickViewModel
+import week.on.a.plate.dialogs.exitApply.event.ExitApplyEvent
+import week.on.a.plate.dialogs.exitApply.logic.ExitApplyViewModel
 import week.on.a.plate.dialogs.filtersMore.event.FiltersMoreEvent
 import week.on.a.plate.dialogs.filtersMore.logic.FiltersMoreViewModel
 import week.on.a.plate.dialogs.selectNStep.event.SelectNStepEvent
@@ -147,6 +149,9 @@ class DialogUseCase @Inject constructor() {
             }
             is ChooseIngredientsForStepEvent -> if (activeDialog.value is ChooseIngredientsForStepViewModel) {
                 (activeDialog.value as ChooseIngredientsForStepViewModel).onEvent(event)
+            }
+            is ExitApplyEvent -> if (activeDialog.value is ExitApplyViewModel) {
+                (activeDialog.value as ExitApplyViewModel).onEvent(event)
             }
         }
     }

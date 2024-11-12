@@ -56,7 +56,11 @@ fun TopBarRecipeCreate(state: RecipeCreateUIState, onEvent: (RecipeCreateEvent) 
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.secondary, RoundedCornerShape(10.dp))
                 .clickable {
-                    onEvent(RecipeCreateEvent.Done)
+                    if (state.steps.value.isNotEmpty()) {
+                        onEvent(RecipeCreateEvent.SetTimeline)
+                    }else{
+                        onEvent(RecipeCreateEvent.Done)
+                    }
                 }
                 .size(36.dp)
         )

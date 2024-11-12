@@ -118,13 +118,6 @@ fun RecipeCreateStart(viewModel: RecipeCreateViewModel) {
                             onEvent(RecipeCreateEvent.AddStep)
                         }
                     }
-                    if (viewModel.state.steps.value.isNotEmpty()) {
-                        Column(Modifier.padding(24.dp)) {
-                            CommonButton("Управление временем шагов") {
-                                onEvent(RecipeCreateEvent.SetTimeline)
-                            }
-                        }
-                    }
                     Spacer(modifier = Modifier.height(300.dp))
                 }
             }

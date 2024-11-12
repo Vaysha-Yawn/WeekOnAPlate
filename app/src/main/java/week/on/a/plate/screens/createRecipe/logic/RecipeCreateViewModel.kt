@@ -20,11 +20,13 @@ import week.on.a.plate.dialogs.editOneString.state.EditOneStringUIState
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screens.createRecipe.event.RecipeCreateEvent
+import week.on.a.plate.screens.createRecipe.navigation.RecipeCreateDestination
 import week.on.a.plate.screens.createRecipe.state.RecipeCreateUIState
 import week.on.a.plate.screens.createRecipe.state.RecipeStepState
 import week.on.a.plate.screens.filters.navigation.FilterDestination
 import week.on.a.plate.screens.filters.state.FilterEnum
 import week.on.a.plate.screens.filters.state.FilterMode
+import week.on.a.plate.screens.recipeDetails.navigation.RecipeDetailsDestination
 import week.on.a.plate.screens.recipeTimeline.navigation.RecipeTimelineDestination
 import week.on.a.plate.screens.recipeTimeline.state.RecipeTimelineUIState
 import week.on.a.plate.screens.recipeTimeline.state.StepTimelineData
@@ -35,7 +37,8 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
     lateinit var mainViewModel: MainViewModel
     var state = RecipeCreateUIState()
     private var stateTimeline = RecipeTimelineUIState(
-            mutableStateOf(listOf()), state.allTime.longValue.toInt())
+        mutableStateOf(listOf()), state.allTime.longValue.toInt()
+    )
 
     private lateinit var resultFlow: MutableStateFlow<RecipeCreateUIState?>
 
@@ -50,10 +53,7 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
         when (event) {
             RecipeCreateEvent.Close -> mainViewModel.nav.popBackStack()
 
-            RecipeCreateEvent.Done -> {
-                resultFlow.value = state
-                mainViewModel.nav.popBackStack()
-            }
+            RecipeCreateEvent.Done -> done()
 
             RecipeCreateEvent.EditActiveTime -> {
                 getTime("Укажите активное время приготовления") { time ->
@@ -226,6 +226,11 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    private fun done() {
+        resultFlow.value = state
+        mainViewModel.nav.popBackStack()
+    }
+
     private fun editPinnedIngredients(recipeStepState: RecipeStepState) {
         viewModelScope.launch {
             val vm = ChooseIngredientsForStepViewModel()
@@ -246,13 +251,14 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
             updateTimelineState()
             mainViewModel.recipeTimelineViewModel.launchAndGet(
                 stateTimeline
-            ) {stateTL->
+            ) { stateTL ->
                 stateTimeline = stateTL
                 state.steps.value.forEach { step ->
                     val stepState = stateTL.allUISteps.value.find { it.id == step.id }!!
                     step.start = stepState.start.value
                     step.duration = stepState.duration.value
                 }
+                onEvent(RecipeCreateEvent.Done)
             }
         }
     }
@@ -295,6 +301,7 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
         flow.collect { value ->
             if (value != null) {
                 use(value)
+                mainViewModel.cookPlannerViewModel.update()
             }
         }
     }

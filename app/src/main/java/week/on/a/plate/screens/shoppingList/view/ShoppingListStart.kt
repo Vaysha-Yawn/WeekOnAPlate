@@ -128,7 +128,7 @@ fun ShoppingListContent(state: ShoppingListUIState, onEvent: (ShoppingListEvent)
         }
         if (state.listChecked.value.isEmpty() && state.listUnchecked.value.isEmpty()){
             Column(Modifier.padding(24.dp)) {
-                TextTitleLargeItalic("Похоже здесь пусто, нажмите + чтобы добавить.")
+                TextTitleLargeItalic("Похоже здесь пусто, нажмите + чтобы добавить")
             }
         }
     }

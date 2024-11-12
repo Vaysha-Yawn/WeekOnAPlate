@@ -69,6 +69,9 @@ import week.on.a.plate.dialogs.editSelection.view.EditSelectionContent
 import week.on.a.plate.dialogs.dialogTimePick.event.TimePickEvent
 import week.on.a.plate.dialogs.dialogTimePick.logic.TimePickViewModel
 import week.on.a.plate.dialogs.dialogTimePick.view.TimePickDialog
+import week.on.a.plate.dialogs.exitApply.event.ExitApplyEvent
+import week.on.a.plate.dialogs.exitApply.logic.ExitApplyViewModel
+import week.on.a.plate.dialogs.exitApply.view.ExitApplyContent
 import week.on.a.plate.dialogs.filtersMore.event.FiltersMoreEvent
 import week.on.a.plate.dialogs.filtersMore.logic.FiltersMoreViewModel
 import week.on.a.plate.dialogs.filtersMore.view.FilterMoreContent
@@ -322,6 +325,16 @@ fun DialogsContainer(
                 sheetState.show()
             }
         }
+
+        is ExitApplyViewModel -> {
+            BaseDialogContainer(data.state.show, { onEvent(ExitApplyEvent.Close) }) {
+                ExitApplyContent () { event: ExitApplyEvent ->
+                    onEvent(event)
+                }
+            }
+        }
+
+
         null -> {}
     }
 }

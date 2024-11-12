@@ -1,6 +1,5 @@
 package week.on.a.plate.mainActivity.logic
 
-import android.util.Log
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -14,6 +13,8 @@ import week.on.a.plate.data.dataView.recipe.RecipeStepView
 import week.on.a.plate.data.dataView.recipe.RecipeView
 import week.on.a.plate.data.repository.tables.recipe.recipe.RecipeRepository
 import week.on.a.plate.dialogs.core.DialogUseCase
+import week.on.a.plate.dialogs.exitApply.event.ExitApplyEvent
+import week.on.a.plate.dialogs.exitApply.logic.ExitApplyViewModel
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.screens.cookPlanner.logic.CookPlannerViewModel
 import week.on.a.plate.screens.createRecipe.logic.RecipeCreateViewModel
@@ -24,7 +25,6 @@ import week.on.a.plate.screens.inventory.logic.InventoryViewModel
 import week.on.a.plate.screens.menu.logic.useCase.CRUDRecipeInMenu
 import week.on.a.plate.screens.recipeDetails.logic.RecipeDetailsViewModel
 import week.on.a.plate.screens.recipeTimeline.logic.RecipeTimelineViewModel
-import week.on.a.plate.screens.searchRecipes.event.SearchScreenEvent
 import week.on.a.plate.screens.searchRecipes.logic.SearchViewModel
 import week.on.a.plate.screens.searchRecipes.logic.voice.VoiceInputUseCase
 import week.on.a.plate.screens.shoppingList.logic.ShoppingListViewModel
@@ -131,11 +131,25 @@ class MainViewModel @Inject constructor(
             is MainEvent.ShowDialog -> dialogUseCase.show()
             is MainEvent.VoiceToText -> voiceToText(event.use)
             is MainEvent.UseSharedLink -> useSharedLink(event.link)
+            MainEvent.OpenDialogExitApplyFromCreateRecipe -> openDialogExitApplyFromCreateRecipe()
         }
     }
 
+    private fun openDialogExitApplyFromCreateRecipe() {
+        val vm = ExitApplyViewModel()
+        vm.mainViewModel = this
+        viewModelScope.launch {
+            vm.launchAndGet {event->
+                if (event == ExitApplyEvent.Exit){
+                    nav.popBackStack()
+                }
+            }
+        }
+        onEvent(MainEvent.OpenDialog(vm))
+    }
+
     private fun useSharedLink(text: String) {
-        if (!isCheckedSharedAction && ::nav.isInitialized ) {
+        if (!isCheckedSharedAction && ::nav.isInitialized) {
             nav.navigate(RecipeCreateDestination)
             isCheckedSharedAction = true
             val recipeBase = emptyRecipe.apply {
@@ -159,7 +173,10 @@ class MainViewModel @Inject constructor(
                                     0,
                                     it.description.value,
                                     it.image.value,
-                                    it.timer.longValue, it.start, it.duration,it.pinnedIngredientsInd.value
+                                    it.timer.longValue,
+                                    it.start,
+                                    it.duration,
+                                    it.pinnedIngredientsInd.value
                                 )
                             },
                             link = recipe.source.value, false, LocalDateTime.now()

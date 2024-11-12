@@ -34,7 +34,7 @@ fun PinnedIngredientsForStep(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column {
-                    TextBody(item.ingredientView.name)
+                    TextSmall(item.ingredientView.name)
                     if (item.description != "") {
                         TextSmall(item.description, color = ColorSubTextGrey)
                     }

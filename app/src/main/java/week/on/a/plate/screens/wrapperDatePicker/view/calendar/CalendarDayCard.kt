@@ -53,7 +53,7 @@ fun CalendarDayCard(
             dayNumber.dayOfMonth.toString(), modifier = Modifier
                 .background(
                     if (active ) {
-                        MaterialTheme.colorScheme.primary
+                        MaterialTheme.colorScheme.surface
                     } else {
                         ColorTransparent
                     }, CircleShape

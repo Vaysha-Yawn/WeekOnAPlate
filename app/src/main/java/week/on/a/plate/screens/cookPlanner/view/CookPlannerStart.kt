@@ -18,6 +18,7 @@ import week.on.a.plate.core.Event
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextDisplayItalic
+import week.on.a.plate.core.uitools.TextSmall
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.TextTitleItalic
 import week.on.a.plate.core.uitools.TextTitleLarge
@@ -98,8 +99,10 @@ fun DayViewCookPlan(
 
 @Composable
 fun EmptyTip() {
-    Box(Modifier.fillMaxSize().padding( horizontal = 24.dp), contentAlignment = Alignment.TopCenter) {
-        TextTitleLargeItalic("Похоже здесь пусто. Запланируйте приготовление через: Рецепт в меню -> Больше -> Запланировать приготовление.")
+    Column (Modifier.fillMaxSize().padding( horizontal = 24.dp)) {
+        TextTitle("Похоже здесь пусто..")
+        Spacer(Modifier.height(24.dp))
+        TextSmall("Запланируйте приготовление через: Рецепт в меню -> Больше -> Планировать приготовление")
     }
 }
 
