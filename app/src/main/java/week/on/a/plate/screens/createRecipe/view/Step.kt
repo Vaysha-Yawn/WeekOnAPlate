@@ -108,7 +108,7 @@ fun StepRecipeEdit(
         Spacer(modifier = Modifier.height(12.dp))
         PinnedIngredientsForStep(
             recipeStepState.pinnedIngredientsInd.value.map {id->
-                state.ingredients.value.find {it.id == id }!!
+                state.ingredients.value.find {it.ingredientView.ingredientId == id }!!
             }
         )
     }
@@ -163,7 +163,7 @@ fun PreviewStepRecipeEdit() {
         vm.setStateByOldRecipe(recipeTom)
         Column {
             PinnedIngredientsForStep(vm.state.steps.value[0].pinnedIngredientsInd.value.map {id->
-                vm.state.ingredients.value.find {it.id == id }!!
+                vm.state.ingredients.value.find {it.ingredientView.ingredientId == id }!!
             })
             StepRecipeEdit(0, vm.state.steps.value[0], vm.state) {}
             StepRecipeEdit(1, vm.state.steps.value[1], vm.state) {}

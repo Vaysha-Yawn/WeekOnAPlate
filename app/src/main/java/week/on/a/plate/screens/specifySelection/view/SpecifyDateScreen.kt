@@ -43,65 +43,6 @@ import week.on.a.plate.core.uitools.TitleMenuSmall
 import week.on.a.plate.screens.specifySelection.event.SpecifySelectionEvent
 import week.on.a.plate.screens.specifySelection.state.SpecifySelectionUIState
 
-
-@Composable
-fun SpecifyDateScreen(
-    state: SpecifySelectionUIState,
-    onEvent: (SpecifySelectionEvent) -> Unit,
-    onEventMain: (MainEvent) -> Unit,
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surface)
-            .padding(24.dp),
-        horizontalAlignment = Alignment.Start
-    ) {
-        Row(
-            Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            CloseButton { onEvent(SpecifySelectionEvent.Back) }
-            TextTitleItalic(
-                text = stringResource(R.string.specify_selection),
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.End
-            )
-        }
-        Spacer(modifier = Modifier.height(36.dp))
-        ChangePotionsCountSpecifySel(state.portionsCount)
-
-        Spacer(modifier = Modifier.height(36.dp))
-        CommonButton(
-            state.date.value?.dateToString()
-                ?: stringResource(R.string.select_day),
-            image = R.drawable.calendar_no_dark
-        ) {
-            onEvent(SpecifySelectionEvent.ChooseDate)
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        ChooseSelectionSpecifySelection(state, onEvent, this)
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        val messageError =
-            stringResource(id = R.string.message_non_validate_place_position_in_menu)
-        DoneButton(
-            stringResource(id = R.string.apply),
-            modifier = Modifier.padding(horizontal = 24.dp)
-        ) {
-            if (state.date.value != null && (state.checkWeek.value || state.checkDayCategory.value != null)) {
-                onEvent(SpecifySelectionEvent.Done)
-            } else {
-                onEventMain(MainEvent.ShowSnackBar(messageError))
-            }
-        }
-    }
-}
-
 @Composable
 fun ChooseSelectionSpecifySelection(
     state: SpecifySelectionUIState,
@@ -109,11 +50,6 @@ fun ChooseSelectionSpecifySelection(
     columnScope: ColumnScope
 ) {
     with(columnScope){
-        /*TextTitleItalic(
-            text = stringResource(R.string.title_in_generally),
-            modifier = Modifier.padding(start = 12.dp)
-        )
-        Spacer(modifier = Modifier.height(12.dp))*/
         Row(
             Modifier
                 .fillMaxWidth()
@@ -131,11 +67,6 @@ fun ChooseSelectionSpecifySelection(
             }
         }
         Spacer(modifier = Modifier.height(12.dp))
-       /* TextTitleItalic(
-            text = stringResource(R.string.title_or_detailed),
-            modifier = Modifier.padding(start = 12.dp)
-        )
-        Spacer(modifier = Modifier.height(12.dp))*/
         Column(
             Modifier
                 .fillMaxWidth()
@@ -182,29 +113,6 @@ fun ChooseSelectionSpecifySelection(
 }
 
 @Composable
-fun ChangePotionsCountSpecifySel(portionsCount: MutableIntState) {
-    TextTitleItalic(text = "Количество порций", modifier = Modifier.padding(start = 12.dp))
-    Spacer(modifier = Modifier.height(12.dp))
-    Column(
-        Modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.background, RoundedCornerShape(20.dp))
-            .padding(horizontal = 12.dp, vertical = 12.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        ButtonsCounterSmall(value = portionsCount,
-            minus = {
-                if (portionsCount.intValue > 0) {
-                    portionsCount.intValue = portionsCount.intValue.minus(1)
-                }
-            },
-            plus = {
-                portionsCount.intValue = portionsCount.intValue.plus(1)
-            })
-    }
-}
-
-@Composable
 fun CheckBoxAndText(text: String, stateCheck: MutableState<Boolean>, onCheck: () -> Unit) {
     Row() {
         CheckButton(checked = stateCheck) {
@@ -221,8 +129,6 @@ fun CheckBoxAndText(text: String, stateCheck: MutableState<Boolean>, onCheck: ()
 @Composable
 fun PreviewAddRecipe() {
     WeekOnAPlateTheme {
-        SpecifyDateScreen(SpecifySelectionUIState().apply {
-            allSelectionsIdDay.value = listOf("Завтрак")
-        }, {}) {}
+
     }
 }

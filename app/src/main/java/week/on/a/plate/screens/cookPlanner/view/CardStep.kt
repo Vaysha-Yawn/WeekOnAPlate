@@ -15,6 +15,7 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -89,18 +90,18 @@ fun CardStep(step: CookPlannerStepView, onEvent: (Event) -> Unit) {
                 Spacer(modifier = Modifier.height(24.dp))
             }
             TextBodyDisActive(
-                step.recipeName + ", ${step.portionsCount}" + " порции"
+                step.recipeName + ", ${step.portionsCount}" + " порции", modifier = Modifier.padding(start = 12.dp)
             )
             Spacer(modifier = Modifier.height(12.dp))
             TextSmall(
-                step.stepView.description
+                step.stepView.description, modifier = Modifier.padding(start = 12.dp)
             )
             if (step.stepView.ingredientsPinnedId.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(12.dp))
-                PinnedIngredientsForStep(
+                val ingredients = remember {
                     step.stepView.ingredientsPinnedId.map { id ->
                         //todo move to logic layer
-                        val ingr = step.allRecipeIngredientsByPortions.find { it.id == id }!!
+                        val ingr = step.allRecipeIngredientsByPortions.find { it.ingredientView.ingredientId == id }!!
                         val startIngredientCount = ingr.count
                         val stdPortions = step.stdPortionsCount
                         val newCountPortions = step.portionsCount
@@ -110,7 +111,8 @@ fun CardStep(step: CookPlannerStepView, onEvent: (Event) -> Unit) {
                         }
                         ingr
                     }
-                )
+                }
+                PinnedIngredientsForStep(ingredients)
             }
             if (step.stepView.timer.toInt() != 0) {
                 Spacer(modifier = Modifier.height(6.dp))

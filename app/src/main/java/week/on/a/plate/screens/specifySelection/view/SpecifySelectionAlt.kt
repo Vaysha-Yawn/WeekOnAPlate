@@ -1,4 +1,4 @@
-package week.on.a.plate.screens.specifySelection.view.alt
+package week.on.a.plate.screens.specifySelection.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -31,7 +31,6 @@ import week.on.a.plate.screens.specifySelection.logic.SpecifySelectionViewModel
 import week.on.a.plate.screens.specifySelection.state.SpecifySelectionUIState
 import week.on.a.plate.screens.calendarMy.state.StateCalendarMy
 import week.on.a.plate.screens.calendarMy.view.CalendarMy
-import week.on.a.plate.screens.specifySelection.view.ChooseSelectionSpecifySelection
 import java.time.LocalDate
 
 @Composable
@@ -61,8 +60,9 @@ fun SpecifySelectionAltContent(state: SpecifySelectionUIState, stateCalendarMy: 
             )
         }
         Spacer(modifier = Modifier.height(24.dp))
-        CalendarMy(stateCalendarMy, onEvent){
+        CalendarMy(stateCalendarMy, onEvent){date->
             onEvent(SpecifySelectionEvent.UpdateSelections)
+            onEvent(SpecifySelectionEvent.ApplyDate(date))
         }
         Spacer(modifier = Modifier.height(24.dp))
 

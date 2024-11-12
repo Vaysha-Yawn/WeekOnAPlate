@@ -66,20 +66,20 @@ fun ChooseIngredientsForStep(viewModel: ChooseIngredientsForStepViewModel) {
                     Modifier
                         .fillMaxWidth()
                         .clickable {
-                            onEvent(ChooseIngredientsForStepEvent.ClickToIngredient(item.id))
+                            onEvent(ChooseIngredientsForStepEvent.ClickToIngredient(item.ingredientView.ingredientId))
                         }
                         .padding( vertical = 6.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Checkbox(
-                        checked = state.chosenIngredients.value.contains(item.id),
+                        checked = state.chosenIngredients.value.contains(item.ingredientView.ingredientId),
                         colors = CheckboxDefaults.colors(
                             checkedColor = MaterialTheme.colorScheme.secondary,
                             checkmarkColor = MaterialTheme.colorScheme.onBackground
                         ),
                         onCheckedChange = {
-                            onEvent(ChooseIngredientsForStepEvent.ClickToIngredient(item.id))
+                            onEvent(ChooseIngredientsForStepEvent.ClickToIngredient(item.ingredientView.ingredientId))
                         },
                     )
                     if (item.ingredientView.img.startsWith("http")) {

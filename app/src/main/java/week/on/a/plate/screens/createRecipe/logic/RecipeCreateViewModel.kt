@@ -207,7 +207,7 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
             }
 
             is RecipeCreateEvent.DeleteIngredient -> {
-                val ind = event.ingredient.id
+                val ind = event.ingredient.ingredientView.ingredientId
                 state.steps.value.forEach {
                     if (it.pinnedIngredientsInd.value.contains(ind)) {
                         it.pinnedIngredientsInd.value =
@@ -249,7 +249,7 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
             ) {stateTL->
                 stateTimeline = stateTL
                 state.steps.value.forEach { step ->
-                    val stepState = stateTimeline.allUISteps.value.find { it.id == step.id }!!
+                    val stepState = stateTL.allUISteps.value.find { it.id == step.id }!!
                     step.start = stepState.start.value
                     step.duration = stepState.duration.value
                 }

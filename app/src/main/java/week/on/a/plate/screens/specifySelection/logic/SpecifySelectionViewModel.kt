@@ -65,7 +65,6 @@ class SpecifySelectionViewModel @Inject constructor(
     fun onEvent(event: SpecifySelectionEvent) {
         when (event) {
             SpecifySelectionEvent.Back -> close()
-            SpecifySelectionEvent.ChooseDate -> chooseDate()
             SpecifySelectionEvent.Done -> done()
             SpecifySelectionEvent.AddCustomSelection -> addCustomSelection()
             is SpecifySelectionEvent.UpdatePreview -> updatePreview(event.date)
@@ -75,7 +74,6 @@ class SpecifySelectionViewModel @Inject constructor(
     }
 
     private fun applyDate(date: LocalDate) {
-        state.isDateChooseActive.value = false
         state.date.value = date
     }
 
@@ -111,10 +109,6 @@ class SpecifySelectionViewModel @Inject constructor(
             }
             mainViewModel.onEvent(MainEvent.OpenDialog(vm))
         }
-    }
-
-    private fun chooseDate() {
-        state.isDateChooseActive.value = true
     }
 
     fun updateSelections() {

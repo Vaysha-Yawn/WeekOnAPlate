@@ -8,7 +8,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import week.on.a.plate.core.navigation.CookPlannerDestination
 import week.on.a.plate.screens.specifySelection.navigation.SpecifySelectionDestination
-import week.on.a.plate.screens.specifySelection.view.SpecifySelectionMain
 import week.on.a.plate.core.navigation.SearchDestination
 import week.on.a.plate.core.navigation.MenuDestination
 import week.on.a.plate.core.navigation.SettingsDestination
@@ -36,7 +35,7 @@ import week.on.a.plate.screens.shoppingList.event.ShoppingListEvent
 import week.on.a.plate.screens.shoppingList.view.ShoppingListStart
 import week.on.a.plate.screens.specifyRecipeToCookPlan.navigation.SpecifyForCookPlanDestination
 import week.on.a.plate.screens.specifyRecipeToCookPlan.view.SpecifyForCookPlanStart
-import week.on.a.plate.screens.specifySelection.view.alt.SpecifySelectionAltStart
+import week.on.a.plate.screens.specifySelection.view.SpecifySelectionAltStart
 
 @Composable
 fun Navigation(

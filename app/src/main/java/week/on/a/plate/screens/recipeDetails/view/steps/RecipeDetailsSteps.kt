@@ -18,6 +18,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -95,10 +96,10 @@ fun RecipeDetailsSteps(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) 
                 Spacer(modifier = Modifier.height(12.dp))
                 TextBody(text = step.description)
                 Spacer(modifier = Modifier.height(12.dp))
-                PinnedIngredientsForStep(
+                val listPinned = remember {
                     step.ingredientsPinnedId.map { id->
                         //todo move to logic layer
-                        val ingr = state.recipe.value.ingredients.find { it.id == id }!!
+                        val ingr = state.recipe.value.ingredients.find { it.ingredientView.ingredientId == id }!!
                         val startIngredientCount = ingr.count
                         val stdPortions = state.recipe.value.standardPortionsCount
                         val newCountPortions = state.currentPortions.intValue
@@ -107,7 +108,8 @@ fun RecipeDetailsSteps(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) 
                         }
                         ingr
                     }
-                )
+                }
+                PinnedIngredientsForStep(listPinned)
             }
             Spacer(modifier = Modifier.height(24.dp))
         }

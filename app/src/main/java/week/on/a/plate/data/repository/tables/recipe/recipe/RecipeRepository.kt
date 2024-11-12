@@ -154,6 +154,7 @@ class RecipeRepository @Inject constructor(
             },
             updateAction = { step ->
                 stepRepository.update(step, recipeId)
+                //todo upd time steps in cook planner
             }
         )
 

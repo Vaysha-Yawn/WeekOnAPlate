@@ -13,5 +13,4 @@ class SpecifySelectionUIState() {
     val portionsCount = mutableIntStateOf(2)
     val allSelectionsIdDay = mutableStateOf<List<String>>(listOf())
     val dayViewPreview:MutableState<List<SelectionView>> = mutableStateOf(listOf())
-    val isDateChooseActive:MutableState<Boolean> = mutableStateOf(false)
 }
