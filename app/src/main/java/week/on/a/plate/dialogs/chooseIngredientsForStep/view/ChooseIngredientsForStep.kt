@@ -82,7 +82,7 @@ fun ChooseIngredientsForStep(viewModel: ChooseIngredientsForStepViewModel) {
                             onEvent(ChooseIngredientsForStepEvent.ClickToIngredient(item.ingredientView.ingredientId))
                         },
                     )
-                    if (item.ingredientView.img.startsWith("http")) {
+                    if (item.ingredientView.img!="") {
                         ImageLoad(
                             url = item.ingredientView.img, modifier = Modifier
                                 .height(40.dp)

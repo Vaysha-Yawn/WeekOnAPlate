@@ -1,9 +1,9 @@
 package week.on.a.plate.mainActivity.view
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.speech.RecognizerIntent
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -22,7 +22,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -30,8 +29,6 @@ import week.on.a.plate.core.theme.ColorBackgroundWhite
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.buttons.ActionPlusButton
 import week.on.a.plate.dialogs.core.DialogsContainer
-import week.on.a.plate.dialogs.exitApply.event.ExitApplyEvent
-import week.on.a.plate.dialogs.exitApply.logic.ExitApplyViewModel
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screens.cookPlanner.logic.CookPlannerViewModel
@@ -80,6 +77,14 @@ class MainActivity : ComponentActivity() {
             }
         }
         viewModel.voiceInputUseCase.voiceInputLauncher = voiceInputLauncher
+
+
+        val getPictureLauncher = registerForActivityResult(
+            contract = ActivityResultContracts.GetContent()
+        ) { uri: Uri? ->
+            viewModel.imageFromGalleryUseCase.saveImage(this, uri)
+        }
+        viewModel.imageFromGalleryUseCase.imageLauncher = getPictureLauncher
 
         setContent {
             WeekOnAPlateTheme {

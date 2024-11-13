@@ -44,7 +44,7 @@ fun IngredientPosition(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Spacer(modifier = Modifier.width(20.dp))
-            if (ingredient.ingredient.ingredientView.img.startsWith("http")){
+            if (ingredient.ingredient.ingredientView.img!=""){
                 ImageLoad(
                     ingredient.ingredient.ingredientView.img, Modifier
                         .size(40.dp)

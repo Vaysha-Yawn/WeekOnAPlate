@@ -42,7 +42,7 @@ fun CardRecipeResult(recipe: RecipeView, onEvent: (SearchScreenEvent) -> Unit, m
             .padding(bottom = 12.dp).border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(20.dp))
             .clip(RoundedCornerShape(20.dp))
     ) {
-        if (recipe.img.startsWith("http")) {
+        if (recipe.img!="") {
             ImageLoad(
                 recipe.img,
                 Modifier

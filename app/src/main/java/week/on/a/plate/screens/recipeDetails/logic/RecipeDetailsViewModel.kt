@@ -8,6 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import week.on.a.plate.core.utils.getAllTimeCook
 import week.on.a.plate.core.utils.getIngredientCountAndMeasure1000
 import week.on.a.plate.core.utils.timeToString
 import week.on.a.plate.data.dataView.example.emptyRecipe
@@ -72,7 +73,7 @@ class RecipeDetailsViewModel @Inject constructor(
         text+= "Рецепт: "+recipeView.name
         text+= "\n"
         text+= "\n"
-        text+= "Время приготовления: " + recipeView.steps.maxOf { it.start+it.duration }.toInt().timeToString()
+        text+= "Время приготовления: " + recipeView.getAllTimeCook().timeToString()
         text+= "\n"
         text+= "Колличество порций: " + recipeView.standardPortionsCount
         text+= "\n"
@@ -95,7 +96,7 @@ class RecipeDetailsViewModel @Inject constructor(
         text+= "Источник:"+ recipeView.link
         text+= "\n"
         text+= "\n"
-        text+= "Экспортировано из приложения \"Неделя на тарелке\" - книга рецептов, составление меню и список покупок. Только для самых любимых и проверенных рецептов, остальным вход воспрещён! (\u2060灬\u2060º\u2060‿\u2060º\u2060灬\u2060)\u2060♡"
+        text+= "Экспортировано из приложения \"Неделя на тарелке\" - книга рецептов, составление меню и список покупок. Только для самых любимых и проверенных рецептов! (\u2060灬\u2060º\u2060‿\u2060º\u2060灬\u2060)\u2060♡"
         return text
     }
 

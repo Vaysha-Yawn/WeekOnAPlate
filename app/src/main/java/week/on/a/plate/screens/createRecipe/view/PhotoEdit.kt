@@ -43,8 +43,7 @@ fun PhotoRecipeEdit(state: RecipeCreateUIState, onEvent: (RecipeCreateEvent) -> 
             TextBody(text = "Добавить фото")
         }
         Spacer(modifier = Modifier.width(24.dp))
-    }
-    if (state.photoLink.value != "") {
+    } else {
         Spacer(modifier = Modifier.height(12.dp))
         Row {
             Icon(

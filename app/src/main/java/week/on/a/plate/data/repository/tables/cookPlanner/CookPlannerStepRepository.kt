@@ -3,6 +3,7 @@ package week.on.a.plate.data.repository.tables.cookPlanner
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import week.on.a.plate.core.utils.getAllTimeCook
 import week.on.a.plate.data.dataView.CookPlannerStepView
 import week.on.a.plate.data.dataView.recipe.RecipeView
 import week.on.a.plate.data.repository.tables.recipe.recipe.RecipeRepository
@@ -91,7 +92,7 @@ class CookPlannerStepRepository @Inject constructor(
     }
 
     suspend fun insertGroupByEnd(recipe: RecipeView, end: LocalDateTime, portionsCount: Int?) {
-        val maxTime = recipe.steps.maxOf { it.start + it.duration }
+        val maxTime = recipe.getAllTimeCook().toLong()
         val start = end.minusSeconds(maxTime)
         val groupId = groupRepo.insert(
             CookPlannerGroupRoom(

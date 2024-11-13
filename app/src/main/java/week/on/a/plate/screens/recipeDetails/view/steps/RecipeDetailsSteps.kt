@@ -32,6 +32,7 @@ import week.on.a.plate.core.theme.bodyMediumSemiBold
 import week.on.a.plate.core.uitools.ImageLoad
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextInApp
+import week.on.a.plate.core.utils.getAllTimeCook
 import week.on.a.plate.core.utils.timeToString
 import week.on.a.plate.data.dataView.example.recipeTom
 import week.on.a.plate.screens.createRecipe.view.PinnedIngredientsForStep
@@ -51,8 +52,6 @@ fun RecipeDetailsSteps(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) 
                 .padding(vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            //todo?
-
             /*Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 TextBody(text = state.recipe.value.prepTime.toInt().timeToString())
                 TextBody(text = "Активное время")
@@ -64,8 +63,7 @@ fun RecipeDetailsSteps(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) 
             TextBody(text = "Время приготовления: ")
             if (state.recipe.value.steps.isNotEmpty()) {
                 TextBody(
-                    text = state.recipe.value.steps.maxOf { it.start + it.duration }.toInt()
-                        .timeToString()
+                    text = state.recipe.value.getAllTimeCook().timeToString()
                 )
             }
         }
@@ -101,7 +99,7 @@ fun RecipeDetailsSteps(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) 
                     TimerButton(step.timer.toInt())
                 }
                 Spacer(modifier = Modifier.height(12.dp))
-                if (step.image.startsWith("http")) {
+                if (step.image!="") {
                     ImageLoad(
                         url = step.image, modifier = Modifier
                             .align(Alignment.CenterHorizontally)

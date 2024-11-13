@@ -8,10 +8,8 @@ import week.on.a.plate.data.repository.tables.menu.position.PositionRoom
 @Entity
 data class PositionRecipeRoom(
     var recipeId: Long,
-    val recipeName: String,
     var portionsCount: Int,
     val selectionId: Long,
-    val recipeImg: String,
 ) : PositionRoom() {
     @PrimaryKey(autoGenerate = true)
     var recipeInMenuId: Long = 0

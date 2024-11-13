@@ -16,9 +16,7 @@ class RecipeInMenuMapper() {
     fun Position.PositionRecipeView.viewToRoom(selectionId:Long): PositionRecipeRoom =
         PositionRecipeRoom(
             recipeId = this.recipe.id,
-            recipeName = this.recipe.name,
             portionsCount = this.portionsCount,
             selectionId = selectionId,
-            recipe.image
         )
 }

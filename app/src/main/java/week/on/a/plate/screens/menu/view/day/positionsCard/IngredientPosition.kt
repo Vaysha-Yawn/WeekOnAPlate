@@ -59,10 +59,10 @@ fun WeekIngredientPosition(
             .clip(RoundedCornerShape(20.dp)),
     ) {
         val height =
-            if (ingredient.ingredient.ingredientView.img.startsWith("http")){
+            if (ingredient.ingredient.ingredientView.img!=""){
             150.dp
         }else{50.dp}
-        if (ingredient.ingredient.ingredientView.img.startsWith("http")) {
+        if (ingredient.ingredient.ingredientView.img!="") {
             ImageLoad(
                 ingredient.ingredient.ingredientView.img,
                 Modifier

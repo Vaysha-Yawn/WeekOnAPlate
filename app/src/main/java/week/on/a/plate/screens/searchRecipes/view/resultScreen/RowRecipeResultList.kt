@@ -58,7 +58,7 @@ fun RowRecipeResultList(
                 .padding(horizontal = 12.dp, vertical = 10.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            if (recipeView.img.startsWith("http")) {
+            if (recipeView.img!="") {
                 ImageLoad(
                     recipeView.img, Modifier
                         .size(80.dp)

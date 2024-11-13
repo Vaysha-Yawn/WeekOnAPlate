@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.navigation.MenuDestination
+import week.on.a.plate.core.utils.getAllTimeCook
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.data.dataView.recipe.IngredientView
 import week.on.a.plate.data.dataView.recipe.RecipeStepView
@@ -67,7 +68,7 @@ class SearchViewModel @Inject constructor(
     private fun search() {
         searchAbstract { recipeView ->
             (if (state.favoriteChecked.value){ recipeView.inFavorite } else true)
-                    && (if (state.allTime.intValue!=0) {recipeView.steps.maxOf { it.start+it.duration }.toInt() <= state.allTime.intValue*60} else true)
+                    && (if (state.allTime.intValue!=0) {recipeView.getAllTimeCook() <= state.allTime.intValue*60} else true)
                     && recipeView.name.contains(state.searchText.value.trim(), true)
                     && recipeView.tags.containsAll(state.selectedTags.value)
                     && recipeView.ingredients.map { ingredientInRecipeView -> ingredientInRecipeView.ingredientView }

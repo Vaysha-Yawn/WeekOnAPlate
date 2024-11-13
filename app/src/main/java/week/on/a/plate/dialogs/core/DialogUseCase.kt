@@ -26,6 +26,8 @@ import week.on.a.plate.dialogs.editPositionRecipeMore.logic.EditRecipePositionVi
 import week.on.a.plate.screens.filters.dialogs.selectedFilters.event.SelectedFiltersEvent
 import week.on.a.plate.screens.filters.dialogs.selectedFilters.logic.SelectedFiltersViewModel
 import week.on.a.plate.core.Event
+import week.on.a.plate.dialogs.chooseHowImagePick.event.ChooseHowImagePickEvent
+import week.on.a.plate.dialogs.chooseHowImagePick.logic.ChooseHowImagePickViewModel
 import week.on.a.plate.dialogs.chooseIngredientsForStep.event.ChooseIngredientsForStepEvent
 import week.on.a.plate.dialogs.chooseIngredientsForStep.logic.ChooseIngredientsForStepViewModel
 import week.on.a.plate.dialogs.cookStepMore.event.CookStepMoreEvent
@@ -152,6 +154,9 @@ class DialogUseCase @Inject constructor() {
             }
             is ExitApplyEvent -> if (activeDialog.value is ExitApplyViewModel) {
                 (activeDialog.value as ExitApplyViewModel).onEvent(event)
+            }
+            is ChooseHowImagePickEvent -> if (activeDialog.value is ChooseHowImagePickViewModel) {
+                (activeDialog.value as ChooseHowImagePickViewModel).onEvent(event)
             }
         }
     }

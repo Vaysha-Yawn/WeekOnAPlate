@@ -75,22 +75,23 @@ fun CardStep(step: CookPlannerStepView, onEvent: (Event) -> Unit) {
                     onEvent(CookPlannerEvent.ShowStepMore(step))
                 }
             }
-            if (step.stepView.image.startsWith("http")) {
-                Spacer(modifier = Modifier.height(12.dp))
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                    ImageLoad(
-                        step.stepView.image,
-                        Modifier
-                            .clip(RoundedCornerShape(10.dp))
-                            .clipToBounds()
-                            .size(200.dp)
-                            .scale(1.4f)
-                    )
-                }
-                Spacer(modifier = Modifier.height(24.dp))
+
+            Spacer(modifier = Modifier.height(12.dp))
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                ImageLoad(
+                    step.stepView.image,
+                    Modifier
+                        .clip(RoundedCornerShape(10.dp))
+                        .clipToBounds()
+                        .size(200.dp)
+                        .scale(1.4f)
+                )
             }
+            Spacer(modifier = Modifier.height(24.dp))
+
             TextBodyDisActive(
-                step.recipeName + ", ${step.portionsCount}" + " порции", modifier = Modifier.padding(start = 12.dp)
+                step.recipeName + ", ${step.portionsCount}" + " порции",
+                modifier = Modifier.padding(start = 12.dp)
             )
             Spacer(modifier = Modifier.height(12.dp))
             TextSmall(
@@ -101,7 +102,8 @@ fun CardStep(step: CookPlannerStepView, onEvent: (Event) -> Unit) {
                 val ingredients = remember {
                     step.stepView.ingredientsPinnedId.map { id ->
                         //todo move to logic layer
-                        val ingr = step.allRecipeIngredientsByPortions.find { it.ingredientView.ingredientId == id }!!
+                        val ingr =
+                            step.allRecipeIngredientsByPortions.find { it.ingredientView.ingredientId == id }!!
                         val startIngredientCount = ingr.count
                         val stdPortions = step.stdPortionsCount
                         val newCountPortions = step.portionsCount

@@ -20,6 +20,7 @@ import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.CloseButton
 import week.on.a.plate.dialogs.selectNStep.event.SelectNStepEvent
 import week.on.a.plate.dialogs.selectNStep.logic.SelectNStepViewModel
+import week.on.a.plate.dialogs.selectNStep.state.SelectNStepUIState
 
 @Composable
 fun SelectNStep(viewModel: SelectNStepViewModel) {
@@ -36,8 +37,7 @@ fun SelectNStep(viewModel: SelectNStepViewModel) {
             .padding(20.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.padding(bottom = 24.dp)) {
-            TextTitle(
-                text = "Выберите шаг", textAlign = TextAlign.End)
+            TextTitle(text = "Выберите шаг", textAlign = TextAlign.End)
         }
 
 
@@ -56,9 +56,7 @@ fun SelectNStep(viewModel: SelectNStepViewModel) {
 fun PreviewEditOtherPanel() {
     WeekOnAPlateTheme {
         val vm = SelectNStepViewModel()
-        LaunchedEffect(true) {
-            vm.launchAndGet(5) {}
-        }
+        vm.state = SelectNStepUIState(5)
         SelectNStep(vm)
     }
 }

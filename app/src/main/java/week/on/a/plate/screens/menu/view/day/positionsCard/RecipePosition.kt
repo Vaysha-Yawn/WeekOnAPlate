@@ -71,8 +71,8 @@ fun WeekRecipePosition(
             )
             .clip(RoundedCornerShape(20.dp)),
     ) {
-        val height = if (recipe.recipe.image.startsWith("http")) 150.dp else 50.dp
-        if (recipe.recipe.image.startsWith("http")) {
+        val height = if (recipe.recipe.image!="") 150.dp else 50.dp
+        if (recipe.recipe.image!="") {
             ImageLoad(
                 recipe.recipe.image,
                 Modifier

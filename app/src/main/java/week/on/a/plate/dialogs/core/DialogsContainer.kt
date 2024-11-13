@@ -54,6 +54,9 @@ import week.on.a.plate.screens.filters.dialogs.selectedFilters.view.DialogSelect
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.uitools.dialogs.BaseDialogContainer
 import week.on.a.plate.core.uitools.dialogs.BottomDialogContainer
+import week.on.a.plate.dialogs.chooseHowImagePick.event.ChooseHowImagePickEvent
+import week.on.a.plate.dialogs.chooseHowImagePick.logic.ChooseHowImagePickViewModel
+import week.on.a.plate.dialogs.chooseHowImagePick.view.ChooseHowImagePickContent
 import week.on.a.plate.dialogs.chooseIngredientsForStep.event.ChooseIngredientsForStepEvent
 import week.on.a.plate.dialogs.chooseIngredientsForStep.logic.ChooseIngredientsForStepViewModel
 import week.on.a.plate.dialogs.chooseIngredientsForStep.view.ChooseIngredientsForStep
@@ -318,7 +321,7 @@ fun DialogsContainer(
             val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
             BottomDialogContainer(
                 sheetState,
-                { onEvent(ChooseIngredientsForStepEvent.Close) }) {
+                { data.onEvent(ChooseIngredientsForStepEvent.Close) }) {
                 ChooseIngredientsForStep(data)
             }
             LaunchedEffect(true) {
@@ -327,13 +330,26 @@ fun DialogsContainer(
         }
 
         is ExitApplyViewModel -> {
-            BaseDialogContainer(data.state.show, { onEvent(ExitApplyEvent.Close) }) {
+            BaseDialogContainer(data.state.show, { data.onEvent(ExitApplyEvent.Close) }) {
                 ExitApplyContent () { event: ExitApplyEvent ->
-                    onEvent(event)
+                    data.onEvent(event)
                 }
             }
         }
 
+        is ChooseHowImagePickViewModel -> {
+            val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+            BottomDialogContainer(
+                sheetState,
+                { data.onEvent(ChooseHowImagePickEvent.Close) }) {
+                ChooseHowImagePickContent(){ event: ChooseHowImagePickEvent ->
+                    data.onEvent(event)
+                }
+            }
+            LaunchedEffect(true) {
+                sheetState.show()
+            }
+        }
 
         null -> {}
     }
