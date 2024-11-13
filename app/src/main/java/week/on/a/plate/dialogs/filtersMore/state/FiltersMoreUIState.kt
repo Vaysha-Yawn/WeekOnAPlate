@@ -8,7 +8,6 @@ class FiltersMoreUIState(
 ){
     val favoriteIsChecked = mutableStateOf(false)
     val allTime = mutableIntStateOf(0)
-    val prepTime = mutableIntStateOf(0)
     val show: MutableState<Boolean> = mutableStateOf(true)
 }
 

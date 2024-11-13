@@ -6,7 +6,6 @@ import androidx.compose.runtime.mutableLongStateOf
 
 data class RecipeTimelineUIState(
     val allUISteps: MutableState<List<StepTimelineData>>,
-    var plannedAllTime: Int
 ) {
     val activeStepInd: MutableState<Int> = mutableIntStateOf(0)
     val realAllTime: MutableState<Long> = mutableLongStateOf(getMaxTime())

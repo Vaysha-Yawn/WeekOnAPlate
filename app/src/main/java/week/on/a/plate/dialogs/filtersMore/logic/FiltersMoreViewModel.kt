@@ -3,8 +3,6 @@ package week.on.a.plate.dialogs.filtersMore.logic
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import week.on.a.plate.dialogs.core.DialogViewModel
-import week.on.a.plate.dialogs.core.appDialogExampleStructure.dialogAbstract.event.DialogEvent
-import week.on.a.plate.dialogs.core.appDialogExampleStructure.dialogAbstract.state.UIState
 import week.on.a.plate.dialogs.filtersMore.event.FiltersMoreEvent
 import week.on.a.plate.dialogs.filtersMore.state.FiltersMoreUIState
 import week.on.a.plate.mainActivity.event.MainEvent
@@ -35,10 +33,9 @@ class FiltersMoreViewModel() : DialogViewModel() {
         }
     }
 
-    suspend fun launchAndGet(favoriteChecked:Boolean, allTime:Int, prepTime:Int, use: (FiltersMoreUIState) -> Unit) {
+    suspend fun launchAndGet(favoriteChecked:Boolean, allTime:Int, use: (FiltersMoreUIState) -> Unit) {
         state.favoriteIsChecked.value = favoriteChecked
         state.allTime.intValue = allTime
-        state.prepTime.intValue = prepTime
         val flow = start()
         flow.collect { value ->
             if (value != null) {

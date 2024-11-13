@@ -164,8 +164,6 @@ class MainViewModel @Inject constructor(
                             description = recipe.description.value,
                             img = recipe.photoLink.value,
                             tags = recipe.tags.value,
-                            prepTime = recipe.prepTime.longValue,
-                            allTime = recipe.allTime.longValue,
                             standardPortionsCount = recipe.portionsCount.intValue,
                             ingredients = recipe.ingredients.value,
                             steps = recipe.steps.value.map {

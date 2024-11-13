@@ -8,8 +8,6 @@ data class RecipeView(
     var description: String,
     var img:String,
     var tags: List<RecipeTagView>,
-    var prepTime: Long,
-    var allTime: Long,
     var standardPortionsCount: Int,
     var ingredients: List<IngredientInRecipeView>,
     var steps: List<RecipeStepView>,

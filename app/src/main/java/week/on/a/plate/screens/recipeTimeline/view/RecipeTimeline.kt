@@ -111,16 +111,10 @@ fun RecipeTimelineContent(state: RecipeTimelineUIState, onEvent: (Event) -> Unit
                 }
 
                 Empty()
-
                 TextSmall(
-                    "Ожидаемое время приготовления: ${state.plannedAllTime.timeToString()}",
+                    "Время приготовления: ${state.allUISteps.value.maxOf { it.start.value+it.duration.value }.toInt().timeToString()}",
                     color = ColorSubTextGrey
                 )
-                TextSmall(
-                    "Фактическое время приготовления: ${state.realAllTime.value.toInt().timeToString()}",
-                    color = ColorSubTextGrey
-                )
-
                 Empty()
             }
         }
@@ -312,7 +306,6 @@ fun RecipeTimelinePreview() {
                     RecipeTimelineUIState.getNewStepTimelineDataObj(it.description) }) }
         RecipeTimelineContent(RecipeTimelineUIState(
             allSteps,
-            plannedAllTime = 25,
         )){}
     }
 }

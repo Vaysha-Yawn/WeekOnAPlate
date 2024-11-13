@@ -20,8 +20,6 @@ val recipeExampleBase = listOf(
             RecipeTagView(1, tagName = "Курица"),
             RecipeTagView(2, tagName = "Русская кухня")
         ),
-        prepTime = 25,
-        allTime = 60,
         standardPortionsCount = 4,
         ingredients = listOf(
             IngredientInRecipeView(id = 0, ingredientView = IngredientView(ingredientId = 0, img = "https://example.com/chicken.jpg", name = "Курица", measure = "г"), description = "Любые части курицы", count = 600),
@@ -60,8 +58,6 @@ val recipeExampleBase = listOf(
         description = "Великий советский салат с крепким союзом сладкой свеклы и соленой рыбы. Этот салат готовится по-разному, но основа остается неизменной. Яблоко добавляет свежесть и смягчает вкус селедки.",
         img = "https://example.com/image_of_salat.jpg", // Update with a relevant image link
         tags = listOf(RecipeTagView(0, tagName = "Салат")),
-        prepTime = 120,
-        allTime = 120,
         standardPortionsCount = 12,
         ingredients = listOf(
             IngredientInRecipeView(0, IngredientView(ingredientId = 1, img = "https://example.com/selyodka.jpg", name = "Сельдь", measure = "шт"), "1", 1),
@@ -96,8 +92,6 @@ val recipeExampleBase = listOf(
         description = "Сытный мясной суп, который можно готовить с различными видами мяса и добавками. Чем больше сортов мяса, тем вкуснее получится солянка. Этот рецепт включает шесть видов мяса, создавая гармоничный вкус.",
         img = "https://example.com/image_of_solyanka.jpg", // Update with a relevant image link
         tags = listOf(RecipeTagView(0, tagName = "Суп")),
-        prepTime = 180,
-        allTime = 180,
         standardPortionsCount = 8,
         ingredients = listOf(
             IngredientInRecipeView(0, IngredientView(ingredientId = 1, img = "https://example.com/meat_on_bone.jpg", name = "Мясо на кости", measure = "г"), "300", 300),
@@ -141,8 +135,6 @@ val recipeExampleBase = listOf(
         description = "Свежий и легкий салат с фетой, который идеально подходит для летнего обеда. Этот салат с простыми ингредиентами приносит гармонию вкуса и аромата.",
         img = "https://example.com/image_of_greek_salad.jpg", // Update with a relevant image link
         tags = listOf(RecipeTagView(0, tagName = "Салат")),
-        prepTime = 10,
-        allTime = 10,
         standardPortionsCount = 3,
         ingredients = listOf(
             IngredientInRecipeView(0, IngredientView(ingredientId = 1, img = "https://example.com/pomidory.jpg", name = "Помидоры", measure = "шт"), "2", 2),
@@ -176,8 +168,6 @@ val recipeExampleBase = listOf(
         description = "Фаршированный перец — это классика советской кухни. Этот рецепт сочетает в себе мясной фарш, рис и ароматные овощи.",
         img = "https://example.com/image_of_stuffed_peppers.jpg", // Update with a relevant image link
         tags = listOf(RecipeTagView(0, tagName = "Основное блюдо")),
-        prepTime = 60,
-        allTime = 60,
         standardPortionsCount = 5,
         ingredients = listOf(
             IngredientInRecipeView(0, IngredientView(ingredientId = 1, img = "https://example.com/farsh.jpg", name = "Фарш", measure = "кг"), "0.5", 500),

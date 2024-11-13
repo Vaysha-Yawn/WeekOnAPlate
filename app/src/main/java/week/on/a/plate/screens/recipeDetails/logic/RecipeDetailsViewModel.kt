@@ -72,9 +72,7 @@ class RecipeDetailsViewModel @Inject constructor(
         text+= "Рецепт: "+recipeView.name
         text+= "\n"
         text+= "\n"
-        text+= "Активное время приготовления: " + recipeView.prepTime.toInt().timeToString()
-        text+= "\n"
-        text+= "Общее время приготовления: " + recipeView.allTime.toInt().timeToString()
+        text+= "Время приготовления: " + recipeView.steps.maxOf { it.start+it.duration }.toInt().timeToString()
         text+= "\n"
         text+= "Колличество порций: " + recipeView.standardPortionsCount
         text+= "\n"
@@ -206,8 +204,6 @@ class RecipeDetailsViewModel @Inject constructor(
                     description = recipe.description.value,
                     img = recipe.photoLink.value,
                     tags = recipe.tags.value,
-                    prepTime = recipe.prepTime.longValue,
-                    allTime = recipe.allTime.longValue,
                     standardPortionsCount = recipe.portionsCount.intValue,
                     ingredients = recipe.ingredients.value,
                     steps = recipe.steps.value.map {

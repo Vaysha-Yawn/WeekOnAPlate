@@ -37,9 +37,7 @@ import week.on.a.plate.screens.searchRecipes.state.ResultSortingDirection
 import week.on.a.plate.screens.searchRecipes.state.SearchState
 import week.on.a.plate.screens.searchRecipes.state.SearchUIState
 import week.on.a.plate.screens.specifySelection.navigation.SpecifySelectionDestination
-import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.LocalTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -68,9 +66,8 @@ class SearchViewModel @Inject constructor(
 
     private fun search() {
         searchAbstract { recipeView ->
-            (if (state.favoriteChecked.value){ recipeView.inFavorite }else true)
-                    && (if (state.allTime.intValue!=0) {recipeView.allTime <= state.allTime.intValue*60} else true)
-                    && (if (state.prepTime.intValue!=0) {recipeView.prepTime <= state.prepTime.intValue*60} else true)
+            (if (state.favoriteChecked.value){ recipeView.inFavorite } else true)
+                    && (if (state.allTime.intValue!=0) {recipeView.steps.maxOf { it.start+it.duration }.toInt() <= state.allTime.intValue*60} else true)
                     && recipeView.name.contains(state.searchText.value.trim(), true)
                     && recipeView.tags.containsAll(state.selectedTags.value)
                     && recipeView.ingredients.map { ingredientInRecipeView -> ingredientInRecipeView.ingredientView }
@@ -165,9 +162,8 @@ class SearchViewModel @Inject constructor(
         vm.mainViewModel = mainViewModel
         mainViewModel.onEvent(MainEvent.OpenDialog(vm))
         viewModelScope.launch {
-            vm.launchAndGet(state.favoriteChecked.value, state.allTime.intValue, state.prepTime.intValue) { stated->
+            vm.launchAndGet(state.favoriteChecked.value, state.allTime.intValue) { stated->
                 state.allTime.intValue = stated.allTime.intValue
-                state.prepTime.intValue = stated.prepTime.intValue
                 state.favoriteChecked.value = stated.favoriteIsChecked.value
                 search()
             }
@@ -253,8 +249,6 @@ class SearchViewModel @Inject constructor(
                 description = "",
                 img = "",
                 tags = state.selectedTags.value,
-                prepTime = 0,
-                allTime = 0,
                 standardPortionsCount = 4,
                 ingredients = listRecipe,
                 steps = listOf(),
@@ -268,8 +262,6 @@ class SearchViewModel @Inject constructor(
                         description = recipe.description.value,
                         img = recipe.photoLink.value,
                         tags = recipe.tags.value,
-                        prepTime = recipe.prepTime.longValue,
-                        allTime = recipe.allTime.longValue,
                         standardPortionsCount = recipe.portionsCount.intValue,
                         ingredients = recipe.ingredients.value,
                         steps = recipe.steps.value.map {

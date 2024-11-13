@@ -11,8 +11,6 @@ data class RecipeRoom(
     val name: String,
     val description: String,
     val img: String,
-    val prepTime: Long,
-    val allTime: Long,
     val standardPortionsCount: Int,
     val link: String,
     var inFavorite: Boolean,

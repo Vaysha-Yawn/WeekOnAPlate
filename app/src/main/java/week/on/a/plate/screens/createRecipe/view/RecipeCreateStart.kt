@@ -62,8 +62,6 @@ fun RecipeCreateStart(viewModel: RecipeCreateViewModel) {
                         Spacer(modifier = Modifier.height(24.dp))
                         DescriptionRecipeEdit(viewModel.state, onEvent)
                         Spacer(modifier = Modifier.height(24.dp))
-                        TimeCookRecipeEdit(viewModel.state, onEvent)
-                        Spacer(modifier = Modifier.height(24.dp))
                         PortionsRecipeEdit(viewModel.state, onEvent)
                         Spacer(modifier = Modifier.height(24.dp))
                         TagsRecipeEdit(viewModel.state, onEvent)

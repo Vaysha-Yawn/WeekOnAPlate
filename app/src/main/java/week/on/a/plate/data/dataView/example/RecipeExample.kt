@@ -17,8 +17,6 @@ val recipeTom =
         description = "Этот рецепт передавался веками в моей семье из поколения в поколение, а все для того, чтобы его однажды опубликовали в этом приложении. Мы готовим его каждое воскресенье и с радостью едим всей семьёй. Надеюсь, что эта традиция будет теперь жить и в вашем доме!",
         img = "https://static.1000.menu/res/640/img/content-v2/dc/1d/36406/salat-iz-pomidorov-s-ogurcom-i-lukom_1613988871_7_max.jpg",
         tags = listOf(RecipeTagView(0, "салат"), RecipeTagView(0, "салат")),
-        prepTime = 15,
-        allTime = 15,
         6,
         ingredients = listOf(
             IngredientInRecipeView(
@@ -118,8 +116,6 @@ val recipeShort = RecipeView(
     description = "Нежная, сладкая, сочная, попробуйте. Рекомендуется растапливать шоколад на паровой бане",
     img = "https://static.1000.menu/res/640/img/content-v2/dc/1d/36406/salat-iz-pomidorov-s-ogurcom-i-lukom_1613988871_7_max.jpg",
     tags = listOf(RecipeTagView(0, tagName = "Десерт")),
-    prepTime = 10,
-    allTime = 10,
     standardPortionsCount = 4,
     ingredients = listOf(
         IngredientInRecipeView(
@@ -147,7 +143,7 @@ val shortRecipe = RecipeShortView(0, "Салат из помидоров с ог
 
 val emptyRecipe = RecipeView(
     0, "", "", "", listOf<RecipeTagView>(),
-    0, 0, 0, listOf(), listOf(), "", false, LocalDateTime.now(),
+    0,  listOf(), listOf(), "", false, LocalDateTime.now(),
 )
 
 fun getSimpleRecipe(names: String, inFavorite: Boolean = false, image: String = ""): RecipeView {
@@ -157,7 +153,7 @@ fun getSimpleRecipe(names: String, inFavorite: Boolean = false, image: String = 
                 RecipeTagView(0, "Избранное")
             )
         } else listOf(),
-        0, 0, 0, listOf(), listOf(), "", false,LocalDateTime.now(),
+        0, listOf(), listOf(), "", false,LocalDateTime.now(),
     )
 }
 

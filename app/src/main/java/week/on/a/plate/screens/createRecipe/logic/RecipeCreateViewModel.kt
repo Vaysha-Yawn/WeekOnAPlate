@@ -37,7 +37,7 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
     lateinit var mainViewModel: MainViewModel
     var state = RecipeCreateUIState()
     private var stateTimeline = RecipeTimelineUIState(
-        mutableStateOf(listOf()), state.allTime.longValue.toInt()
+        mutableStateOf(listOf())
     )
 
     private lateinit var resultFlow: MutableStateFlow<RecipeCreateUIState?>
@@ -54,18 +54,6 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
             RecipeCreateEvent.Close -> mainViewModel.nav.popBackStack()
 
             RecipeCreateEvent.Done -> done()
-
-            RecipeCreateEvent.EditActiveTime -> {
-                getTime("Укажите активное время приготовления") { time ->
-                    state.prepTime.longValue = time
-                }
-            }
-
-            RecipeCreateEvent.EditAllTime -> {
-                getTime("Укажите полное время приготовления") { time ->
-                    state.allTime.longValue = time
-                }
-            }
 
             RecipeCreateEvent.EditTags -> {
                 viewModelScope.launch {
@@ -272,8 +260,6 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
                 duration = mutableLongStateOf(it.duration)
             )
         }
-
-        stateTimeline.plannedAllTime = state.allTime.longValue.toInt()
     }
 
     private fun getTime(title: String, use: (Long) -> Unit) {
@@ -311,8 +297,6 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
         state.photoLink.value = oldRecipe.img
         state.name.value = oldRecipe.name
         state.description.value = oldRecipe.description
-        state.prepTime.longValue = oldRecipe.prepTime
-        state.allTime.longValue = oldRecipe.allTime
         state.portionsCount.intValue = oldRecipe.standardPortionsCount
         state.tags.value = oldRecipe.tags
         state.ingredients.value = oldRecipe.ingredients

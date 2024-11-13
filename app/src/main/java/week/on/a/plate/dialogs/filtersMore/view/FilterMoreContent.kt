@@ -71,13 +71,10 @@ fun FilterMoreContent(vm: FiltersMoreViewModel) {
             Pair("до 2 ч", 120),
         )
 
-        TextBody("Общее время")
+        TextBody("Время приготовленмя")
         Spacer(Modifier.height(24.dp))
         TagsListFilterTime(vm.state.allTime, listTime)
         Spacer(Modifier.height(24.dp))
-        TextBody("Активное время")
-        Spacer(Modifier.height(24.dp))
-        TagsListFilterTime(vm.state.prepTime, listTime)
     }
 }
 

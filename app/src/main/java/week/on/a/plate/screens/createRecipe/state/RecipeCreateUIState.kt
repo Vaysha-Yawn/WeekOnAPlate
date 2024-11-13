@@ -15,8 +15,6 @@ class RecipeCreateUIState {
     val photoLink = mutableStateOf("")
     val name = mutableStateOf("")
     val description = mutableStateOf("")
-    val prepTime = mutableLongStateOf(0)
-    val allTime = mutableLongStateOf(0)
     val portionsCount = mutableIntStateOf(0)
     val tags = mutableStateOf(listOf<RecipeTagView>())
     val ingredients = mutableStateOf(listOf<IngredientInRecipeView>())

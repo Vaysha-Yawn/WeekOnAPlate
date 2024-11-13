@@ -19,8 +19,6 @@ sealed class RecipeCreateEvent:Event() {
     data object EditMainImage : RecipeCreateEvent()
     data object Done: RecipeCreateEvent()
     data object Close: RecipeCreateEvent()
-    data object EditActiveTime : RecipeCreateEvent()
-    data object EditAllTime : RecipeCreateEvent()
     data object EditTags : RecipeCreateEvent()
     data object AddIngredient : RecipeCreateEvent()
     data object AddStep : RecipeCreateEvent()
