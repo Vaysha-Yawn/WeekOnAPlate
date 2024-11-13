@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.TextTitle
-import week.on.a.plate.core.uitools.WebPage
+import week.on.a.plate.core.uitools.webview.WebPage
 import week.on.a.plate.data.dataView.example.recipeTom
 import week.on.a.plate.screens.recipeDetails.state.RecipeDetailsState
 
@@ -21,7 +21,7 @@ fun RecipeDetailsSource(state: RecipeDetailsState, onEventMain: (Event) -> Unit)
     val url = remember {
         mutableStateOf(state.recipe.value.link)
     }
-    WebPage(url, state.webview, onEventMain)
+    WebPage(url, state.webview, onEventMain, false)
     val mess = if (state.recipe.value.link.startsWith("http")) {
         "Страница загружается"
     } else {
