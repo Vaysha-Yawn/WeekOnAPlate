@@ -76,8 +76,9 @@ fun WeekRecipePosition(
             ImageLoad(
                 recipe.recipe.image,
                 Modifier
-                    .clipToBounds()
+                    .clip(RoundedCornerShape(20.dp))
                     .fillMaxWidth()
+                    .clipToBounds()
                     .height(height)
                     .scale(2f)
             )

@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
@@ -41,89 +40,85 @@ import java.time.LocalDateTime
 
 @Composable
 fun CardStep(step: CookPlannerStepView, onEvent: (Event) -> Unit) {
-    Row(
-        Modifier
-            .clickable {
-                onEvent(CookPlannerEvent.NavToFullStep(step))
+    Column(Modifier
+        .clickable {
+            onEvent(CookPlannerEvent.NavToFullStep(step))
+        }
+        .padding(horizontal = 12.dp)
+        .fillMaxWidth()
+        .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(20.dp))
+        .padding(bottom = 24.dp, top = 12.dp)
+        .padding(horizontal = 24.dp)) {
+        Row(
+            Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Checkbox(
+                checked = step.checked,
+                modifier = Modifier.padding(0.dp),
+                colors = CheckboxDefaults.colors(
+                    checkedColor = MaterialTheme.colorScheme.secondary,
+                    checkmarkColor = MaterialTheme.colorScheme.onBackground
+                ),
+                onCheckedChange = {
+                    onEvent(CookPlannerEvent.CheckStep(step))
+                },
+            )
+            TextBody(
+                "${step.start.hour.normalizeTimeToText()}:${step.start.minute.normalizeTimeToText()} -> ${step.end.hour.normalizeTimeToText()}:${step.end.minute.normalizeTimeToText()}"
+            )
+            Spacer(Modifier.weight(1f))
+            MoreButton {
+                onEvent(CookPlannerEvent.ShowStepMore(step))
             }
-            .padding(horizontal = 12.dp)
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(20.dp))
-            .padding(bottom = 24.dp, top = 12.dp)
-            .padding(horizontal = 24.dp)
-    ) {
-        Column(Modifier.fillMaxWidth()) {
-            Row(
-                Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Checkbox(
-                    checked = step.checked,
-                    modifier = Modifier.padding(0.dp),
-                    colors = CheckboxDefaults.colors(
-                        checkedColor = MaterialTheme.colorScheme.secondary,
-                        checkmarkColor = MaterialTheme.colorScheme.onBackground
-                    ),
-                    onCheckedChange = {
-                        onEvent(CookPlannerEvent.CheckStep(step))
-                    },
-                )
-                TextBody(
-                    "${step.start.hour.normalizeTimeToText()}:${step.start.minute.normalizeTimeToText()} -> ${step.end.hour.normalizeTimeToText()}:${step.end.minute.normalizeTimeToText()}"
-                )
-                Spacer(Modifier.weight(1f))
-                MoreButton {
-                    onEvent(CookPlannerEvent.ShowStepMore(step))
-                }
-            }
-
+        }
+        Column(Modifier.padding(start = 12.dp)) {
             Spacer(modifier = Modifier.height(12.dp))
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                ImageLoad(
-                    step.stepView.image,
-                    Modifier
-                        .clip(RoundedCornerShape(10.dp))
-                        .clipToBounds()
-                        .size(200.dp)
-                        .scale(1.4f)
-                )
-            }
+            ImageLoad(
+                step.stepView.image,
+                Modifier
+                    .clip(RoundedCornerShape(20.dp))
+                    .clipToBounds()
+                    .align(Alignment.Start)
+                    .scale(2f)
+                    .height(150.dp)
+            )
             Spacer(modifier = Modifier.height(24.dp))
 
             TextBodyDisActive(
-                step.recipeName + ", ${step.portionsCount}" + stringResource(R.string._portions),
-                modifier = Modifier.padding(start = 12.dp)
+                step.recipeName + ", ${step.portionsCount}" + stringResource(R.string._portions)
             )
             Spacer(modifier = Modifier.height(12.dp))
             TextSmall(
-                step.stepView.description, modifier = Modifier.padding(start = 12.dp)
+                step.stepView.description
             )
-            if (step.stepView.ingredientsPinnedId.isNotEmpty()) {
-                Spacer(modifier = Modifier.height(12.dp))
-                val ingredients = remember {
-                    step.stepView.ingredientsPinnedId.map { id ->
-                        //todo move to logic layer
-                        val ingr =
-                            step.allRecipeIngredientsByPortions.find { it.ingredientView.ingredientId == id }!!
-                        val startIngredientCount = ingr.count
-                        val stdPortions = step.stdPortionsCount
-                        val newCountPortions = step.portionsCount
-                        if (startIngredientCount > 0) {
-                            ingr.count =
-                                (startIngredientCount.toFloat() / stdPortions.toFloat() * newCountPortions).toInt()
-                        }
-                        ingr
+        }
+        if (step.stepView.ingredientsPinnedId.isNotEmpty()) {
+            Spacer(modifier = Modifier.height(12.dp))
+            val ingredients = remember {
+                step.stepView.ingredientsPinnedId.map { id ->
+                    //todo move to logic layer
+                    val ingr =
+                        step.allRecipeIngredientsByPortions.find { it.ingredientView.ingredientId == id }!!
+                    val startIngredientCount = ingr.count
+                    val stdPortions = step.stdPortionsCount
+                    val newCountPortions = step.portionsCount
+                    if (startIngredientCount > 0) {
+                        ingr.count =
+                            (startIngredientCount.toFloat() / stdPortions.toFloat() * newCountPortions).toInt()
                     }
+                    ingr
                 }
-                PinnedIngredientsForStep(ingredients)
             }
-            if (step.stepView.timer.toInt() != 0) {
-                Spacer(modifier = Modifier.height(6.dp))
-                TimerButton(step.stepView.timer.toInt())
-            }
+            PinnedIngredientsForStep(ingredients)
+        }
+        if (step.stepView.timer.toInt() != 0) {
+            Spacer(modifier = Modifier.height(12.dp))
+            TimerButton(step.stepView.timer.toInt())
         }
     }
+
 }
 
 fun Int.normalizeTimeToText(): String {

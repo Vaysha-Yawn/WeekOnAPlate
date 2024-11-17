@@ -46,10 +46,10 @@ fun CardRecipeResult(recipe: RecipeView, onEvent: (SearchScreenEvent) -> Unit, m
             ImageLoad(
                 recipe.img,
                 Modifier
+                    .clip(RoundedCornerShape(20.dp))
                     .clipToBounds()
-                    .fillMaxWidth()
-                    .height(150.dp)
                     .scale(2f)
+                    .height(150.dp)
             )
         } else {
             Spacer(Modifier.height(150.dp))

@@ -70,12 +70,12 @@ fun RecipeDetailsSteps(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) 
                 Modifier
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.surface)
-                    .padding(horizontal = 24.dp, vertical = 12.dp), horizontalAlignment = Alignment.Start
+                    .padding(horizontal = 36.dp, vertical = 12.dp), horizontalAlignment = Alignment.Start
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.Start
                 ) {
                     TextInApp(
                         text = (index + 1).toString(),
@@ -85,7 +85,7 @@ fun RecipeDetailsSteps(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) 
                                 MaterialTheme.colorScheme.background,
                                 RoundedCornerShape(5.dp)
                             )
-                            .padding(horizontal = 12.dp, vertical = 5.dp)
+                            .padding(horizontal = 12.dp).padding( vertical = 5.dp)
                     )
                     Spacer(modifier = Modifier.width(24.dp))
                     TimerButton(step.timer.toInt())
@@ -94,12 +94,12 @@ fun RecipeDetailsSteps(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) 
                 if (step.image!="") {
                     ImageLoad(
                         url = step.image, modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
+                            .align(Alignment.Start)
                             .height(200.dp)
                     )
                 }
                 Spacer(modifier = Modifier.height(12.dp))
-                TextBody(text = step.description, modifier = Modifier.padding(start = 12.dp))
+                TextBody(text = step.description)
                 Spacer(modifier = Modifier.height(12.dp))
                 val listPinned = remember {
                     step.ingredientsPinnedId.map { id->
