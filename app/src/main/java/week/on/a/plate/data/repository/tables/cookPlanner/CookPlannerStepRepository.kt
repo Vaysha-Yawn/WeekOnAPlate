@@ -40,15 +40,14 @@ class CookPlannerStepRepository @Inject constructor(
             listCookPlannerStepRoom.map { cookPlannerStepRoom ->
                 val group = groupRepo.getById(cookPlannerStepRoom.plannerGroupId)
                 val recipe = recipeRepo.getRecipe(group.recipeId)
-                val step = stepRecipeRepo.getStep(cookPlannerStepRoom.originalStepId)
+                val step = stepRecipeRepo.getStep(cookPlannerStepRoom.originalStepId)!!
                 with(cookPlannerStepMapper) {
                     cookPlannerStepRoom.roomToView(
                         recipe.name,
                         step,
                         recipe.ingredients,
                         group.recipeId,
-                        group.portionsCount,
-                        recipe.standardPortionsCount
+                        group.portionsCount, recipe.standardPortionsCount
                     )
                 }
             }.sortedBy { it.start }
@@ -59,7 +58,7 @@ class CookPlannerStepRepository @Inject constructor(
         return stepRepo.getAllFlowByDateStartNoFlow(date.toString()).map { cookPlannerStepRoom ->
             val group = groupRepo.getById(cookPlannerStepRoom.plannerGroupId)
             val recipe = recipeRepo.getRecipe(group.recipeId)
-            val step = stepRecipeRepo.getStep(cookPlannerStepRoom.originalStepId)
+            val step = stepRecipeRepo.getStep(cookPlannerStepRoom.originalStepId)!!
             with(cookPlannerStepMapper) {
                 cookPlannerStepRoom.roomToView(
                     recipe.name,

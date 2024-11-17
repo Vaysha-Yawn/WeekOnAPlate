@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -39,7 +40,8 @@ fun TimePickDialog(
     state: TimePickUIState,
     onEvent: (TimePickEvent)->Unit
 ) {
-    PickerDialog(state,
+    PickerDialog(
+        state,
         onDismissRequest = { onEvent(TimePickEvent.Close) },
         buttons = {
             DisplayModeToggleButton(
@@ -47,8 +49,14 @@ fun TimePickDialog(
                 onDisplayModeChange = { state.mode.value = it },
             )
             Spacer(Modifier.weight(1f))
-            TextBody( "Отмена" , modifier = Modifier.clickable{ onEvent(TimePickEvent.Close) }.padding(end = 24.dp), color = ColorSubTextGrey)
-            TextBody( "Подтвердить" , modifier = Modifier.clickable{ onEvent(TimePickEvent.Done) })
+            TextBody(
+                stringResource(R.string.cancel),
+                modifier = Modifier
+                    .clickable { onEvent(TimePickEvent.Close) }
+                    .padding(end = 24.dp),
+                color = ColorSubTextGrey
+            )
+            TextBody(stringResource(R.string.apply), modifier = Modifier.clickable { onEvent(TimePickEvent.Done) })
         },
     ) {
         val contentModifier = Modifier.padding(horizontal = 24.dp)
@@ -65,7 +73,7 @@ fun TimePickDialog(
         )
         when (state.mode.value) {
             DisplayMode.Picker -> {
-                TextBody("Выберите часы и минуты")
+                TextBody(stringResource(R.string.select_hours_and_minutes))
                 Spacer(Modifier.height(12.dp))
                 TimePicker(modifier = contentModifier, state = state.timeState, colors = colors)
             }

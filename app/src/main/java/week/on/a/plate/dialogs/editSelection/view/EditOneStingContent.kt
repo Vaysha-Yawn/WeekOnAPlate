@@ -38,7 +38,10 @@ fun EditSelectionContent(
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
     }
-    Column(Modifier.background(MaterialTheme.colorScheme.surface).padding(24.dp)) {
+    Column(
+        Modifier
+            .background(MaterialTheme.colorScheme.surface)
+            .padding(24.dp)) {
         TextTitle(text = state.title.value)
         Spacer(modifier = Modifier.height(24.dp))
         EditTextLine(
@@ -46,8 +49,8 @@ fun EditSelectionContent(
             state.placeholder.value, modifier = Modifier.focusRequester(focusRequester)
         )
         Spacer(modifier = Modifier.height(24.dp))
-        TextTitle(text = "Выберите время приема пищи")
-        TextSmall("* Время приема пищи используется для сортировки в меню")
+        TextTitle(text = stringResource(R.string.choose_meal_times))
+        TextSmall(stringResource(R.string.meal_time_tip))
         Spacer(modifier = Modifier.height(24.dp))
         CommonButton(
             state.selectedTime.value.format(DateTimeFormatter.ofPattern("HH:mm")),

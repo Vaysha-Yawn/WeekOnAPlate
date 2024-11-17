@@ -135,7 +135,7 @@ class SearchViewModel @Inject constructor(
     fun onEvent(event: SearchScreenEvent) {
         when (event) {
             is SearchScreenEvent.Search -> search()
-            SearchScreenEvent.VoiceSearch -> onEvent(MainEvent.VoiceToText() {
+            is SearchScreenEvent.VoiceSearch -> onEvent(MainEvent.VoiceToText(event.context) {
                 state.searchText.value = it?.joinToString() ?: ""
                 search()
             })

@@ -1,7 +1,9 @@
 package week.on.a.plate.screens.createRecipe.logic
 
+import android.util.Log
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,6 +32,7 @@ import week.on.a.plate.screens.filters.state.FilterMode
 import week.on.a.plate.screens.recipeTimeline.navigation.RecipeTimelineDestination
 import week.on.a.plate.screens.recipeTimeline.state.RecipeTimelineUIState
 import week.on.a.plate.screens.recipeTimeline.state.StepTimelineData
+import week.on.a.plate.screens.searchRecipes.logic.imageFromGallery.getSavedPicture
 import javax.inject.Inject
 
 @HiltViewModel
@@ -113,10 +116,6 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
                 event.recipeStepState.image.value = ""
             }
 
-            is RecipeCreateEvent.EditImage -> getImage(event.recipeStepState.image.value) { uri ->
-                event.recipeStepState.image.value = uri
-            }
-
             is RecipeCreateEvent.EditTimer -> {
                 getTime("На сколько поставить таймер?") { time ->
                     event.recipeStepState.timer.longValue = time
@@ -131,8 +130,24 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
                 }
             }
 
-            RecipeCreateEvent.EditMainImage -> getImage(state.photoLink.value) { uri ->
-                state.photoLink.value = uri
+            is RecipeCreateEvent.EditImage -> getImage(event.recipeStepState.image.value) { nameImage ->
+                viewModelScope.launch {
+                    event.recipeStepState.image.value = nameImage
+                    if (!nameImage.startsWith("http")){
+                        val picture = getSavedPicture(event.context, nameImage)
+                        event.recipeStepState.imageContainer.value = picture?.asImageBitmap()
+                    }
+                }
+            }
+
+            is RecipeCreateEvent.EditMainImage -> getImage(state.photoLink.value) { nameImage ->
+                viewModelScope.launch {
+                    state.photoLink.value = nameImage
+                    if (!nameImage.startsWith("http")){
+                        val picture = getSavedPicture(event.context, nameImage)
+                        state.mainImageContainer.value = picture?.asImageBitmap()
+                    }
+                }
             }
 
             RecipeCreateEvent.AddManyIngredients -> addManyIngredients()
@@ -297,7 +312,7 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
         oldRecipe: RecipeView?, isForCreate: Boolean,
         use: (RecipeCreateUIState) -> Unit
     ) {
-        if (oldRecipe != null) setStateByOldRecipe(oldRecipe)
+        if (oldRecipe != null) setStateByOldRecipe(oldRecipe) else state = RecipeCreateUIState()
         state.isForCreate.value = isForCreate
         val flow = start()
         flow.collect { value ->
@@ -316,7 +331,7 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
         state.portionsCount.intValue = oldRecipe.standardPortionsCount
         state.tags.value = oldRecipe.tags
         state.ingredients.value = oldRecipe.ingredients
-
+        state.mainImageContainer.value = null
 
         val list = mutableListOf<RecipeStepState>()
         oldRecipe.steps.forEach { stepOld ->
@@ -327,6 +342,7 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
                         image.value = stepOld.image
                         timer.longValue = stepOld.timer
                         pinnedIngredientsInd.value = stepOld.ingredientsPinnedId
+                        imageContainer.value = null
                     }
                 }
             list.add(step)

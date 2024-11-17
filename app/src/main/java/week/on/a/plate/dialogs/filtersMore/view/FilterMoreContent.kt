@@ -20,6 +20,7 @@ import androidx.compose.runtime.MutableIntState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -40,7 +41,7 @@ fun FilterMoreContent(vm: FiltersMoreViewModel) {
         Modifier
             .background(MaterialTheme.colorScheme.surface)
             .padding(24.dp)) {
-        TextTitle("Дополнительные фильтры", Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
+        TextTitle(stringResource(R.string.more_filters), Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
         Spacer(Modifier.height(24.dp))
         Row(
             Modifier
@@ -59,7 +60,7 @@ fun FilterMoreContent(vm: FiltersMoreViewModel) {
                 onCheckedChange = { vm.state.favoriteIsChecked.value = !vm.state.favoriteIsChecked.value},
             )
             Spacer(Modifier.width(6.dp))
-            TextBody("Только избранные рецепты")
+            TextBody(stringResource(R.string.only_favorites))
         }
         Spacer(Modifier.height(24.dp))
 
@@ -71,7 +72,7 @@ fun FilterMoreContent(vm: FiltersMoreViewModel) {
             Pair("до 2 ч", 120),
         )
 
-        TextBody("Время приготовленмя")
+        TextBody(stringResource(R.string.cook_time))
         Spacer(Modifier.height(24.dp))
         TagsListFilterTime(vm.state.allTime, listTime)
         Spacer(Modifier.height(24.dp))
@@ -97,9 +98,11 @@ fun TagsListFilterTime(value:MutableIntState, listTags:List<Pair<String,Int>>){
 @Composable
 fun TagFilterTime(currentValue: Int, targetValue: Int, text: String, onClick: () -> Unit) {
     TagSmall(
-        text, modifier = Modifier.clickable {
-            onClick()
-        }.padding(end = 12.dp, bottom = 12.dp),
+        text, modifier = Modifier
+            .clickable {
+                onClick()
+            }
+            .padding(end = 12.dp, bottom = 12.dp),
         color = if (currentValue == targetValue) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.background,
         )
 }

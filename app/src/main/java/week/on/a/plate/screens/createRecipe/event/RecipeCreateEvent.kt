@@ -1,5 +1,6 @@
 package week.on.a.plate.screens.createRecipe.event
 
+import android.content.Context
 import androidx.compose.runtime.MutableState
 import week.on.a.plate.core.Event
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
@@ -10,13 +11,13 @@ sealed class RecipeCreateEvent:Event() {
     class DeleteStep(val recipeStepState: RecipeStepState) : RecipeCreateEvent()
     class ClearTime(val recipeStepState: RecipeStepState) : RecipeCreateEvent()
     class DeleteImage(val recipeStepState: RecipeStepState) : RecipeCreateEvent()
-    class EditImage(val recipeStepState: RecipeStepState) : RecipeCreateEvent()
+    class EditImage(val recipeStepState: RecipeStepState, val context:Context) : RecipeCreateEvent()
     class EditTimer(val recipeStepState: RecipeStepState) : RecipeCreateEvent()
     class DeleteIngredient(val ingredient: IngredientInRecipeView) : RecipeCreateEvent()
     class EditPinnedIngredients(val recipeStepState: RecipeStepState) :
         RecipeCreateEvent()
 
-    data object EditMainImage : RecipeCreateEvent()
+    data class EditMainImage(val context:Context) : RecipeCreateEvent()
     data object Done: RecipeCreateEvent()
     data object Close: RecipeCreateEvent()
     data object EditTags : RecipeCreateEvent()

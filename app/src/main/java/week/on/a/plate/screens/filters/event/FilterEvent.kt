@@ -1,5 +1,6 @@
 package week.on.a.plate.screens.filters.event
 
+import android.content.Context
 import week.on.a.plate.core.Event
 import week.on.a.plate.data.dataView.recipe.IngredientCategoryView
 import week.on.a.plate.data.dataView.recipe.IngredientView
@@ -9,7 +10,7 @@ import week.on.a.plate.data.dataView.recipe.TagCategoryView
 
 sealed class FilterEvent : Event() {
     class SearchFilter(val text: String = "") : FilterEvent()
-    data object VoiceSearchFilters : FilterEvent()
+    data class VoiceSearchFilters(val context: Context) : FilterEvent()
     data object ClearSearch: FilterEvent()
 
     data object CreateActive: FilterEvent()

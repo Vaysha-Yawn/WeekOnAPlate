@@ -8,7 +8,6 @@ import week.on.a.plate.data.dataView.recipe.RecipeStepView
 import week.on.a.plate.data.dataView.recipe.RecipeView
 import week.on.a.plate.data.repository.tables.cookPlanner.CookPlannerGroupDAO
 import week.on.a.plate.data.repository.tables.cookPlanner.CookPlannerStepDAO
-import week.on.a.plate.data.repository.tables.cookPlanner.CookPlannerStepRepository
 import week.on.a.plate.data.repository.tables.cookPlanner.CookPlannerStepRoom
 import week.on.a.plate.data.repository.tables.menu.position.positionRecipe.PositionRecipeRepository
 import week.on.a.plate.data.repository.tables.recipe.ingredientInRecipe.IngredientInRecipeRepository
@@ -27,7 +26,7 @@ class RecipeRepository @Inject constructor(
     private val positionRecipeRepository: PositionRecipeRepository,
 
     private val groupRepo: CookPlannerGroupDAO,
-    private val stepRepo: CookPlannerStepDAO,
+    private val cookPlannerStepDAO: CookPlannerStepDAO,
 ) {
     private val recipeMapper = RecipeMapper()
 
@@ -43,12 +42,6 @@ class RecipeRepository @Inject constructor(
                 ingredients = ingredients,
                 steps = steps
             )
-        }
-    }
-
-    suspend fun getAllRecipe(): List<RecipeView> {
-        return dao.getAll().map { recipeRoom ->
-            getRecipe(recipeRoom.recipeId)
         }
     }
 
@@ -145,8 +138,8 @@ class RecipeRepository @Inject constructor(
                 list.find { stepFind -> stepFind.id == stepView.id }
             },
             insertAction = { step ->
-                stepRepository.insertStep(step, recipeId)
-                addStepForUpdateRecipe(step, recipeId)
+                val newId = stepRepository.insertStep(step, recipeId)
+                addStepForUpdateRecipe(step, recipeId, newId)
             },
             deleteAction = { step ->
                 stepRepository.deleteStep(step)
@@ -154,7 +147,7 @@ class RecipeRepository @Inject constructor(
             },
             updateAction = { step ->
                 stepRepository.update(step, recipeId)
-                //todo upd time steps in cook planner
+                updStepForUpdateRecipe(step)
             }
         )
 
@@ -170,36 +163,51 @@ class RecipeRepository @Inject constructor(
         )
     }
 
-    ///
+    /// cook planner methods
     private suspend fun deleteGroupByRecipeId(id: Long) {
         val allGroups = groupRepo.getAllByRecipeId(id)
+        if (allGroups.isEmpty()) return
         allGroups.forEach {
             val groupId = it.id
             groupRepo.deleteById(groupId)
-            stepRepo.deleteByIdGroup(groupId)
+            cookPlannerStepDAO.deleteByIdGroup(groupId)
         }
     }
 
-    private suspend fun addStepForUpdateRecipe(step: RecipeStepView, recipeId: Long) {
+    private suspend fun updStepForUpdateRecipe(step: RecipeStepView) {
+        val steps = cookPlannerStepDAO.getAllByOriginalStepId(step.id)
+        if (steps.isEmpty()) return
+        steps.forEach { stepCook->
+            val group = groupRepo.getById(stepCook.plannerGroupId)
+            val start = group.start
+            stepCook.start = start.plusSeconds(step.start)
+            stepCook.end = start.plusSeconds(step.start).plusSeconds(step.duration)
+            cookPlannerStepDAO.update(stepCook)
+        }
+    }
+
+    private suspend fun addStepForUpdateRecipe(step: RecipeStepView, recipeId: Long, newStepId: Long) {
         val groups = groupRepo.getAllByRecipeId(recipeId)
+        if (groups.isEmpty()) return
         groups.forEach { group->
-            val allHave = stepRepo.getByGroupId(group.id)
+            val allHave = cookPlannerStepDAO.getByGroupId(group.id)
             val start = allHave.minOf { it.start }
             val stepRoom = CookPlannerStepRoom(
                 group.id,
-                step.id,
+                newStepId,
                 false,
                 start.plusSeconds(step.start),
                 start.plusSeconds(step.duration).plusSeconds(step.start),
             )
-            stepRepo.insert(stepRoom)
+            cookPlannerStepDAO.insert(stepRoom)
         }
     }
 
     private suspend fun deleteStepForUpdateRecipe(step: RecipeStepView) {
-        val stepsForDel = stepRepo.getAllByOriginalStepId(step.id)
+        val stepsForDel = cookPlannerStepDAO.getAllByOriginalStepId(step.id)
+        if (stepsForDel.isEmpty()) return
         stepsForDel.forEach { stepDel->
-            stepRepo.deleteById(stepDel.id)
+            cookPlannerStepDAO.deleteById(stepDel.id)
         }
     }
     //

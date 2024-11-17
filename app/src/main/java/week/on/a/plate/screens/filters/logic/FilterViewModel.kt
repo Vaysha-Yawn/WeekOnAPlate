@@ -1,5 +1,6 @@
 package week.on.a.plate.screens.filters.logic
 
+import android.content.Context
 import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -95,7 +96,7 @@ class FilterViewModel @Inject constructor(
             FilterEvent.Done -> done()
             is FilterEvent.SearchFilter -> search(event.text)
             FilterEvent.SelectedFilters -> openSelectedFilters()
-            FilterEvent.VoiceSearchFilters -> voiceSearch()
+            is FilterEvent.VoiceSearchFilters -> voiceSearch(event.context)
             FilterEvent.ClearSearch -> clear()
 
             is FilterEvent.CreateIngredient -> toCreateIngredient()
@@ -297,8 +298,8 @@ class FilterViewModel @Inject constructor(
 
     /// VoiceSearch
 
-    private fun voiceSearch() {
-        mainViewModel.onEvent(MainEvent.VoiceToText() { strings: ArrayList<String>? ->
+    private fun voiceSearch(context: Context) {
+        mainViewModel.onEvent(MainEvent.VoiceToText(context) { strings: ArrayList<String>? ->
             if (strings == null) return@VoiceToText
             viewModelScope.launch {
                 val searchedList = strings.getOrNull(0)?.split(" ") ?: return@launch

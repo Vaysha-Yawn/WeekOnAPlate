@@ -21,8 +21,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import week.on.a.plate.R
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.ImageLoad
@@ -90,7 +92,7 @@ fun CardStep(step: CookPlannerStepView, onEvent: (Event) -> Unit) {
             Spacer(modifier = Modifier.height(24.dp))
 
             TextBodyDisActive(
-                step.recipeName + ", ${step.portionsCount}" + " порции",
+                step.recipeName + ", ${step.portionsCount}" + stringResource(R.string._portions),
                 modifier = Modifier.padding(start = 12.dp)
             )
             Spacer(modifier = Modifier.height(12.dp))

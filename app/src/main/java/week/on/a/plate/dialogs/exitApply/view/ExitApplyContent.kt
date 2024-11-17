@@ -10,9 +10,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import week.on.a.plate.R
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.TextSmall
 import week.on.a.plate.core.uitools.TextTitle
@@ -28,18 +30,18 @@ fun ExitApplyContent(onEvent: (ExitApplyEvent) -> Unit) {
             .padding(24.dp)
     ) {
         TextTitle(
-            "Вы уверены, что хотите выйти?",
+            stringResource(R.string.ask_exit),
             Modifier.fillMaxWidth(),
             textAlign = TextAlign.Start
         )
         Spacer(Modifier.height(24.dp))
-        TextSmall("При выходе изменения не сохранятся.")
+        TextSmall(stringResource(R.string.exit_tip))
         Spacer(Modifier.height(48.dp))
-        DoneButton("Остаться") {
+        DoneButton(stringResource(R.string.stay)) {
             onEvent(ExitApplyEvent.Close)
         }
         Spacer(Modifier.height(12.dp))
-        CommonButton("Выйти") {
+        CommonButton(stringResource(R.string.exit)) {
             onEvent(ExitApplyEvent.Exit)
         }
     }

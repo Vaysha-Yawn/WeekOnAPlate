@@ -10,9 +10,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import week.on.a.plate.R
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.TextSmall
 import week.on.a.plate.core.uitools.TextTitle
@@ -28,11 +30,11 @@ fun ChooseHowImagePickContent(onEvent: (ChooseHowImagePickEvent) -> Unit) {
             .background(MaterialTheme.colorScheme.surface)
             .padding(24.dp)
     ) {
-        DoneButton("Указать ссылку на изображение") {
+        DoneButton(stringResource(R.string.provide_link_to_image)) {
             onEvent(ChooseHowImagePickEvent.ByUrl)
         }
         Spacer(Modifier.height(12.dp))
-        CommonButton ("Выбрать из галлереи") {
+        CommonButton (stringResource(R.string.select_from_gallery)) {
             onEvent(ChooseHowImagePickEvent.FromGallery)
         }
     }

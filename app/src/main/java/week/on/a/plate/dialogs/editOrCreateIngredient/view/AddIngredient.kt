@@ -41,22 +41,24 @@ fun AddIngredient(
     onEvent: (AddIngredientEvent) -> Unit,
 ) {
     val isError: MutableState<Boolean> = remember { mutableStateOf(false) }
-    LazyColumn(modifier = Modifier.background(MaterialTheme.colorScheme.surface).padding(24.dp)) {
+    LazyColumn(modifier = Modifier
+        .background(MaterialTheme.colorScheme.surface)
+        .padding(24.dp)) {
         item {
             TextTitleItalic(
-                text = "Создать ингредиент",
+                text = stringResource(R.string.create_ingredient),
                 modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center
             )
             Spacer(modifier = Modifier.height(36.dp))
             TextBody(
-                text = "Название ингредиента",
+                text = stringResource(R.string.ingredient_name),
                 modifier = Modifier
                     .padding(start = 12.dp)
                     .padding(bottom = 12.dp), textAlign = TextAlign.Start
             )
             EditTextLine(
                 state.name,
-                "Введите название ингредиента",
+                stringResource(R.string.enter_ingredient_name),
                 modifier = Modifier, isRequired = true, isError = isError
             )
             Spacer(modifier = Modifier.height(24.dp))
@@ -67,7 +69,7 @@ fun AddIngredient(
                 horizontalArrangement = Arrangement.End,
             ) {
                 TextBody(
-                    text = "Это жидкость?",
+                    text = stringResource(R.string.is_this_a_liquid),
                     modifier = Modifier
                         .padding(start = 12.dp), textAlign = TextAlign.Start
                 )
@@ -91,13 +93,13 @@ fun AddIngredient(
             Spacer(modifier = Modifier.height(24.dp))
 
             TextBody(
-                text = "Категория",
+                text = stringResource(R.string.category),
                 modifier = Modifier
                     .padding(start = 12.dp)
                     .padding(bottom = 12.dp), textAlign = TextAlign.Start
             )
             CommonButton(
-                if (state.category.value == null) "Выбрать категорию" else state.category.value!!.name,
+                if (state.category.value == null) stringResource(R.string.select_category) else state.category.value!!.name,
                 image = R.drawable.search
             ) {
                 onEvent(AddIngredientEvent.ChooseCategory)
@@ -111,7 +113,7 @@ fun AddIngredient(
             )
             EditTextLine(
                 state.photoUri,
-                "Введите ссылку на изображение",
+                stringResource(R.string.enter_image_link),
                 modifier = Modifier
             )
             Spacer(modifier = Modifier.height(24.dp))

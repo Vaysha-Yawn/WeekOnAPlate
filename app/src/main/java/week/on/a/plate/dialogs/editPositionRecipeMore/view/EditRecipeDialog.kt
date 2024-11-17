@@ -16,10 +16,12 @@ import week.on.a.plate.core.theme.WeekOnAPlateTheme
 
 @Composable
 fun EditRecipePositionDialogContent(onEvent: (EditRecipePositionEvent) -> Unit) {
-    Column(modifier = Modifier.background(MaterialTheme.colorScheme.surface).padding(20.dp)) {
+    Column(modifier = Modifier
+        .background(MaterialTheme.colorScheme.surface)
+        .padding(20.dp)) {
         ButtonRow(
             R.drawable.cook_cap,
-            text= "Планировать приготовление",
+            text= stringResource(R.string.plan_your_cooking),
         ) {
             onEvent(EditRecipePositionEvent.CookPlan)
         }

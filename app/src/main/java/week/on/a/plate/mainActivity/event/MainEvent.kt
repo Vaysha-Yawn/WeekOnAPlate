@@ -1,5 +1,6 @@
 package week.on.a.plate.mainActivity.event
 
+import android.content.Context
 import androidx.navigation.NavHostController
 import week.on.a.plate.core.Event
 import week.on.a.plate.dialogs.core.DialogViewModel
@@ -15,6 +16,6 @@ sealed class MainEvent : Event() {
     data object HideDialog : MainEvent()
     class ShowDialog(val dialog: DialogViewModel) : MainEvent()
     class UseSharedLink(val link: String) : MainEvent()
-    class VoiceToText(val use:(ArrayList<String>?)->Unit) : MainEvent()
+    class VoiceToText(val context:Context, val use:(ArrayList<String>?)->Unit) : MainEvent()
     data object OpenDialogExitApplyFromCreateRecipe : MainEvent()
 }

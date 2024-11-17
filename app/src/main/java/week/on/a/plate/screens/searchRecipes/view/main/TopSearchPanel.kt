@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.uitools.SearchLine
@@ -23,13 +24,14 @@ fun TopSearchPanel(stateUI: SearchUIState, onEvent: (Event) -> Unit) {
             }
             Spacer(modifier = Modifier.width(12.dp))
         }
+        val context = LocalContext.current
         SearchLine(
             textSearch = stateUI.searchText,
             modifier = Modifier.weight(1f),
             actionSearch = { s -> onEvent(SearchScreenEvent.Search) },
             actionSearchVoice = {
                 onEvent(
-                    SearchScreenEvent.VoiceSearch
+                    SearchScreenEvent.VoiceSearch(context)
                 )
             }, {onEvent(SearchScreenEvent.Clear)})
     }

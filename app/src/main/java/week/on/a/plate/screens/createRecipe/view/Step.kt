@@ -16,8 +16,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -25,6 +29,7 @@ import week.on.a.plate.R
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.EditTextLine
 import week.on.a.plate.core.uitools.ImageLoad
+import week.on.a.plate.core.uitools.ImageLoadEditable
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextTitleItalic
 import week.on.a.plate.core.uitools.buttons.CommonButton
@@ -33,7 +38,7 @@ import week.on.a.plate.screens.createRecipe.event.RecipeCreateEvent
 import week.on.a.plate.screens.createRecipe.logic.RecipeCreateViewModel
 import week.on.a.plate.screens.createRecipe.state.RecipeCreateUIState
 import week.on.a.plate.screens.createRecipe.state.RecipeStepState
-import week.on.a.plate.screens.recipeDetails.view.steps.TimerButton
+
 
 @Composable
 fun StepRecipeEdit(
@@ -71,7 +76,6 @@ fun StepRecipeEdit(
 
     Spacer(modifier = Modifier.height(12.dp))
     EditTextLine(text = recipeStepState.description, placeholder = "Введите описание шага")
-
     if (recipeStepState.image.value != "") {
         Spacer(modifier = Modifier.height(12.dp))
         Row {
@@ -82,10 +86,11 @@ fun StepRecipeEdit(
                     onEvent(RecipeCreateEvent.DeleteImage(recipeStepState))
                 })
             Spacer(modifier = Modifier.width(12.dp))
-            ImageLoad(url = recipeStepState.image.value, modifier = Modifier
+            val context = LocalContext.current
+            ImageLoadEditable(url = recipeStepState.image.value, recipeStepState.imageContainer, modifier = Modifier
                 .height(160.dp)
                 .clickable {
-                    onEvent(RecipeCreateEvent.EditImage(recipeStepState))
+                    onEvent(RecipeCreateEvent.EditImage(recipeStepState, context))
                 })
         }
     }
@@ -121,10 +126,11 @@ fun StepRecipeEdit(
 
 @Composable
 fun ImageStepButton(recipeStepState: RecipeStepState, onEvent: (RecipeCreateEvent) -> Unit) {
+    val context = LocalContext.current
     Row(
         Modifier
             .clickable {
-                onEvent(RecipeCreateEvent.EditImage(recipeStepState))
+                onEvent(RecipeCreateEvent.EditImage(recipeStepState, context))
             }
             .background(MaterialTheme.colorScheme.background, RoundedCornerShape(20.dp))
             .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(20.dp))

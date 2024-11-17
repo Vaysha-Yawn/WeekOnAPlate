@@ -12,26 +12,31 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.ImageLoad
 import week.on.a.plate.core.uitools.TextBody
-import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.screens.createRecipe.event.RecipeCreateEvent
 import week.on.a.plate.screens.createRecipe.state.RecipeCreateUIState
 
 @Composable
 fun PhotoRecipeEdit(state: RecipeCreateUIState, onEvent: (RecipeCreateEvent) -> Unit) {
+    val context = LocalContext.current
     if (state.photoLink.value == "") {
         Row(
             Modifier
                 .clickable {
-                    onEvent(RecipeCreateEvent.EditMainImage)
+                    onEvent(RecipeCreateEvent.EditMainImage(context))
                 }
                 .background(MaterialTheme.colorScheme.background, RoundedCornerShape(20.dp))
                 .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(20.dp))
@@ -40,7 +45,7 @@ fun PhotoRecipeEdit(state: RecipeCreateUIState, onEvent: (RecipeCreateEvent) -> 
         ) {
             Icon(painter = painterResource(id = R.drawable.photo), contentDescription = "")
             Spacer(modifier = Modifier.width(5.dp))
-            TextBody(text = "Добавить фото")
+            TextBody(text = stringResource(R.string.add_photo))
         }
         Spacer(modifier = Modifier.width(24.dp))
     } else {
@@ -53,10 +58,11 @@ fun PhotoRecipeEdit(state: RecipeCreateUIState, onEvent: (RecipeCreateEvent) -> 
                     state.photoLink.value = ""
                 })
             Spacer(modifier = Modifier.width(12.dp))
+
             ImageLoad(url = state.photoLink.value, modifier = Modifier
                 .height(160.dp)
                 .clickable {
-                    onEvent(RecipeCreateEvent.EditMainImage)
+                    onEvent(RecipeCreateEvent.EditMainImage(context))
                 })
         }
     }

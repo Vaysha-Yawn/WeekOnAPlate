@@ -1,5 +1,6 @@
 package week.on.a.plate.screens.searchRecipes.event
 
+import android.content.Context
 import week.on.a.plate.core.Event
 import week.on.a.plate.data.dataView.recipe.RecipeTagView
 import week.on.a.plate.data.dataView.recipe.RecipeView
@@ -9,7 +10,7 @@ import week.on.a.plate.screens.searchRecipes.state.ResultSortingDirection
 sealed class SearchScreenEvent : Event(){
     data object Search : SearchScreenEvent()
     class FlipFavorite(val recipe: RecipeView, val inFavorite: Boolean) : SearchScreenEvent()
-    data object VoiceSearch : SearchScreenEvent()
+    data class VoiceSearch(val context: Context) : SearchScreenEvent()
     data object Back : SearchScreenEvent()
     class AddToMenu(val recipeView: RecipeView): SearchScreenEvent()
     class NavigateToFullRecipe(val recipeView: RecipeView): SearchScreenEvent()

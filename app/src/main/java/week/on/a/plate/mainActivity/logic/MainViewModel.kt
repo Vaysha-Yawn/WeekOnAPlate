@@ -1,5 +1,6 @@
 package week.on.a.plate.mainActivity.logic
 
+import android.content.Context
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -131,7 +132,7 @@ class MainViewModel @Inject constructor(
             MainEvent.NavigateBack -> nav.popBackStack()
             MainEvent.HideDialog -> dialogUseCase.hide()
             is MainEvent.ShowDialog -> dialogUseCase.show()
-            is MainEvent.VoiceToText -> voiceToText(event.use)
+            is MainEvent.VoiceToText -> voiceToText(event.context, event.use)
             is MainEvent.UseSharedLink -> useSharedLink(event.link)
             MainEvent.OpenDialogExitApplyFromCreateRecipe -> openDialogExitApplyFromCreateRecipe()
         }
@@ -188,9 +189,9 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private fun voiceToText(use: (ArrayList<String>?) -> Unit) {
+    private fun voiceToText(context: Context, use: (ArrayList<String>?) -> Unit) {
         viewModelScope.launch {
-            voiceInputUseCase.start(use)
+            voiceInputUseCase.start(context, use)
         }
     }
 

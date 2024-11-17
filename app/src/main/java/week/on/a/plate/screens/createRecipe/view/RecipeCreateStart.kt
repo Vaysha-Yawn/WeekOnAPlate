@@ -14,8 +14,10 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import week.on.a.plate.R
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.CommonButton
@@ -69,7 +71,7 @@ fun RecipeCreateStart(viewModel: RecipeCreateViewModel) {
                 }
                 item {
                     Column(Modifier.padding(24.dp)) {
-                        TextTitle(text = "Ингредиенты")
+                        TextTitle(text = stringResource(R.string.ingredients))
                     }
                 }
                 items(viewModel.state.ingredients.value.size) {
@@ -89,14 +91,14 @@ fun RecipeCreateStart(viewModel: RecipeCreateViewModel) {
                             .fillMaxWidth()
                     ) {
                         Spacer(modifier = Modifier.size(24.dp))
-                        CommonButton(text = "Редактировать ингредиенты") {
+                        CommonButton(text = stringResource(R.string.edit_ingredients)) {
                             onEvent(RecipeCreateEvent.AddManyIngredients)
                         }
                     }
                 }
                 item {
                     Column(Modifier.padding(top = 36.dp, bottom = 12.dp, start = 24.dp)) {
-                        TextTitle(text = "Пошаговый рецепт")
+                        TextTitle(text = stringResource(R.string.step_by_step_recipe))
                     }
                 }
                 items(viewModel.state.steps.value.size) {
@@ -112,7 +114,7 @@ fun RecipeCreateStart(viewModel: RecipeCreateViewModel) {
                 }
                 item {
                     Column(Modifier.padding(24.dp)) {
-                        CommonButton(text = "Добавить шаг") {
+                        CommonButton(text = stringResource(R.string.add_step)) {
                             onEvent(RecipeCreateEvent.AddStep)
                         }
                     }

@@ -18,8 +18,8 @@ class StepRepository @Inject constructor(
         }
     }
 
-    suspend fun getStep(stepId: Long): RecipeStepView {
-        return with(stepMapper) { daoStep.getStepById(stepId).roomToView() }
+    suspend fun getStep(stepId: Long): RecipeStepView? {
+        return with(stepMapper) { daoStep.getStepById(stepId)?.roomToView() }
     }
 
     fun getStepsFlow(recipeId: Long): Flow<List<RecipeStepView>> {
@@ -30,9 +30,9 @@ class StepRepository @Inject constructor(
         }
     }
 
-    suspend fun insertStep(stepView: RecipeStepView, recipeId: Long) {
+    suspend fun insertStep(stepView: RecipeStepView, recipeId: Long): Long {
         val stepRoom = with(stepMapper) { stepView.viewToRoom(recipeId) }
-        daoStep.insert(stepRoom)
+        return daoStep.insert(stepRoom)
     }
 
     suspend fun deleteStep(recipe: RecipeStepView) {

@@ -9,15 +9,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import week.on.a.plate.R
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.TextTitle
-import week.on.a.plate.core.uitools.buttons.CloseButton
 import week.on.a.plate.dialogs.selectNStep.event.SelectNStepEvent
 import week.on.a.plate.dialogs.selectNStep.logic.SelectNStepViewModel
 import week.on.a.plate.dialogs.selectNStep.state.SelectNStepUIState
@@ -36,17 +36,24 @@ fun SelectNStep(viewModel: SelectNStepViewModel) {
             )
             .padding(20.dp)
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.padding(bottom = 24.dp)) {
-            TextTitle(text = "Выберите шаг", textAlign = TextAlign.End)
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.padding(bottom = 24.dp)
+        ) {
+            TextTitle(text = stringResource(R.string.select_step), textAlign = TextAlign.End)
         }
 
 
         for (step in 0 until state.stepCount) {
             TextTitle(
-                text = (step + 1).toString() + " шаг",
-                Modifier.clickable {
-                    onEvent(SelectNStepEvent.Select(step))
-                }.padding(bottom = 24.dp))
+                text = (step + 1).toString() + stringResource(R.string.step),
+                Modifier
+                    .clickable {
+                        onEvent(SelectNStepEvent.Select(step))
+                    }
+                    .padding(bottom = 24.dp)
+            )
         }
     }
 }

@@ -20,7 +20,7 @@ interface RecipeStepDAO {
     suspend fun getRecipeAndRecipeSteps(recipeId:Long): RecipeAndRecipeSteps
 
     @Query("SELECT * FROM recipesteproom WHERE id=:id")
-    suspend fun getStepById(id:Long): RecipeStepRoom
+    suspend fun getStepById(id:Long): RecipeStepRoom?
 
     @Transaction
     @Query("SELECT * FROM recipeRoom WHERE recipeId=:recipeId")

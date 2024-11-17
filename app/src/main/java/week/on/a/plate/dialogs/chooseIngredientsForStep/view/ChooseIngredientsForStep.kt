@@ -57,7 +57,7 @@ fun ChooseIngredientsForStep(viewModel: ChooseIngredientsForStepViewModel) {
     ) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween, modifier =  Modifier.padding(bottom = 12.dp)) {
             TextTitle(
-                text = "Выберите ингредиенты", textAlign = TextAlign.End)
+                text = stringResource(R.string.select_ingredients), textAlign = TextAlign.End)
         }
 
         LazyColumn() {
@@ -68,7 +68,7 @@ fun ChooseIngredientsForStep(viewModel: ChooseIngredientsForStepViewModel) {
                         .clickable {
                             onEvent(ChooseIngredientsForStepEvent.ClickToIngredient(item.ingredientView.ingredientId))
                         }
-                        .padding( vertical = 6.dp),
+                        .padding(vertical = 6.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {

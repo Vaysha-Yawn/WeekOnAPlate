@@ -36,14 +36,16 @@ fun AddTag(
     onEvent: (AddTagEvent) -> Unit,
 ) {
     val isError: MutableState<Boolean> = remember { mutableStateOf(false) }
-    Column(modifier = Modifier.background(MaterialTheme.colorScheme.surface).padding(24.dp)) {
+    Column(modifier = Modifier
+        .background(MaterialTheme.colorScheme.surface)
+        .padding(24.dp)) {
         TextTitleItalic(
-            text = "Создать тэг",
+            text = stringResource(R.string.create_tag),
             modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(24.dp))
         TextBody(
-            text = "Название тэга",
+            text = stringResource(R.string.tag_name),
             modifier = Modifier
                 .padding(start = 12.dp)
                 .padding(bottom = 12.dp),
@@ -51,19 +53,19 @@ fun AddTag(
         )
         EditTextLine(
             state.text,
-            "Введите название тэга здесь",
+            stringResource(R.string.enter_tag_name_here),
             modifier = Modifier, isRequired = true, isError = isError
         )
         Spacer(modifier = Modifier.height(24.dp))
         TextBody(
-            text = "Категория",
+            text = stringResource(R.string.category),
             modifier = Modifier
                 .padding(start = 12.dp)
                 .padding(bottom = 12.dp),
             textAlign = TextAlign.Start
         )
         CommonButton(
-            if (state.category.value?.name == "") "Выбрать категорию" else state.category.value?.name?:"",
+            if (state.category.value?.name == "") stringResource(R.string.select_category) else state.category.value?.name?:"",
             image = R.drawable.search,
         ) {
             onEvent(AddTagEvent.ChooseCategory)
