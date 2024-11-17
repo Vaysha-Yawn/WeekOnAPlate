@@ -22,12 +22,12 @@ class ImageFromGalleryUseCase(val vm: ViewModel) {
             uri?.let {
                 val inputStream = context.contentResolver.openInputStream(uri)
                 inputStream?.use { input ->
-                    val bytes = hashImage(input.readBytes())
-                    val name = "image_${bytes}.jpg"
+                    val bytes = input.readBytes()
+                    val name = "image_${hashImage(bytes)}.jpg"
                     val file = File(context.filesDir, name)
                     if (!file.exists()) {
                         file.outputStream().use { output ->
-                            input.copyTo(output)
+                            output.write(bytes)
                             imageResultChanel.emit(name)
                         }
                     } else {

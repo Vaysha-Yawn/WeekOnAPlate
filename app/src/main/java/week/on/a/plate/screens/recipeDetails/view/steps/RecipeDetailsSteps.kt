@@ -52,14 +52,6 @@ fun RecipeDetailsSteps(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) 
                 .padding(vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            /*Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                TextBody(text = state.recipe.value.prepTime.toInt().timeToString())
-                TextBody(text = "Активное время")
-            }
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                TextBody(text = state.recipe.value.allTime.toInt().timeToString())
-                TextBody(text = "Всё время")
-            }*/
             TextBody(text = "Время приготовления: ")
             if (state.recipe.value.steps.isNotEmpty()) {
                 TextBody(
