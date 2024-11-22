@@ -71,7 +71,7 @@ fun ShoppingListContent(state: ShoppingListUIState, onEvent: (ShoppingListEvent)
         ) {
             TextTitleLarge(
                 text = "Список покупок",
-                modifier = Modifier
+                modifier = Modifier.weight(1f)
             )
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(painterResource(R.drawable.delete), "", modifier = Modifier

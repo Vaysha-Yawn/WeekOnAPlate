@@ -47,14 +47,14 @@ fun TagList(tags: List<RecipeTagView>, ingredients: List<IngredientView>) {
     Column {
         if (tags.isNotEmpty()) {
             TagsFlowRow(sizeList = tags.size) { index ->
-                TagSmall(tag = tags[index])
+                TagSmall(tag = tags[index], Modifier.padding(end = 6.dp, bottom = 6.dp))
                 Spacer(modifier = Modifier.size(6.dp))
             }
         }
         Spacer(modifier = Modifier.size(6.dp))
         if (ingredients.isNotEmpty()) {
             TagsFlowRow(ingredients.size) { index ->
-                TagSmall(ingredientView = ingredients[index])
+                TagSmall(ingredientView = ingredients[index], Modifier.padding(end = 6.dp, bottom = 6.dp))
             }
         }
     }
@@ -77,12 +77,12 @@ fun TagsFlowRowWithHidden(sizeList: Int, content: @Composable (Int) -> Unit) {
         mutableStateOf(false)
     }
     FlowRow(Modifier.fillMaxWidth()) {
-        if (sizeList > 2) {
-            for (i in 0 until 2) {
+        if (sizeList > 1) {
+            for (i in 0 until 1) {
                 content(i)
             }
             if (showMore.value) {
-                for (i in 2 until sizeList) {
+                for (i in 1 until sizeList) {
                     content(i)
                 }
                 TextSmall(

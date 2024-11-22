@@ -6,12 +6,12 @@ import week.on.a.plate.data.repository.tables.menu.position.draft.PositionDraftR
 import week.on.a.plate.data.repository.tables.menu.position.note.PositionNoteRepository
 import week.on.a.plate.data.repository.tables.menu.position.positionIngredient.PositionIngredientRepository
 import week.on.a.plate.data.repository.tables.menu.position.positionRecipe.PositionRecipeRepository
-import week.on.a.plate.data.repository.tables.menu.selection.WeekRepository
+import week.on.a.plate.data.repository.tables.menu.selection.WeekMenuRepository
 import week.on.a.plate.screens.menu.event.ActionWeekMenuDB
 import javax.inject.Inject
 
 class CRUDRecipeInMenu @Inject constructor(
-    val menuR: WeekRepository,
+    val menuR: WeekMenuRepository,
     private val noteRepository: PositionNoteRepository,
     private val positionIngredientRepository: PositionIngredientRepository,
     private val recipeRepository: PositionRecipeRepository,

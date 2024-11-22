@@ -67,7 +67,7 @@ class RecipeTimelineViewModel @Inject constructor() : ViewModel() {
                     }
                 }
             }
-            RecipeTimelineEvent.Back -> close()
+            RecipeTimelineEvent.Back -> done()
             RecipeTimelineEvent.Done -> done()
             is RecipeTimelineEvent.SelectStep -> {
                 state.activeStepInd.value = event.ind

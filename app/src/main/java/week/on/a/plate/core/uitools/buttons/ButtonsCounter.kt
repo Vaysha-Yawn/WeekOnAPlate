@@ -27,7 +27,6 @@ import week.on.a.plate.core.uitools.TextInApp
 import week.on.a.plate.core.theme.ColorButtonNegativeGrey
 import week.on.a.plate.core.theme.Typography
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
-import week.on.a.plate.core.theme.paddingCommon
 
 @Composable
 fun ButtonsCounter(
@@ -54,7 +53,7 @@ fun ButtonsCounter(
         TextInApp(
             value.value.toString(),
             textStyle = Typography.displaySmall,
-            modifier = Modifier.padding(horizontal = paddingCommon)
+            modifier = Modifier.padding(horizontal = 24.dp)
         )
         Image(
             painter = painterResource(id = R.drawable.plus),

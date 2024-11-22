@@ -1,14 +1,17 @@
 package week.on.a.plate.dialogs.editIngredientInMenu.view
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -25,10 +28,10 @@ import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.EditNumberLine
 import week.on.a.plate.core.uitools.EditTextLine
 import week.on.a.plate.core.uitools.TextBody
+import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.animate.AnimateErrorBox
 import week.on.a.plate.core.uitools.buttons.CommonButton
 import week.on.a.plate.core.uitools.buttons.DoneButton
-import week.on.a.plate.core.uitools.ingredientCard.CardIngredient
 import week.on.a.plate.data.dataView.example.positionIngredientExample
 import week.on.a.plate.dialogs.editIngredientInMenu.event.EditPositionIngredientEvent
 import week.on.a.plate.dialogs.editIngredientInMenu.state.EditPositionIngredientUIState
@@ -44,24 +47,30 @@ fun EditOrAddIngredientBottomDialogContent(
             .background(MaterialTheme.colorScheme.surface)
             .padding(vertical = 24.dp)
     ) {
-        TextBody(
+        /*TextBody(
             text = stringResource(R.string.Ingredient),
             modifier = Modifier.padding(horizontal = 36.dp)
         )
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(12.dp))*/
         if (state.ingredientState.value != null) {
-            CardIngredient(
-                ingredient = state.ingredientState.value!!,
-                {
-                    Image(
-                        painter = painterResource(id = R.drawable.find_replace),
-                        contentDescription = "",
-                        modifier = Modifier.size(24.dp)
-                    )
-                },
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp)
+                    .padding(horizontal = 12.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                onEvent(EditPositionIngredientEvent.ChooseIngredient)
+                TextTitle(state.ingredientState.value!!.name, Modifier.weight(1f))
+                Icon(
+                    painterResource(R.drawable.delete),
+                    "",
+                    tint = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier.clickable {
+                        EditPositionIngredientEvent.Delete
+                    })
             }
+            Spacer(modifier = Modifier.height(12.dp))
+            HorizontalDivider(Modifier, 1.dp, MaterialTheme.colorScheme.outline)
         } else {
             AnimateErrorBox(isError) {
                 CommonButton(

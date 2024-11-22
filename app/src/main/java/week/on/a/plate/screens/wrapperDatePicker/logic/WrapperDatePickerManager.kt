@@ -3,7 +3,7 @@ package week.on.a.plate.screens.wrapperDatePicker.logic
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import week.on.a.plate.data.repository.tables.cookPlanner.CookPlannerStepRepository
-import week.on.a.plate.data.repository.tables.menu.selection.WeekRepository
+import week.on.a.plate.data.repository.tables.menu.selection.WeekMenuRepository
 import week.on.a.plate.dialogs.chooseWeekInMenu.logic.ChooseWeekViewModel
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 
 class WrapperDatePickerManager @Inject constructor(
-    private val repository: WeekRepository,
+    private val repository: WeekMenuRepository,
     private val cookRepository: CookPlannerStepRepository
 ) {
 

@@ -15,7 +15,7 @@ data class InventoryPositionData(
     val ingredient: IngredientView,
     val countTarget: Int,
 ) {
-    val answer: MutableState<Boolean> = mutableStateOf(false)
+    val answer: MutableState<Boolean> = mutableStateOf(true)
     companion object {
         fun getByIngredientInRecipe(ingredient: IngredientInRecipeView): InventoryPositionData {
             return InventoryPositionData(

@@ -48,7 +48,7 @@ fun SortMoreContent(vm:SortMoreViewModel){
                         vm.onEvent(event)
                     }
                     .padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
-                Icon(painterResource(res), "")
+                Icon(painterResource(res), "", tint = MaterialTheme.colorScheme.onBackground)
                 Spacer(Modifier.width(24.dp))
                 TextBody(text)
             }

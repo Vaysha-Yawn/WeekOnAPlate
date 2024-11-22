@@ -5,6 +5,7 @@ import android.os.StrictMode
 import android.webkit.CookieManager
 import android.webkit.WebSettings
 import android.webkit.WebView
+import androidx.compose.foundation.isSystemInDarkTheme
 
 fun WebView.setSettings(){
     val builder = StrictMode.VmPolicy.Builder()

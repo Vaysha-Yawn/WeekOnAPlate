@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.core.theme.ColorButtonNegativeGrey
 import week.on.a.plate.core.uitools.ImageLoad
+import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.PlusButtonCard
 import week.on.a.plate.data.dataView.recipe.RecipeView
@@ -74,7 +75,7 @@ fun RowRecipeResultList(
             }
             Spacer(modifier = Modifier.width(12.dp))
             Column(Modifier.weight(2f)) {
-                TextTitle(text = recipeView.name, Modifier.padding(start = 6.dp))
+                TextBody(text = recipeView.name, Modifier.padding(start = 6.dp))
                 Spacer(modifier = Modifier.height(12.dp))
                 TagListHidden(
                     recipeView.tags,

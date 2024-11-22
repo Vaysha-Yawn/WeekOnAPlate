@@ -95,4 +95,5 @@
     <string name="edit_ingredients">Редактировать ингредиенты</string>
     <string name="step_by_step_recipe">Пошаговый рецепт</string>
     <string name="add_step">Добавить шаг</string>
+    <string name="settings">Настройки</string>
 </resources>

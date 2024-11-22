@@ -40,6 +40,7 @@ import week.on.a.plate.screens.inventory.logic.InventoryViewModel
 import week.on.a.plate.screens.recipeDetails.logic.RecipeDetailsViewModel
 import week.on.a.plate.screens.recipeTimeline.logic.RecipeTimelineViewModel
 import week.on.a.plate.screens.searchRecipes.logic.SearchViewModel
+import week.on.a.plate.screens.settings.logic.SettingsViewModel
 import week.on.a.plate.screens.shoppingList.logic.ShoppingListViewModel
 import week.on.a.plate.screens.specifyRecipeToCookPlan.logic.SpecifyRecipeToCookPlanViewModel
 import week.on.a.plate.screens.specifySelection.logic.SpecifySelectionViewModel
@@ -60,6 +61,7 @@ class MainActivity : ComponentActivity() {
     private val cookPlannerViewModel: CookPlannerViewModel by viewModels()
     private val specifyRecipeToCookPlanViewModel: SpecifyRecipeToCookPlanViewModel by viewModels()
     private val recipeTimelineViewModel: RecipeTimelineViewModel by viewModels()
+    private val settingsViewModel: SettingsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -104,7 +106,8 @@ class MainActivity : ComponentActivity() {
                     deleteApplyViewModel,
                     cookPlannerViewModel,
                     specifyRecipeToCookPlanViewModel,
-                    recipeTimelineViewModel
+                    recipeTimelineViewModel,
+                    settingsViewModel
                 )
 
                 Scaffold(modifier = Modifier

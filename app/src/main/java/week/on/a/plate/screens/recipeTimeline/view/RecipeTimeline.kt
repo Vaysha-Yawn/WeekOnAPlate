@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -96,7 +95,8 @@ fun RecipeTimelineContent(state: RecipeTimelineUIState, onEvent: (Event) -> Unit
         LazyColumn(Modifier.weight(1f)) {
             item {
                 Column(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .background(
                             MaterialTheme.colorScheme.background,
                             RoundedCornerShape(20.dp)
@@ -105,14 +105,23 @@ fun RecipeTimelineContent(state: RecipeTimelineUIState, onEvent: (Event) -> Unit
                 ) {
                     TextBody(
                         (state.activeStepInd.value + 1).toString() + " шаг",
-                        Modifier.padding(bottom = 5.dp).background(MaterialTheme.colorScheme.secondary, RoundedCornerShape(5.dp)).padding(horizontal = 5.dp)
+                        Modifier
+                            .padding(bottom = 5.dp)
+                            .background(
+                                MaterialTheme.colorScheme.secondary,
+                                RoundedCornerShape(5.dp)
+                            )
+                            .padding(horizontal = 5.dp)
                     )
                     TextBody(state.allUISteps.value[state.activeStepInd.value].description)
                 }
 
                 Empty()
                 TextSmall(
-                    "Время приготовления: ${state.allUISteps.value.maxOf { it.start.value+it.duration.value }.toInt().timeToString()}",
+                    "Время приготовления: ${
+                        state.allUISteps.value.maxOf { it.start.value + it.duration.value }.toInt()
+                            .timeToString()
+                    }",
                     color = ColorSubTextGrey
                 )
                 Empty()
@@ -131,13 +140,18 @@ fun RecipeTimelineContent(state: RecipeTimelineUIState, onEvent: (Event) -> Unit
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            CircleButton(R.drawable.duration, "Длительность", MaterialTheme.colorScheme.secondary, this) {
+            CircleButton(
+                R.drawable.duration,
+                "Длительность",
+                MaterialTheme.colorScheme.secondary,
+                modifier = Modifier.weight(1f)
+            ) {
                 onEvent(RecipeTimelineEvent.SetDuration)
             }
-            CircleButton(R.drawable.target, "Указать начало", rowScope = this) {
+            CircleButton(R.drawable.target, "Указать начало", modifier = Modifier.weight(1f)) {
                 onEvent(RecipeTimelineEvent.SetStart)
             }
-            CircleButton(R.drawable.auto, "Авто", rowScope = this) {
+            CircleButton(R.drawable.auto, "Авто", modifier = Modifier.weight(1f)) {
                 onEvent(RecipeTimelineEvent.Auto)
             }
         }
@@ -150,20 +164,20 @@ fun RecipeTimelineContent(state: RecipeTimelineUIState, onEvent: (Event) -> Unit
             CircleButton(
                 R.drawable.parallel,
                 "Начать вместе с N",
-                rowScope = this
+                modifier = Modifier.weight(1f)
             ) {
                 onEvent(RecipeTimelineEvent.StartWithN)
             }
-            CircleButton(R.drawable.after_n, "После N", rowScope = this) {
+            CircleButton(R.drawable.after_n, "После N", modifier = Modifier.weight(1f)) {
                 onEvent(RecipeTimelineEvent.AfterN)
             }
-            CircleButton(R.drawable.after_last, "После предыдущего", rowScope = this) {
+            CircleButton(R.drawable.after_last, "После предыдущего", modifier = Modifier.weight(1f)) {
                 onEvent(RecipeTimelineEvent.AfterLast)
             }
-            CircleButton(R.drawable.after_lasts, "После предыдущих", rowScope = this) {
+            CircleButton(R.drawable.after_lasts, "После предыдущих", modifier = Modifier.weight(1f)) {
                 onEvent(RecipeTimelineEvent.AfterLasts)
             }
-            CircleButton(R.drawable.to_end, "В конец", rowScope = this) {
+            CircleButton(R.drawable.to_end, "В конец", modifier = Modifier.weight(1f)) {
                 onEvent(RecipeTimelineEvent.ToEnd)
             }
         }
@@ -184,16 +198,19 @@ fun Timeline(state: RecipeTimelineUIState, click: (Int) -> Unit) {
     val countMax = state.allUISteps.value.maxOf { it.start.value + it.duration.value }
     Row(Modifier.fillMaxSize()) {
         LazyColumn(
-            Modifier.fillMaxSize()
+            Modifier
+                .fillMaxSize()
                 .horizontalScroll(horizontalScroll)
         ) {
             stickyHeader {
                 Box(
                     Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 5.dp).background(MaterialTheme.colorScheme.surface)) {
+                        .padding(bottom = 5.dp)
+                        .background(MaterialTheme.colorScheme.surface)
+                ) {
                     var n = 0
-                    for (i in 0 .. countMax / zoom) {
+                    for (i in 0..countMax / zoom) {
                         TextSmall(
                             (n * zoom).toString(),
                             color = MaterialTheme.colorScheme.onBackground,
@@ -211,7 +228,7 @@ fun Timeline(state: RecipeTimelineUIState, click: (Int) -> Unit) {
                         .drawBehind {
                             val cellCount = countMax / zoom
                             var x = 70f * this.density
-                            for (i in 0 .. cellCount) {
+                            for (i in 0..cellCount) {
                                 var y = 0f
                                 val size = 14f
                                 val count = (this.size.height / size).toInt()
@@ -231,13 +248,13 @@ fun Timeline(state: RecipeTimelineUIState, click: (Int) -> Unit) {
                     )
                     Spacer(
                         Modifier
-                            .width((step.start.value.toFloat()/60 * cellSizePerZoom).dp)
+                            .width((step.start.value.toFloat() / 60 * cellSizePerZoom).dp)
                             .animateContentSize()
                     )
                     TextBody(
                         (it + 1).toString(), textAlign = TextAlign.Center,
                         modifier = Modifier
-                            .width((step.duration.value.toFloat() * cellSizePerZoom/60).dp)
+                            .width((step.duration.value.toFloat() * cellSizePerZoom / 60).dp)
                             .animateContentSize()
                             .background(
                                 if (state.activeStepInd.value == it) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.outline,
@@ -264,36 +281,37 @@ fun CircleButton(
     imgRec: Int,
     text: String,
     color: Color = MaterialTheme.colorScheme.primary,
-    rowScope: RowScope,
+    modifier: Modifier,
     click: () -> Unit,
 ) {
-    with(rowScope){
-        Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.weight(1f).clickable {
-            click()
-        }) {
-            Icon(
-                painterResource(imgRec),
-                text,
-                Modifier
-                    .background(color, CircleShape)
-                    .padding(10.dp)
-                    .size(24.dp))
-            Spacer(Modifier.height(5.dp))
-            TextInApp(
-                text,
-                Modifier,
-                textStyle = TextStyle(
-                    fontFamily = FontFamily.Default,
-                    fontWeight = FontWeight.Medium,
-                    fontStyle = FontStyle.Normal,
-                    fontSize = 10.sp,
-                    lineHeight = 12.sp,
-                ),
-                color = MaterialTheme.colorScheme.onBackground,
-                textAlign =  TextAlign.Center
-            )
-        }
+
+    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier.clickable {
+        click()
+    }) {
+        Icon(
+            painterResource(imgRec),
+            text,
+            Modifier
+                .background(color, CircleShape)
+                .padding(10.dp)
+                .size(24.dp)
+        )
+        Spacer(Modifier.height(5.dp))
+        TextInApp(
+            text,
+            Modifier,
+            textStyle = TextStyle(
+                fontFamily = FontFamily.Default,
+                fontWeight = FontWeight.Medium,
+                fontStyle = FontStyle.Normal,
+                fontSize = 10.sp,
+                lineHeight = 12.sp,
+            ),
+            color = MaterialTheme.colorScheme.onBackground,
+            textAlign = TextAlign.Center
+        )
     }
+
 }
 
 @Preview(showBackground = true)
@@ -303,9 +321,13 @@ fun RecipeTimelinePreview() {
         val allSteps = remember {
             mutableStateOf(
                 recipeExampleBase[1].steps.map {
-                    RecipeTimelineUIState.getNewStepTimelineDataObj(it.description) }) }
-        RecipeTimelineContent(RecipeTimelineUIState(
-            allSteps,
-        )){}
+                    RecipeTimelineUIState.getNewStepTimelineDataObj(it.description)
+                })
+        }
+        RecipeTimelineContent(
+            RecipeTimelineUIState(
+                allSteps,
+            )
+        ) {}
     }
 }

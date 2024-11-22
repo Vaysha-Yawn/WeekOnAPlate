@@ -1,6 +1,5 @@
 package week.on.a.plate.screens.specifySelection.logic
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -10,7 +9,7 @@ import kotlinx.coroutines.launch
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.navigation.MenuDestination
 import week.on.a.plate.data.dataView.week.CategoriesSelection
-import week.on.a.plate.data.repository.tables.menu.selection.WeekRepository
+import week.on.a.plate.data.repository.tables.menu.selection.WeekMenuRepository
 import week.on.a.plate.dialogs.editSelection.logic.EditSelectionViewModel
 import week.on.a.plate.dialogs.editSelection.state.EditSelectionUIState
 import week.on.a.plate.mainActivity.event.MainEvent
@@ -29,7 +28,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SpecifySelectionViewModel @Inject constructor(
-    private val weekRepository: WeekRepository,
+    private val weekMenuRepository: WeekMenuRepository,
     private val calendarMyUseCase : CalendarMyUseCase,
     ) : ViewModel() {
      lateinit var mainViewModel: MainViewModel
@@ -80,7 +79,7 @@ class SpecifySelectionViewModel @Inject constructor(
     private fun updatePreview(date: LocalDate) {
         state.date.value = date
         viewModelScope.launch {
-            val selections = weekRepository.getSelectionsByDate(state.date.value!!)
+            val selections = weekMenuRepository.getSelectionsByDate(state.date.value!!)
             state.dayViewPreview.value = selections
         }
 
@@ -102,7 +101,7 @@ class SpecifySelectionViewModel @Inject constructor(
                         add(selState.text.value)
                     }
                 viewModelScope.launch {
-                    weekRepository.getSelIdOrCreate(LocalDateTime.of(state.date.value, selState.selectedTime.value), false, selState.text.value, mainViewModel.locale, )
+                    weekMenuRepository.getSelIdOrCreate(LocalDateTime.of(state.date.value, selState.selectedTime.value), false, selState.text.value, mainViewModel.locale, )
                 }
                 state.checkWeek.value = false
                 state.checkDayCategory.value = selState.text.value
@@ -113,7 +112,7 @@ class SpecifySelectionViewModel @Inject constructor(
 
     fun updateSelections() {
         viewModelScope.launch {
-            val allSelections = weekRepository.getSelectionsByDate(state.date.value)
+            val allSelections = weekMenuRepository.getSelectionsByDate(state.date.value)
             val listSelName = allSelections.map { it.name }.toMutableList()
             val listSuggest = listOf(
                 CategoriesSelection.NonPosed, CategoriesSelection.Breakfast,
@@ -141,7 +140,7 @@ class SpecifySelectionViewModel @Inject constructor(
         close()
         val category = getCategory() ?: return
         mainViewModel.viewModelScope.launch {
-            val selId = weekRepository.getSelIdOrCreate(
+            val selId = weekMenuRepository.getSelIdOrCreate(
                 LocalDateTime.of(state.date.value, LocalTime.of(0,0)),
                 state.checkWeek.value,
                 category,

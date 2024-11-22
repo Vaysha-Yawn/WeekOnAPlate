@@ -21,7 +21,7 @@ class EditPositionIngredientViewModel() : DialogViewModel() {
     lateinit var mainViewModel: MainViewModel
     lateinit var state: EditPositionIngredientUIState
     private var resultFlow: MutableStateFlow<Position.PositionIngredientView?> =
-        MutableStateFlow<Position.PositionIngredientView?>(null)
+        MutableStateFlow(null)
 
     fun done() {
         close()
@@ -51,6 +51,7 @@ class EditPositionIngredientViewModel() : DialogViewModel() {
                     chooseIngredient()
                 }
             }
+            EditPositionIngredientEvent.Delete -> TODO()
         }
     }
 

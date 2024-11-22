@@ -135,6 +135,7 @@ class CookPlannerViewModel @Inject constructor(
         getTime("На сколько вы хотите увеличить шаг?") {
             mainViewModel.viewModelScope.launch {
                 repository.increaseStepTime(step, it)
+                update()
             }
         }
     }
@@ -147,6 +148,7 @@ class CookPlannerViewModel @Inject constructor(
             vm.launchAndGet(step.portionsCount) { portionsCount ->
                 viewModelScope.launch {
                     repository.changePortionsCount(step, portionsCount)
+                    update()
                 }
             }
         }
@@ -167,6 +169,7 @@ class CookPlannerViewModel @Inject constructor(
         getTime("На сколько передвинуть шаг?") {
             mainViewModel.viewModelScope.launch {
                 repository.moveStepByTimeStart(step, it)
+                update()
             }
         }
     }
@@ -174,6 +177,7 @@ class CookPlannerViewModel @Inject constructor(
     private fun delete(step: CookPlannerStepView) {
         viewModelScope.launch {
             repository.deleteGroup(step.plannerGroupId)
+            update()
         }
     }
 
@@ -181,6 +185,7 @@ class CookPlannerViewModel @Inject constructor(
         getTime("Во сколько начать приготовление?") {
             mainViewModel.viewModelScope.launch {
                 repository.changeStartRecipeTime(step.plannerGroupId, it)
+                update()
             }
         }
     }
@@ -189,6 +194,7 @@ class CookPlannerViewModel @Inject constructor(
         getTime("Ко скольки рассчитать приготовление?") {
             mainViewModel.viewModelScope.launch {
                 repository.changeEndRecipeTime(step.plannerGroupId, it)
+                update()
             }
         }
     }

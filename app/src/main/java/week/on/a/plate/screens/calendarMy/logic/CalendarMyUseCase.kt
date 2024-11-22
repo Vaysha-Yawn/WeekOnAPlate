@@ -4,7 +4,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import week.on.a.plate.data.repository.tables.cookPlanner.CookPlannerStepRepository
-import week.on.a.plate.data.repository.tables.menu.selection.WeekRepository
+import week.on.a.plate.data.repository.tables.menu.selection.WeekMenuRepository
 import week.on.a.plate.screens.calendarMy.event.CalendarMyEvent
 import week.on.a.plate.screens.calendarMy.state.StateCalendarMy
 import java.time.DayOfWeek
@@ -14,7 +14,7 @@ import java.time.format.TextStyle
 import javax.inject.Inject
 
 class CalendarMyUseCase @Inject constructor(
-    private val repository: WeekRepository,
+    private val repository: WeekMenuRepository,
     private val cookRepository: CookPlannerStepRepository,
 ) {
     suspend fun getAllMonthDays(year: Int, month: Int, isForMenu:Boolean): List<Pair<LocalDate, Boolean>> {

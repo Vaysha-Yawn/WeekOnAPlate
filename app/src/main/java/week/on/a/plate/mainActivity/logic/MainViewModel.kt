@@ -29,6 +29,7 @@ import week.on.a.plate.screens.recipeTimeline.logic.RecipeTimelineViewModel
 import week.on.a.plate.screens.searchRecipes.logic.SearchViewModel
 import week.on.a.plate.screens.searchRecipes.logic.imageFromGallery.ImageFromGalleryUseCase
 import week.on.a.plate.screens.searchRecipes.logic.voice.VoiceInputUseCase
+import week.on.a.plate.screens.settings.logic.SettingsViewModel
 import week.on.a.plate.screens.shoppingList.logic.ShoppingListViewModel
 import week.on.a.plate.screens.specifyRecipeToCookPlan.logic.SpecifyRecipeToCookPlanViewModel
 import week.on.a.plate.screens.specifySelection.logic.SpecifySelectionViewModel
@@ -43,6 +44,7 @@ class MainViewModel @Inject constructor(
     private val recipeRepository: RecipeRepository,
 ) : ViewModel() {
 
+    lateinit var settingsViewModel: SettingsViewModel
     lateinit var menuViewModel: week.on.a.plate.screens.menu.logic.MenuViewModel
     lateinit var specifySelectionViewModel: SpecifySelectionViewModel
     lateinit var filterViewModel: FilterViewModel
@@ -69,6 +71,7 @@ class MainViewModel @Inject constructor(
         cookPlanner: CookPlannerViewModel,
         specifyRecipeToCookPlan: SpecifyRecipeToCookPlanViewModel,
         recipeTimeline: RecipeTimelineViewModel,
+        settings: SettingsViewModel
     ) {
         specifySelectionViewModel = specifySelection
         filterViewModel = filter
@@ -82,6 +85,7 @@ class MainViewModel @Inject constructor(
         cookPlannerViewModel = cookPlanner
         specifyRecipeToCookPlanViewModel = specifyRecipeToCookPlan
         recipeTimelineViewModel = recipeTimeline
+        settingsViewModel = settings
 
         specifySelectionViewModel.mainViewModel = this
         filterViewModel.mainViewModel = this
@@ -95,6 +99,7 @@ class MainViewModel @Inject constructor(
         cookPlannerViewModel.mainViewModel = this
         specifyRecipeToCookPlanViewModel.mainViewModel = this
         recipeTimelineViewModel.mainViewModel = this
+        searchViewModel.mainViewModel = this
     }
 
     lateinit var locale: Locale

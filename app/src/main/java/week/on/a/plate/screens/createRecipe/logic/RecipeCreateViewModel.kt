@@ -154,6 +154,14 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
             is RecipeCreateEvent.DeleteIngredient -> deleteIngredient(event.ingredient)
             RecipeCreateEvent.SetTimeline -> setTimeline()
             is RecipeCreateEvent.EditPinnedIngredients -> editPinnedIngredients(event.recipeStepState)
+            is RecipeCreateEvent.EditStepDuration -> {
+                event.stepState.duration = event.time.toLong()
+            }
+            is RecipeCreateEvent.SetCustomDuration -> {
+                getTime("Длительность шага"){time->
+                    event.state.duration = time
+                }
+            }
         }
     }
 

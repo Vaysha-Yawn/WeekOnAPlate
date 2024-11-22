@@ -31,6 +31,7 @@ import week.on.a.plate.screens.recipeTimeline.navigation.RecipeTimelineDestinati
 import week.on.a.plate.screens.recipeTimeline.view.RecipeTimelineStart
 import week.on.a.plate.screens.searchRecipes.event.SearchScreenEvent
 import week.on.a.plate.screens.searchRecipes.view.main.SearchStart
+import week.on.a.plate.screens.settings.view.SettingsStart
 import week.on.a.plate.screens.shoppingList.event.ShoppingListEvent
 import week.on.a.plate.screens.shoppingList.view.ShoppingListStart
 import week.on.a.plate.screens.specifyRecipeToCookPlan.navigation.SpecifyForCookPlanDestination
@@ -78,6 +79,7 @@ fun Navigation(
             viewModel.isActivePlusButton.value = false
             viewModel.isActiveBaseScreen.value = true
             viewModel.isActiveFilterScreen.value = false
+            SettingsStart(viewModel.settingsViewModel)
         }
 
         composable<CookPlannerDestination> {
