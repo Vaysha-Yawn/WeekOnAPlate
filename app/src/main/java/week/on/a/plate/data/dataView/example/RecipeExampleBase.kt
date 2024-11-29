@@ -71,10 +71,10 @@ val recipeExampleBase = listOf(
             IngredientInRecipeView(8, IngredientView(ingredientId = 9, img = "https://example.com/sol.jpg", name = "Соль", measure = "по вкусу"), "по вкусу", 0)
         ),
         steps = listOf(
-            RecipeStepView(0, "Подготовить все ингредиенты.", "https://example.com/preparation.jpg", 0, 0, 0, listOf()),
-            RecipeStepView(1, "Обернуть картошку, свеклу и морковь фольгой.", "https://example.com/wrapping.jpg", 0, 0, 0, listOf()),
-            RecipeStepView(2, "Выложить овощи на противень и отправить в духовку, разогретую до 200 градусов. Запекать до мягкости: картошке и моркови понадобится около 40 минут, а свекле — час.", "https://example.com/baking.jpg", 40, 0, 0, listOf()),
-            RecipeStepView(3, "В кипящую воду положить яйца и варить их 11 минут. Затем охладить.", "https://example.com/boiling_eggs.jpg", 11, 0, 0, listOf()),
+            RecipeStepView(0, "Подготовить все ингредиенты.", "https://example.com/preparation.jpg", 0, 0, 360, listOf()),
+            RecipeStepView(1, "Обернуть картошку, свеклу и морковь фольгой.", "https://example.com/wrapping.jpg", 0, 30, 10, listOf()),
+            RecipeStepView(2, "Выложить овощи на противень и отправить в духовку, разогретую до 200 градусов. Запекать до мягкости: картошке и моркови понадобится около 40 минут, а свекле — час.", "https://example.com/baking.jpg", 40, 15, 20, listOf()),
+            RecipeStepView(3, "В кипящую воду положить яйца и варить их 11 минут. Затем охладить.", "https://example.com/boiling_eggs.jpg", 11, 35, 5, listOf()),
             RecipeStepView(4, "Очистить яйца и натереть их на крупной терке.", "https://example.com/grating_eggs.jpg", 0, 0, 0, listOf()),
             RecipeStepView(5, "Картошку и морковь очистить и нарезать мелким кубиком. Рыбу очистить, разделить на филе и нарезать таким же кубиком.", "https://example.com/chopping.jpg", 0, 0, 0, listOf()),
             RecipeStepView(6, "Лук и яблоки нарезать чуть мельче.", "https://example.com/chopping_onions_apples.jpg", 0, 0, 0, listOf()),

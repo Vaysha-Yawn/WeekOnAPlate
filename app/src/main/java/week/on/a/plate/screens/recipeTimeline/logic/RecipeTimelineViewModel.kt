@@ -16,6 +16,7 @@ import week.on.a.plate.dialogs.selectNStep.logic.SelectNStepViewModel
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screens.calendarMy.event.CalendarMyEvent
+import week.on.a.plate.screens.createRecipe.event.RecipeCreateEvent
 import week.on.a.plate.screens.recipeTimeline.event.RecipeTimelineEvent
 import week.on.a.plate.screens.recipeTimeline.state.RecipeTimelineUIState
 import week.on.a.plate.screens.recipeTimeline.state.StepTimelineMode
@@ -67,7 +68,7 @@ class RecipeTimelineViewModel @Inject constructor() : ViewModel() {
                     }
                 }
             }
-            RecipeTimelineEvent.Back -> done()
+            RecipeTimelineEvent.Back -> close()
             RecipeTimelineEvent.Done -> done()
             is RecipeTimelineEvent.SelectStep -> {
                 state.activeStepInd.value = event.ind
@@ -137,11 +138,12 @@ class RecipeTimelineViewModel @Inject constructor() : ViewModel() {
 
     fun done() {
         close()
-        resultFlow.value = state
+        mainViewModel.recipeCreateViewModel.onEvent(RecipeCreateEvent.Done)
     }
 
     fun close() {
         mainViewModel.onEvent(MainEvent.NavigateBack)
+        resultFlow.value = state
     }
 
     fun start(): Flow<RecipeTimelineUIState?> {
@@ -150,8 +152,13 @@ class RecipeTimelineViewModel @Inject constructor() : ViewModel() {
         return flow
     }
 
-    suspend fun launchAndGet( stated:RecipeTimelineUIState, use: suspend (RecipeTimelineUIState) -> Unit) {
+    suspend fun launchAndGet( stated:RecipeTimelineUIState, isFirstTimeline:Boolean, use: suspend (RecipeTimelineUIState) -> Unit) {
         state = stated
+
+        if (isFirstTimeline){
+            onEvent(RecipeTimelineEvent.AfterN)
+        }
+
         val flow = start()
         flow.collect { value ->
             if (value != null) {

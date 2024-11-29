@@ -96,4 +96,6 @@
     <string name="step_by_step_recipe">Пошаговый рецепт</string>
     <string name="add_step">Добавить шаг</string>
     <string name="settings">Настройки</string>
+    <string name="next">Далее</string>
+    <string name="make_photo">Сделать фото</string>
 </resources>

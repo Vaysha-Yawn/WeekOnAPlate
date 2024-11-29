@@ -6,6 +6,5 @@ import week.on.a.plate.core.Event
 sealed class EditPositionIngredientEvent: Event() {
     data object Done: EditPositionIngredientEvent()
     data object Close: EditPositionIngredientEvent()
-    data object  ChooseIngredient: EditPositionIngredientEvent()
-    data object Delete: EditPositionIngredientEvent()
+    data object ChooseIngredient: EditPositionIngredientEvent()
 }

@@ -24,6 +24,7 @@ import week.on.a.plate.core.uitools.TextInApp
 import week.on.a.plate.core.theme.ColorStrokeGrey
 import week.on.a.plate.core.theme.Typography
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
+import week.on.a.plate.screens.filters.view.clickNoRipple
 
 @Composable
 fun FilterButton(filterCount: Int, actionFilter: () -> Unit) {
@@ -32,7 +33,7 @@ fun FilterButton(filterCount: Int, actionFilter: () -> Unit) {
             painter = painterResource(id = R.drawable.sort),
             contentDescription = "",
             modifier = Modifier
-                .clickable { actionFilter() }
+                .clickNoRipple(actionFilter)
                 .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(10.dp)).padding(6.dp),
         )
         IndicatorFilter(filterCount)

@@ -36,12 +36,13 @@ import week.on.a.plate.core.utils.getAllTimeCook
 import week.on.a.plate.core.utils.timeToString
 import week.on.a.plate.data.dataView.example.recipeTom
 import week.on.a.plate.screens.createRecipe.view.PinnedIngredientsForStep
+import week.on.a.plate.screens.filters.view.clickNoRipple
 import week.on.a.plate.screens.recipeDetails.event.RecipeDetailsEvent
 import week.on.a.plate.screens.recipeDetails.logic.setTimer
 import week.on.a.plate.screens.recipeDetails.state.RecipeDetailsState
 
 @Composable
-fun RecipeDetailsSteps(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) -> Unit) {
+fun RecipeDetailsSteps(state: RecipeDetailsState,   onEvent: (RecipeDetailsEvent) -> Unit) {
     Column(Modifier.background(MaterialTheme.colorScheme.background)) {
         HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.outline)
         Row(
@@ -53,24 +54,20 @@ fun RecipeDetailsSteps(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) 
             verticalAlignment = Alignment.CenterVertically
         ) {
             TextBody(text = "Время приготовления: ")
-            if (state.recipe.value.steps.isNotEmpty()) {
+            if (state.recipe.steps.isNotEmpty()) {
                 TextBody(
-                    text = state.recipe.value.getAllTimeCook().timeToString()
+                    text = state.recipe.getAllTimeCook().timeToString()
                 )
             }
         }
         HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.outline)
 
-        Spacer(modifier = Modifier
-            .height(24.dp)
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surface))
-        for ((index, step) in state.recipe.value.steps.withIndex()) {
+        for ((index, step) in state.recipe.steps.withIndex()) {
             Column(
                 Modifier
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.surface)
-                    .padding(horizontal = 36.dp, vertical = 12.dp), horizontalAlignment = Alignment.Start
+                    .padding(horizontal = 24.dp, vertical = 24.dp), horizontalAlignment = Alignment.Start
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -99,22 +96,11 @@ fun RecipeDetailsSteps(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) 
                     )
                 }
                 Spacer(modifier = Modifier.height(12.dp))
-                TextBody(text = step.description)
-                Spacer(modifier = Modifier.height(12.dp))
-                val listPinned = remember {
-                    step.ingredientsPinnedId.map { id->
-                        //todo move to logic layer
-                        val ingr = state.recipe.value.ingredients.find { it.ingredientView.ingredientId == id }!!
-                        val startIngredientCount = ingr.count
-                        val stdPortions = state.recipe.value.standardPortionsCount
-                        val newCountPortions = state.currentPortions.intValue
-                        if (startIngredientCount > 0) {
-                            ingr.count = (startIngredientCount.toFloat() / stdPortions.toFloat() * newCountPortions).toInt()
-                        }
-                        ingr
-                    }
+                TextBody(text = step.description, Modifier.padding(start = 12.dp))
+                state.mapPinnedStepIdToIngredients.value[step.id]?.let {
+                    Spacer(modifier = Modifier.height(12.dp))
+                    PinnedIngredientsForStep(it)
                 }
-                PinnedIngredientsForStep(listPinned)
             }
             Spacer(modifier = Modifier.height(24.dp))
         }
@@ -128,7 +114,7 @@ fun TimerButton(timer: Int) {
     val act = LocalContext.current
     Row(
         Modifier
-            .clickable {
+            .clickNoRipple {
                 setTimer(act, timer)
             }
             .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(50.dp))
@@ -161,7 +147,7 @@ fun TimerButton(timer: Int) {
 fun PreviewRecipeDetailsSteps() {
     WeekOnAPlateTheme {
         RecipeDetailsSteps(RecipeDetailsState().apply {
-            recipe = mutableStateOf(recipeTom)
+            recipe = recipeTom
         }) {}
     }
 }

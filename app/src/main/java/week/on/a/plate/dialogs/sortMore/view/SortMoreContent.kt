@@ -1,7 +1,6 @@
 package week.on.a.plate.dialogs.sortMore.view
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -25,6 +24,7 @@ import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.dialogs.sortMore.event.SortMoreEvent
 import week.on.a.plate.dialogs.sortMore.logic.SortMoreViewModel
+import week.on.a.plate.screens.filters.view.clickNoRipple
 
 @Composable
 fun SortMoreContent(vm:SortMoreViewModel){
@@ -44,7 +44,7 @@ fun SortMoreContent(vm:SortMoreViewModel){
             Row(
                 Modifier
                     .fillMaxWidth()
-                    .clickable {
+                    .clickNoRipple {
                         vm.onEvent(event)
                     }
                     .padding(12.dp), verticalAlignment = Alignment.CenterVertically) {

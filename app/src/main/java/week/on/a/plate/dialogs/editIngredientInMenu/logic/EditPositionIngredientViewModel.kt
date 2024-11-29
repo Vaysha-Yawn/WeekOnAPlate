@@ -51,7 +51,6 @@ class EditPositionIngredientViewModel() : DialogViewModel() {
                     chooseIngredient()
                 }
             }
-            EditPositionIngredientEvent.Delete -> TODO()
         }
     }
 
@@ -64,7 +63,7 @@ class EditPositionIngredientViewModel() : DialogViewModel() {
                 FilterMode.One, FilterEnum.Ingredient,
                 Pair(listOf(), listOf()), false
             ) {
-                mainViewModel.onEvent(MainEvent.ShowDialog(this@EditPositionIngredientViewModel))
+                mainViewModel.onEvent(MainEvent.ShowDialog)
                 val new = it.ingredients?.getOrNull(0)
                 if (new != null) state.ingredientState.value = new
             }

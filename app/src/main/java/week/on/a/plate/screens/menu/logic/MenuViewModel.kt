@@ -1,10 +1,10 @@
 package week.on.a.plate.screens.menu.logic
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.navigation.SearchDestination
@@ -34,6 +34,7 @@ import week.on.a.plate.dialogs.editSelection.logic.EditSelectionViewModel
 import week.on.a.plate.dialogs.editSelection.state.EditSelectionUIState
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
+import week.on.a.plate.preference.PreferenceUseCase
 import week.on.a.plate.screens.filters.navigation.FilterDestination
 import week.on.a.plate.screens.filters.state.FilterEnum
 import week.on.a.plate.screens.filters.state.FilterMode
@@ -44,7 +45,6 @@ import week.on.a.plate.screens.menu.event.NavFromMenuData
 import week.on.a.plate.screens.menu.logic.useCase.CRUDRecipeInMenu
 import week.on.a.plate.screens.menu.logic.useCase.SelectedRecipeManager
 import week.on.a.plate.screens.menu.state.MenuUIState
-import week.on.a.plate.screens.menu.state.WeekState
 import week.on.a.plate.screens.recipeDetails.navigation.RecipeDetailsDestination
 import week.on.a.plate.screens.specifyRecipeToCookPlan.navigation.SpecifyForCookPlanDestination
 import week.on.a.plate.screens.specifySelection.logic.SpecifySelectionResult
@@ -127,9 +127,9 @@ class MenuViewModel @Inject constructor(
                 menuUIState
             )
 
-            is MenuEvent.GetSelIdAndCreate -> getSelAndCreate()
+            is MenuEvent.GetSelIdAndCreate -> getSelAndCreate(event.context)
 
-            is MenuEvent.CreatePosition -> addPosition(event.selId)
+            is MenuEvent.CreatePosition -> addPosition(event.selId, event.context)
             is MenuEvent.EditPositionMore -> {
                 when (event.position) {
                     is Position.PositionRecipeView -> editPositionRecipe(event.position)
@@ -183,20 +183,21 @@ class MenuViewModel @Inject constructor(
             }
 
             is MenuEvent.FindReplaceRecipe -> findReplaceRecipe(event.recipe)
-            is MenuEvent.NavToAddRecipe -> navToAddRecipe(event.selId)
+            is MenuEvent.NavToAddRecipe -> navToAddRecipe(event.selId, event.context)
             is MenuEvent.SearchByDraft -> searchByDraft(event.draft)
             is MenuEvent.CreateFirstNonPosedPosition -> createFirstNonPosedPosition(
                 event.date,
-                event.name
+                event.name,
+                event.context
             )
 
             is MenuEvent.EditOrDeleteSelection -> editOrDeleteSelection(event.sel)
             is MenuEvent.CreateSelection -> createSelection(event.date, event.isForWeek)
-            MenuEvent.CreateWeekSelIdAndCreatePosition -> createWeekSelIdAndCreatePosition()
+            is MenuEvent.CreateWeekSelIdAndCreatePosition -> createWeekSelIdAndCreatePosition(event.context)
         }
     }
 
-    private fun createWeekSelIdAndCreatePosition() {
+    private fun createWeekSelIdAndCreatePosition(context: Context) {
         viewModelScope.launch {
             val id = sCRUDRecipeInMenu.menuR.getSelIdOrCreate(
                 LocalDateTime.of(
@@ -205,7 +206,7 @@ class MenuViewModel @Inject constructor(
                 ),
                 true, CategoriesSelection.ForWeek.fullName, mainViewModel.locale,
             )
-            addPosition(id)
+            addPosition(id, context)
         }
     }
 
@@ -286,11 +287,6 @@ class MenuViewModel @Inject constructor(
             navData.recId,
             navData.portionsCount
         )
-        viewModelScope.launch {
-            delay(600L)
-            mainViewModel.recipeDetailsViewModel.updIngredientsCount()
-            mainViewModel.nav.navigate(RecipeDetailsDestination)
-        }
     }
 
     private fun deleteSelected() {
@@ -306,7 +302,7 @@ class MenuViewModel @Inject constructor(
         onEvent(MenuEvent.ActionWrapperDatePicker(WrapperDatePickerEvent.SwitchEditMode))
     }
 
-    private fun createFirstNonPosedPosition(date: LocalDate, name: String) {
+    private fun createFirstNonPosedPosition(date: LocalDate, name: String, context: Context) {
         viewModelScope.launch {
             val time = when (name) {
                 CategoriesSelection.NonPosed.fullName -> {
@@ -339,7 +335,7 @@ class MenuViewModel @Inject constructor(
                 name,
                 mainViewModel.locale,
             )
-            onEvent(MenuEvent.CreatePosition(sel))
+            onEvent(MenuEvent.CreatePosition(sel, context))
         }
     }
 
@@ -408,7 +404,7 @@ class MenuViewModel @Inject constructor(
         mainViewModel.nav.navigate(SearchDestination)
     }
 
-    private fun navToAddRecipe(selId: Long) {
+    private fun navToAddRecipe(selId: Long, context: Context) {
         viewModelScope.launch {
             mainViewModel.nav.navigate(SearchDestination)
             mainViewModel.searchViewModel.launchAndGet(selId, null) { recipe ->
@@ -416,7 +412,8 @@ class MenuViewModel @Inject constructor(
                 val vm = ChangePortionsCountViewModel()
                 vm.mainViewModel = mainViewModel
                 onEvent(MainEvent.OpenDialog(vm))
-                vm.launchAndGet(2) { count ->
+                val std = PreferenceUseCase().getDefaultPortionsCount(context)
+                vm.launchAndGet(std) { count ->
                     val recipePosition = Position.PositionRecipeView(
                         0,
                         RecipeShortView(recipe.id, recipe.name, recipe.img),
@@ -463,9 +460,9 @@ class MenuViewModel @Inject constructor(
         }
     }
 
-    private fun getSelAndCreate() {
+    private fun getSelAndCreate(context: Context) {
         specifyDate { res ->
-            addPosition(res.selId)
+            addPosition(res.selId, context)
         }
     }
 
@@ -477,7 +474,7 @@ class MenuViewModel @Inject constructor(
         }
     }
 
-    private fun addPosition(selId: Long) {
+    private fun addPosition(selId: Long, context: Context) {
         viewModelScope.launch {
             val vm = AddPositionViewModel()
             vm.mainViewModel = mainViewModel
@@ -489,7 +486,7 @@ class MenuViewModel @Inject constructor(
                     AddPositionEvent.AddNote -> addNote(selId)
                     AddPositionEvent.AddRecipe -> onEvent(
                         MenuEvent.NavToAddRecipe(
-                            selId
+                            selId, context
                         )
                     )
 

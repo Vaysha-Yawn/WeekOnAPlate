@@ -50,11 +50,12 @@ fun WeekMenu(
                         Modifier.padding(start = 12.dp)
                     )
                     Spacer(modifier = Modifier.width(24.dp))
+                    val context = LocalContext.current
                     PlusButtonTitle {
                         if (week.selectionView.positions.isEmpty() && week.selectionView.id == 0L) {
-                            onEvent(MenuEvent.CreateWeekSelIdAndCreatePosition)
+                            onEvent(MenuEvent.CreateWeekSelIdAndCreatePosition(context))
                         } else {
-                            onEvent(MenuEvent.CreatePosition(week.selectionView.id))
+                            onEvent(MenuEvent.CreatePosition(week.selectionView.id, context))
                         }
                     }
                 }
@@ -121,12 +122,13 @@ fun SellTitleWeek(sel: SelectionView, onEvent: (event: Event) -> Unit) {
                 .combinedClickable(
                     onClick = {},
                     onLongClick = {
-                        onEvent(week.on.a.plate.screens.menu.event.MenuEvent.EditOrDeleteSelection(sel))
+                        onEvent(MenuEvent.EditOrDeleteSelection(sel))
                     }
                 ),
         )
+        val context = LocalContext.current
         PlusButtonTitle {
-            onEvent(week.on.a.plate.screens.menu.event.MenuEvent.CreatePosition(sel.id))
+            onEvent(MenuEvent.CreatePosition(sel.id, context))
         }
     }
 }

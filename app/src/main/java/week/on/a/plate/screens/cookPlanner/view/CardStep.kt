@@ -35,13 +35,14 @@ import week.on.a.plate.data.dataView.CookPlannerStepView
 import week.on.a.plate.data.dataView.recipe.RecipeStepView
 import week.on.a.plate.screens.cookPlanner.event.CookPlannerEvent
 import week.on.a.plate.screens.createRecipe.view.PinnedIngredientsForStep
+import week.on.a.plate.screens.filters.view.clickNoRipple
 import week.on.a.plate.screens.recipeDetails.view.steps.TimerButton
 import java.time.LocalDateTime
 
 @Composable
 fun CardStep(step: CookPlannerStepView, onEvent: (Event) -> Unit) {
     Column(Modifier
-        .clickable {
+        .clickNoRipple {
             onEvent(CookPlannerEvent.NavToFullStep(step))
         }
         .padding(horizontal = 12.dp)
@@ -96,22 +97,7 @@ fun CardStep(step: CookPlannerStepView, onEvent: (Event) -> Unit) {
         }
         if (step.stepView.ingredientsPinnedId.isNotEmpty()) {
             Spacer(modifier = Modifier.height(12.dp))
-            val ingredients = remember {
-                step.stepView.ingredientsPinnedId.map { id ->
-                    //todo move to logic layer
-                    val ingr =
-                        step.allRecipeIngredientsByPortions.find { it.ingredientView.ingredientId == id }!!
-                    val startIngredientCount = ingr.count
-                    val stdPortions = step.stdPortionsCount
-                    val newCountPortions = step.portionsCount
-                    if (startIngredientCount > 0) {
-                        ingr.count =
-                            (startIngredientCount.toFloat() / stdPortions.toFloat() * newCountPortions).toInt()
-                    }
-                    ingr
-                }
-            }
-            PinnedIngredientsForStep(ingredients)
+            PinnedIngredientsForStep(step.pinnedIngredientsByPortionsCount)
         }
         if (step.stepView.timer.toInt() != 0) {
             Spacer(modifier = Modifier.height(12.dp))
@@ -144,7 +130,7 @@ fun PreviewCardStep() {
                 RecipeStepView(0, "Паэлью жарим до готовности", "", 15, 0, 0, listOf()),
                 listOf(),
                 false,
-                3, 4
+                3, 4, listOf()
             )
         ) {}
     }

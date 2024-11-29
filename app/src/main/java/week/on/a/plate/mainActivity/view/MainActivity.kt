@@ -44,6 +44,7 @@ import week.on.a.plate.screens.settings.logic.SettingsViewModel
 import week.on.a.plate.screens.shoppingList.logic.ShoppingListViewModel
 import week.on.a.plate.screens.specifyRecipeToCookPlan.logic.SpecifyRecipeToCookPlanViewModel
 import week.on.a.plate.screens.specifySelection.logic.SpecifySelectionViewModel
+import week.on.a.plate.screens.tutorial.logic.TutorialViewModel
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -62,6 +63,7 @@ class MainActivity : ComponentActivity() {
     private val specifyRecipeToCookPlanViewModel: SpecifyRecipeToCookPlanViewModel by viewModels()
     private val recipeTimelineViewModel: RecipeTimelineViewModel by viewModels()
     private val settingsViewModel: SettingsViewModel by viewModels()
+    private val tutorialViewModel: TutorialViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,6 +90,14 @@ class MainActivity : ComponentActivity() {
         }
         viewModel.imageFromGalleryUseCase.imageLauncher = getPictureLauncher
 
+        //todo take picture use case
+        val getPhotoLauncher = registerForActivityResult(
+            contract = ActivityResultContracts.TakePicture()
+        ) { uri: Boolean ->
+
+        }
+        //viewModel.imageFromGalleryUseCase.imageLauncher = getPictureLauncher
+
         setContent {
             WeekOnAPlateTheme {
                 viewModel.locale = LocalContext.current.resources.configuration.locales[0]
@@ -107,7 +117,8 @@ class MainActivity : ComponentActivity() {
                     cookPlannerViewModel,
                     specifyRecipeToCookPlanViewModel,
                     recipeTimelineViewModel,
-                    settingsViewModel
+                    settingsViewModel,
+                    tutorialViewModel
                 )
 
                 Scaffold(modifier = Modifier
@@ -154,15 +165,9 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-
-    override fun onBackPressed() {
-        val destination = viewModel.nav.currentBackStackEntry?.destination
-        val isCreateRecipe = destination?.hierarchy?.any { it.route?.substringBefore("?") == RecipeCreateDestination::class.qualifiedName } == true
-        if (isCreateRecipe){
-            viewModel.onEvent(MainEvent.OpenDialogExitApplyFromCreateRecipe)
-        }else{
-            super.onBackPressed()
+        //todo test work?
+        if (viewModel.sharedLink != "" && !viewModel.isCheckedSharedAction) {
+            viewModel.onEvent(MainEvent.UseSharedLink(viewModel.sharedLink))
         }
     }
 
@@ -176,6 +181,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onResume() {
         super.onResume()
+        //work!
         if (viewModel.sharedLink != "" && !viewModel.isCheckedSharedAction) {
             viewModel.onEvent(MainEvent.UseSharedLink(viewModel.sharedLink))
         }

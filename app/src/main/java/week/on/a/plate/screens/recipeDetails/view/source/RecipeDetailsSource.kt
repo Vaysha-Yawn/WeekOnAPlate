@@ -19,10 +19,10 @@ import week.on.a.plate.screens.recipeDetails.state.RecipeDetailsState
 @Composable
 fun RecipeDetailsSource(state: RecipeDetailsState, onEventMain: (Event) -> Unit) {
     val url = remember {
-        mutableStateOf(state.recipe.value.link)
+        mutableStateOf(state.recipe.link)
     }
     WebPage(url, state.webview, onEventMain, false)
-    val mess = if (state.recipe.value.link.startsWith("http")) {
+    val mess = if (state.recipe.link.startsWith("http")) {
         "Страница загружается"
     } else {
         "Источник не добавлен"
@@ -35,7 +35,7 @@ fun RecipeDetailsSource(state: RecipeDetailsState, onEventMain: (Event) -> Unit)
 fun PreviewRecipeDetailsSource() {
     WeekOnAPlateTheme {
         RecipeDetailsSource(RecipeDetailsState().apply {
-            recipe = mutableStateOf(recipeTom)
+            recipe = recipeTom
         }) {}
     }
 }

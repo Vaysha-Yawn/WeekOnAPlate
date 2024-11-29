@@ -15,5 +15,6 @@ data class CookPlannerStepView(
     val allRecipeIngredientsByPortions: List<IngredientInRecipeView>,
     val checked: Boolean,
     val portionsCount:Int,
-    val stdPortionsCount:Int
+    val stdPortionsCount:Int,
+    val pinnedIngredientsByPortionsCount: List<IngredientInRecipeView>,
 )

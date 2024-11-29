@@ -33,6 +33,7 @@ import week.on.a.plate.screens.settings.logic.SettingsViewModel
 import week.on.a.plate.screens.shoppingList.logic.ShoppingListViewModel
 import week.on.a.plate.screens.specifyRecipeToCookPlan.logic.SpecifyRecipeToCookPlanViewModel
 import week.on.a.plate.screens.specifySelection.logic.SpecifySelectionViewModel
+import week.on.a.plate.screens.tutorial.logic.TutorialViewModel
 import java.time.LocalDateTime
 import java.util.Locale
 import javax.inject.Inject
@@ -57,6 +58,7 @@ class MainViewModel @Inject constructor(
     lateinit var cookPlannerViewModel: CookPlannerViewModel
     lateinit var specifyRecipeToCookPlanViewModel: SpecifyRecipeToCookPlanViewModel
     lateinit var recipeTimelineViewModel: RecipeTimelineViewModel
+    lateinit var tutorialViewModel: TutorialViewModel
 
     fun initViewModels(
         specifySelection: SpecifySelectionViewModel,
@@ -71,7 +73,8 @@ class MainViewModel @Inject constructor(
         cookPlanner: CookPlannerViewModel,
         specifyRecipeToCookPlan: SpecifyRecipeToCookPlanViewModel,
         recipeTimeline: RecipeTimelineViewModel,
-        settings: SettingsViewModel
+        settings: SettingsViewModel,
+        tutorial: TutorialViewModel
     ) {
         specifySelectionViewModel = specifySelection
         filterViewModel = filter
@@ -86,6 +89,7 @@ class MainViewModel @Inject constructor(
         specifyRecipeToCookPlanViewModel = specifyRecipeToCookPlan
         recipeTimelineViewModel = recipeTimeline
         settingsViewModel = settings
+        tutorialViewModel = tutorial
 
         specifySelectionViewModel.mainViewModel = this
         filterViewModel.mainViewModel = this
@@ -100,6 +104,8 @@ class MainViewModel @Inject constructor(
         specifyRecipeToCookPlanViewModel.mainViewModel = this
         recipeTimelineViewModel.mainViewModel = this
         searchViewModel.mainViewModel = this
+        tutorialViewModel.mainViewModel = this
+        settingsViewModel.mainViewModel = this
     }
 
     lateinit var locale: Locale
@@ -136,7 +142,7 @@ class MainViewModel @Inject constructor(
             is MainEvent.Navigate -> nav.navigate(event.destination)
             MainEvent.NavigateBack -> nav.popBackStack()
             MainEvent.HideDialog -> dialogUseCase.hide()
-            is MainEvent.ShowDialog -> dialogUseCase.show()
+            MainEvent.ShowDialog -> dialogUseCase.show()
             is MainEvent.VoiceToText -> voiceToText(event.context, event.use)
             is MainEvent.UseSharedLink -> useSharedLink(event.link)
             MainEvent.OpenDialogExitApplyFromCreateRecipe -> openDialogExitApplyFromCreateRecipe()

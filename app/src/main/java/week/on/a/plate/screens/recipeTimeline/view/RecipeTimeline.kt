@@ -103,6 +103,15 @@ fun RecipeTimelineContent(state: RecipeTimelineUIState, onEvent: (Event) -> Unit
                         )
                         .padding(20.dp)
                 ) {
+                    TextSmall(
+                        "Общее время приготовления: ${
+                            state.allUISteps.value.maxOf { it.start.value + it.duration.value }
+                                .toInt()
+                                .timeToString()
+                        }",
+                        color = ColorSubTextGrey
+                    )
+                    Empty()
                     TextBody(
                         (state.activeStepInd.value + 1).toString() + " шаг",
                         Modifier
@@ -115,15 +124,6 @@ fun RecipeTimelineContent(state: RecipeTimelineUIState, onEvent: (Event) -> Unit
                     )
                     TextBody(state.allUISteps.value[state.activeStepInd.value].description)
                 }
-
-                Empty()
-                TextSmall(
-                    "Время приготовления: ${
-                        state.allUISteps.value.maxOf { it.start.value + it.duration.value }.toInt()
-                            .timeToString()
-                    }",
-                    color = ColorSubTextGrey
-                )
                 Empty()
             }
         }
@@ -161,22 +161,26 @@ fun RecipeTimelineContent(state: RecipeTimelineUIState, onEvent: (Event) -> Unit
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            CircleButton(
+            /*CircleButton(
                 R.drawable.parallel,
                 "Начать вместе с N",
                 modifier = Modifier.weight(1f)
             ) {
                 onEvent(RecipeTimelineEvent.StartWithN)
-            }
-            CircleButton(R.drawable.after_n, "После N", modifier = Modifier.weight(1f)) {
+            }*/
+            /*CircleButton(R.drawable.after_n, "После N", modifier = Modifier.weight(1f)) {
                 onEvent(RecipeTimelineEvent.AfterN)
-            }
-            CircleButton(R.drawable.after_last, "После предыдущего", modifier = Modifier.weight(1f)) {
+            }*/
+            CircleButton(
+                R.drawable.after_last,
+                "После предыдущего",
+                modifier = Modifier.weight(1f)
+            ) {
                 onEvent(RecipeTimelineEvent.AfterLast)
             }
-            CircleButton(R.drawable.after_lasts, "После предыдущих", modifier = Modifier.weight(1f)) {
-                onEvent(RecipeTimelineEvent.AfterLasts)
-            }
+            /* CircleButton(R.drawable.after_lasts, "После предыдущих", modifier = Modifier.weight(1f)) {
+                 onEvent(RecipeTimelineEvent.AfterLasts)
+             }*/
             CircleButton(R.drawable.to_end, "В конец", modifier = Modifier.weight(1f)) {
                 onEvent(RecipeTimelineEvent.ToEnd)
             }
@@ -192,10 +196,14 @@ fun RecipeTimelineContent(state: RecipeTimelineUIState, onEvent: (Event) -> Unit
 @Composable
 fun Timeline(state: RecipeTimelineUIState, click: (Int) -> Unit) {
     val horizontalScroll = rememberScrollState()
-    val zoom = 10
-    val cellSize = 40
-    val cellSizePerZoom = cellSize.toFloat() / zoom.toFloat()
-    val countMax = state.allUISteps.value.maxOf { it.start.value + it.duration.value }
+    val cellSize = 30
+    val set = mutableListOf<Long>()
+    state.allUISteps.value.forEach {
+        set.add(it.start.value)
+        set.add(it.start.value + it.duration.value)
+    }
+    val setS = set.toSortedSet()
+
     Row(Modifier.fillMaxSize()) {
         LazyColumn(
             Modifier
@@ -210,12 +218,12 @@ fun Timeline(state: RecipeTimelineUIState, click: (Int) -> Unit) {
                         .background(MaterialTheme.colorScheme.surface)
                 ) {
                     var n = 0
-                    for (i in 0..countMax / zoom) {
+                    for (i in setS) {
                         TextSmall(
-                            (n * zoom).toString(),
+                            (i / 60).toString(),
                             color = MaterialTheme.colorScheme.onBackground,
                             modifier = Modifier
-                                .offset(x = (n * cellSize).dp + 70.dp - 8.dp)
+                                .offset(x = (n * cellSize).dp + 65.dp)
                         )
                         n += 1
                     }
@@ -226,9 +234,8 @@ fun Timeline(state: RecipeTimelineUIState, click: (Int) -> Unit) {
                     Modifier
                         .fillMaxWidth()
                         .drawBehind {
-                            val cellCount = countMax / zoom
                             var x = 70f * this.density
-                            for (i in 0..cellCount) {
+                            for (i in setS) {
                                 var y = 0f
                                 val size = 14f
                                 val count = (this.size.height / size).toInt()
@@ -245,16 +252,17 @@ fun Timeline(state: RecipeTimelineUIState, click: (Int) -> Unit) {
                         modifier = Modifier
                             .padding(bottom = 5.dp)
                             .width(70.dp)
+                            .clickable {
+                                click(it)
+                            }
                     )
-                    Spacer(
-                        Modifier
-                            .width((step.start.value.toFloat() / 60 * cellSizePerZoom).dp)
-                            .animateContentSize()
-                    )
+                    val offset = setS.indexOf(step.start.value)
+                    val durationCells = setS.indexOf(step.start.value+step.duration.value)-setS.indexOf(step.start.value)
                     TextBody(
                         (it + 1).toString(), textAlign = TextAlign.Center,
                         modifier = Modifier
-                            .width((step.duration.value.toFloat() * cellSizePerZoom / 60).dp)
+                            .offset(x = (cellSize*offset).dp)
+                            .width(cellSize.dp*durationCells)
                             .animateContentSize()
                             .background(
                                 if (state.activeStepInd.value == it) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.outline,
@@ -321,7 +329,11 @@ fun RecipeTimelinePreview() {
         val allSteps = remember {
             mutableStateOf(
                 recipeExampleBase[1].steps.map {
-                    RecipeTimelineUIState.getNewStepTimelineDataObj(it.description)
+                    RecipeTimelineUIState.getNewStepTimelineDataObj(
+                        it.description,
+                        (0..20).random().toLong(),
+                        10L*(1..3).random().toLong()
+                    )
                 })
         }
         RecipeTimelineContent(

@@ -27,6 +27,7 @@ import week.on.a.plate.core.uitools.TextInApp
 import week.on.a.plate.core.theme.ColorButtonNegativeGrey
 import week.on.a.plate.core.theme.Typography
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
+import week.on.a.plate.screens.filters.view.clickNoRipple
 
 @Composable
 fun ButtonsCounter(
@@ -48,7 +49,7 @@ fun ButtonsCounter(
                 .background(ColorButtonNegativeGrey, CircleShape)
                 .padding(12.dp)
                 .size(24.dp)
-                .clickable { minus() },
+                .clickNoRipple(minus),
         )
         TextInApp(
             value.value.toString(),
@@ -62,7 +63,7 @@ fun ButtonsCounter(
                 .background(ColorButtonNegativeGrey, CircleShape)
                 .padding(12.dp)
                 .size(24.dp)
-                .clickable { plus() },
+                .clickNoRipple (plus) ,
         )
     }
 }
@@ -83,7 +84,7 @@ fun ButtonsCounterSmall(
                 .background(ColorButtonNegativeGrey, CircleShape)
                 .padding(6.dp)
                 .size(20.dp)
-                .clickable { minus() },
+                .clickNoRipple(minus),
         )
         TextInApp(
             value.value.toString(),
@@ -97,7 +98,7 @@ fun ButtonsCounterSmall(
                 .background(ColorButtonNegativeGrey, CircleShape)
                 .padding(6.dp)
                 .size(20.dp)
-                .clickable { plus() },
+                .clickNoRipple (plus),
         )
     }
 }

@@ -1,5 +1,6 @@
 package week.on.a.plate.screens.createRecipe.view
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,6 +26,7 @@ import week.on.a.plate.core.uitools.buttons.DoneButtonSmall
 import week.on.a.plate.core.uitools.buttons.TextButton
 import week.on.a.plate.core.uitools.webview.WebPage
 import week.on.a.plate.screens.createRecipe.state.RecipeCreateUIState
+import week.on.a.plate.screens.filters.view.clickNoRipple
 
 @Composable
 fun WebPageCreateRecipe(state: RecipeCreateUIState, onEvent: (Event) -> Unit) {
@@ -37,6 +39,8 @@ fun WebPageCreateRecipe(state: RecipeCreateUIState, onEvent: (Event) -> Unit) {
         WebPage(url = state.source, state.webview, onEvent, true)
     }
 }
+
+
 
 @Composable
 fun RowWebActions(state: RecipeCreateUIState) {
@@ -80,7 +84,7 @@ fun IconBtn(icon: ImageVector, click: () -> Unit) {
         modifier = Modifier
             .padding(12.dp)
             .background(MaterialTheme.colorScheme.secondary, RoundedCornerShape(20.dp))
-            .clickable {
+            .clickNoRipple {
                 click()
             },
         tint = MaterialTheme.colorScheme.onBackground

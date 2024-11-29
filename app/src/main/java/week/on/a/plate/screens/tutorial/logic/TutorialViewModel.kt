@@ -1,20 +1,22 @@
 package week.on.a.plate.screens.tutorial.logic
 
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screens.tutorial.event.TutorialEvent
-import week.on.a.plate.screens.tutorial.getFromAssetUtils.tutorialMap
 import week.on.a.plate.screens.tutorial.state.TutorialDestination
+import week.on.a.plate.screens.tutorial.state.TutorialPage
 import week.on.a.plate.screens.tutorial.state.TutorialStateUI
 import javax.inject.Inject
 
 //todo
 @HiltViewModel
 class TutorialViewModel @Inject constructor() : ViewModel() {
+    lateinit var mainViewModel: MainViewModel
+    var targetDestination: TutorialDestination = TutorialDestination.Menu
+    private val listPages: List<TutorialPage> = listOf()
 
-    lateinit var stateUI: TutorialStateUI
+    val stateUI = TutorialStateUI()
 
     fun onEvent(event: TutorialEvent) {
         when (event) {
@@ -22,11 +24,12 @@ class TutorialViewModel @Inject constructor() : ViewModel() {
             TutorialEvent.LastPage -> lastPage()
             TutorialEvent.NextPage -> nextPage()
             TutorialEvent.Skip -> done()
+            is TutorialEvent.SelectPage -> TODO()
         }
     }
 
     private fun nextPage() {
-        if (stateUI.listPages.size - 1 < stateUI.activePageInd.intValue) {
+        if (listPages.size - 1 < stateUI.activePageInd.intValue) {
             stateUI.activePageInd.intValue += 1
         }
     }
@@ -44,6 +47,6 @@ class TutorialViewModel @Inject constructor() : ViewModel() {
     }
 
     fun launch(dest: TutorialDestination) {
-        stateUI = TutorialStateUI(dest, mutableIntStateOf(0), tutorialMap[dest]!!)
+        //dest, mutableIntStateOf(0), tutorialMap[dest]!!
     }
 }

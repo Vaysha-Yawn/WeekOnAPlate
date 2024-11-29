@@ -18,12 +18,13 @@ import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.utils.timeToString
+import week.on.a.plate.screens.filters.view.clickNoRipple
 
 @Composable
 fun TimerButton(time:Int, edit:()->Unit){
     Row(
         Modifier
-            .clickable {
+            .clickNoRipple {
                 edit()
             }
             .background(MaterialTheme.colorScheme.background, RoundedCornerShape(20.dp))

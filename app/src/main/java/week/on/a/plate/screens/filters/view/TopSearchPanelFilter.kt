@@ -44,7 +44,7 @@ fun TopSearchPanelFilter(stateUI: FilterUIState, onEvent: (FilterEvent) -> Unit)
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Icon(painterResource(R.drawable.back), "", modifier = Modifier
-                .clickable { onEvent(FilterEvent.Done) }
+                .clickNoRipple { onEvent(FilterEvent.Done) }
                 .padding(6.dp)
             )
             Row(verticalAlignment = Alignment.CenterVertically) {

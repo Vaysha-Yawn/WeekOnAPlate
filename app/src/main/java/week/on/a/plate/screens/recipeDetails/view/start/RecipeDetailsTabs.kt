@@ -40,8 +40,8 @@ fun RecipeDetailsTabs(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) -
                         TextSmall(
                             text =
                             when (index) {
-                                0 -> state.recipe.value.getAllTimeCook().timeToString()
-                                1 -> state.recipe.value.ingredients.size.toString()
+                                0 -> state.recipe.getAllTimeCook().timeToString()
+                                1 -> state.recipe.ingredients.size.toString()
                                 2 -> ""
                                 else -> ""
                             }
@@ -61,7 +61,7 @@ fun RecipeDetailsTabs(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) -
 fun PreviewRecipeDetailsTabs() {
     WeekOnAPlateTheme {
         RecipeDetailsTabs(RecipeDetailsState().apply {
-            recipe = mutableStateOf(recipeTom)
+            recipe = recipeTom
         }) {}
     }
 }

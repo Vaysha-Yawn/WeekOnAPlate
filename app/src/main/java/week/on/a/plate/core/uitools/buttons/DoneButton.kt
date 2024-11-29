@@ -26,6 +26,7 @@ import week.on.a.plate.core.theme.Typography
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextInApp
+import week.on.a.plate.screens.filters.view.clickNoRipple
 
 @Composable
 fun DoneButton(
@@ -35,14 +36,12 @@ fun DoneButton(
 ) {
     Row(
         modifier
-            .fillMaxWidth().clickable {
-                click()
-            }
-            .background(ColorButtonGreen, RoundedCornerShape(20.dp))
+            .fillMaxWidth().clickNoRipple(click)
+            .background(MaterialTheme.colorScheme.secondary, RoundedCornerShape(20.dp))
             .padding(10.dp)
             , horizontalArrangement = Arrangement.Center
     ) {
-        TextBody(text = text, color = ColorTextBlack)
+        TextBody(text = text, color = MaterialTheme.colorScheme.onBackground)
     }
 }
 
@@ -54,14 +53,13 @@ fun DoneButtonSmall(
 ) {
     Row(
         modifier
-            .fillMaxWidth().clickable {
-                click()
-            }
-            .background(ColorButtonGreen, RoundedCornerShape(20.dp))
+            .fillMaxWidth().clickNoRipple(click)
+
+            .background(MaterialTheme.colorScheme.secondary, RoundedCornerShape(20.dp))
             .padding(10.dp)
             , horizontalArrangement = Arrangement.Center
     ) {
-        TextInApp(text = text, textStyle = Typography.bodyMedium, color = ColorTextBlack)
+        TextInApp(text = text, textStyle = Typography.bodyMedium, color = MaterialTheme.colorScheme.onBackground)
     }
 }
 
@@ -74,9 +72,7 @@ fun CommonButton(
 ) {
     Row(
         modifier
-            .fillMaxWidth().clickable {
-                click()
-            }
+            .fillMaxWidth().clickNoRipple(click)
             .background(
                 MaterialTheme.colorScheme.background, RoundedCornerShape(20.dp)
             )
@@ -113,11 +109,9 @@ fun TextButton(
     click: () -> Unit
 ) {
     Row(
-        modifier.clickable {
-            click()
-        }
+        modifier.clickNoRipple(click)
             .background(
-                MaterialTheme.colorScheme.background, RoundedCornerShape(20.dp)
+                MaterialTheme.colorScheme.secondary, RoundedCornerShape(20.dp)
             )
             .padding(10.dp),
         horizontalArrangement = Arrangement.SpaceBetween,

@@ -15,12 +15,12 @@ data class RecipeTimelineUIState(
     }
 
     companion object{
-        fun getNewStepTimelineDataObj(descr:String): StepTimelineData {
+        fun getNewStepTimelineDataObj(descr:String, startMin:Long, durationMin:Long): StepTimelineData {
             return StepTimelineData(
                 0,
                 descr,
-                mutableLongStateOf(0),
-                mutableLongStateOf(5*60)
+                mutableLongStateOf(startMin*60),
+                mutableLongStateOf(durationMin*60)
             )
         }
     }

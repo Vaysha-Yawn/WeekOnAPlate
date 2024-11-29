@@ -1,16 +1,24 @@
 package week.on.a.plate.screens.filters.view
 
+import androidx.compose.foundation.Indication
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -19,15 +27,16 @@ import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.CreateTagOrIngredient
-import week.on.a.plate.core.uitools.TagBig
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.DoneButton
@@ -44,7 +53,11 @@ import week.on.a.plate.screens.filters.state.FilterUIState
 
 @Composable
 fun FilterScreen(stateUI: FilterUIState, onEvent: (FilterEvent) -> Unit) {
-    Column(Modifier.background(MaterialTheme.colorScheme.surface).imePadding()) {
+    Column(
+        Modifier
+            .background(MaterialTheme.colorScheme.surface)
+            .imePadding()
+    ) {
         if (stateUI.filterEnum.value == FilterEnum.IngredientAndTag) {
             TabRowFilter(
                 stateUI.activeFilterTabIndex,
@@ -75,15 +88,12 @@ fun FilterScreen(stateUI: FilterUIState, onEvent: (FilterEvent) -> Unit) {
                 if (stateUI.searchText.value != "") {
                     items(stateUI.resultSearchTags.value.size) {
                         Spacer(modifier = Modifier.height(24.dp))
-                        TagBig(
-                            tag = stateUI.resultSearchTags.value[it], isActive =
-                            stateUI.selectedTags.value.contains(stateUI.resultSearchTags.value[it]),
-                            clickable = {
-                                onEvent(FilterEvent.SelectTag(stateUI.resultSearchTags.value[it]))
-                            }, longClick = {
-                                onEvent(FilterEvent.EditOrDeleteTag(stateUI.resultSearchTags.value[it]))
-                            }
-                        )
+
+                        FilterItemWithMore(stateUI.resultSearchTags.value[it].tagName,
+                            stateUI.selectedIngredients.value.contains(stateUI.resultSearchIngredients.value[it]),
+                            false,
+                            click = { onEvent(FilterEvent.SelectTag(stateUI.resultSearchTags.value[it])) })
+                        { onEvent(FilterEvent.EditOrDeleteTag(stateUI.resultSearchTags.value[it])) }
                     }
                 } else {
                     items(stateUI.allTagsCategories.value.size) {
@@ -101,16 +111,11 @@ fun FilterScreen(stateUI: FilterUIState, onEvent: (FilterEvent) -> Unit) {
                 if (stateUI.searchText.value != "") {
                     items(stateUI.resultSearchIngredients.value.size) {
                         Spacer(modifier = Modifier.height(24.dp))
-                        TagBig(
-                            ingredientView = stateUI.resultSearchIngredients.value[it],
-                            isActive =
+                        FilterItemWithMore(stateUI.resultSearchIngredients.value[it].name,
                             stateUI.selectedIngredients.value.contains(stateUI.resultSearchIngredients.value[it]),
-                            clickable = {
-                                onEvent(FilterEvent.SelectIngredient(stateUI.resultSearchIngredients.value[it]))
-                            }, longClick = {
-                                onEvent(FilterEvent.EditOrDeleteIngredient(stateUI.resultSearchIngredients.value[it]))
-                            }
-                        )
+                            true,
+                            click = { onEvent(FilterEvent.SelectIngredient(stateUI.resultSearchIngredients.value[it])) })
+                        { onEvent(FilterEvent.EditOrDeleteIngredient(stateUI.resultSearchIngredients.value[it])) }
                     }
                 } else {
                     items(stateUI.allIngredientsCategories.value.size) {
@@ -126,30 +131,20 @@ fun FilterScreen(stateUI: FilterUIState, onEvent: (FilterEvent) -> Unit) {
                 if (stateUI.searchText.value != "") {
                     items(stateUI.resultSearchTagsCategories.value.size) {
                         Spacer(modifier = Modifier.height(24.dp))
-                        TagBig(
-                            text = stateUI.resultSearchTagsCategories.value[it].name,
-                            color = if (stateUI.selectedTagsCategories.value.contains(stateUI.resultSearchTagsCategories.value[it]))
-                                MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.background,
-                            clickable = {
-                                onEvent(FilterEvent.SelectTagCategory(stateUI.resultSearchTagsCategories.value[it]))
-                            }, longClick = {
-                                onEvent(FilterEvent.EditOrDeleteTagCategory(stateUI.resultSearchTagsCategories.value[it]))
-                            }
-                        )
+                        FilterItemWithMore(stateUI.resultSearchTagsCategories.value[it].name,
+                            stateUI.selectedTagsCategories.value.contains(stateUI.resultSearchTagsCategories.value[it]),
+                            false,
+                            click = { onEvent(FilterEvent.SelectTagCategory(stateUI.resultSearchTagsCategories.value[it])) })
+                        { onEvent(FilterEvent.EditOrDeleteTagCategory(stateUI.resultSearchTagsCategories.value[it])) }
                     }
                 } else {
                     items(stateUI.allTagsCategories.value.size) {
                         Spacer(modifier = Modifier.height(24.dp))
-                        TagBig(
-                            text = stateUI.allTagsCategories.value[it].name,
-                            color = if (stateUI.selectedTagsCategories.value.contains(stateUI.allTagsCategories.value[it]))
-                                MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.background,
-                            clickable = {
-                                onEvent(FilterEvent.SelectTagCategory(stateUI.allTagsCategories.value[it]))
-                            }, longClick = {
-                                onEvent(FilterEvent.EditOrDeleteTagCategory(stateUI.allTagsCategories.value[it]))
-                            }
-                        )
+                        FilterItemWithMore(stateUI.allTagsCategories.value[it].name,
+                            stateUI.selectedTagsCategories.value.contains(stateUI.allTagsCategories.value[it]),
+                            false,
+                            click = { onEvent(FilterEvent.SelectTagCategory(stateUI.allTagsCategories.value[it])) })
+                        { onEvent(FilterEvent.EditOrDeleteTagCategory(stateUI.allTagsCategories.value[it])) }
                     }
                 }
             }
@@ -158,33 +153,22 @@ fun FilterScreen(stateUI: FilterUIState, onEvent: (FilterEvent) -> Unit) {
                 if (stateUI.searchText.value != "") {
                     items(stateUI.resultSearchIngredientsCategories.value.size) {
                         Spacer(modifier = Modifier.height(24.dp))
-                        TagBig(
-                            text = stateUI.resultSearchIngredientsCategories.value[it].name,
-                            color = if (stateUI.selectedIngredientsCategories.value.contains(
-                                    stateUI.resultSearchIngredientsCategories.value[it]
-                                )
-                            )
-                                MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.background,
-                            clickable = {
-                                onEvent(FilterEvent.SelectIngredientCategory(stateUI.resultSearchIngredientsCategories.value[it]))
-                            }, longClick = {
-                                onEvent(FilterEvent.EditOrDeleteIngredientCategory(stateUI.resultSearchIngredientsCategories.value[it]))
-                            }
-                        )
+                        FilterItemWithMore(stateUI.resultSearchIngredientsCategories.value[it].name,
+                            stateUI.selectedIngredientsCategories.value.contains(
+                                stateUI.resultSearchIngredientsCategories.value[it]
+                            ),
+                            true,
+                            click = { onEvent(FilterEvent.SelectIngredientCategory(stateUI.resultSearchIngredientsCategories.value[it])) })
+                        { onEvent(FilterEvent.EditOrDeleteIngredientCategory(stateUI.resultSearchIngredientsCategories.value[it])) }
                     }
                 } else {
                     items(stateUI.allIngredientsCategories.value.size) {
                         Spacer(modifier = Modifier.height(24.dp))
-                        TagBig(
-                            text = stateUI.allIngredientsCategories.value[it].name,
-                            color = if (stateUI.selectedIngredientsCategories.value.contains(stateUI.allIngredientsCategories.value[it]))
-                                MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.background,
-                            clickable = {
-                                onEvent(FilterEvent.SelectIngredientCategory(stateUI.allIngredientsCategories.value[it]))
-                            }, longClick = {
-                                onEvent(FilterEvent.EditOrDeleteIngredientCategory(stateUI.allIngredientsCategories.value[it]))
-                            }
-                        )
+                        FilterItemWithMore(stateUI.allIngredientsCategories.value[it].name,
+                            stateUI.selectedIngredientsCategories.value.contains(stateUI.allIngredientsCategories.value[it]),
+                            true,
+                            click = { onEvent(FilterEvent.SelectIngredientCategory(stateUI.allIngredientsCategories.value[it])) })
+                        { onEvent(FilterEvent.EditOrDeleteIngredientCategory(stateUI.allIngredientsCategories.value[it])) }
                     }
                 }
             }
@@ -192,7 +176,10 @@ fun FilterScreen(stateUI: FilterUIState, onEvent: (FilterEvent) -> Unit) {
         }
         if (stateUI.filterMode.value == FilterMode.Multiple) {
             DoneButton(
-                modifier = Modifier.padding(horizontal = 24.dp).padding(bottom = 12.dp).padding(top = 6.dp),
+                modifier = Modifier
+                    .padding(horizontal = 24.dp)
+                    .padding(bottom = 12.dp)
+                    .padding(top = 6.dp),
                 text = stringResource(R.string.apply),
             ) {
                 onEvent(FilterEvent.Done)
@@ -285,11 +272,9 @@ fun CategoriesTags(
                     .padding(end = 12.dp)
                     .padding(bottom = 12.dp)
             ) {
-                TagBig(tag = tag, selectedTags.value.contains(tag), clickable = {
-                    onEvent(FilterEvent.SelectTag(tag))
-                }, longClick = {
-                    onEvent(FilterEvent.EditOrDeleteTag(tag))
-                })
+                FilterItemWithMore(tag.tagName, selectedTags.value.contains(tag), false,
+                    click = { onEvent(FilterEvent.SelectTag(tag)) })
+                { onEvent(FilterEvent.EditOrDeleteTag(tag)) }
             }
         }
     }
@@ -301,8 +286,7 @@ fun IngredientCategories(
     ingredientCategory: IngredientCategoryView,
     selectedIngredients: MutableState<List<IngredientView>>,
     onEvent: (FilterEvent) -> Unit,
-
-    ) {
+) {
     Spacer(modifier = Modifier.height(12.dp))
     TextTitle(text = ingredientCategory.name)
     Spacer(modifier = Modifier.height(12.dp))
@@ -313,18 +297,53 @@ fun IngredientCategories(
                     .padding(end = 12.dp)
                     .padding(bottom = 12.dp)
             ) {
-                TagBig(
-                    ingredientView = ingredient,
+                FilterItemWithMore(ingredient.name,
                     selectedIngredients.value.contains(ingredient),
-                    clickable = {
-                        onEvent(FilterEvent.SelectIngredient(ingredient))
-                    },
-                    longClick = {
-                        onEvent(FilterEvent.EditOrDeleteIngredient(ingredient))
-                    })
+                    true,
+                    click = { onEvent(FilterEvent.SelectIngredient(ingredient)) })
+                { onEvent(FilterEvent.EditOrDeleteIngredient(ingredient)) }
             }
         }
     }
+}
+
+@Composable
+fun FilterItemWithMore(
+    text: String,
+    isActive: Boolean,
+    isIngredient: Boolean,
+    click: () -> Unit,
+    more: () -> Unit
+) {
+    Row(
+        Modifier
+            .background(
+                if (isActive) {
+                    if (isIngredient) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        MaterialTheme.colorScheme.secondary
+                    }
+                } else MaterialTheme.colorScheme.background,
+                RoundedCornerShape(30.dp)
+            )
+            .padding(horizontal = 12.dp, vertical = 6.dp).padding(start = 12.dp), verticalAlignment = Alignment.CenterVertically
+    ) {
+        TextBody(
+            text, modifier = Modifier
+                .clickNoRipple(click)
+        )
+        Spacer(Modifier.width(6.dp))
+        Icon(painterResource(R.drawable.more), "", tint = MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier.clickNoRipple(more))
+    }
+}
+
+@Composable
+fun Modifier.clickNoRipple(click: () -> Unit):Modifier{
+    return this.clickable(onClick = click,
+        interactionSource = remember { MutableInteractionSource() },
+        indication = null)
 }
 
 @Preview(showBackground = true)

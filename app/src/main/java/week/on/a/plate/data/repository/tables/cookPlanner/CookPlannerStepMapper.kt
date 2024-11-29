@@ -21,7 +21,8 @@ class CookPlannerStepMapper() {
             checked = checked,
             portionsCount = portionsCount,
             allRecipeIngredientsByPortions = recipeIngredients,
-            stdPortionsCount = stdPortionsCount
+            stdPortionsCount = stdPortionsCount,
+            pinnedIngredientsByPortionsCount = mapPinnedIngredients(recipeIngredients, stdPortionsCount, portionsCount, stepView.ingredientsPinnedId)
         )
 
     fun CookPlannerStepView.viewToRoom(): CookPlannerStepRoom =
@@ -32,4 +33,15 @@ class CookPlannerStepMapper() {
             start = start,
             end = end,
         )
+
+
+}
+
+fun mapPinnedIngredients(allIngredients:List<IngredientInRecipeView>, stdPortions:Int, currentPortions:Int, ingredientsPinnedId:List<Long>):List<IngredientInRecipeView> {
+   return ingredientsPinnedId.map { id ->
+            val ingr = allIngredients.find { it.ingredientView.ingredientId == id }!!
+            val startIngredientCount = ingr.count
+            if (startIngredientCount > 0) { ingr.count = (startIngredientCount.toFloat() / stdPortions.toFloat() * currentPortions).toInt() }
+            ingr
+        }
 }

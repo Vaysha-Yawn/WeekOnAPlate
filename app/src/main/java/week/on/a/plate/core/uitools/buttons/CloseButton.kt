@@ -3,7 +3,6 @@ package week.on.a.plate.core.uitools.buttons
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -17,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.core.theme.ColorStrokeGrey
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
+import week.on.a.plate.screens.filters.view.clickNoRipple
 
 @Composable
 fun CloseButton(actionClose: () -> Unit) {
@@ -26,7 +26,7 @@ fun CloseButton(actionClose: () -> Unit) {
         modifier = Modifier
             .padding(12.dp)
             .size(24.dp)
-            .clickable { actionClose() },
+            .clickNoRipple  (actionClose),
     )
 }
 
@@ -36,7 +36,7 @@ fun CloseOutlined(actionClose: () -> Unit) {
         painter = painterResource(id = R.drawable.close),
         contentDescription = "",
         modifier = Modifier
-            .clickable { actionClose() }
+            .clickNoRipple (actionClose)
             .border(1.dp, ColorStrokeGrey, RoundedCornerShape(10.dp))
             .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(10.dp ))
             .padding(12.dp)

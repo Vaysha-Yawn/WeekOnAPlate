@@ -1,5 +1,6 @@
 package week.on.a.plate.screens.createRecipe.view
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -22,6 +23,7 @@ import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.CommonButton
 import week.on.a.plate.data.dataView.example.recipeTom
+import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.screens.createRecipe.event.RecipeCreateEvent
 import week.on.a.plate.screens.createRecipe.logic.RecipeCreateViewModel
 
@@ -32,6 +34,19 @@ fun RecipeCreateStart(viewModel: RecipeCreateViewModel) {
         viewModel.onEvent(event)
     }
     val state = rememberLazyListState()
+
+    BackHandler {
+        if (viewModel.state.activeTabIndex.intValue==0){
+            viewModel.onEvent(MainEvent.OpenDialogExitApplyFromCreateRecipe)
+        }else{
+            if (viewModel.state.webview.value?.canGoBack()==true){
+                viewModel.state.webview.value!!.goBack()
+            }else  {
+                viewModel.onEvent(MainEvent.OpenDialogExitApplyFromCreateRecipe)
+            }
+        }
+    }
+
     Column(Modifier.background(MaterialTheme.colorScheme.surface)) {
         TopBarRecipeCreate(viewModel.state, onEvent)
         LazyColumn(

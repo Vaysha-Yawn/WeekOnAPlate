@@ -3,7 +3,6 @@ package week.on.a.plate.core.uitools.buttons
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -17,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
+import week.on.a.plate.screens.filters.view.clickNoRipple
 
 @Composable
 fun ActionPlusButton(modifier:Modifier = Modifier, actionAdd: () -> Unit) {
@@ -27,7 +27,7 @@ fun ActionPlusButton(modifier:Modifier = Modifier, actionAdd: () -> Unit) {
             .background(MaterialTheme.colorScheme.secondary, CircleShape)
             .padding(6.dp)
             .size(48.dp)
-            .clickable { actionAdd() },
+            .clickNoRipple(actionAdd),
     )
 }
 
@@ -39,7 +39,7 @@ fun PlusButtonCard(actionAdd: () -> Unit) {
         modifier = Modifier
             .background(MaterialTheme.colorScheme.secondary, RoundedCornerShape(5.dp))
             .size(36.dp)
-            .clickable { actionAdd() },
+            .clickNoRipple(actionAdd),
     )
 }
 
@@ -52,7 +52,7 @@ fun PlusButtonTitle(actionAdd: () -> Unit) {
             .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(5.dp))
             .padding(2.dp)
             .size(24.dp)
-            .clickable { actionAdd() },
+            .clickNoRipple(actionAdd),
     )
 }
 

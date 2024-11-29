@@ -36,10 +36,12 @@ import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextDisplayItalic
 import week.on.a.plate.core.uitools.TextSmall
+import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.TextTitleLarge
 import week.on.a.plate.core.uitools.TextTitleLargeItalic
 import week.on.a.plate.core.utils.getIngredientCountAndMeasure1000
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
+import week.on.a.plate.screens.filters.view.clickNoRipple
 import week.on.a.plate.screens.shoppingList.event.ShoppingListEvent
 import week.on.a.plate.screens.shoppingList.logic.ShoppingListViewModel
 import week.on.a.plate.screens.shoppingList.state.ShoppingListUIState
@@ -75,12 +77,12 @@ fun ShoppingListContent(state: ShoppingListUIState, onEvent: (ShoppingListEvent)
             )
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(painterResource(R.drawable.delete), "", modifier = Modifier
-                    .clickable {
+                    .clickNoRipple {
                         onEvent(ShoppingListEvent.DeleteAll)
                     }
                     .size(30.dp))
                 Spacer(Modifier.width(12.dp))
-                Icon(painterResource(R.drawable.share), "", modifier = Modifier.clickable {
+                Icon(painterResource(R.drawable.share), "", modifier = Modifier.clickNoRipple {
                     onEvent(ShoppingListEvent.Share(context))
                 })
             }
@@ -110,7 +112,7 @@ fun ShoppingListContent(state: ShoppingListUIState, onEvent: (ShoppingListEvent)
                         Icon(
                             painter = painterResource(id = R.drawable.delete),
                             contentDescription = "", modifier = Modifier
-                                .clickable {
+                                .clickNoRipple {
                                     onEvent(ShoppingListEvent.DeleteChecked)
                                 }
                                 .size(36.dp)
@@ -128,7 +130,9 @@ fun ShoppingListContent(state: ShoppingListUIState, onEvent: (ShoppingListEvent)
         }
         if (state.listChecked.value.isEmpty() && state.listUnchecked.value.isEmpty()){
             Column(Modifier.padding(24.dp)) {
-                TextTitleLargeItalic("Похоже здесь пусто, нажмите + чтобы добавить")
+                TextTitle("Похоже здесь пусто...")
+                Spacer(Modifier.height(12.dp))
+                TextBody("Нажмите +, чтобы добавить ингредиенты в список покупок.")
             }
         }
     }
@@ -141,12 +145,11 @@ fun ShoppingListPosition(
     edit: (IngredientInRecipeView) -> Unit,
     onCheckedChange: (Boolean) -> Unit
 ) {
-
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .clickable {
+            .clickNoRipple {
                 edit(item)
             }
             .padding(horizontal = 24.dp)
@@ -182,6 +185,7 @@ fun ShoppingListPosition(
             }
         }
     }
+
     Spacer(modifier = Modifier.height(12.dp))
 }
 

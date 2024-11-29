@@ -34,6 +34,10 @@ fun ChooseHowImagePickContent(onEvent: (ChooseHowImagePickEvent) -> Unit) {
             onEvent(ChooseHowImagePickEvent.ByUrl)
         }
         Spacer(Modifier.height(12.dp))
+        CommonButton (stringResource(R.string.make_photo)) {
+            onEvent(ChooseHowImagePickEvent.MakePhoto)
+        }
+        Spacer(Modifier.height(12.dp))
         CommonButton (stringResource(R.string.select_from_gallery)) {
             onEvent(ChooseHowImagePickEvent.FromGallery)
         }

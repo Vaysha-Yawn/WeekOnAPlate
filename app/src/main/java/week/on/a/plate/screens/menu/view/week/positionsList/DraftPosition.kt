@@ -1,7 +1,6 @@
 package week.on.a.plate.screens.menu.view.week.positionsList
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -17,20 +16,21 @@ import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.core.uitools.buttons.MoreButton
 import week.on.a.plate.data.dataView.week.Position
+import week.on.a.plate.screens.filters.view.clickNoRipple
 import week.on.a.plate.screens.menu.event.MenuEvent
 import week.on.a.plate.screens.searchRecipes.view.resultScreen.TagListHidden
 
 @Composable
 fun DraftPosition(
     draft: Position.PositionDraftView,
-    onEvent: (event: week.on.a.plate.screens.menu.event.MenuEvent) -> Unit,
+    onEvent: (event: MenuEvent) -> Unit,
     rowScope: RowScope
 ) {
     with(rowScope) {
         Spacer(modifier = Modifier.width(20.dp))
         Row(Modifier
             .weight(3f)
-            .padding(vertical = 5.dp).clickable {  onEvent(week.on.a.plate.screens.menu.event.MenuEvent.EditOtherPosition(draft)) },
+            .padding(vertical = 5.dp).clickNoRipple {  onEvent(MenuEvent.EditOtherPosition(draft)) },
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically) {
             TagListHidden(draft.tags, draft.ingredients)
@@ -40,11 +40,11 @@ fun DraftPosition(
             contentDescription = "",
             modifier = Modifier
                 .size(24.dp)
-                .clickable { onEvent(week.on.a.plate.screens.menu.event.MenuEvent.SearchByDraft(draft)) },
+                .clickNoRipple { onEvent(MenuEvent.SearchByDraft(draft)) },
         )
         Spacer(modifier = Modifier.width(10.dp))
         MoreButton {
-            onEvent(week.on.a.plate.screens.menu.event.MenuEvent.EditPositionMore(draft))
+            onEvent(MenuEvent.EditPositionMore(draft))
         }
         Spacer(modifier = Modifier.width(12.dp))
     }

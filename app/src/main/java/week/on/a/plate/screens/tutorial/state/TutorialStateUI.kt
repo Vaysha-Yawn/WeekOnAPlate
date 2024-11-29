@@ -2,19 +2,23 @@ package week.on.a.plate.screens.tutorial.state
 
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import week.on.a.plate.core.navigation.CookPlannerDestination
 import week.on.a.plate.core.navigation.MenuDestination
 import week.on.a.plate.core.navigation.SearchDestination
 import week.on.a.plate.core.navigation.ShoppingListDestination
 import week.on.a.plate.screens.filters.navigation.FilterDestination
 
-data class TutorialStateUI(
-    var targetDestination: TutorialDestination,
-    val activePageInd: MutableIntState,
-    val listPages: List<TutorialPageStateUI>
-)
+class TutorialStateUI(){
+    val activePageInd: MutableIntState = mutableIntStateOf(0)
+    val sizePages: MutableIntState = mutableIntStateOf(5)
+    val title = mutableStateOf("")
+    val description = mutableStateOf("")
+    val imgUri = mutableStateOf("")
+}
 
-data class TutorialPageStateUI(
+data class TutorialPage(
     val img: Int,
     val title: String,
     val description: String

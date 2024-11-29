@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
@@ -28,13 +29,14 @@ import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.PlusButtonCard
 import week.on.a.plate.data.dataView.recipe.RecipeView
+import week.on.a.plate.screens.filters.view.clickNoRipple
 import week.on.a.plate.screens.searchRecipes.event.SearchScreenEvent
 
 @Composable
 fun CardRecipeResult(recipe: RecipeView, onEvent: (SearchScreenEvent) -> Unit, modifier: Modifier) {
     Box(
         modifier
-            .clickable {
+            .clickNoRipple {
                 onEvent(
                     SearchScreenEvent.NavigateToFullRecipe(recipe)
                 )
@@ -76,9 +78,10 @@ fun CardRecipeResult(recipe: RecipeView, onEvent: (SearchScreenEvent) -> Unit, m
                         )
                         .padding(5.dp)
                 ) {
+                    val context = LocalContext.current
                     PlusButtonCard {
                         onEvent(
-                            SearchScreenEvent.AddToMenu(recipe)
+                            SearchScreenEvent.AddToMenu(recipe, context)
                         )
                     }
                 }
@@ -100,7 +103,7 @@ fun CardRecipeResult(recipe: RecipeView, onEvent: (SearchScreenEvent) -> Unit, m
                         contentDescription = "",
                         modifier = Modifier
                             .size(36.dp)
-                            .clickable {
+                            .clickNoRipple {
                                 onEvent(
                                     SearchScreenEvent.FlipFavorite(
                                         recipe,

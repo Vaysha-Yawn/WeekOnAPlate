@@ -6,4 +6,5 @@ sealed class ChooseHowImagePickEvent: Event() {
     data object FromGallery: ChooseHowImagePickEvent()
     data object ByUrl: ChooseHowImagePickEvent()
     data object Close: ChooseHowImagePickEvent()
+    data object MakePhoto : ChooseHowImagePickEvent()
 }

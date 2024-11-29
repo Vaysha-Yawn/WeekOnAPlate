@@ -1,6 +1,5 @@
 package week.on.a.plate.screens.createRecipe.logic
 
-import android.util.Log
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.asImageBitmap
@@ -14,13 +13,10 @@ import week.on.a.plate.core.Event
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.data.dataView.recipe.RecipeView
 import week.on.a.plate.data.dataView.week.Position
-import week.on.a.plate.dialogs.chooseHowImagePick.event.ChooseHowImagePickEvent
 import week.on.a.plate.dialogs.chooseHowImagePick.logic.ChooseHowImagePickViewModel
 import week.on.a.plate.dialogs.chooseIngredientsForStep.logic.ChooseIngredientsForStepViewModel
 import week.on.a.plate.dialogs.dialogTimePick.logic.TimePickViewModel
 import week.on.a.plate.dialogs.editIngredientInMenu.logic.EditPositionIngredientViewModel
-import week.on.a.plate.dialogs.editOneString.logic.EditOneStringViewModel
-import week.on.a.plate.dialogs.editOneString.state.EditOneStringUIState
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screens.createRecipe.event.RecipeCreateEvent
@@ -39,6 +35,7 @@ import javax.inject.Inject
 class RecipeCreateViewModel @Inject constructor() : ViewModel() {
     lateinit var mainViewModel: MainViewModel
     var state = RecipeCreateUIState()
+    var isFirstTimeline:Boolean = true
     private var stateTimeline = RecipeTimelineUIState(
         mutableStateOf(listOf())
     )
@@ -170,36 +167,8 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
         vmChoose.mainViewModel = mainViewModel
         mainViewModel.onEvent(MainEvent.OpenDialog(vmChoose))
         viewModelScope.launch {
-            vmChoose.launchAndGet {event->
-                when(event){
-                    ChooseHowImagePickEvent.ByUrl -> {
-                        viewModelScope.launch {
-                            val vm = EditOneStringViewModel()
-                            vm.mainViewModel = mainViewModel
-                            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-                            vm.launchAndGet(
-                                EditOneStringUIState(
-                                    oldValue ?: "",
-                                    "Редактировать ссылку на изображение",
-                                    "Введите новую ссылку на изображение"
-                                )
-                            ) { note ->
-                                use(note.lowercase())
-                            }
-                        }
-                    }
-                    ChooseHowImagePickEvent.Close -> {}
-                    ChooseHowImagePickEvent.FromGallery -> {
-                        viewModelScope.launch {
-                            mainViewModel.imageFromGalleryUseCase.start { imgPath->
-                                use(imgPath?:"")
-                            }
-                        }
-                    }
-                }
-            }
+            vmChoose.launchAndGet(oldValue, use)
         }
-
     }
 
     private fun addManyIngredients() {
@@ -277,7 +246,7 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
         viewModelScope.launch {
             updateTimelineState()
             mainViewModel.recipeTimelineViewModel.launchAndGet(
-                stateTimeline
+                stateTimeline, isFirstTimeline
             ) { stateTL ->
                 stateTimeline = stateTL
                 state.steps.value.forEach { step ->
@@ -285,7 +254,9 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
                     step.start = stepState.start.value
                     step.duration = stepState.duration.value
                 }
-                onEvent(RecipeCreateEvent.Done)
+                if (isFirstTimeline) {
+                    isFirstTimeline = false
+                }
             }
         }
     }
@@ -321,6 +292,9 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
         use: (RecipeCreateUIState) -> Unit
     ) {
         if (oldRecipe != null) setStateByOldRecipe(oldRecipe) else state = RecipeCreateUIState()
+
+        isFirstTimeline = oldRecipe==null
+
         state.isForCreate.value = isForCreate
         val flow = start()
         flow.collect { value ->

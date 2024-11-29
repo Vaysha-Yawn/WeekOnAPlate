@@ -25,6 +25,7 @@ import week.on.a.plate.core.theme.titleLargeNonItalic
 import week.on.a.plate.core.theme.titleMediumItalic
 import week.on.a.plate.data.dataView.recipe.IngredientView
 import week.on.a.plate.data.dataView.recipe.RecipeTagView
+import week.on.a.plate.screens.filters.view.clickNoRipple
 
 
 @Composable
@@ -187,44 +188,12 @@ fun CreateTagOrIngredient(name: String, eventCreate: () -> Unit) {
     TagBig("+ Создать: " + name, MaterialTheme.colorScheme.background, eventCreate)
 }
 
-@Composable
-fun TagBig(
-    tag: RecipeTagView,
-    isActive: Boolean,
-    clickable: () -> Unit = {},
-    longClick: () -> Unit = {}
-) {
-    TagBig(
-        tag.tagName,
-        if (isActive) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.background,
-        clickable,
-        longClick
-    )
-}
-
-@Composable
-fun TagBig(
-    ingredientView: IngredientView,
-    isActive: Boolean,
-    clickable: () -> Unit = {},
-    longClick: () -> Unit = {}
-) {
-    TagBig(
-        ingredientView.name,
-        if (isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.background,
-        clickable, longClick
-    )
-}
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun TagBig(text: String, color: Color, clickable: () -> Unit = {}, longClick: () -> Unit = {}) {
+fun TagBig(text: String, color: Color, clickable: () -> Unit = {},) {
     TextInApp(
         text, modifier = Modifier
-            .combinedClickable(
-                onClick = clickable,
-                onLongClick = longClick
-            )
+            .clickNoRipple(clickable)
             .background(
                 color, RoundedCornerShape(30.dp)
             )

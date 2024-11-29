@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.core.Event
@@ -36,11 +37,12 @@ fun TitleMenu(selection: SelectionView, modifier: Modifier, onEvent: (event: Eve
                     }
                 ),
         )
+        val context = LocalContext.current
         PlusButtonTitle() {
             if (selection.id == 0L) {
-                onEvent(MenuEvent.CreateFirstNonPosedPosition(selection.dateTime.toLocalDate(), selection.name))
+                onEvent(MenuEvent.CreateFirstNonPosedPosition(selection.dateTime.toLocalDate(), selection.name, context))
             } else {
-                onEvent(MenuEvent.CreatePosition(selection.id))
+                onEvent(MenuEvent.CreatePosition(selection.id, context))
             }
         }
     }
@@ -65,11 +67,12 @@ fun TitleMenuS(selection: SelectionView, modifier: Modifier, onEvent: (event: Ev
                 ),
             color = ColorSubTextGrey
         )
+        val context = LocalContext.current
         PlusButtonTitle() {
             if (selection.id == 0L) {
-                onEvent(week.on.a.plate.screens.menu.event.MenuEvent.CreateFirstNonPosedPosition(selection.dateTime.toLocalDate(), selection.name))
+                onEvent(MenuEvent.CreateFirstNonPosedPosition(selection.dateTime.toLocalDate(), selection.name, context))
             } else {
-                onEvent(week.on.a.plate.screens.menu.event.MenuEvent.CreatePosition(selection.id))
+                onEvent(MenuEvent.CreatePosition(selection.id, context))
             }
         }
     }

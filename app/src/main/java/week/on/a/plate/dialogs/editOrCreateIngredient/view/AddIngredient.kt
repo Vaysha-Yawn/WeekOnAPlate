@@ -111,11 +111,9 @@ fun AddIngredient(
                     .padding(start = 12.dp)
                     .padding(bottom = 12.dp), textAlign = TextAlign.Start
             )
-            EditTextLine(
-                state.photoUri,
-                stringResource(R.string.enter_image_link),
-                modifier = Modifier
-            )
+            CommonButton("Выберите фото") {
+                onEvent(AddIngredientEvent.PickImage)
+            }
             Spacer(modifier = Modifier.height(24.dp))
             DoneButton(
                 text = stringResource(id = R.string.add),

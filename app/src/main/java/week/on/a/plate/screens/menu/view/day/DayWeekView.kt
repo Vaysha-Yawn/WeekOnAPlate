@@ -15,6 +15,7 @@ import week.on.a.plate.data.dataView.week.DayView
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.PlusButtonTitle
+import week.on.a.plate.screens.filters.view.clickNoRipple
 import week.on.a.plate.screens.menu.state.MenuUIState
 
 
@@ -37,7 +38,7 @@ fun DayView(day: DayView, menuUIState: MenuUIState, onEvent: (event: Event) -> U
                     text = "Добавить приём пищи",
                     modifier = Modifier
                         .padding(end = 20.dp)
-                        .clickable {
+                        .clickNoRipple {
                             onEvent(week.on.a.plate.screens.menu.event.MenuEvent.CreateSelection(day.date, false))
                         },
                 )

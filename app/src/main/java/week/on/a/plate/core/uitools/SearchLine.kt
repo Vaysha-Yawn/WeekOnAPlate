@@ -27,6 +27,7 @@ import week.on.a.plate.R
 import week.on.a.plate.core.theme.ColorStrokeGrey
 import week.on.a.plate.core.theme.Typography
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
+import week.on.a.plate.screens.filters.view.clickNoRipple
 
 
 @Composable
@@ -52,7 +53,7 @@ fun SearchLine(
                 contentDescription = "",
                 modifier = Modifier
                     .size(24.dp)
-                    .clickable {
+                    .clickNoRipple {
                         actionSearchVoice()
                     }
             )
@@ -63,7 +64,7 @@ fun SearchLine(
                 Image(
                     painter = painterResource(id = R.drawable.close),
                     contentDescription = "",
-                    modifier = Modifier.size(24.dp).clickable {
+                    modifier = Modifier.size(24.dp).clickNoRipple {
                         textSearch.value = ""
                         actionClear()
                     }

@@ -44,7 +44,7 @@ fun RecipeDetailsIngredients(state: RecipeDetailsState, onEvent: (RecipeDetailsE
         HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.outline)
         Spacer(modifier = Modifier.height(12.dp))
 
-        for ((index, ingredient) in state.recipe.value.ingredients.withIndex()) {
+        for ((index, ingredient) in state.recipe.ingredients.withIndex()) {
             IngredientInRecipeCard(ingredient, state.ingredientsCounts.value[index],  isDeletable = false)
             Spacer(modifier = Modifier.height(12.dp))
         }
@@ -56,7 +56,7 @@ fun RecipeDetailsIngredients(state: RecipeDetailsState, onEvent: (RecipeDetailsE
 fun PreviewRecipeDetailsIngredients() {
     WeekOnAPlateTheme {
         RecipeDetailsIngredients(RecipeDetailsState().apply {
-            recipe = mutableStateOf(recipeTom)
+            recipe = recipeTom
         }) {}
     }
 }

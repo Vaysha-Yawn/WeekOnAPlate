@@ -23,9 +23,6 @@ import week.on.a.plate.core.theme.WeekOnAPlateTheme
 
 @Composable
 fun RecipeDetailsStart(vm: RecipeDetailsViewModel) {
-
-    vm.state.recipe = vm.recipeFlow.collectAsState()
-
     RecipeDetailsStart(vm.state, { event: Event ->
         vm.mainViewModel.onEvent(event)
     }) { event: RecipeDetailsEvent ->
@@ -75,7 +72,7 @@ fun RecipeDetailsStart(
 fun PreviewRecipeDetailsStart() {
     WeekOnAPlateTheme {
         RecipeDetailsStart(RecipeDetailsState().apply {
-            recipe = mutableStateOf(recipeTom)
+            recipe = recipeTom
         }, {}) {}
     }
 }

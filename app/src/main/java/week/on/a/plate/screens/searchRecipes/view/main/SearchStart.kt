@@ -1,6 +1,7 @@
 package week.on.a.plate.screens.searchRecipes.view.main
 
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
@@ -36,12 +37,18 @@ fun SearchStart(
                     || viewModel.state.searched.value == SearchState.done)
         ) {
             SearchResultScreen(viewModel.state.resultSearch.value, viewModel.state, onEvent)
+            BackHandler {
+                viewModel.clearSearch()
+            }
         } else if (viewModel.state.searchText.value != ""
             || viewModel.state.selectedTags.value.isNotEmpty()
             || viewModel.state.selectedIngredients.value.isNotEmpty()
             || viewModel.state.searched.value == SearchState.done
         ) {
             SearchNothingFound(viewModel.state, onEvent)
+            BackHandler {
+                viewModel.clearSearch()
+            }
         } else {
             SearchCategoriesScreen(viewModel.state, onEvent)
         }

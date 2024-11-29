@@ -47,11 +47,6 @@ fun EditOrAddIngredientBottomDialogContent(
             .background(MaterialTheme.colorScheme.surface)
             .padding(vertical = 24.dp)
     ) {
-        /*TextBody(
-            text = stringResource(R.string.Ingredient),
-            modifier = Modifier.padding(horizontal = 36.dp)
-        )
-        Spacer(modifier = Modifier.height(12.dp))*/
         if (state.ingredientState.value != null) {
             Row(
                 Modifier
@@ -61,13 +56,6 @@ fun EditOrAddIngredientBottomDialogContent(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 TextTitle(state.ingredientState.value!!.name, Modifier.weight(1f))
-                Icon(
-                    painterResource(R.drawable.delete),
-                    "",
-                    tint = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier.clickable {
-                        EditPositionIngredientEvent.Delete
-                    })
             }
             Spacer(modifier = Modifier.height(12.dp))
             HorizontalDivider(Modifier, 1.dp, MaterialTheme.colorScheme.outline)

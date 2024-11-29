@@ -1,7 +1,6 @@
 package week.on.a.plate.dialogs.dialogTimePick.view
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -33,6 +32,7 @@ import week.on.a.plate.core.theme.ColorSubTextGrey
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.dialogs.dialogTimePick.event.TimePickEvent
 import week.on.a.plate.dialogs.dialogTimePick.state.TimePickUIState
+import week.on.a.plate.screens.filters.view.clickNoRipple
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,11 +52,11 @@ fun TimePickDialog(
             TextBody(
                 stringResource(R.string.cancel),
                 modifier = Modifier
-                    .clickable { onEvent(TimePickEvent.Close) }
+                    .clickNoRipple { onEvent(TimePickEvent.Close) }
                     .padding(end = 24.dp),
                 color = ColorSubTextGrey
             )
-            TextBody(stringResource(R.string.apply), modifier = Modifier.clickable { onEvent(TimePickEvent.Done) })
+            TextBody(stringResource(R.string.apply), modifier = Modifier.clickNoRipple { onEvent(TimePickEvent.Done) })
         },
     ) {
         val contentModifier = Modifier.padding(horizontal = 24.dp)

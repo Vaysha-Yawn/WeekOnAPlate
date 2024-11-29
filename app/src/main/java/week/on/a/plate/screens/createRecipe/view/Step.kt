@@ -19,6 +19,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -26,10 +28,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
+import week.on.a.plate.core.theme.ColorSubTextGrey
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.EditTextLine
 import week.on.a.plate.core.uitools.ImageLoadEditable
 import week.on.a.plate.core.uitools.TextBody
+import week.on.a.plate.core.uitools.TextSmall
 import week.on.a.plate.core.uitools.TextTitleItalic
 import week.on.a.plate.core.uitools.buttons.CommonButton
 import week.on.a.plate.core.utils.timeToString
@@ -38,6 +42,7 @@ import week.on.a.plate.screens.createRecipe.event.RecipeCreateEvent
 import week.on.a.plate.screens.createRecipe.logic.RecipeCreateViewModel
 import week.on.a.plate.screens.createRecipe.state.RecipeCreateUIState
 import week.on.a.plate.screens.createRecipe.state.RecipeStepState
+import week.on.a.plate.screens.filters.view.clickNoRipple
 
 
 @Composable
@@ -58,7 +63,7 @@ fun StepRecipeEdit(
                 contentDescription = "",
                 modifier = Modifier
                     .size(24.dp)
-                    .clickable {
+                    .clickNoRipple {
                         onEvent(RecipeCreateEvent.DeleteStep(recipeStepState))
                     }
             )
@@ -91,7 +96,7 @@ fun StepRecipeEdit(
                 recipeStepState.imageContainer,
                 modifier = Modifier
                     .height(160.dp)
-                    .clickable {
+                    .clickNoRipple {
                         onEvent(RecipeCreateEvent.EditImage(recipeStepState, context))
                     })
         }
@@ -132,30 +137,29 @@ fun StepRecipeEdit(
 @Composable
 fun DurationStep(state: RecipeStepState, onEvent: (RecipeCreateEvent) -> Unit) {
     val suggest = listOf(300, 600, 900, 1200, 1800,)
-    val cur =state.duration.toInt().timeToString()
-    TextBody(text = "Текущая  длительность шага: ${if (cur=="") "0 мин" else cur}", Modifier)
+    val cur = remember { mutableIntStateOf(state.duration.toInt()) }
+    TextSmall(text = "Текущая  длительность шага: ${if (cur.intValue==0) "0 мин" else cur.intValue.timeToString()}", Modifier, color = ColorSubTextGrey)
     Spacer(Modifier.height(12.dp))
-    TextBody(text = "Изменить длительность шага:", Modifier)
+    TextSmall(text = "Изменить длительность шага:", Modifier, color = ColorSubTextGrey)
     Spacer(Modifier.height(12.dp))
     LazyRow(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-        stickyHeader {
-            Row(
-                Modifier
-                    .clickable {
+        stickyHeader() {
+            Row(Modifier.background(MaterialTheme.colorScheme.surface)
+                    .clickNoRipple {
                         onEvent(RecipeCreateEvent.SetCustomDuration(state))
-                    }
-                    .background(MaterialTheme.colorScheme.background, RoundedCornerShape(20.dp))
-                    .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(20.dp))
-                    .padding(horizontal = 12.dp, vertical = 5.dp),
+                    },
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                TextBody(text = "Другое")
+                TextBody(text = "Другое", Modifier.background(MaterialTheme.colorScheme.background, RoundedCornerShape(20.dp))
+                .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(20.dp))
+                .padding(horizontal = 12.dp, vertical = 5.dp))
             }
             Spacer(Modifier.width(12.dp))
         }
         itemsIndexed(suggest) { ind, item ->
-            TimeButton(item) {
+            TimeButton(item, cur.intValue) {
                 onEvent(RecipeCreateEvent.EditStepDuration(state, item))
+                cur.intValue = item
             }
             Spacer(Modifier.width(12.dp))
         }
@@ -163,13 +167,19 @@ fun DurationStep(state: RecipeStepState, onEvent: (RecipeCreateEvent) -> Unit) {
 }
 
 @Composable
-fun TimeButton(time: Int, edit: () -> Unit) {
+fun TimeButton(time: Int, currentTime: Int, edit: () -> Unit) {
     Row(
         Modifier
             .clickable {
                 edit()
             }
-            .background(MaterialTheme.colorScheme.background, RoundedCornerShape(20.dp))
+            .background(
+                if (currentTime == time) {
+                    MaterialTheme.colorScheme.secondary
+                } else {
+                    MaterialTheme.colorScheme.background
+                }, RoundedCornerShape(20.dp)
+            )
             .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(20.dp))
             .padding(horizontal = 12.dp, vertical = 5.dp),
         verticalAlignment = Alignment.CenterVertically

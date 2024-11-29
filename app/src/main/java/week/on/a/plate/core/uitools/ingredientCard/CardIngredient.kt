@@ -2,7 +2,6 @@ package week.on.a.plate.core.uitools.ingredientCard
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -25,6 +24,7 @@ import week.on.a.plate.data.dataView.example.ingredientTomato
 import week.on.a.plate.data.dataView.recipe.IngredientView
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
+import week.on.a.plate.screens.filters.view.clickNoRipple
 
 @Composable
 fun CardIngredient(
@@ -33,9 +33,7 @@ fun CardIngredient(
     actionClick:()->Unit
 ) {
     Card(
-        Modifier.fillMaxWidth().clickable {
-            actionClick()
-        },
+        Modifier.fillMaxWidth().clickNoRipple(actionClick),
         elevation = CardDefaults.elevatedCardElevation(5.dp),
         shape = RectangleShape,
     ) {

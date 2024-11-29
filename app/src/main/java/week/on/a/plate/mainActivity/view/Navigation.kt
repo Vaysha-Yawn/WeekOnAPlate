@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import week.on.a.plate.core.navigation.CookPlannerDestination
@@ -37,6 +38,8 @@ import week.on.a.plate.screens.shoppingList.view.ShoppingListStart
 import week.on.a.plate.screens.specifyRecipeToCookPlan.navigation.SpecifyForCookPlanDestination
 import week.on.a.plate.screens.specifyRecipeToCookPlan.view.SpecifyForCookPlanStart
 import week.on.a.plate.screens.specifySelection.view.SpecifySelectionAltStart
+import week.on.a.plate.screens.tutorial.navigation.TutorialDestination
+import week.on.a.plate.screens.tutorial.view.TutorialStart
 
 @Composable
 fun Navigation(
@@ -53,8 +56,9 @@ fun Navigation(
             viewModel.isActiveBaseScreen.value = true
             viewModel.isActivePlusButton.value = true
             viewModel.isActiveFilterScreen.value = false
+            val context = LocalContext.current
             viewModel.actionPlusButton.value =
-                { viewModel.menuViewModel.onEvent(MenuEvent.GetSelIdAndCreate) }
+                { viewModel.menuViewModel.onEvent(MenuEvent.GetSelIdAndCreate (context)) }
             MenuScreen(
                 viewModel.menuViewModel
             )
@@ -95,6 +99,13 @@ fun Navigation(
             viewModel.isActivePlusButton.value = false
             viewModel.isActiveFilterScreen.value = false
             SpecifySelectionAltStart(viewModel.specifySelectionViewModel)
+        }
+
+        composable<TutorialDestination> {
+            viewModel.isActiveBaseScreen.value = false
+            viewModel.isActivePlusButton.value = false
+            viewModel.isActiveFilterScreen.value = false
+            TutorialStart(viewModel.tutorialViewModel)
         }
 
         composable<RecipeTimelineDestination> {

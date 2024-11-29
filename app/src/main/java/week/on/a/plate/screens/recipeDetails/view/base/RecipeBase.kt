@@ -28,9 +28,9 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 fun RecipeBase(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) -> Unit) {
-    if (state.recipe.value.img != "") {
+    if (state.recipe.img != "") {
         ImageLoad(
-            state.recipe.value.img,
+            state.recipe.img,
             Modifier
                 .height(200.dp)
                 .fillMaxWidth()
@@ -43,21 +43,21 @@ fun RecipeBase(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) -> Unit)
             .padding(horizontal = 36.dp)
             .padding(top = 24.dp)
     ) {
-        TextTitleLarge(text = state.recipe.value.name)
-        if (state.recipe.value.tags.isNotEmpty()) {
+        TextTitleLarge(text = state.recipe.name)
+        if (state.recipe.tags.isNotEmpty()) {
             Spacer(modifier = Modifier.height(24.dp))
-            TagList(tags = state.recipe.value.tags, ingredients = listOf())
+            TagList(tags = state.recipe.tags, ingredients = listOf())
         }
         Spacer(modifier = Modifier.height(12.dp))
         SubText(
-            text = "Последнее редактирование: " + state.recipe.value.lastEdit.toLocalDate()
-                .dateToStringShort() + " в " + state.recipe.value.lastEdit.format(
+            text = "Последнее редактирование: " + state.recipe.lastEdit.toLocalDate()
+                .dateToStringShort() + " в " + state.recipe.lastEdit.format(
                 DateTimeFormatter.ofPattern("HH:mm")
             ), textAlign = TextAlign.Start
         )
-        if (state.recipe.value.description != "") {
+        if (state.recipe.description != "") {
             Spacer(modifier = Modifier.height(12.dp))
-            TextBody(text = state.recipe.value.description)
+            TextBody(text = state.recipe.description)
         }
     }
     Spacer(modifier = Modifier.height(36.dp))
@@ -77,7 +77,7 @@ fun PreviewRecipeBase() {
     WeekOnAPlateTheme {
         Column(Modifier.fillMaxWidth()) {
             RecipeBase(RecipeDetailsState().apply {
-                this.recipe = mutableStateOf(recipeTom)
+                this.recipe = recipeTom
             }) {}
         }
     }

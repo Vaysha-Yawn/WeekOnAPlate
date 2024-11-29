@@ -61,7 +61,7 @@ class AddTagViewModel() : DialogViewModel() {
             vm.launchAndGet(FilterMode.One, FilterEnum.CategoryTag, null, true) { filters ->
                 val res = filters.tagsCategories?.getOrNull(0)
                 if (res != null) state.category.value = res
-                mainViewModel.onEvent(MainEvent.ShowDialog(this@AddTagViewModel))
+                mainViewModel.onEvent(MainEvent.ShowDialog)
                 vm.isForCategory = false
                 vm.state.restoreState(oldFilterState)
             }

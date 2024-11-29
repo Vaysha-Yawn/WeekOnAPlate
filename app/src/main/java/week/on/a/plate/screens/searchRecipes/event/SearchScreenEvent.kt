@@ -12,7 +12,7 @@ sealed class SearchScreenEvent : Event(){
     class FlipFavorite(val recipe: RecipeView, val inFavorite: Boolean) : SearchScreenEvent()
     data class VoiceSearch(val context: Context) : SearchScreenEvent()
     data object Back : SearchScreenEvent()
-    class AddToMenu(val recipeView: RecipeView): SearchScreenEvent()
+    class AddToMenu(val recipeView: RecipeView, val context: Context): SearchScreenEvent()
     class NavigateToFullRecipe(val recipeView: RecipeView): SearchScreenEvent()
     class SelectTag(val recipeTagView: RecipeTagView) : SearchScreenEvent()
     class ChangeSort(val type : ResultSortType, val direction: ResultSortingDirection) : SearchScreenEvent()

@@ -1,5 +1,6 @@
 package week.on.a.plate.screens.searchRecipes.logic
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,11 +22,13 @@ import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.data.dataView.week.RecipeShortView
 import week.on.a.plate.data.repository.tables.filters.recipeTagCategory.RecipeTagCategoryRepository
 import week.on.a.plate.data.repository.tables.recipe.recipe.RecipeRepository
+import week.on.a.plate.dialogs.changePortions.logic.ChangePortionsCountViewModel
 import week.on.a.plate.dialogs.filtersMore.logic.FiltersMoreViewModel
 import week.on.a.plate.dialogs.sortMore.event.SortMoreEvent
 import week.on.a.plate.dialogs.sortMore.logic.SortMoreViewModel
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
+import week.on.a.plate.preference.PreferenceUseCase
 import week.on.a.plate.screens.createRecipe.navigation.RecipeCreateDestination
 import week.on.a.plate.screens.filters.navigation.FilterDestination
 import week.on.a.plate.screens.filters.state.FilterEnum
@@ -142,7 +145,7 @@ class SearchViewModel @Inject constructor(
 
             SearchScreenEvent.Back -> close()
             is SearchScreenEvent.FlipFavorite -> flipFavorite(event.recipe, event.inFavorite)
-            is SearchScreenEvent.AddToMenu -> addToMenu(event.recipeView)
+            is SearchScreenEvent.AddToMenu -> addToMenu(event.recipeView, event.context)
             is SearchScreenEvent.NavigateToFullRecipe -> navigateToFullRecipe(event.recipeView.id)
             SearchScreenEvent.ToFilter -> toFilter()
             is SearchScreenEvent.SelectTag -> selectTag(event.recipeTagView)
@@ -232,7 +235,6 @@ class SearchViewModel @Inject constructor(
 
     private fun navigateToFullRecipe(id: Long) {
         mainViewModel.recipeDetailsViewModel.launch(id)
-        mainViewModel.nav.navigate(RecipeDetailsDestination)
     }
 
     private fun createRecipe() {
@@ -288,31 +290,40 @@ class SearchViewModel @Inject constructor(
         state.searched.value = SearchState.none
     }
 
-    private fun addToMenu(recipeView: RecipeView) {
+    private fun addToMenu(recipeView: RecipeView, context: Context) {
+        //todo надо повторяющуюся логику, как сохранение рецепта вынести в одну функцию
         viewModelScope.launch {
             if (selId != null) {
                 resultFlow?.value = recipeView
                 selId = null
                 mainViewModel.nav.navigate(MenuDestination)
             } else {
-                val vm = mainViewModel.specifySelectionViewModel
+                val vmSpec = mainViewModel.specifySelectionViewModel
+                close()
                 mainViewModel.nav.navigate(SpecifySelectionDestination)
-                vm.launchAndGet() { res ->
-                    viewModelScope.launch {
-                        val recipePosition = Position.PositionRecipeView(
-                            0,
-                            RecipeShortView(recipeView.id, recipeView.name, recipeView.img),
-                            res.portions,
-                            res.selId
-                        )
-                        sCRUDRecipeInMenu.onEvent(
-                            week.on.a.plate.screens.menu.event.ActionWeekMenuDB.AddRecipePositionInMenuDB(
-                                res.selId,
-                                recipePosition
+                vmSpec.launchAndGet() { res ->
+                    val vm = ChangePortionsCountViewModel()
+                    vm.mainViewModel = mainViewModel
+                    onEvent(MainEvent.OpenDialog(vm))
+                    val std = PreferenceUseCase().getDefaultPortionsCount(context)
+                    vm.launchAndGet(std) { count ->
+                        viewModelScope.launch {
+                            val recipePosition = Position.PositionRecipeView(
+                                0,
+                                RecipeShortView(recipeView.id, recipeView.name, recipeView.img),
+                                count,
+                                res.selId
                             )
-                        )
+                            sCRUDRecipeInMenu.onEvent(
+                                week.on.a.plate.screens.menu.event.ActionWeekMenuDB.AddRecipePositionInMenuDB(
+                                    res.selId,
+                                    recipePosition
+                                )
+                            )
+                            mainViewModel.menuViewModel.updateWeek()
+                            mainViewModel.nav.navigate(MenuDestination)
+                        }
                     }
-                    close()
                 }
             }
         }

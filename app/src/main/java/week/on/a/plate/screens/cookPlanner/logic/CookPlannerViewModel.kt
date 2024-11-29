@@ -54,9 +54,7 @@ class CookPlannerViewModel @Inject constructor(
 
     fun onEvent(event: Event) {
         when (event) {
-            is MainEvent -> {
-                mainViewModel.onEvent(event)
-            }
+            is MainEvent -> { mainViewModel.onEvent(event) }
 
             is WrapperDatePickerEvent -> {
                 wrapperDatePickerManager.onEvent(event, state.wrapperDatePickerUIState)
@@ -90,7 +88,6 @@ class CookPlannerViewModel @Inject constructor(
                     WrapperDatePickerEvent.SwitchWeekOrDayView -> {}
                 }
             }
-
             is CookPlannerEvent -> onEvent(event)
         }
     }
@@ -124,9 +121,6 @@ class CookPlannerViewModel @Inject constructor(
 
             is CookPlannerEvent.NavToFullStep -> {
                 mainViewModel.recipeDetailsViewModel.launch(event.step.recipeId, event.step.portionsCount)
-                viewModelScope.launch {
-                    mainViewModel.nav.navigate(RecipeDetailsDestination)
-                }
             }
         }
     }

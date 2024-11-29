@@ -43,7 +43,7 @@ fun TopPanelRecipeDetail(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent
                 onEvent(RecipeDetailsEvent.Edit)
             }
             ImageButton(
-                if (state.recipe.value.inFavorite) R.drawable.bookmark_full else R.drawable.bookmark
+                if (state.recipe.inFavorite) R.drawable.bookmark_full else R.drawable.bookmark
             ) {
                 onEvent(RecipeDetailsEvent.SwitchFavorite)
             }

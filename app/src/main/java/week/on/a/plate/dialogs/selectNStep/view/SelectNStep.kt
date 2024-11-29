@@ -1,7 +1,6 @@
 package week.on.a.plate.dialogs.selectNStep.view
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,6 +20,7 @@ import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.dialogs.selectNStep.event.SelectNStepEvent
 import week.on.a.plate.dialogs.selectNStep.logic.SelectNStepViewModel
 import week.on.a.plate.dialogs.selectNStep.state.SelectNStepUIState
+import week.on.a.plate.screens.filters.view.clickNoRipple
 
 @Composable
 fun SelectNStep(viewModel: SelectNStepViewModel) {
@@ -49,7 +49,7 @@ fun SelectNStep(viewModel: SelectNStepViewModel) {
             TextTitle(
                 text = (step + 1).toString() + stringResource(R.string.step),
                 Modifier
-                    .clickable {
+                    .clickNoRipple {
                         onEvent(SelectNStepEvent.Select(step))
                     }
                     .padding(bottom = 24.dp)

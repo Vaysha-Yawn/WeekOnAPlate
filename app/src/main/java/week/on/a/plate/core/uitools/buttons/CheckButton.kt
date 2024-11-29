@@ -12,9 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import week.on.a.plate.core.theme.ColorButtonGreen
 import week.on.a.plate.core.theme.ColorDarkButtonGreen
-import week.on.a.plate.core.theme.ColorStrokeBlue
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 
 @Composable

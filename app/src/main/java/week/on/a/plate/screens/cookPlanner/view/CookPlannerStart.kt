@@ -107,7 +107,7 @@ fun EmptyTip() {
             .padding(horizontal = 24.dp)) {
         TextTitle(stringResource(R.string.seems_empty))
         Spacer(Modifier.height(24.dp))
-        TextSmall(stringResource(R.string.cook_planner_empty_tip))
+        TextBody(stringResource(R.string.cook_planner_empty_tip))
     }
 }
 

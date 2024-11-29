@@ -30,7 +30,7 @@ fun PinnedIngredientsForStep(
             Row(
                 Modifier
                     .background(MaterialTheme.colorScheme.background, RoundedCornerShape(20.dp))
-                    .padding(horizontal = 10.dp),
+                    .padding(horizontal = 12.dp, vertical = 6.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column {

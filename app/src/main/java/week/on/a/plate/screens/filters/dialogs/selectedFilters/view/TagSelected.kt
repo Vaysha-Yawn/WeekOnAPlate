@@ -1,6 +1,7 @@
 package week.on.a.plate.screens.filters.dialogs.selectedFilters.view
 
 import androidx.compose.foundation.layout.Row
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import week.on.a.plate.data.dataView.recipe.IngredientView
@@ -12,9 +13,10 @@ import week.on.a.plate.core.uitools.buttons.CloseButton
 fun TagSelected(tag: RecipeTagView, remove:()->Unit) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         CloseButton { remove() }
-        TagBig(tag = tag, true){
-            remove()
-        }
+        TagBig(
+            tag.tagName,
+            MaterialTheme.colorScheme.secondary
+        )
     }
 }
 
@@ -22,8 +24,9 @@ fun TagSelected(tag: RecipeTagView, remove:()->Unit) {
 fun IngredientSelected(ingredient: IngredientView, remove:()->Unit) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         CloseButton { remove() }
-        TagBig(ingredientView = ingredient, true){
-            remove()
-        }
+        TagBig(
+            ingredient.name,
+             MaterialTheme.colorScheme.primary
+        )
     }
 }
