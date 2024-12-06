@@ -117,8 +117,8 @@ fun StepRecipeEdit(
             }
         }
     }
-    Spacer(modifier = Modifier.height(12.dp))
-    DurationStep(recipeStepState, onEvent)
+    //Spacer(modifier = Modifier.height(12.dp))
+    //DurationStep(recipeStepState, onEvent)
     if (recipeStepState.pinnedIngredientsInd.value.isNotEmpty()) {
         Spacer(modifier = Modifier.height(12.dp))
         PinnedIngredientsForStep(

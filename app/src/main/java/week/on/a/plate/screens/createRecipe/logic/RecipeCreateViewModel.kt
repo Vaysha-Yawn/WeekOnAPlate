@@ -28,7 +28,7 @@ import week.on.a.plate.screens.filters.state.FilterMode
 import week.on.a.plate.screens.recipeTimeline.navigation.RecipeTimelineDestination
 import week.on.a.plate.screens.recipeTimeline.state.RecipeTimelineUIState
 import week.on.a.plate.screens.recipeTimeline.state.StepTimelineData
-import week.on.a.plate.screens.searchRecipes.logic.imageFromGallery.getSavedPicture
+import week.on.a.plate.mainActivity.logic.imageFromGallery.getSavedPicture
 import javax.inject.Inject
 
 @HiltViewModel

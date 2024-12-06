@@ -27,8 +27,9 @@ import week.on.a.plate.screens.menu.logic.useCase.CRUDRecipeInMenu
 import week.on.a.plate.screens.recipeDetails.logic.RecipeDetailsViewModel
 import week.on.a.plate.screens.recipeTimeline.logic.RecipeTimelineViewModel
 import week.on.a.plate.screens.searchRecipes.logic.SearchViewModel
-import week.on.a.plate.screens.searchRecipes.logic.imageFromGallery.ImageFromGalleryUseCase
-import week.on.a.plate.screens.searchRecipes.logic.voice.VoiceInputUseCase
+import week.on.a.plate.mainActivity.logic.imageFromGallery.ImageFromGalleryUseCase
+import week.on.a.plate.mainActivity.logic.takePicture.TakePictureUseCase
+import week.on.a.plate.mainActivity.logic.voice.VoiceInputUseCase
 import week.on.a.plate.screens.settings.logic.SettingsViewModel
 import week.on.a.plate.screens.shoppingList.logic.ShoppingListViewModel
 import week.on.a.plate.screens.specifyRecipeToCookPlan.logic.SpecifyRecipeToCookPlanViewModel
@@ -110,8 +111,9 @@ class MainViewModel @Inject constructor(
 
     lateinit var locale: Locale
     val actionPlusButton = mutableStateOf({})
-    val voiceInputUseCase = VoiceInputUseCase()
+    val voiceInputUseCase = VoiceInputUseCase(this)
     val imageFromGalleryUseCase = ImageFromGalleryUseCase(this)
+    val takePictureUseCase = TakePictureUseCase(this)
     val snackbarHostState = SnackbarHostState()
     lateinit var nav: NavHostController
     val isActiveBaseScreen = mutableStateOf(true)

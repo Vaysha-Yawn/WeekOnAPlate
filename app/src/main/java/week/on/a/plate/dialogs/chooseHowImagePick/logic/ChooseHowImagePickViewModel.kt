@@ -65,7 +65,13 @@ class ChooseHowImagePickViewModel() : DialogViewModel() {
                 }
             }
 
-            ChooseHowImagePickEvent.MakePhoto -> TODO()
+            is ChooseHowImagePickEvent.MakePhoto -> {
+                mainViewModel.viewModelScope.launch {
+                    mainViewModel.takePictureUseCase.start(event.context) { imgPath ->
+                        done(imgPath ?: "")
+                    }
+                }
+            }
         }
     }
 

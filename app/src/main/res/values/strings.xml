@@ -98,4 +98,6 @@
     <string name="settings">Настройки</string>
     <string name="next">Далее</string>
     <string name="make_photo">Сделать фото</string>
+    <string name="no_camera_hint">Не удалось сделать фото, камера не обнаружена</string>
+    <string name="no_mic_hint">Микрофон не обнаружен</string>
 </resources>

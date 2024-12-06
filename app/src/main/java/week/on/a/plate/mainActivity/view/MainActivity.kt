@@ -90,13 +90,17 @@ class MainActivity : ComponentActivity() {
         }
         viewModel.imageFromGalleryUseCase.imageLauncher = getPictureLauncher
 
-        //todo take picture use case
+
         val getPhotoLauncher = registerForActivityResult(
             contract = ActivityResultContracts.TakePicture()
-        ) { uri: Boolean ->
-
+        ) { result: Boolean ->
+            if (result){
+                viewModel.takePictureUseCase.saveImage(this)
+            }else{
+                viewModel.takePictureUseCase.close()
+            }
         }
-        //viewModel.imageFromGalleryUseCase.imageLauncher = getPictureLauncher
+        viewModel.takePictureUseCase.imageLauncher = getPhotoLauncher
 
         setContent {
             WeekOnAPlateTheme {
