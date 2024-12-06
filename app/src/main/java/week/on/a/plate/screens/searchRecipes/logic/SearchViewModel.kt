@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.navigation.MenuDestination
-import week.on.a.plate.core.utils.getAllTimeCook
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.data.dataView.recipe.IngredientView
 import week.on.a.plate.data.dataView.recipe.RecipeStepView
@@ -34,7 +33,6 @@ import week.on.a.plate.screens.filters.navigation.FilterDestination
 import week.on.a.plate.screens.filters.state.FilterEnum
 import week.on.a.plate.screens.filters.state.FilterMode
 import week.on.a.plate.screens.menu.logic.useCase.CRUDRecipeInMenu
-import week.on.a.plate.screens.recipeDetails.navigation.RecipeDetailsDestination
 import week.on.a.plate.screens.searchRecipes.event.SearchScreenEvent
 import week.on.a.plate.screens.searchRecipes.state.ResultSortType
 import week.on.a.plate.screens.searchRecipes.state.ResultSortingDirection
@@ -42,6 +40,7 @@ import week.on.a.plate.screens.searchRecipes.state.SearchState
 import week.on.a.plate.screens.searchRecipes.state.SearchUIState
 import week.on.a.plate.screens.specifySelection.navigation.SpecifySelectionDestination
 import java.time.LocalDateTime
+import java.time.LocalTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -71,7 +70,7 @@ class SearchViewModel @Inject constructor(
     private fun search() {
         searchAbstract { recipeView ->
             (if (state.favoriteChecked.value){ recipeView.inFavorite } else true)
-                    && (if (state.allTime.intValue!=0) {recipeView.getAllTimeCook() <= state.allTime.intValue*60} else true)
+                    && (if (state.allTime.intValue!=0) {recipeView.duration.toSecondOfDay() <= state.allTime.intValue*60} else true)
                     && recipeView.name.contains(state.searchText.value.trim(), true)
                     && recipeView.tags.containsAll(state.selectedTags.value)
                     && recipeView.ingredients.map { ingredientInRecipeView -> ingredientInRecipeView.ingredientView }
@@ -255,7 +254,7 @@ class SearchViewModel @Inject constructor(
                 standardPortionsCount = 4,
                 ingredients = listRecipe,
                 steps = listOf(),
-                link = "", false, LocalDateTime.now()
+                link = "", false, LocalDateTime.now(), LocalTime.of(0, 0)
             )
             vm.launchAndGet(recipeStart, true) { recipe ->
                 viewModelScope.launch {
@@ -272,10 +271,10 @@ class SearchViewModel @Inject constructor(
                                 0,
                                 it.description.value,
                                 it.image.value,
-                                it.timer.longValue, it.start, it.duration, it.pinnedIngredientsInd.value
+                                it.timer.longValue, it.pinnedIngredientsInd.value
                             )
                         },
-                        link = recipe.source.value, false, LocalDateTime.now()
+                        link = recipe.source.value, false, LocalDateTime.now(), recipe.duration.value
                     )
                     recipeRepository.create(newRecipe)
                 }

@@ -117,8 +117,6 @@ fun StepRecipeEdit(
             }
         }
     }
-    //Spacer(modifier = Modifier.height(12.dp))
-    //DurationStep(recipeStepState, onEvent)
     if (recipeStepState.pinnedIngredientsInd.value.isNotEmpty()) {
         Spacer(modifier = Modifier.height(12.dp))
         PinnedIngredientsForStep(
@@ -130,61 +128,6 @@ fun StepRecipeEdit(
     Spacer(modifier = Modifier.height(12.dp))
     CommonButton("Редактировать прикреплённые ингредиенты") {
         onEvent(RecipeCreateEvent.EditPinnedIngredients(recipeStepState))
-    }
-}
-
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-fun DurationStep(state: RecipeStepState, onEvent: (RecipeCreateEvent) -> Unit) {
-    val suggest = listOf(300, 600, 900, 1200, 1800,)
-    val cur = remember { mutableIntStateOf(state.duration.toInt()) }
-    TextSmall(text = "Текущая  длительность шага: ${if (cur.intValue==0) "0 мин" else cur.intValue.timeToString()}", Modifier, color = ColorSubTextGrey)
-    Spacer(Modifier.height(12.dp))
-    TextSmall(text = "Изменить длительность шага:", Modifier, color = ColorSubTextGrey)
-    Spacer(Modifier.height(12.dp))
-    LazyRow(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-        stickyHeader() {
-            Row(Modifier.background(MaterialTheme.colorScheme.surface)
-                    .clickNoRipple {
-                        onEvent(RecipeCreateEvent.SetCustomDuration(state))
-                    },
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                TextBody(text = "Другое", Modifier.background(MaterialTheme.colorScheme.background, RoundedCornerShape(20.dp))
-                .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(20.dp))
-                .padding(horizontal = 12.dp, vertical = 5.dp))
-            }
-            Spacer(Modifier.width(12.dp))
-        }
-        itemsIndexed(suggest) { ind, item ->
-            TimeButton(item, cur.intValue) {
-                onEvent(RecipeCreateEvent.EditStepDuration(state, item))
-                cur.intValue = item
-            }
-            Spacer(Modifier.width(12.dp))
-        }
-    }
-}
-
-@Composable
-fun TimeButton(time: Int, currentTime: Int, edit: () -> Unit) {
-    Row(
-        Modifier
-            .clickable {
-                edit()
-            }
-            .background(
-                if (currentTime == time) {
-                    MaterialTheme.colorScheme.secondary
-                } else {
-                    MaterialTheme.colorScheme.background
-                }, RoundedCornerShape(20.dp)
-            )
-            .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(20.dp))
-            .padding(horizontal = 12.dp, vertical = 5.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        TextBody(text = time.timeToString())
     }
 }
 

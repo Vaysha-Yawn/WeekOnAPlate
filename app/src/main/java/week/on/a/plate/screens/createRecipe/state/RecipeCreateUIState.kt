@@ -5,10 +5,10 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.ImageBitmap
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.data.dataView.recipe.RecipeTagView
+import java.time.LocalDateTime
 import java.time.LocalTime
 
 class RecipeCreateUIState {
@@ -24,9 +24,10 @@ class RecipeCreateUIState {
     val steps = mutableStateOf(listOf<RecipeStepState>())
     val webview = mutableStateOf<WebView?>(null)
     val isForCreate = mutableStateOf<Boolean>(true)
+    val duration = mutableStateOf<LocalTime>(LocalTime.of(0, 0))
 }
 
-class RecipeStepState (val id:Long, var start: Long, var duration: Long) {
+class RecipeStepState(val id:Long) {
     val description = mutableStateOf("")
     val image = mutableStateOf("")
     val imageContainer =  mutableStateOf<ImageBitmap?>(null)

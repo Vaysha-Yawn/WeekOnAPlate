@@ -37,20 +37,6 @@ fun CookStepMoreContent( onEvent: (CookStepMoreEvent) -> Unit) {
         }
 
         ButtonRow(
-            R.drawable.add_time,
-            text= stringResource(R.string.increase_step_time),
-        ){
-            onEvent(CookStepMoreEvent.IncreaseStepTime)
-        }
-
-        ButtonRow(
-            R.drawable.next,
-            text= stringResource(R.string.move_step_by_time_start),
-        ){
-            onEvent(CookStepMoreEvent.MoveStepByTimeStart)
-        }
-
-        ButtonRow(
             R.drawable.numbers,
             text = stringResource(R.string.Change_number_of_servings),
         ){

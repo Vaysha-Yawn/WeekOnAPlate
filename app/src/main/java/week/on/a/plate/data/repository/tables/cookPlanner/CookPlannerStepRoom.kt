@@ -12,10 +12,11 @@ data class CookPlannerStepRoom(
     val plannerGroupId: Long,
     val originalStepId: Long,
     var checked: Boolean,
-    @TypeConverters(LocalDateTimeTypeConverter::class)
+    //remove
+    /*@TypeConverters(LocalDateTimeTypeConverter::class)
     var start: LocalDateTime,
     @TypeConverters(LocalDateTimeTypeConverter::class)
-    var end: LocalDateTime,
+    var end: LocalDateTime,*/
 ) {
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0

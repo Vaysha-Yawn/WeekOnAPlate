@@ -23,7 +23,8 @@ class RecipeMapper() {
             steps = steps,
             link = this.link,
             inFavorite = this.inFavorite,
-            lastEdit = lastEdit
+            lastEdit = lastEdit,
+            duration = duration
         )
 
     fun RecipeView.viewToRoom(): RecipeRoom =
@@ -34,6 +35,7 @@ class RecipeMapper() {
             standardPortionsCount = this.standardPortionsCount,
             link = this.link,
             inFavorite = this.inFavorite,
-            lastEdit = lastEdit
+            lastEdit = lastEdit,
+            duration = duration
         )
 }

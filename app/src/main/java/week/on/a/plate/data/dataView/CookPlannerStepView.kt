@@ -7,14 +7,17 @@ import java.time.LocalDateTime
 data class CookPlannerStepView(
     val id: Long,
     val plannerGroupId: Long,
-    val recipeId: Long,
-    val recipeName: String,
-    val start: LocalDateTime,
-    val end: LocalDateTime,
     val stepView: RecipeStepView,
-    val allRecipeIngredientsByPortions: List<IngredientInRecipeView>,
     val checked: Boolean,
-    val portionsCount:Int,
-    val stdPortionsCount:Int,
     val pinnedIngredientsByPortionsCount: List<IngredientInRecipeView>,
+)
+
+data class CookPlannerGroupView(
+    val id: Long,
+    val recipeId:Long,
+    val start:LocalDateTime,
+    val end:LocalDateTime,
+    val recipeName:String,
+    val portionsCount: Int,
+    val steps:List<CookPlannerStepView>
 )

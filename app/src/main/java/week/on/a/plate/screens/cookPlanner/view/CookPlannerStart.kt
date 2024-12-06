@@ -25,6 +25,7 @@ import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.TextTitleItalic
 import week.on.a.plate.core.uitools.TextTitleLarge
 import week.on.a.plate.core.uitools.TextTitleLargeItalic
+import week.on.a.plate.data.dataView.CookPlannerGroupView
 import week.on.a.plate.data.dataView.CookPlannerStepView
 import week.on.a.plate.screens.cookPlanner.logic.CookPlannerViewModel
 import week.on.a.plate.screens.cookPlanner.state.CookPlannerUIState
@@ -74,7 +75,7 @@ fun CookPlannerContent(state: CookPlannerUIState, onEvent: (Event) -> Unit) {
                     }
                     items(day.value) {
                         Spacer(Modifier.height(24.dp))
-                        CardStep(it, onEvent)
+                        CookGroup(it, onEvent)
                     }
                 }
             }
@@ -83,14 +84,14 @@ fun CookPlannerContent(state: CookPlannerUIState, onEvent: (Event) -> Unit) {
 
 @Composable
 fun DayViewCookPlan(
-    week: Map<LocalDate, List<CookPlannerStepView>>,
+    week: Map<LocalDate, List<CookPlannerGroupView>>,
     date: LocalDate,
     onEvent: (Event) -> Unit
 ) {
     if (week.keys.contains(date) && week[date] != null && week[date]?.isNotEmpty()==true) {
         LazyColumn {
             items(week[date]!!.size) { ind ->
-                CardStep(week[date]!![ind], onEvent)
+                CookGroup(week[date]!![ind], onEvent)
                 Spacer(Modifier.height(24.dp))
             }
         }

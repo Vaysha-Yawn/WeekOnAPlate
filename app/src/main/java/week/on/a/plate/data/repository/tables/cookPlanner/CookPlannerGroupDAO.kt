@@ -11,6 +11,12 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CookPlannerGroupDAO {
+    @Query("SELECT * FROM CookPlannerGroupRoom WHERE DATE(start) = :date")
+    fun getAllFlowByDateStart(date: String): Flow<List<CookPlannerGroupRoom>>
+
+    @Query("SELECT * FROM CookPlannerGroupRoom WHERE DATE(start) = :date")
+    suspend fun getAllByDateStart(date: String): List<CookPlannerGroupRoom>
+
     @Query("SELECT * FROM CookPlannerGroupRoom")
     fun getAllFlow(): Flow<List<CookPlannerGroupRoom>>
 

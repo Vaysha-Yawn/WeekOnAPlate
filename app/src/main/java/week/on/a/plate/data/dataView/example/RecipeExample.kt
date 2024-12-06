@@ -6,7 +6,6 @@ import week.on.a.plate.data.dataView.recipe.RecipeStepView
 import week.on.a.plate.data.dataView.recipe.RecipeTagView
 import week.on.a.plate.data.dataView.recipe.RecipeView
 import week.on.a.plate.data.dataView.week.RecipeShortView
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 
@@ -79,35 +78,35 @@ val recipeTom =
                 0,
                 "Как сделать салат из свежих огурцов и помидоров? Подготовьте продукты. Овощи и зелень хорошо вымойте и обсушите салфетками. Масло можете брать любое растительное.",
                 "https://static.1000.menu/res/380/img/content/36406/salat-iz-pomidorov-s-ogurcom-i-lukom_1562163876_1_max.jpg",
-                0, 0, 0, listOf()
+                0, listOf()
             ),
             RecipeStepView(
                 1,
                 "Если шкурка у огурцов горчит, или слишком жесткая, или вы просто хотите, чтобы готовый салат был более мягким, то срежьте ее. Также срежьте и кончики у огурцов. Сами огурцы нарежьте ломтиками небольшого размера и переложите в миску для салата.",
                 "https://static.1000.menu/res/380/img/content/36406/salat-iz-pomidorov-s-ogurcom-i-lukom_1562163876_2_max.jpg",
-                15, 0, 0, listOf()
+                15, listOf()
             ),
             RecipeStepView(
                 2,
                 "Помидоры нарежьте ломтиками примерно такого же размера и формы, как огурцы. Основания плодоножек удаляйте. Добавьте измельченные помидоры в миску к огурцам.",
                 "https://static.1000.menu/res/380/img/content/36406/salat-iz-pomidorov-s-ogurcom-i-lukom_1562163876_3_max.jpg",
-                0, 0, 0, listOf()
+                0, listOf()
             ),
             RecipeStepView(
                 3,
                 "Лук почистите и нарежьте тонкими полукольцами или четверть кольцами. Добавьте к измельченным овощам, разделив отдельные ломтики лука руками. Остается только заправить салат из помидоров с огурцом и луком растительным маслом, посолить по вкусу и добавить молотый черный перец на свое усмотрение. Не забудьте мелко нарезать и добавить свежий укроп.",
                 "https://static.1000.menu/res/380/img/content/36406/salat-iz-pomidorov-s-ogurcom-i-lukom_1562163876_4_max.jpg",
-                0, 0, 0, listOf()
+                0, listOf()
             ),
             RecipeStepView(
                 4,
                 "Перемешайте все подготовленные ингредиенты и подавайте салат из свежих огурцов и помидоров с луком сразу же после приготовления. Он вкусен именно свежим.",
                 "https://static.1000.menu/res/380/img/content/36406/salat-iz-pomidorov-s-ogurcom-i-lukom_1562165388_5_max.jpg",
-                0, 0, 0, listOf()
+                0, listOf()
             ),
         ),
         link = "https://eda.ru/media/vopros/zagotovki-tri-prostyh-pravila",
-        false, LocalDateTime.now(),
+        false, LocalDateTime.now(), LocalTime.now(),
     )
 
 val recipeShort = RecipeView(
@@ -130,11 +129,11 @@ val recipeShort = RecipeView(
             0,
             "Перемешайте все подготовленные ингредиенты и подавайте салат из свежих огурцов и помидоров с луком сразу же после приготовления. Он вкусен именно свежим.",
             "https://static.1000.menu/res/380/img/content/36406/salat-iz-pomidorov-s-ogurcom-i-lukom_1562165388_5_max.jpg",
-            0, 0, 0, listOf()
+            0, listOf()
         ),
     ),
     link = "https://eda.ru/media/vopros/zagotovki-tri-prostyh-pravila",
-    inFavorite = false, LocalDateTime.now(),
+    inFavorite = false, LocalDateTime.now(), LocalTime.now(),
 )
 
 
@@ -143,7 +142,7 @@ val shortRecipe = RecipeShortView(0, "Салат из помидоров с ог
 
 val emptyRecipe = RecipeView(
     0, "", "", "", listOf<RecipeTagView>(),
-    0,  listOf(), listOf(), "", false, LocalDateTime.now(),
+    0,  listOf(), listOf(), "", false, LocalDateTime.now(),LocalTime.now(),
 )
 
 fun getSimpleRecipe(names: String, inFavorite: Boolean = false, image: String = ""): RecipeView {
@@ -153,7 +152,7 @@ fun getSimpleRecipe(names: String, inFavorite: Boolean = false, image: String = 
                 RecipeTagView(0, "Избранное")
             )
         } else listOf(),
-        0, listOf(), listOf(), "", false,LocalDateTime.now(),
+        0, listOf(), listOf(), "", false,LocalDateTime.now(),LocalTime.now(),
     )
 }
 

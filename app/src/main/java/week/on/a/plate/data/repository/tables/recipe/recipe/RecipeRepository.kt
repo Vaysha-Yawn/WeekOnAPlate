@@ -178,10 +178,6 @@ class RecipeRepository @Inject constructor(
         val steps = cookPlannerStepDAO.getAllByOriginalStepId(step.id)
         if (steps.isEmpty()) return
         steps.forEach { stepCook->
-            val group = groupRepo.getById(stepCook.plannerGroupId)
-            val start = group.start
-            stepCook.start = start.plusSeconds(step.start)
-            stepCook.end = start.plusSeconds(step.start).plusSeconds(step.duration)
             cookPlannerStepDAO.update(stepCook)
         }
     }
@@ -190,14 +186,10 @@ class RecipeRepository @Inject constructor(
         val groups = groupRepo.getAllByRecipeId(recipeId)
         if (groups.isEmpty()) return
         groups.forEach { group->
-            val allHave = cookPlannerStepDAO.getByGroupId(group.id)
-            val start = allHave.minOf { it.start }
             val stepRoom = CookPlannerStepRoom(
                 group.id,
                 newStepId,
-                false,
-                start.plusSeconds(step.start),
-                start.plusSeconds(step.duration).plusSeconds(step.start),
+                false
             )
             cookPlannerStepDAO.insert(stepRoom)
         }

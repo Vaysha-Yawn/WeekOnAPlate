@@ -10,8 +10,6 @@ class RecipeStepMapper() {
             description = this.description,
             image = this.image,
             timer = this.timer,
-            start = start,
-            duration = duration,
             ingredientsPinned
         )
 
@@ -21,8 +19,6 @@ class RecipeStepMapper() {
             description = this.description,
             image = this.image,
             timer = this.timer,
-            start = start,
-            duration = duration,
             ingredientsPinnedId
         )
 }

@@ -4,7 +4,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import week.on.a.plate.data.repository.tables.menu.selection.LocalDateTimeTypeConverter
+import week.on.a.plate.data.repository.tables.menu.selection.LocalTimeTypeConverter
 import java.time.LocalDateTime
+import java.time.LocalTime
 
 @Entity
 data class RecipeRoom(
@@ -16,6 +18,9 @@ data class RecipeRoom(
     var inFavorite: Boolean,
     @TypeConverters(LocalDateTimeTypeConverter::class)
     val lastEdit: LocalDateTime,
+    //add
+    @TypeConverters(LocalTimeTypeConverter::class)
+    val duration: LocalTime,
 ) {
     @PrimaryKey(autoGenerate = true)
     var recipeId: Long = 0

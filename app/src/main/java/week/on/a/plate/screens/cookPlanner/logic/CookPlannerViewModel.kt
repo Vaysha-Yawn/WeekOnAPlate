@@ -6,7 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.Event
-import week.on.a.plate.data.dataView.CookPlannerStepView
+import week.on.a.plate.data.dataView.CookPlannerGroupView
 import week.on.a.plate.data.dataView.week.getTitleWeek
 import week.on.a.plate.data.repository.tables.cookPlanner.CookPlannerStepRepository
 import week.on.a.plate.dialogs.changePortions.logic.ChangePortionsCountViewModel
@@ -17,7 +17,6 @@ import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screens.cookPlanner.event.CookPlannerEvent
 import week.on.a.plate.screens.cookPlanner.state.CookPlannerUIState
-import week.on.a.plate.screens.recipeDetails.navigation.RecipeDetailsDestination
 import week.on.a.plate.screens.wrapperDatePicker.event.WrapperDatePickerEvent
 import week.on.a.plate.screens.wrapperDatePicker.logic.WrapperDatePickerManager
 import javax.inject.Inject
@@ -97,6 +96,7 @@ class CookPlannerViewModel @Inject constructor(
             is CookPlannerEvent.CheckStep -> {
                 viewModelScope.launch {
                     repository.check(event.step)
+                    update()
                 }
             }
 
@@ -107,43 +107,18 @@ class CookPlannerViewModel @Inject constructor(
                     mainViewModel.onEvent(MainEvent.OpenDialog(vm))
                     vm.launchAndGet {
                         when (it) {
-                            CookStepMoreEvent.ChangeEndRecipeTime -> changeEndRecipeTime(event.step)
-                            CookStepMoreEvent.ChangeStartRecipeTime -> changeStartRecipeTime(event.step)
+                            CookStepMoreEvent.ChangeEndRecipeTime -> changeEndRecipeTime(event.groupView)
+                            CookStepMoreEvent.ChangeStartRecipeTime -> changeStartRecipeTime(event.groupView)
                             CookStepMoreEvent.Close -> {}
-                            CookStepMoreEvent.IncreaseStepTime -> increaseStepTime(event.step)
-                            CookStepMoreEvent.MoveStepByTimeStart -> moveStepByTimeStart(event.step)
-                            CookStepMoreEvent.ChangePortionsCount -> changePortionsCount(event.step)
-                            CookStepMoreEvent.Delete -> delete(event.step)
+                            CookStepMoreEvent.ChangePortionsCount -> changePortionsCount(event.groupView)
+                            CookStepMoreEvent.Delete -> delete(event.groupView)
                         }
                     }
                 }
             }
 
             is CookPlannerEvent.NavToFullStep -> {
-                mainViewModel.recipeDetailsViewModel.launch(event.step.recipeId, event.step.portionsCount)
-            }
-        }
-    }
-
-    private fun increaseStepTime(step: CookPlannerStepView) {
-        getTime("На сколько вы хотите увеличить шаг?") {
-            mainViewModel.viewModelScope.launch {
-                repository.increaseStepTime(step, it)
-                update()
-            }
-        }
-    }
-
-    private fun changePortionsCount(step: CookPlannerStepView) {
-        viewModelScope.launch {
-            val vm = ChangePortionsCountViewModel()
-            vm.mainViewModel = mainViewModel
-            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-            vm.launchAndGet(step.portionsCount) { portionsCount ->
-                viewModelScope.launch {
-                    repository.changePortionsCount(step, portionsCount)
-                    update()
-                }
+                mainViewModel.recipeDetailsViewModel.launch(event.groupView.recipeId, event.groupView.portionsCount)
             }
         }
     }
@@ -159,35 +134,40 @@ class CookPlannerViewModel @Inject constructor(
         }
     }
 
-    private fun moveStepByTimeStart(step: CookPlannerStepView) {
-        getTime("На сколько передвинуть шаг?") {
-            mainViewModel.viewModelScope.launch {
-                repository.moveStepByTimeStart(step, it)
-                update()
+    private fun changePortionsCount(group: CookPlannerGroupView) {
+        viewModelScope.launch {
+            val vm = ChangePortionsCountViewModel()
+            vm.mainViewModel = mainViewModel
+            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
+            vm.launchAndGet(group.portionsCount) { portionsCount ->
+                viewModelScope.launch {
+                    repository.changePortionsCount(group, portionsCount)
+                    update()
+                }
             }
         }
     }
 
-    private fun delete(step: CookPlannerStepView) {
+    private fun delete(group: CookPlannerGroupView) {
         viewModelScope.launch {
-            repository.deleteGroup(step.plannerGroupId)
+            repository.deleteGroup(group.id)
             update()
         }
     }
 
-    private fun changeStartRecipeTime(step: CookPlannerStepView) {
+    private fun changeStartRecipeTime(group: CookPlannerGroupView) {
         getTime("Во сколько начать приготовление?") {
             mainViewModel.viewModelScope.launch {
-                repository.changeStartRecipeTime(step.plannerGroupId, it)
+                repository.changeStartRecipeTime(group.id, it)
                 update()
             }
         }
     }
 
-    private fun changeEndRecipeTime(step: CookPlannerStepView) {
+    private fun changeEndRecipeTime(group: CookPlannerGroupView) {
         getTime("Ко скольки рассчитать приготовление?") {
             mainViewModel.viewModelScope.launch {
-                repository.changeEndRecipeTime(step.plannerGroupId, it)
+                repository.changeEndRecipeTime(group.id, it)
                 update()
             }
         }

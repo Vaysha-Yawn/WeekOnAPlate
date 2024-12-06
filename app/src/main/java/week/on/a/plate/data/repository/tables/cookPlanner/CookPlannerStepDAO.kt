@@ -11,11 +11,6 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CookPlannerStepDAO {
-    @Query("SELECT * FROM CookPlannerStepRoom WHERE DATE(start) = :date")
-    fun getAllFlowByDateStart(date: String): Flow<List<CookPlannerStepRoom>>
-
-    @Query("SELECT * FROM CookPlannerStepRoom WHERE DATE(start) = :date")
-    suspend fun getAllFlowByDateStartNoFlow(date: String): List<CookPlannerStepRoom>
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(item: CookPlannerStepRoom):Long

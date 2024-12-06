@@ -2,6 +2,7 @@
     <string name="app_name">Неделя на тарелке</string>
     <string name="done">Готово</string>
     <string name="Portions">Порции</string>
+    <string name="portions_end_of_phrase"> порции</string>
     <string name="data_not_found">Нет данных</string>
     <string name="add_day">Добавить день</string>
     <string name="Change_number_of_servings">Изменить количество порций</string>

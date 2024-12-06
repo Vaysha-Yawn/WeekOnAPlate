@@ -7,22 +7,22 @@ import week.on.a.plate.data.dataView.recipe.RecipeStepView
 
 class CookPlannerStepMapper() {
     fun CookPlannerStepRoom.roomToView(
-        recipeName: String, stepView: RecipeStepView, recipeIngredients: List<IngredientInRecipeView>,
-        recipeId:Long, portionsCount:Int, stdPortionsCount:Int,
+        stepView: RecipeStepView,
+        recipeIngredients: List<IngredientInRecipeView>,
+        portionsCount: Int,
+        stdPortionsCount: Int,
     ): CookPlannerStepView =
         CookPlannerStepView(
             id = id,
             plannerGroupId = plannerGroupId,
-            recipeId = recipeId,
-            recipeName = recipeName,
-            start = start,
-            end = end,
             stepView = stepView,
             checked = checked,
-            portionsCount = portionsCount,
-            allRecipeIngredientsByPortions = recipeIngredients,
-            stdPortionsCount = stdPortionsCount,
-            pinnedIngredientsByPortionsCount = mapPinnedIngredients(recipeIngredients, stdPortionsCount, portionsCount, stepView.ingredientsPinnedId)
+            pinnedIngredientsByPortionsCount = mapPinnedIngredients(
+                recipeIngredients,
+                stdPortionsCount,
+                portionsCount,
+                stepView.ingredientsPinnedId
+            )
         )
 
     fun CookPlannerStepView.viewToRoom(): CookPlannerStepRoom =
@@ -30,18 +30,22 @@ class CookPlannerStepMapper() {
             plannerGroupId = plannerGroupId,
             originalStepId = stepView.id,
             checked = checked,
-            start = start,
-            end = end,
         )
-
-
 }
 
-fun mapPinnedIngredients(allIngredients:List<IngredientInRecipeView>, stdPortions:Int, currentPortions:Int, ingredientsPinnedId:List<Long>):List<IngredientInRecipeView> {
-   return ingredientsPinnedId.map { id ->
-            val ingr = allIngredients.find { it.ingredientView.ingredientId == id }!!
-            val startIngredientCount = ingr.count
-            if (startIngredientCount > 0) { ingr.count = (startIngredientCount.toFloat() / stdPortions.toFloat() * currentPortions).toInt() }
-            ingr
+fun mapPinnedIngredients(
+    allIngredients: List<IngredientInRecipeView>,
+    stdPortions: Int,
+    currentPortions: Int,
+    ingredientsPinnedId: List<Long>
+): List<IngredientInRecipeView> {
+    return ingredientsPinnedId.map { id ->
+        val ingr = allIngredients.find { it.ingredientView.ingredientId == id }!!.copy()
+        val startIngredientCount = ingr.count
+        if (startIngredientCount > 0) {
+            ingr.count =
+                (startIngredientCount.toFloat() / stdPortions.toFloat() * currentPortions).toInt()
         }
+        ingr
+    }
 }

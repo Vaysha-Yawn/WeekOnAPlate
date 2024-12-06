@@ -12,7 +12,7 @@ import week.on.a.plate.data.dataView.recipe.RecipeView
 
 class RecipeDetailsState() {
     var recipe: RecipeView = emptyRecipe
-    val ingredientsCounts = mutableStateOf<List<Int>>(listOf())
+    val ingredientsCounts = mutableStateOf<List<IngredientInRecipeView>>(listOf())
     val activeTabIndex = mutableIntStateOf(0)
     val currentPortions = mutableIntStateOf(2)
     val mapPinnedStepIdToIngredients: MutableState<Map<Long, List<IngredientInRecipeView>>> = mutableStateOf(

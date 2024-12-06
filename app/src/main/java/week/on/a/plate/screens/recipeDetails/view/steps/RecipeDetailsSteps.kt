@@ -17,8 +17,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -32,7 +30,6 @@ import week.on.a.plate.core.theme.bodyMediumSemiBold
 import week.on.a.plate.core.uitools.ImageLoad
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextInApp
-import week.on.a.plate.core.utils.getAllTimeCook
 import week.on.a.plate.core.utils.timeToString
 import week.on.a.plate.data.dataView.example.recipeTom
 import week.on.a.plate.screens.createRecipe.view.PinnedIngredientsForStep
@@ -56,7 +53,7 @@ fun RecipeDetailsSteps(state: RecipeDetailsState,   onEvent: (RecipeDetailsEvent
             TextBody(text = "Время приготовления: ")
             if (state.recipe.steps.isNotEmpty()) {
                 TextBody(
-                    text = state.recipe.getAllTimeCook().timeToString()
+                    text = state.recipe.duration.toSecondOfDay().timeToString()
                 )
             }
         }

@@ -14,8 +14,9 @@ data class RecipeStepRoom(
     val description: String,
     val image:String,
     val timer:Long,
-    val start:Long,
-    val duration:Long,
+    // remove
+/*    val start:Long,
+    val duration:Long,*/
     @TypeConverters(ListIntConverter::class)
     val ingredientsPinned:List<Long>
 ){

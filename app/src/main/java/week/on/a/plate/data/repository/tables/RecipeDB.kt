@@ -2,6 +2,7 @@ package week.on.a.plate.data.repository.tables
 
 
 import android.content.Context
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -53,8 +54,9 @@ import week.on.a.plate.data.repository.tables.shoppingList.ShoppingItemRoom
         RecipeTagRoom::class, RecipeTagCategoryRoom::class, PositionRecipeRoom::class, SelectionRoom::class,
         PositionIngredientRoom::class, PositionNoteRoom::class, PositionDraftRoom::class, DraftAndIngredientCrossRef::class, DraftAndTagCrossRef::class,
         ShoppingItemRoom::class, CookPlannerStepRoom::class, CookPlannerGroupRoom::class
-    ], version = 1, exportSchema = false
+    ], version = 1, exportSchema = true
 )
+
 @TypeConverters(
     DateTypeConverter::class, LocalDateTimeTypeConverter::class, LocalTimeTypeConverter::class, ListIntConverter::class
 )

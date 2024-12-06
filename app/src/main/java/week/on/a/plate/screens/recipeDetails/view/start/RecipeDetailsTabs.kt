@@ -19,7 +19,6 @@ import week.on.a.plate.screens.recipeDetails.event.RecipeDetailsEvent
 import week.on.a.plate.screens.recipeDetails.state.RecipeDetailsState
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.utils.timeToString
-import week.on.a.plate.core.utils.getAllTimeCook
 
 @Composable
 fun RecipeDetailsTabs(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) -> Unit) {
@@ -40,7 +39,7 @@ fun RecipeDetailsTabs(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) -
                         TextSmall(
                             text =
                             when (index) {
-                                0 -> state.recipe.getAllTimeCook().timeToString()
+                                0 -> state.recipe.duration.toSecondOfDay().timeToString()
                                 1 -> state.recipe.ingredients.size.toString()
                                 2 -> ""
                                 else -> ""

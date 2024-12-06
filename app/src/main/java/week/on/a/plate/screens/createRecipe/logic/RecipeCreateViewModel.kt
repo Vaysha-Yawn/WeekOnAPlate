@@ -122,7 +122,7 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
             RecipeCreateEvent.AddStep -> {
                 viewModelScope.launch {
                     state.steps.value = state.steps.value.toMutableList().apply {
-                        this.add(RecipeStepState(0, 0, 5))
+                        this.add(RecipeStepState(0))
                     }.toList()
                 }
             }
@@ -152,11 +152,11 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
             RecipeCreateEvent.SetTimeline -> setTimeline()
             is RecipeCreateEvent.EditPinnedIngredients -> editPinnedIngredients(event.recipeStepState)
             is RecipeCreateEvent.EditStepDuration -> {
-                event.stepState.duration = event.time.toLong()
+               // event.stepState.duration = event.time.toLong()
             }
             is RecipeCreateEvent.SetCustomDuration -> {
                 getTime("Длительность шага"){time->
-                    event.state.duration = time
+                   // event.state.duration = time
                 }
             }
         }
@@ -251,8 +251,8 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
                 stateTimeline = stateTL
                 state.steps.value.forEach { step ->
                     val stepState = stateTL.allUISteps.value.find { it.id == step.id }!!
-                    step.start = stepState.start.value
-                    step.duration = stepState.duration.value
+                  //  step.start = stepState.start.value
+                  //  step.duration = stepState.duration.value
                 }
                 if (isFirstTimeline) {
                     isFirstTimeline = false
@@ -262,14 +262,14 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
     }
 
     private fun updateTimelineState() {
-        stateTimeline.allUISteps.value = state.steps.value.map {
+        /*stateTimeline.allUISteps.value = state.steps.value.map {
             StepTimelineData(
                 id = it.id,
                 description = it.description.value,
                 start = mutableLongStateOf(it.start),
                 duration = mutableLongStateOf(it.duration)
             )
-        }
+        }*/
     }
 
     private fun getTime(title: String, use: (Long) -> Unit) {
@@ -318,7 +318,7 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
         val list = mutableListOf<RecipeStepState>()
         oldRecipe.steps.forEach { stepOld ->
             val step =
-                RecipeStepState(stepOld.id, stepOld.start, stepOld.duration).also { stepState ->
+                RecipeStepState(stepOld.id).also { stepState ->
                     with(stepState) {
                         description.value = stepOld.description
                         image.value = stepOld.image

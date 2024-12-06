@@ -6,13 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import week.on.a.plate.core.utils.getAllTimeCook
 import week.on.a.plate.core.utils.getIngredientCountAndMeasure1000
 import week.on.a.plate.core.utils.timeToString
-import week.on.a.plate.data.dataView.example.emptyRecipe
 import week.on.a.plate.data.dataView.recipe.RecipeStepView
 import week.on.a.plate.data.dataView.recipe.RecipeView
 import week.on.a.plate.data.dataView.week.Position
@@ -30,9 +26,7 @@ import week.on.a.plate.screens.recipeDetails.event.RecipeDetailsEvent
 import week.on.a.plate.screens.recipeDetails.navigation.RecipeDetailsDestination
 import week.on.a.plate.screens.recipeDetails.state.RecipeDetailsState
 import week.on.a.plate.screens.specifySelection.navigation.SpecifySelectionDestination
-import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.LocalTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -74,7 +68,7 @@ class RecipeDetailsViewModel @Inject constructor(
         text += "Рецепт: " + recipeView.name
         text += "\n"
         text += "\n"
-        text += "Время приготовления: " + recipeView.getAllTimeCook().timeToString()
+        text += "Время приготовления: " + recipeView.duration.toSecondOfDay().timeToString()
         text += "\n"
         text += "Колличество порций: " + recipeView.standardPortionsCount
         text += "\n"
@@ -107,12 +101,8 @@ class RecipeDetailsViewModel @Inject constructor(
     private fun addToCart() {
         if (state.recipe.ingredients.isNotEmpty()) {
             viewModelScope.launch {
-                val listCopy = state.recipe.ingredients.toList()
-                listCopy.forEachIndexed { index, ingredientInRecipeView ->
-                    ingredientInRecipeView.count = state.ingredientsCounts.value[index]
-                }
                 mainViewModel.nav.navigate(InventoryDestination)
-                mainViewModel.inventoryViewModel.launchAndGet(listCopy)
+                mainViewModel.inventoryViewModel.launchAndGet(state.ingredientsCounts.value)
             }
         } else {
             mainViewModel.onEvent(MainEvent.ShowSnackBar("Нет ингредиентов в составе."))
@@ -121,29 +111,24 @@ class RecipeDetailsViewModel @Inject constructor(
 
     private fun plusPortionsView() {
         state.currentPortions.intValue = state.currentPortions.intValue.plus(1)
-        updIngredientsCount()
+        update()
     }
 
-    fun updIngredientsCount() {
-        val newCountPortions = state.currentPortions.intValue
-        val startCount = state.recipe.standardPortionsCount
+    private fun updIngredientsCount() {
         if (state.recipe.ingredients.size == state.ingredientsCounts.value.size && state.recipe.ingredients.isNotEmpty()) {
-            state.ingredientsCounts.value = state.ingredientsCounts.value.toMutableList().apply {
-                this.forEachIndexed { index, _ ->
-                    val startIngredientCount = state.recipe.ingredients[index].count
-                    if (startIngredientCount > 0) {
-                        this[index] =
-                            (startIngredientCount.toFloat() / startCount.toFloat() * newCountPortions.toFloat()).toInt()
-                    }
-                }
-            }.toList()
+            state.ingredientsCounts.value = mapPinnedIngredients(
+                allIngredients = state.recipe.ingredients,
+                stdPortions = state.recipe.standardPortionsCount,
+                currentPortions = state.currentPortions.intValue,
+                ingredientsPinnedId = state.recipe.ingredients.map { it.ingredientView.ingredientId }
+            )
         }
     }
 
     private fun minusPortionsView() {
         if (state.currentPortions.intValue > 1) {
             state.currentPortions.intValue = state.currentPortions.intValue.minus(1)
-            updIngredientsCount()
+            update()
         }
     }
 
@@ -217,10 +202,10 @@ class RecipeDetailsViewModel @Inject constructor(
                             it.id,
                             it.description.value,
                             it.image.value,
-                            it.timer.longValue, it.start, it.duration, it.pinnedIngredientsInd.value
+                            it.timer.longValue, it.pinnedIngredientsInd.value
                         )
                     },
-                    link = recipe.source.value, state.recipe.inFavorite, LocalDateTime.now()
+                    link = recipe.source.value, state.recipe.inFavorite, LocalDateTime.now(), recipe.duration.value
                 )
                 viewModelScope.launch {
                     recipeRepository.updateRecipe(state.recipe, newRecipe)
@@ -233,12 +218,7 @@ class RecipeDetailsViewModel @Inject constructor(
     fun launch(recipeId: Long, portionsCount: Int? = null) {
         viewModelScope.launch {
             state.recipe = recipeRepository.getRecipe(recipeId)
-            val list = mutableListOf<Int>()
-            state.recipe.ingredients.forEach { ingredientInRecipeView ->
-                val count = ingredientInRecipeView.count
-                list.add(count)
-            }
-            state.ingredientsCounts.value = list
+            state.ingredientsCounts.value = state.recipe.ingredients
             state.currentPortions.intValue =
                 portionsCount ?: state.recipe.standardPortionsCount
 
@@ -264,15 +244,7 @@ class RecipeDetailsViewModel @Inject constructor(
     fun update() {
         viewModelScope.launch {
             state.recipe = recipeRepository.getRecipe(state.recipe.id)
-            val list = mutableListOf<Int>()
-            state.recipe.ingredients.forEach { ingredientInRecipeView ->
-                val count = ingredientInRecipeView.count
-                list.add(count)
-            }
-            state.ingredientsCounts.value = list
-            state.currentPortions.intValue =
-                state.recipe.standardPortionsCount
-
+            updIngredientsCount()
             val recipe = state.recipe
             state.mapPinnedStepIdToIngredients.value = recipe.steps.associate { stepView ->
                 Pair(
@@ -285,8 +257,6 @@ class RecipeDetailsViewModel @Inject constructor(
                     )
                 )
             }
-
-            updIngredientsCount()
         }
     }
 

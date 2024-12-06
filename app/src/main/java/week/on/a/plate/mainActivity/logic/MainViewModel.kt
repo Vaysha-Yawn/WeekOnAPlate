@@ -188,12 +188,11 @@ class MainViewModel @Inject constructor(
                                     it.description.value,
                                     it.image.value,
                                     it.timer.longValue,
-                                    it.start,
-                                    it.duration,
                                     it.pinnedIngredientsInd.value
                                 )
                             },
-                            link = recipe.source.value, false, LocalDateTime.now()
+                            link = recipe.source.value, false, LocalDateTime.now(),
+                            recipe.duration.value
                         )
                         recipeRepository.create(newRecipe)
                     }
