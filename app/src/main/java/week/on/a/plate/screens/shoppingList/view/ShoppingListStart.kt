@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -43,16 +44,21 @@ fun ShoppingListStart(viewModel: ShoppingListViewModel) {
 
     viewModel.state.listChecked = viewModel.allItemsChecked.collectAsState()
     viewModel.state.listUnchecked = viewModel.allItemsUnChecked.collectAsState()
-
+    val context = LocalContext.current
     Column(
         Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.surface)
     ) {
-        TextTitleLarge(
-            text = "Список покупок",
-            modifier = Modifier.padding(horizontal = 36.dp, vertical = 12.dp)
-        )
+        Row(Modifier.fillMaxWidth().padding(horizontal = 36.dp, vertical = 12.dp), verticalAlignment = Alignment.CenterVertically , horizontalArrangement = Arrangement.SpaceBetween) {
+            TextTitleLarge(
+                text = "Список покупок",
+                modifier = Modifier
+            )
+            Icon(painterResource(R.drawable.share), "", modifier = Modifier.clickable {
+                viewModel.onEvent(ShoppingListEvent.Share(context))
+            })
+        }
         HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.outline)
         Spacer(modifier = Modifier.height(12.dp))
         LazyColumn() {

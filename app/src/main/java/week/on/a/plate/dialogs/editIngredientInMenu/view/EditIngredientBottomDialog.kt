@@ -115,7 +115,7 @@ fun EditOrAddIngredientBottomDialogContent(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Preview(showBackground = true)
 @Composable
 fun PreviewEditIngredientBottomDialog() {

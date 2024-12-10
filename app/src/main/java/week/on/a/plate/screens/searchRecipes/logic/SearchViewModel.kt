@@ -259,7 +259,7 @@ class SearchViewModel @Inject constructor(
                 steps = listOf(),
                 link = "", false, LocalDate.now(), LocalDate.now(), LocalTime.now()
             )
-            vm.launchAndGet(recipeStart) { recipe ->
+            vm.launchAndGet(recipeStart, true) { recipe ->
                 viewModelScope.launch {
                     val newRecipe = RecipeView(
                         id = 0,

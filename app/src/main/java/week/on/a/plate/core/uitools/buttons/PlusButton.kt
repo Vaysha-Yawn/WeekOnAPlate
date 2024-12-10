@@ -38,7 +38,7 @@ fun PlusButtonCard(actionAdd: () -> Unit) {
         contentDescription = "",
         modifier = Modifier
             .background(MaterialTheme.colorScheme.secondary, RoundedCornerShape(5.dp))
-            .size(24.dp)
+            .size(36.dp)
             .clickable { actionAdd() },
     )
 }

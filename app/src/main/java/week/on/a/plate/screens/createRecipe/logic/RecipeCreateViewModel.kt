@@ -162,13 +162,29 @@ class RecipeCreateViewModel @Inject constructor(): ViewModel() {
             RecipeCreateEvent.AddManyIngredients -> {
                 viewModelScope.launch {
                     mainViewModel.nav.navigate(FilterDestination)
+                    val ingredientsOld = state.ingredients.value.map { it.ingredientView }
                     mainViewModel.filterViewModel.launchAndGet(
                         FilterMode.Multiple, FilterEnum.Ingredient,
-                        null, false
-                    ) {
+                        Pair(listOf(), ingredientsOld), false
+                    ) { filterRes ->
+                        val ingredientsNew = filterRes.ingredients?:return@launchAndGet
+                        val listToAdd = ingredientsNew.toMutableList().apply {
+                            removeAll(ingredientsOld)
+                        }.toList()
+                        val listToDelete = ingredientsOld.toMutableList().apply {
+                            removeAll(ingredientsNew)
+                        }.toList() 
+                        
                         state.ingredients.value = state.ingredients.value.toMutableList().apply {
-                            it.ingredients?.forEach { ingredient->
+                            listToAdd.forEach { ingredient->
                                 add(IngredientInRecipeView(0, ingredient, "", 0))
+                            }
+                        }.toList()
+
+                        state.ingredients.value = state.ingredients.value.toMutableList().apply {
+                            listToDelete.forEach { ingredient->
+                                val t = state.ingredients.value.find { it.ingredientView.ingredientId == ingredient.ingredientId }
+                                remove(t)
                             }
                         }.toList()
                     }
@@ -199,10 +215,11 @@ class RecipeCreateViewModel @Inject constructor(): ViewModel() {
     }
 
     suspend fun launchAndGet(
-        oldRecipe: RecipeView?,
+        oldRecipe: RecipeView?, isForCreate:Boolean,
         use: (RecipeCreateUIState) -> Unit
     ) {
         if (oldRecipe != null) setStateByOldRecipe(oldRecipe)
+        state.isForCreate.value = isForCreate
         val flow = start()
         flow.collect { value ->
             if (value != null) {

@@ -12,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -22,6 +23,7 @@ import week.on.a.plate.screens.recipeDetails.state.RecipeDetailsState
 
 @Composable
 fun TopPanelRecipeDetail(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) -> Unit) {
+    val context = LocalContext.current
     Row(
         Modifier
             .fillMaxWidth()
@@ -31,6 +33,9 @@ fun TopPanelRecipeDetail(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent
             onEvent(RecipeDetailsEvent.Back)
         }
         Row(verticalAlignment = Alignment.CenterVertically) {
+            ImageButton(R.drawable.share) {
+                onEvent(RecipeDetailsEvent.Share(context))
+            }
             ImageButton(R.drawable.delete) {
                 onEvent(RecipeDetailsEvent.Delete)
             }

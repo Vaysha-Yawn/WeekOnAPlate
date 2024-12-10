@@ -96,10 +96,6 @@ fun RecipeCreateStart(viewModel: RecipeCreateViewModel) {
                             .padding(horizontal = 24.dp)
                             .fillMaxWidth()
                     ) {
-                        Spacer(modifier = Modifier.height(12.dp))
-                        CommonButton(text = "Добавить ингредиент") {
-                            onEvent(RecipeCreateEvent.AddIngredient)
-                        }
                         Spacer(modifier = Modifier.size(24.dp))
                         CommonButton(text = "Добавить несколько ингредиентов") {
                             onEvent(RecipeCreateEvent.AddManyIngredients)

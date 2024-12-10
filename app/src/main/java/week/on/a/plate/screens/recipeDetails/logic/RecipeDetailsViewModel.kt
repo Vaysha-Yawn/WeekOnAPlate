@@ -1,12 +1,15 @@
 package week.on.a.plate.screens.recipeDetails.logic
 
 import android.content.Context
+import android.content.Intent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import week.on.a.plate.core.utils.getIngredientCountAndMeasure1000
+import week.on.a.plate.core.utils.timeToString
 import week.on.a.plate.data.dataView.example.emptyRecipe
 import week.on.a.plate.data.dataView.recipe.RecipeStepView
 import week.on.a.plate.data.dataView.recipe.RecipeView
@@ -49,7 +52,53 @@ class RecipeDetailsViewModel @Inject constructor(
             is RecipeDetailsEvent.StartTimerForStep -> startTimerForStep(event.time, event.act)
             RecipeDetailsEvent.SwitchFavorite -> switchFavorite()
             RecipeDetailsEvent.Delete -> delete()
+            is RecipeDetailsEvent.Share -> share(event.context)
         }
+    }
+
+    private fun share(context: Context) {
+        val text = recipeToText(state.recipe.value)
+        val intent =Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, text)
+            type = "text/plain"
+        }
+        val chooserIntent = Intent.createChooser(intent, "Поделиться через:")
+        context.startActivity(chooserIntent)
+    }
+
+    private fun recipeToText(recipeView: RecipeView):String{
+        var text = ""
+        text+= "Рецепт: "+recipeView.name
+        text+= "\n"
+        text+= "\n"
+        text+= "Активное время приготовления: " + recipeView.prepTime.timeToString()
+        text+= "\n"
+        text+= "Общее время приготовления: " + recipeView.allTime.timeToString()
+        text+= "\n"
+        text+= "Колличество порций: " + recipeView.standardPortionsCount
+        text+= "\n"
+        text+= "\n"
+        text+= "Ингредиенты:"
+        for (ingredient in recipeView.ingredients){
+            text+= "\n"
+            val tet = getIngredientCountAndMeasure1000(ingredient.count, ingredient.ingredientView.measure)
+            text+= "- "+ingredient.ingredientView.name + " " + tet.first + " " + tet.second
+        }
+        text+= "\n"
+        text+= "\n"
+        text+= "Приготовление:"
+        for ((index, step) in recipeView.steps.withIndex()){
+            text+= "\n"
+            text+= (index+1).toString() +". "+ step.description
+        }
+        text+= "\n"
+        text+= "\n"
+        text+= "Источник:"+ recipeView.link
+        text+= "\n"
+        text+= "\n"
+        text+= "Экспортировано из приложения \"Неделя на тарелке\" - книга рецептов, составление меню и список покупок. Только для самых любимых и проверенных рецептов, остальным вход воспрещён! (\u2060灬\u2060º\u2060‿\u2060º\u2060灬\u2060)\u2060♡"
+        return text
     }
 
     private fun addToCart() {
@@ -148,7 +197,7 @@ class RecipeDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             val vm = mainViewModel.recipeCreateViewModel
             mainViewModel.nav.navigate(RecipeCreateDestination)
-            vm.launchAndGet(state.recipe.value) { recipe ->
+            vm.launchAndGet(state.recipe.value, false) { recipe ->
                 val newRecipe = RecipeView(
                     id = 0,
                     name = recipe.name.value,

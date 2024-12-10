@@ -22,6 +22,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
+import week.on.a.plate.core.uitools.TextBody
+import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.TextTitleItalic
 import week.on.a.plate.core.uitools.buttons.BackButton
 import week.on.a.plate.screens.createRecipe.event.RecipeCreateEvent
@@ -40,7 +42,13 @@ fun TopBarRecipeCreate(state: RecipeCreateUIState, onEvent: (RecipeCreateEvent) 
         BackButton {
             onEvent(RecipeCreateEvent.Close)
         }
-        TextTitleItalic(text = "Создание рецепта")
+        TextBody(text =
+        if (state.isForCreate.value){
+            "Создание рецепта"
+        }else{
+            "Редактирование рецепта"
+        }
+        )
         Spacer(modifier = Modifier.width(12.dp))
         Image(
             painter = painterResource(id = R.drawable.check),

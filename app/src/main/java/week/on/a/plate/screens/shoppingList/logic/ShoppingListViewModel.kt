@@ -1,5 +1,7 @@
 package week.on.a.plate.screens.shoppingList.logic
 
+import android.content.Context
+import android.content.Intent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -9,6 +11,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.navigation.ShoppingListScreen
+import week.on.a.plate.core.utils.getIngredientCountAndMeasure1000
 import week.on.a.plate.data.dataView.ShoppingItemView
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.data.dataView.week.Position
@@ -59,7 +62,33 @@ class ShoppingListViewModel @Inject constructor(
             ShoppingListEvent.DeleteChecked -> deleteChecked()
             is ShoppingListEvent.Uncheck -> updateCheck(false, event.position)
             is ShoppingListEvent.Edit -> editIngredient(event.ingredient)
+            is ShoppingListEvent.Share -> share(event.context)
         }
+    }
+
+    private fun share(context: Context) {
+        val text = shoppingListToText(state.listUnchecked.value)
+        val intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, text)
+            type = "text/plain"
+        }
+        val chooserIntent = Intent.createChooser(intent, "Поделиться через:")
+        context.startActivity(chooserIntent)
+    }
+
+    private fun shoppingListToText(listToShop: List<IngredientInRecipeView>): String {
+        var text = ""
+        text+= "Список покупок:"
+        for (item in listToShop){
+            text+= "\n"
+            val tet = getIngredientCountAndMeasure1000(item.count, item.ingredientView.measure)
+            text+= "- "+ item.ingredientView.name + " " + tet.first + " " + tet.second
+        }
+        text+= "\n"
+        text+= "\n"
+        text+= "Экспортировано из приложения \"Неделя на тарелке\" - книга рецептов, составление меню и список покупок. Только для самых любимых и проверенных рецептов, остальным вход воспрещён! (\u2060灬\u2060º\u2060‿\u2060º\u2060灬\u2060)\u2060♡"
+        return text
     }
 
     private fun deleteChecked() {

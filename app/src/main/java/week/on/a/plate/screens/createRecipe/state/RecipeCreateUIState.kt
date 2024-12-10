@@ -19,6 +19,7 @@ class RecipeCreateUIState {
     val ingredients = mutableStateOf(listOf<IngredientInRecipeView>())
     val steps = mutableStateOf(listOf<RecipeStepState>())
     val webview = mutableStateOf<WebView?>(null)
+    val isForCreate = mutableStateOf<Boolean>(true)
 }
 
 class RecipeStepState {

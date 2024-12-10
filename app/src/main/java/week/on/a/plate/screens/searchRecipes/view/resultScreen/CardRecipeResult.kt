@@ -98,7 +98,7 @@ fun CardRecipeResult(recipe: RecipeView, onEvent: (SearchScreenEvent) -> Unit, m
                         ),
                         contentDescription = "",
                         modifier = Modifier
-                            .size(24.dp)
+                            .size(36.dp)
                             .clickable {
                                 onEvent(
                                     SearchScreenEvent.FlipFavorite(
