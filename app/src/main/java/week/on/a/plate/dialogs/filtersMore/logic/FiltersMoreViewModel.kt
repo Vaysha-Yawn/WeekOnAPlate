@@ -31,14 +31,14 @@ class FiltersMoreViewModel() : DialogViewModel() {
 
     fun onEvent(event: FiltersMoreEvent) {
         when (event) {
-            FiltersMoreEvent.CheckFavorite -> state.favoriteIsChecked.value = !state.favoriteIsChecked.value
             FiltersMoreEvent.Close -> close()
-            is FiltersMoreEvent.SetAllCookTime -> state.allTime.intValue = event.timeMin
-            is FiltersMoreEvent.SetPrepCookTime -> state.prepTime.intValue = event.timeMin
         }
     }
 
-    suspend fun launchAndGet(use: (FiltersMoreUIState) -> Unit) {
+    suspend fun launchAndGet(favoriteChecked:Boolean, allTime:Int, prepTime:Int, use: (FiltersMoreUIState) -> Unit) {
+        state.favoriteIsChecked.value = favoriteChecked
+        state.allTime.intValue = allTime
+        state.prepTime.intValue = prepTime
         val flow = start()
         flow.collect { value ->
             if (value != null) {

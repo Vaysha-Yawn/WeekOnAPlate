@@ -20,6 +20,7 @@ import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.data.dataView.week.RecipeShortView
 import week.on.a.plate.data.repository.tables.filters.recipeTagCategory.RecipeTagCategoryRepository
 import week.on.a.plate.data.repository.tables.recipe.recipe.RecipeRepository
+import week.on.a.plate.dialogs.filtersMore.logic.FiltersMoreViewModel
 import week.on.a.plate.dialogs.sortMore.event.SortMoreEvent
 import week.on.a.plate.dialogs.sortMore.logic.SortMoreViewModel
 import week.on.a.plate.mainActivity.event.MainEvent
@@ -66,7 +67,10 @@ class SearchViewModel @Inject constructor(
 
     private fun search() {
         searchAbstract { recipeView ->
-            recipeView.name.contains(state.searchText.value.trim(), true)
+            (if (state.favoriteChecked.value){ recipeView.inFavorite }else true)
+                    && (if (state.allTime.intValue!=0) {recipeView.allTime <= state.allTime.intValue*60} else true)
+                    && (if (state.prepTime.intValue!=0) {recipeView.prepTime <= state.prepTime.intValue*60} else true)
+                    && recipeView.name.contains(state.searchText.value.trim(), true)
                     && recipeView.tags.containsAll(state.selectedTags.value)
                     && recipeView.ingredients.map { ingredientInRecipeView -> ingredientInRecipeView.ingredientView }
                 .containsAll(state.selectedIngredients.value)
@@ -149,9 +153,23 @@ class SearchViewModel @Inject constructor(
             SearchScreenEvent.SearchAll -> searchAll()
             SearchScreenEvent.SearchRandom -> searchRandom()
             is SearchScreenEvent.ChangeSort -> changeSort(event.type, event.direction)
-            SearchScreenEvent.FiltersMore -> TODO()
+            SearchScreenEvent.FiltersMore -> filtersMore()
             SearchScreenEvent.SavePreset -> TODO()
             SearchScreenEvent.SortMore -> sortMore()
+        }
+    }
+
+    private fun filtersMore() {
+        val vm = FiltersMoreViewModel()
+        vm.mainViewModel = mainViewModel
+        mainViewModel.onEvent(MainEvent.OpenDialog(vm))
+        viewModelScope.launch {
+            vm.launchAndGet(state.favoriteChecked.value, state.allTime.intValue, state.prepTime.intValue) { stated->
+                state.allTime.intValue = stated.allTime.intValue
+                state.prepTime.intValue = stated.prepTime.intValue
+                state.favoriteChecked.value = stated.favoriteIsChecked.value
+                search()
+            }
         }
     }
 
@@ -160,7 +178,7 @@ class SearchViewModel @Inject constructor(
         vm.mainViewModel = mainViewModel
         mainViewModel.onEvent(MainEvent.OpenDialog(vm))
         viewModelScope.launch {
-            vm.launchAndGet { event->
+            vm.launchAndGet() { event->
                 when(event){
                     SortMoreEvent.AlphabetNormal -> onEvent(SearchScreenEvent.ChangeSort(ResultSortType.alphabet, ResultSortingDirection.down))
                     SortMoreEvent.AlphabetRevers -> onEvent(SearchScreenEvent.ChangeSort(ResultSortType.alphabet, ResultSortingDirection.up))
@@ -376,6 +394,9 @@ class SearchViewModel @Inject constructor(
             state.selectedIngredients.value = listOf()
             state.searchText.value = ""
             state.searched.value = SearchState.none
+            state.favoriteChecked.value = false
+            state.allTime.intValue = 0
+            state.prepTime.intValue = 0
         } else {
             mainViewModel.onEvent(MainEvent.NavigateBack)
         }

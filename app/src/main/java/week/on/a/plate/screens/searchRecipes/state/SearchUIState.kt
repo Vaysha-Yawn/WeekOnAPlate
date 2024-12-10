@@ -1,6 +1,7 @@
 package week.on.a.plate.screens.searchRecipes.state
 
 import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import week.on.a.plate.data.dataView.recipe.IngredientView
 import week.on.a.plate.data.dataView.recipe.RecipeTagView
@@ -16,15 +17,12 @@ class SearchUIState {
     val searched = mutableStateOf(SearchState.none)
     val modeResultViewIsList = mutableStateOf(true)
     val resultSortType = mutableStateOf(Pair(ResultSortType.date, ResultSortingDirection.down))
-}
-enum class ResultSortType{
-    date, alphabet, randow
-}
-enum class ResultSortingDirection{
-    up, down
+    val favoriteChecked = mutableStateOf(false)
+    val allTime = mutableIntStateOf(0)
+    val prepTime = mutableIntStateOf(0)
 }
 
-enum class SearchState{
-    none, searching, done
-}
+enum class ResultSortType{ date, alphabet, randow }
+enum class ResultSortingDirection{ up, down }
+enum class SearchState{ none, searching, done }
 

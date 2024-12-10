@@ -36,7 +36,7 @@ class SortMoreViewModel() : DialogViewModel() {
         else done(event)
     }
 
-    suspend fun launchAndGet(use: (SortMoreEvent) -> Unit) {
+    suspend fun launchAndGet( use: (SortMoreEvent) -> Unit) {
         val flow = start()
         flow.collect { value ->
             if (value != null) {

@@ -82,7 +82,6 @@ fun SearchResultEditRow(state: SearchUIState, onEvent: (SearchScreenEvent) -> Un
             )
         }
 
-
         Row(
             horizontalArrangement = Arrangement.End
         ) {
@@ -90,32 +89,13 @@ fun SearchResultEditRow(state: SearchUIState, onEvent: (SearchScreenEvent) -> Un
                 onEvent(SearchScreenEvent.SortMore)
             }.padding(6.dp))
             Spacer(Modifier.width(12.dp))
-            Icon(painterResource(R.drawable.bookmark), "", modifier = Modifier.clickable {
+            /*Icon(painterResource(R.drawable.bookmark), "", modifier = Modifier.clickable {
                 onEvent(SearchScreenEvent.SavePreset)
-            }.padding(6.dp))
+            }.padding(6.dp))*/
             Spacer(Modifier.width(12.dp))
-            Icon(painterResource(R.drawable.more), "", modifier = Modifier.clickable {
+            Icon(painterResource(R.drawable.filter_alt), "", modifier = Modifier.clickable {
                 onEvent(SearchScreenEvent.FiltersMore)
             }.padding(6.dp))
-           /* if (state.resultSortType.value.first == ResultSortType.date){
-                Icon(painterResource(R.drawable.calendar), "", modifier = Modifier.clickable {
-                    onEvent(SearchScreenEvent.ChangeSort(ResultSortType.alphabet, state.resultSortType.value.second))
-                })
-            }else{
-                Icon(painterResource(R.drawable.sort_by_alpha), "", modifier = Modifier.clickable {
-                    onEvent(SearchScreenEvent.ChangeSort(ResultSortType.date, state.resultSortType.value.second))
-                })
-            }
-            Spacer(Modifier.size(6.dp))
-            if (state.resultSortType.value.second == ResultSortingDirection.up){
-                Icon(painterResource(R.drawable.arrow_up), "", modifier = Modifier.clickable {
-                    onEvent(SearchScreenEvent.ChangeSort(state.resultSortType.value.first, ResultSortingDirection.down))
-                })
-            }else{
-                Icon(painterResource(R.drawable.arrow_down), "", modifier = Modifier.clickable {
-                    onEvent(SearchScreenEvent.ChangeSort(state.resultSortType.value.first, ResultSortingDirection.up))
-                })
-            }*/
         }
     }
     HorizontalDivider(Modifier, 1.dp, MaterialTheme.colorScheme.outline)
