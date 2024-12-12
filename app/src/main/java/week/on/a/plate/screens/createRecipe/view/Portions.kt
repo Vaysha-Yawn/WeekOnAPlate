@@ -21,9 +21,10 @@ import week.on.a.plate.screens.createRecipe.state.RecipeCreateUIState
 
 @Composable
 fun PortionsRecipeEdit(state: RecipeCreateUIState, onEvent: (RecipeCreateEvent) -> Unit) {
-    TextBody(text = stringResource(R.string.portions_count), Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
-    Spacer(modifier = Modifier.height(12.dp))
-    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+    TextTitle(text = stringResource(R.string.portions_count), Modifier.fillMaxWidth(),
+        textAlign = TextAlign.Start)
+    Spacer(modifier = Modifier.height(24.dp))
+    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
         ButtonsCounterSmall(
             value = state.portionsCount,
             minus = {

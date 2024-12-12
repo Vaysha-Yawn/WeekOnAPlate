@@ -15,7 +15,7 @@ class SearchUIState {
     val selectedTags = mutableStateOf<List<RecipeTagView>>(listOf())
     val selectedIngredients = mutableStateOf<List<IngredientView>>(listOf())
     val searched = mutableStateOf(SearchState.none)
-    val modeResultViewIsList = mutableStateOf(true)
+    val modeResultViewIsList = mutableStateOf(false)
     val resultSortType = mutableStateOf(Pair(ResultSortType.date, ResultSortingDirection.down))
     val favoriteChecked = mutableStateOf(false)
     val allTime = mutableIntStateOf(0)

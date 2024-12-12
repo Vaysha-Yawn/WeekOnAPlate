@@ -243,9 +243,9 @@ class RecipeDetailsViewModel @Inject constructor(
 
     fun update() {
         viewModelScope.launch {
-            state.recipe = recipeRepository.getRecipe(state.recipe.id)
+            val recipe = recipeRepository.getRecipe(state.recipe.id)
+            state.recipe = recipe
             updIngredientsCount()
-            val recipe = state.recipe
             state.mapPinnedStepIdToIngredients.value = recipe.steps.associate { stepView ->
                 Pair(
                     stepView.id,

@@ -19,8 +19,10 @@ import week.on.a.plate.screens.searchRecipes.view.resultScreen.TagList
 @Composable
 fun TagsRecipeEdit(state: RecipeCreateUIState, onEvent: (RecipeCreateEvent) -> Unit) {
     TextTitle(text = "Тэги")
-    Spacer(modifier = Modifier.height(12.dp))
-    TagList(state.tags.value, listOf())
+    if (state.tags.value.isNotEmpty()) {
+        Spacer(modifier = Modifier.height(12.dp))
+        TagList(state.tags.value, listOf())
+    }
     Spacer(modifier = Modifier.height(12.dp))
     CommonButton(text = "Редактировать тэги") {
         onEvent(RecipeCreateEvent.EditTags)

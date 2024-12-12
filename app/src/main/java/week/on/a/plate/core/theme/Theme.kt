@@ -1,19 +1,16 @@
 package week.on.a.plate.core.theme
 
-import android.app.Activity
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import week.on.a.plate.preference.PreferenceUseCase
 
-private val DarkColorScheme = darkColorScheme(
+
+val DarkColorScheme = darkColorScheme(
     primary = ColorButtonYellowDark,
     secondary = ColorDarkButtonGreen,
     secondaryContainer = ColorDarkButtonOutlineGreen,
@@ -45,26 +42,16 @@ val LightColorScheme = lightColorScheme(
     surfaceVariant = ColorPanelLightGrey,
 )
 
-val PurpleRedDarkColorScheme = ColorPalette(
-    primary = Color(0xFFCB3436),
-    secondary = Color(0xFF463DB2),
-)
-
-val PurpleRedLightColorScheme = ColorPalette(
-    primary = Color(0xFFFF9C9C),
-    secondary = Color(0xFFB9B4FF),
-)
-
 @Composable
 fun WeekOnAPlateTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    //todo customtheme
-    val colorScheme = if (darkTheme) DarkColorScheme.copy(primary = PurpleRedDarkColorScheme.primary, secondary = PurpleRedDarkColorScheme.secondary)
-    else LightColorScheme.copy(primary = PurpleRedLightColorScheme.primary, secondary = PurpleRedLightColorScheme.secondary)
 
+    val themeInd = PreferenceUseCase().getActiveThemeId(LocalContext.current)
+    val group = palettes[themeInd]
+    val colorScheme = group.getColorScheme(darkTheme)
 
     MaterialTheme(
         colorScheme = colorScheme,

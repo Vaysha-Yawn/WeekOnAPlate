@@ -56,11 +56,11 @@ fun EditTextLine(
             colors = OutlinedTextFieldDefaults.colors(
                 focusedTextColor = MaterialTheme.colorScheme.onBackground,
                 focusedBorderColor = MaterialTheme.colorScheme.outline,
-                focusedContainerColor = if (isSystemInDarkTheme()) ColorTextBlack else ColorPanelLightGrey,
+                focusedContainerColor = MaterialTheme.colorScheme.background,
 
                 unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
                 unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-                unfocusedContainerColor = if (isSystemInDarkTheme()) ColorTextBlack else ColorPanelLightGrey,
+                unfocusedContainerColor =  MaterialTheme.colorScheme.background,
 
                 errorTextColor = Color.Red,
                 errorPlaceholderColor = Color.Red,

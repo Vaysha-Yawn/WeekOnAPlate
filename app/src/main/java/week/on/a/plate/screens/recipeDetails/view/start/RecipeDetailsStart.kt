@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import week.on.a.plate.core.Event
@@ -41,7 +39,7 @@ fun RecipeDetailsStart(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.surface)
     ) {
-        TopPanelRecipeDetail(state, onEvent)
+        TopPanelRecipeDetail(state.recipe.inFavorite, onEvent)
         LazyColumn {
             item {
                 RecipeBase(state, onEvent)

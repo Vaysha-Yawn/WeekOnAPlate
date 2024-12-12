@@ -5,7 +5,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.rememberDatePickerState
@@ -28,7 +27,6 @@ import week.on.a.plate.dialogs.addPositionChoose.logic.AddPositionViewModel
 import week.on.a.plate.dialogs.addPositionChoose.view.AddPositionDialogContent
 import week.on.a.plate.dialogs.changePortions.event.ChangePortionsCountEvent
 import week.on.a.plate.dialogs.changePortions.logic.ChangePortionsCountViewModel
-import week.on.a.plate.dialogs.changePortions.view.ChangePortionsPanel
 import week.on.a.plate.dialogs.chooseWeekInMenu.event.ChooseWeekDialogEvent
 import week.on.a.plate.dialogs.chooseWeekInMenu.logic.ChooseWeekViewModel
 import week.on.a.plate.dialogs.chooseWeekInMenu.state.ChooseWeekUIState
@@ -54,6 +52,7 @@ import week.on.a.plate.screens.filters.dialogs.selectedFilters.view.DialogSelect
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.uitools.dialogs.BaseDialogContainer
 import week.on.a.plate.core.uitools.dialogs.BottomDialogContainer
+import week.on.a.plate.dialogs.changePortions.view.ChangePortionsPanel
 import week.on.a.plate.dialogs.chooseHowImagePick.event.ChooseHowImagePickEvent
 import week.on.a.plate.dialogs.chooseHowImagePick.logic.ChooseHowImagePickViewModel
 import week.on.a.plate.dialogs.chooseHowImagePick.view.ChooseHowImagePickContent
@@ -81,10 +80,15 @@ import week.on.a.plate.dialogs.filtersMore.view.FilterMoreContent
 import week.on.a.plate.dialogs.selectNStep.event.SelectNStepEvent
 import week.on.a.plate.dialogs.selectNStep.logic.SelectNStepViewModel
 import week.on.a.plate.dialogs.selectNStep.view.SelectNStep
+import week.on.a.plate.dialogs.setPermanentMeals.event.SetPermanentMealsEvent
+import week.on.a.plate.dialogs.setPermanentMeals.logic.SetPermanentMealsViewModel
+import week.on.a.plate.dialogs.setPermanentMeals.view.SetPermanentMealsStart
+import week.on.a.plate.dialogs.setTheme.event.SetThemeEvent
+import week.on.a.plate.dialogs.setTheme.logic.SetThemesViewModel
+import week.on.a.plate.dialogs.setTheme.view.SetThemeStart
 import week.on.a.plate.dialogs.sortMore.event.SortMoreEvent
 import week.on.a.plate.dialogs.sortMore.logic.SortMoreViewModel
 import week.on.a.plate.dialogs.sortMore.view.SortMoreContent
-import week.on.a.plate.screens.calendarMy.logic.CalendarMyUseCase
 import week.on.a.plate.screens.calendarMy.view.CalendarMy
 
 
@@ -345,6 +349,34 @@ fun DialogsContainer(
                 ChooseHowImagePickContent(){ event: ChooseHowImagePickEvent ->
                     data.onEvent(event)
                 }
+            }
+            LaunchedEffect(true) {
+                sheetState.show()
+            }
+        }
+
+        is SetThemesViewModel -> {
+            val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+            BottomDialogContainer(
+                sheetState,
+                { onEvent(SetThemeEvent.Close) }) {
+                SetThemeStart(
+                    data.state
+                ) { event: SetThemeEvent -> onEvent(event) }
+            }
+            LaunchedEffect(true) {
+                sheetState.show()
+            }
+        }
+
+        is SetPermanentMealsViewModel -> {
+            val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+            BottomDialogContainer(
+                sheetState,
+                { onEvent(SetPermanentMealsEvent.Close) }) {
+                SetPermanentMealsStart(
+                    data.state
+                ) { event: SetPermanentMealsEvent -> onEvent(event) }
             }
             LaunchedEffect(true) {
                 sheetState.show()

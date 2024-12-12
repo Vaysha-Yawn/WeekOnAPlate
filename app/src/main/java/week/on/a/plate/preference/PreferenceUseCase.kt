@@ -1,5 +1,6 @@
 package week.on.a.plate.preference
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import week.on.a.plate.mainActivity.view.MainActivity
@@ -39,10 +40,11 @@ class PreferenceUseCase {
         utils.saveInt(DEFAULT_PORTIONS_COUNT, count, context)
     }
 
-    fun restartActivity(act: MainActivity){
-        val i = Intent(act, MainActivity::class.java)
+    fun restartActivity(context: Context){
+        /*val i = Intent(context, MainActivity::class.java)
         i.flags.plus(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-        act.startActivity(i)
+        context.startActivity(i)*/
+        (context as MainActivity).recreate()
     }
 
     companion object {
@@ -64,6 +66,5 @@ class PreferenceUseCase {
         const val IS_TUTORIAL_FILTERS_COMPLETED = "IS_TUTORIAL_MENU_COMPLETED"
         const val IS_TUTORIAL_COOK_PLANNER_COMPLETED = "IS_TUTORIAL_MENU_COMPLETED"
         const val IS_TUTORIAL_SEARCH_COMPLETED = "IS_TUTORIAL_MENU_COMPLETED"
-                //приёмы пищи //CategoriesSelection: localtime and name анкета
     }
 }

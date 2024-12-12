@@ -89,4 +89,8 @@ object ModuleRecipeDB {
     @Provides
     @Singleton
     fun providePlannerGroup(recipeDB: RecipeDB) = recipeDB.daoCookPlannerGroup()
+
+    @Provides
+    @Singleton
+    fun provideCategorySelection(recipeDB: RecipeDB) = recipeDB.daoCategorySelection()
 }

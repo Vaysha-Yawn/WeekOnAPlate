@@ -10,10 +10,13 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import week.on.a.plate.data.dataView.example.ingredients
 import week.on.a.plate.data.dataView.example.tags
+import week.on.a.plate.data.dataView.week.stdCategoriesSelection
 import week.on.a.plate.data.repository.tables.filters.ingredient.IngredientRepository
 import week.on.a.plate.data.repository.tables.filters.ingredientCategory.IngredientCategoryRepository
 import week.on.a.plate.data.repository.tables.filters.recipeTag.RecipeTagRepository
 import week.on.a.plate.data.repository.tables.filters.recipeTagCategory.RecipeTagCategoryRepository
+import week.on.a.plate.data.repository.tables.menu.category_selection.CategorySelectionDAO
+import week.on.a.plate.data.repository.tables.menu.category_selection.CategorySelectionRoom
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
@@ -24,6 +27,7 @@ class App:Application(){
     @Inject lateinit var ingredientRepository: IngredientRepository
     @Inject lateinit var ingredientCategoryRepository: IngredientCategoryRepository
     @Inject lateinit var tagRepository: RecipeTagRepository
+    @Inject lateinit var categorySelectionDAO: CategorySelectionDAO
 
     override fun onCreate() {
         super.onCreate()
@@ -50,6 +54,10 @@ class App:Application(){
                             ingredientView.measure,
                         )
                     }
+                }
+
+                stdCategoriesSelection.forEach {
+                    categorySelectionDAO.insert(CategorySelectionRoom(it.fullName, it.stdTime))
                 }
             }
         }

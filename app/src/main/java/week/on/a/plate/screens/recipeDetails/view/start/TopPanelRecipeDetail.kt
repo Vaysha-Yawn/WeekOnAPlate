@@ -18,11 +18,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
+import week.on.a.plate.data.dataView.example.recipeTom
 import week.on.a.plate.screens.recipeDetails.event.RecipeDetailsEvent
-import week.on.a.plate.screens.recipeDetails.state.RecipeDetailsState
 
 @Composable
-fun TopPanelRecipeDetail(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) -> Unit) {
+fun TopPanelRecipeDetail(inFavorite: Boolean, onEvent: (RecipeDetailsEvent) -> Unit) {
     val context = LocalContext.current
     Row(
         Modifier
@@ -43,7 +43,7 @@ fun TopPanelRecipeDetail(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent
                 onEvent(RecipeDetailsEvent.Edit)
             }
             ImageButton(
-                if (state.recipe.inFavorite) R.drawable.bookmark_full else R.drawable.bookmark
+                if (inFavorite) R.drawable.bookmark_full else R.drawable.bookmark
             ) {
                 onEvent(RecipeDetailsEvent.SwitchFavorite)
             }
@@ -73,6 +73,6 @@ fun ImageButton(res: Int, modifier: Modifier = Modifier, action: () -> Unit) {
 @Composable
 fun PreviewTopPanelRecipeDetail() {
     WeekOnAPlateTheme {
-        TopPanelRecipeDetail(RecipeDetailsState()) {}
+        TopPanelRecipeDetail(recipeTom.inFavorite) {}
     }
 }

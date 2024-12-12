@@ -42,13 +42,12 @@ fun CardRecipeResult(recipe: RecipeView, onEvent: (SearchScreenEvent) -> Unit, m
                 )
             }
             .padding(bottom = 12.dp).border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(20.dp))
-            .clip(RoundedCornerShape(20.dp))
+            .clip(RoundedCornerShape(20.dp)), contentAlignment = Alignment.TopCenter
     ) {
         if (recipe.img!="") {
             ImageLoad(
                 recipe.img,
                 Modifier
-                    .clip(RoundedCornerShape(20.dp))
                     .clipToBounds()
                     .scale(2f)
                     .height(150.dp)
@@ -63,8 +62,7 @@ fun CardRecipeResult(recipe: RecipeView, onEvent: (SearchScreenEvent) -> Unit, m
         ) {
             Column(
                 Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp).padding(end = 12.dp),
+                    .fillMaxWidth().padding(end = 12.dp),
                 horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.SpaceEvenly
             ) {

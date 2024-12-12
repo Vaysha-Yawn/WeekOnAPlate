@@ -4,9 +4,7 @@ package week.on.a.plate.data.dataView.example
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.data.dataView.recipe.IngredientView
 import week.on.a.plate.data.dataView.recipe.RecipeTagView
-import week.on.a.plate.data.dataView.week.CategoriesSelection
 import week.on.a.plate.data.dataView.week.Position
-import week.on.a.plate.data.dataView.week.SelectionView
 
 
 val positionRecipeExample = Position.PositionRecipeView(0, shortRecipe, 2, 0)

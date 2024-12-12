@@ -17,7 +17,7 @@ import week.on.a.plate.screens.createRecipe.state.RecipeCreateUIState
 
 @Composable
 fun DescriptionRecipeEdit(state: RecipeCreateUIState, onEvent: (RecipeCreateEvent) -> Unit) {
-    TextBody(text = stringResource(R.string.recipe_description))
+    TextTitle(text = stringResource(R.string.recipe_description))
     Spacer(modifier = Modifier.height(12.dp))
     EditTextLine(text = state.description, placeholder = stringResource(R.string.enter_recipe_description))
 }

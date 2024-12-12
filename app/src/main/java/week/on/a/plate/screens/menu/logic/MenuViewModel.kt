@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.navigation.SearchDestination
@@ -12,6 +11,7 @@ import week.on.a.plate.core.navigation.ShoppingListDestination
 import week.on.a.plate.data.dataView.ShoppingItemView
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.data.dataView.week.CategoriesSelection
+import week.on.a.plate.data.dataView.week.ForWeek
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.data.dataView.week.RecipeShortView
 import week.on.a.plate.data.dataView.week.SelectionView
@@ -45,7 +45,6 @@ import week.on.a.plate.screens.menu.event.NavFromMenuData
 import week.on.a.plate.screens.menu.logic.useCase.CRUDRecipeInMenu
 import week.on.a.plate.screens.menu.logic.useCase.SelectedRecipeManager
 import week.on.a.plate.screens.menu.state.MenuUIState
-import week.on.a.plate.screens.recipeDetails.navigation.RecipeDetailsDestination
 import week.on.a.plate.screens.specifyRecipeToCookPlan.navigation.SpecifyForCookPlanDestination
 import week.on.a.plate.screens.specifySelection.logic.SpecifySelectionResult
 import week.on.a.plate.screens.specifySelection.navigation.SpecifySelectionDestination
@@ -187,7 +186,7 @@ class MenuViewModel @Inject constructor(
             is MenuEvent.SearchByDraft -> searchByDraft(event.draft)
             is MenuEvent.CreateFirstNonPosedPosition -> createFirstNonPosedPosition(
                 event.date,
-                event.name,
+                event.selectionView,
                 event.context
             )
 
@@ -202,9 +201,9 @@ class MenuViewModel @Inject constructor(
             val id = sCRUDRecipeInMenu.menuR.getSelIdOrCreate(
                 LocalDateTime.of(
                     activeDay.value,
-                    CategoriesSelection.ForWeek.stdTime
+                    ForWeek.stdTime
                 ),
-                true, CategoriesSelection.ForWeek.fullName, mainViewModel.locale,
+                true, ForWeek.fullName, mainViewModel.locale,
             )
             addPosition(id, context)
         }
@@ -235,7 +234,8 @@ class MenuViewModel @Inject constructor(
     }
 
     private fun editOrDeleteSelection(sel: SelectionView) {
-        if (sel.isForWeek || CategoriesSelection.entries.find { it.fullName == sel.name } != null) return
+        //todo get suggest from bd and add NonPosed
+        if (sel.isForWeek /*|| CategoriesSelection.entries.find { it.fullName == sel.name } != null*/) return//мы не можем удалить или изменить предложенные варианты из меню
         val vm = EditOrDeleteViewModel()
         vm.mainViewModel = mainViewModel
         mainViewModel.onEvent(MainEvent.OpenDialog(vm))
@@ -302,37 +302,13 @@ class MenuViewModel @Inject constructor(
         onEvent(MenuEvent.ActionWrapperDatePicker(WrapperDatePickerEvent.SwitchEditMode))
     }
 
-    private fun createFirstNonPosedPosition(date: LocalDate, name: String, context: Context) {
+    private fun createFirstNonPosedPosition(date: LocalDate, selectionView: SelectionView, context: Context) {
         viewModelScope.launch {
-            val time = when (name) {
-                CategoriesSelection.NonPosed.fullName -> {
-                    CategoriesSelection.NonPosed.stdTime
-                }
-
-                CategoriesSelection.Breakfast.fullName -> {
-                    CategoriesSelection.Breakfast.stdTime
-                }
-
-                CategoriesSelection.Lunch.fullName -> {
-                    CategoriesSelection.Lunch.stdTime
-                }
-
-                CategoriesSelection.Snack.fullName -> {
-                    CategoriesSelection.Snack.stdTime
-                }
-
-                CategoriesSelection.Dinner.fullName -> {
-                    CategoriesSelection.Dinner.stdTime
-                }
-
-                else -> {
-                    LocalTime.of(0, 0)
-                }
-            }
+            val time = selectionView.dateTime.toLocalTime()
             val sel = sCRUDRecipeInMenu.menuR.getSelIdOrCreate(
                 LocalDateTime.of(date, time),
                 false,
-                name,
+                selectionView.name,
                 mainViewModel.locale,
             )
             onEvent(MenuEvent.CreatePosition(sel, context))

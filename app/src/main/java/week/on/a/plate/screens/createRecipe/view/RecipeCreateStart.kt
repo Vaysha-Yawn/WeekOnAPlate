@@ -90,13 +90,15 @@ fun RecipeCreateStart(viewModel: RecipeCreateViewModel) {
                     }
                 }
                 items(viewModel.state.ingredients.value.size) {
-                    if (viewModel.state.ingredients.value.isNotEmpty()) {
-                        IngredientRecipeEdit(
-                            viewModel.state.ingredients.value[it],
-                            viewModel.state,
-                            onEvent
-                        )
-                        Spacer(modifier = Modifier.height(12.dp))
+                    if (viewModel.state.ingredients.value.isNotEmpty()){
+                        if (viewModel.state.ingredients.value.isNotEmpty()) {
+                            IngredientRecipeEdit(
+                                viewModel.state.ingredients.value[it],
+                                viewModel.state,
+                                onEvent
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
+                        }
                     }
                 }
                 item {

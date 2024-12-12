@@ -19,6 +19,8 @@ import week.on.a.plate.data.repository.tables.filters.recipeTag.RecipeTagDAO
 import week.on.a.plate.data.repository.tables.filters.recipeTag.RecipeTagRoom
 import week.on.a.plate.data.repository.tables.filters.recipeTagCategory.RecipeTagCategoryDAO
 import week.on.a.plate.data.repository.tables.filters.recipeTagCategory.RecipeTagCategoryRoom
+import week.on.a.plate.data.repository.tables.menu.category_selection.CategorySelectionDAO
+import week.on.a.plate.data.repository.tables.menu.category_selection.CategorySelectionRoom
 import week.on.a.plate.data.repository.tables.menu.position.draft.PositionDraftDAO
 import week.on.a.plate.data.repository.tables.menu.position.draft.PositionDraftRoom
 import week.on.a.plate.data.repository.tables.menu.position.draft.draftIngredientCrossRef.DraftAndIngredientCrossRef
@@ -53,7 +55,7 @@ import week.on.a.plate.data.repository.tables.shoppingList.ShoppingItemRoom
     entities = [IngredientRoom::class, IngredientCategoryRoom::class, IngredientInRecipeRoom::class, RecipeRoom::class, RecipeRecipeTagCrossRef::class, RecipeStepRoom::class,
         RecipeTagRoom::class, RecipeTagCategoryRoom::class, PositionRecipeRoom::class, SelectionRoom::class,
         PositionIngredientRoom::class, PositionNoteRoom::class, PositionDraftRoom::class, DraftAndIngredientCrossRef::class, DraftAndTagCrossRef::class,
-        ShoppingItemRoom::class, CookPlannerStepRoom::class, CookPlannerGroupRoom::class
+        ShoppingItemRoom::class, CookPlannerStepRoom::class, CookPlannerGroupRoom::class, CategorySelectionRoom::class
     ], version = 1, exportSchema = true
 )
 
@@ -79,6 +81,7 @@ abstract class RecipeDB : RoomDatabase() {
     abstract fun daoShoppingItem(): ShoppingItemDAO
     abstract fun daoCookPlannerStep(): CookPlannerStepDAO
     abstract fun daoCookPlannerGroup(): CookPlannerGroupDAO
+    abstract fun daoCategorySelection(): CategorySelectionDAO
 
     companion object {
         fun buildDatabase(context: Context): RecipeDB {

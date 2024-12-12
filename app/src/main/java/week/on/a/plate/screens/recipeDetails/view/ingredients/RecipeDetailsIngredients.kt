@@ -39,7 +39,7 @@ fun RecipeDetailsIngredients(state: RecipeDetailsState, onEvent: (RecipeDetailsE
             }, plus = {
                 onEvent(RecipeDetailsEvent.PlusPortionsView)
             })
-            TextBody(text = "порций")
+            TextBody(text = "порции")
         }
         HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.outline)
         Spacer(modifier = Modifier.height(12.dp))

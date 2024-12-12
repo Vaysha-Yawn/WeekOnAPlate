@@ -30,16 +30,9 @@ import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.TextBody
-import week.on.a.plate.core.uitools.TextTitleItalic
-import week.on.a.plate.core.uitools.buttons.ButtonsCounterSmall
 import week.on.a.plate.core.uitools.buttons.CheckButton
-import week.on.a.plate.core.uitools.buttons.CloseButton
-import week.on.a.plate.core.uitools.buttons.CommonButton
-import week.on.a.plate.core.uitools.buttons.DoneButton
-import week.on.a.plate.core.utils.dateToString
-import week.on.a.plate.data.dataView.week.CategoriesSelection
-import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.core.uitools.TitleMenuSmall
+import week.on.a.plate.data.dataView.week.ForWeek
 import week.on.a.plate.screens.specifySelection.event.SpecifySelectionEvent
 import week.on.a.plate.screens.specifySelection.state.SpecifySelectionUIState
 
@@ -57,7 +50,7 @@ fun ChooseSelectionSpecifySelection(
                 .padding(horizontal = 12.dp, vertical = 12.dp),
             horizontalArrangement = Arrangement.Start
         ) {
-            CheckBoxAndText(CategoriesSelection.ForWeek.fullName, state.checkWeek) {
+            CheckBoxAndText(ForWeek.fullName, state.checkWeek) {
                 if (state.checkWeek.value) {
                     state.checkWeek.value = false
                 } else {

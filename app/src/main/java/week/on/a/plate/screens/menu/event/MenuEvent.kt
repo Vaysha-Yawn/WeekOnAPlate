@@ -14,7 +14,7 @@ sealed class MenuEvent : Event() {
     data class ActionWrapperDatePicker(val event: WrapperDatePickerEvent) : MenuEvent()
     data class GetSelIdAndCreate(val context: Context) : MenuEvent()
     data class CreatePosition(val selId: Long, val context: Context) : MenuEvent()
-    data class CreateFirstNonPosedPosition(val date: LocalDate, val name: String, val context: Context) : MenuEvent()
+    data class CreateFirstNonPosedPosition(val date: LocalDate, val selectionView: SelectionView, val context: Context) : MenuEvent()
     data class EditPositionMore(val position: Position) : MenuEvent()
     data class EditOtherPosition(val position: Position) : MenuEvent()
     data class CreateWeekSelIdAndCreatePosition(val context: Context) : MenuEvent()

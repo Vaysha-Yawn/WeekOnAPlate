@@ -6,7 +6,10 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.Event
+import week.on.a.plate.data.repository.tables.menu.category_selection.CategorySelectionDAO
 import week.on.a.plate.dialogs.changePortions.logic.ChangePortionsCountViewModel
+import week.on.a.plate.dialogs.setPermanentMeals.logic.SetPermanentMealsViewModel
+import week.on.a.plate.dialogs.setTheme.logic.SetThemesViewModel
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.preference.PreferenceUseCase
@@ -15,7 +18,7 @@ import week.on.a.plate.screens.settings.state.SettingsUIState
 import javax.inject.Inject
 
 @HiltViewModel
-class SettingsViewModel @Inject constructor() : ViewModel() {
+class SettingsViewModel @Inject constructor(val dao: CategorySelectionDAO) : ViewModel() {
     lateinit var mainViewModel: MainViewModel
     val state = SettingsUIState()
     private val pref = PreferenceUseCase()
@@ -77,7 +80,12 @@ class SettingsViewModel @Inject constructor() : ViewModel() {
     }
 
     private fun setMenuSelections(context: Context) {
-
+        viewModelScope.launch {
+            val vm = SetPermanentMealsViewModel(dao)
+            vm.mainViewModel = mainViewModel
+            onEvent(MainEvent.OpenDialog(vm))
+            vm.launch()
+        }
     }
 
     private fun setStdPortionsCount(context: Context) {
@@ -93,7 +101,12 @@ class SettingsViewModel @Inject constructor() : ViewModel() {
     }
 
     private fun theme(context: Context) {
-
+        viewModelScope.launch {
+            val vm = SetThemesViewModel()
+            vm.mainViewModel = mainViewModel
+            onEvent(MainEvent.OpenDialog(vm))
+            vm.launch(context)
+        }
     }
 
     private fun tutorial(context: Context) {

@@ -44,6 +44,10 @@ import week.on.a.plate.dialogs.filtersMore.event.FiltersMoreEvent
 import week.on.a.plate.dialogs.filtersMore.logic.FiltersMoreViewModel
 import week.on.a.plate.dialogs.selectNStep.event.SelectNStepEvent
 import week.on.a.plate.dialogs.selectNStep.logic.SelectNStepViewModel
+import week.on.a.plate.dialogs.setPermanentMeals.event.SetPermanentMealsEvent
+import week.on.a.plate.dialogs.setPermanentMeals.logic.SetPermanentMealsViewModel
+import week.on.a.plate.dialogs.setTheme.event.SetThemeEvent
+import week.on.a.plate.dialogs.setTheme.logic.SetThemesViewModel
 import week.on.a.plate.dialogs.sortMore.event.SortMoreEvent
 import week.on.a.plate.dialogs.sortMore.logic.SortMoreViewModel
 import week.on.a.plate.screens.calendarMy.event.CalendarMyEvent
@@ -157,6 +161,12 @@ class DialogUseCase @Inject constructor() {
             }
             is ChooseHowImagePickEvent -> if (activeDialog.value is ChooseHowImagePickViewModel) {
                 (activeDialog.value as ChooseHowImagePickViewModel).onEvent(event)
+            }
+            is SetThemeEvent -> if (activeDialog.value is SetThemesViewModel) {
+                (activeDialog.value as SetThemesViewModel).onEvent(event)
+            }
+            is SetPermanentMealsEvent -> if (activeDialog.value is SetPermanentMealsViewModel) {
+                (activeDialog.value as SetPermanentMealsViewModel).onEvent(event)
             }
         }
     }

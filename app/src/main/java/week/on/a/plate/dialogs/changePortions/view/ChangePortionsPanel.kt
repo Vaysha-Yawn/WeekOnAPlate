@@ -38,7 +38,7 @@ fun ChangePortionsPanel(portionsCount: MutableIntState, done: () -> Unit) {
         Row(
             Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.tertiary, RoundedCornerShape(20.dp)),
+                .background(MaterialTheme.colorScheme.background, RoundedCornerShape(20.dp)),
             horizontalArrangement = Arrangement.Center
         ) {
             ButtonsCounter(portionsCount, {

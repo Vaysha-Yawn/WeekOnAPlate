@@ -8,7 +8,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.navigation.MenuDestination
-import week.on.a.plate.data.dataView.week.CategoriesSelection
+import week.on.a.plate.data.dataView.week.ForWeek
+import week.on.a.plate.data.dataView.week.NonPosed
+import week.on.a.plate.data.repository.tables.menu.category_selection.CategorySelectionDAO
+import week.on.a.plate.data.repository.tables.menu.category_selection.CategorySelectionRoom
 import week.on.a.plate.data.repository.tables.menu.selection.WeekMenuRepository
 import week.on.a.plate.dialogs.editSelection.logic.EditSelectionViewModel
 import week.on.a.plate.dialogs.editSelection.state.EditSelectionUIState
@@ -30,6 +33,7 @@ import javax.inject.Inject
 class SpecifySelectionViewModel @Inject constructor(
     private val weekMenuRepository: WeekMenuRepository,
     private val calendarMyUseCase : CalendarMyUseCase,
+    private val categorySelectionDAO: CategorySelectionDAO,
     ) : ViewModel() {
      lateinit var mainViewModel: MainViewModel
     val state: SpecifySelectionUIState = SpecifySelectionUIState()
@@ -114,15 +118,13 @@ class SpecifySelectionViewModel @Inject constructor(
         viewModelScope.launch {
             val allSelections = weekMenuRepository.getSelectionsByDate(state.date.value)
             val listSelName = allSelections.map { it.name }.toMutableList()
-            val listSuggest = listOf(
-                CategoriesSelection.NonPosed, CategoriesSelection.Breakfast,
-                CategoriesSelection.Lunch, CategoriesSelection.Snack,
-                CategoriesSelection.Dinner,
-            )
+            var listSuggest = categorySelectionDAO.getAll().toMutableList()
+            listSuggest.add(CategorySelectionRoom(NonPosed.fullName, NonPosed.stdTime))
+            listSuggest =  listSuggest.sortedBy { it.stdTime }.toMutableList()
             for (i in listSuggest) {
-                if (listSelName.find { it == i.fullName } == null) {
+                if (listSelName.find { it == i.name } == null) {
                     listSelName.add(
-                        i.fullName,
+                        i.name
                     )
                 }
             }
@@ -132,7 +134,7 @@ class SpecifySelectionViewModel @Inject constructor(
 
     private fun getCategory(): String? {
         if (!state.checkWeek.value && state.checkDayCategory.value == null) return null
-        if (state.checkWeek.value) return CategoriesSelection.ForWeek.fullName
+        if (state.checkWeek.value) return ForWeek.fullName
         return state.checkDayCategory.value
     }
 

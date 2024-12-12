@@ -40,7 +40,7 @@ fun TitleMenu(selection: SelectionView, modifier: Modifier, onEvent: (event: Eve
         val context = LocalContext.current
         PlusButtonTitle() {
             if (selection.id == 0L) {
-                onEvent(MenuEvent.CreateFirstNonPosedPosition(selection.dateTime.toLocalDate(), selection.name, context))
+                onEvent(MenuEvent.CreateFirstNonPosedPosition(selection.dateTime.toLocalDate(), selection, context))
             } else {
                 onEvent(MenuEvent.CreatePosition(selection.id, context))
             }
@@ -70,7 +70,7 @@ fun TitleMenuS(selection: SelectionView, modifier: Modifier, onEvent: (event: Ev
         val context = LocalContext.current
         PlusButtonTitle() {
             if (selection.id == 0L) {
-                onEvent(MenuEvent.CreateFirstNonPosedPosition(selection.dateTime.toLocalDate(), selection.name, context))
+                onEvent(MenuEvent.CreateFirstNonPosedPosition(selection.dateTime.toLocalDate(), selection, context, ))
             } else {
                 onEvent(MenuEvent.CreatePosition(selection.id, context))
             }

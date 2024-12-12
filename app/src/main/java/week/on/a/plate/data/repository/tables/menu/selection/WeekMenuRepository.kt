@@ -1,10 +1,13 @@
 package week.on.a.plate.data.repository.tables.menu.selection
 
-import week.on.a.plate.data.dataView.week.CategoriesSelection
 import week.on.a.plate.data.dataView.week.DayView
+import week.on.a.plate.data.dataView.week.ForWeek
+import week.on.a.plate.data.dataView.week.NonPosed
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.data.dataView.week.SelectionView
 import week.on.a.plate.data.dataView.week.WeekView
+import week.on.a.plate.data.repository.tables.menu.category_selection.CategorySelectionDAO
+import week.on.a.plate.data.repository.tables.menu.category_selection.CategorySelectionRoom
 import week.on.a.plate.data.repository.tables.menu.position.draft.PositionDraftRepository
 import week.on.a.plate.data.repository.tables.menu.position.note.PositionNoteRepository
 import week.on.a.plate.data.repository.tables.menu.position.positionIngredient.PositionIngredientRepository
@@ -25,9 +28,9 @@ class WeekMenuRepository @Inject constructor(
     private val positionIngredientRepository: PositionIngredientRepository,
     private val noteRepository: PositionNoteRepository,
     private val positionRecipeRepository: PositionRecipeRepository,
-
     private val selectionDAO: SelectionDAO,
-) {
+    private val categorySelectionDAO: CategorySelectionDAO,
+    ) {
     private val selectionMapper = SelectionMapper()
 
     suspend fun getSelIdOrCreate(
@@ -72,17 +75,15 @@ class WeekMenuRepository @Inject constructor(
         val dayDates = getDaysOfWeek(date, locale)
         val dayViews = dayDates.map { dateDay ->
             val listSelections = getSelectionsByDate(dateDay)
-            val listSuggest = listOf(
-                CategoriesSelection.NonPosed, CategoriesSelection.Breakfast,
-                CategoriesSelection.Lunch, CategoriesSelection.Snack,
-                CategoriesSelection.Dinner,
-            )
+            var listSuggest = categorySelectionDAO.getAll().toMutableList()
+            listSuggest.add(CategorySelectionRoom(NonPosed.fullName, NonPosed.stdTime))
+            listSuggest =  listSuggest.sortedBy { it.stdTime }.toMutableList()
             for (i in listSuggest) {
-                if (listSelections.find { it.name == i.fullName } == null) {
+                if (listSelections.find { it.name == i.name } == null) {
                     listSelections.add(
                         SelectionView(
                             0,
-                            i.fullName,
+                            i.name,
                             LocalDateTime.of(dateDay, i.stdTime),
                             weekOfYear,
                             false,
@@ -100,8 +101,8 @@ class WeekMenuRepository @Inject constructor(
         } else {
             SelectionView(
                 0,
-                CategoriesSelection.ForWeek.fullName,
-                LocalDateTime.of(date, CategoriesSelection.ForWeek.stdTime),
+                ForWeek.fullName,
+                LocalDateTime.of(date, ForWeek.stdTime),
                 weekOfYear,
                 true,
                 mutableListOf(),

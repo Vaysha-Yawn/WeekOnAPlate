@@ -38,7 +38,7 @@ fun ButtonsCounter(
     Row(
         horizontalArrangement = Arrangement.Absolute.Center, modifier = Modifier
             .background(
-                MaterialTheme.colorScheme.tertiary, RoundedCornerShape(10.dp)
+                MaterialTheme.colorScheme.background, RoundedCornerShape(10.dp)
             )
             .padding(10.dp), verticalAlignment = Alignment.CenterVertically
     ) {
@@ -75,7 +75,10 @@ fun ButtonsCounterSmall(
     plus: () -> Unit,
 ) {
     Row(
-        horizontalArrangement = Arrangement.Absolute.Center, modifier = Modifier, verticalAlignment = Alignment.CenterVertically
+        horizontalArrangement = Arrangement.Absolute.Center,
+        modifier = Modifier
+            .background(MaterialTheme.colorScheme.background, RoundedCornerShape(10.dp)).padding(20.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
             painter = painterResource(id = R.drawable.remove),
