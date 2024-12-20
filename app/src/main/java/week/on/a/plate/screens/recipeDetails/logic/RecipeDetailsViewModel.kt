@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import week.on.a.plate.R
 import week.on.a.plate.core.utils.getIngredientCountAndMeasure1000
 import week.on.a.plate.core.utils.timeToString
 import week.on.a.plate.data.dataView.recipe.RecipeStepView
@@ -40,43 +41,43 @@ class RecipeDetailsViewModel @Inject constructor(
 
     fun onEvent(event: RecipeDetailsEvent) {
         when (event) {
-            RecipeDetailsEvent.AddToCart -> addToCart()
+            is RecipeDetailsEvent.AddToCart -> addToCart(event.context)
             RecipeDetailsEvent.AddToMenu -> addToMenu()
             RecipeDetailsEvent.Back -> mainViewModel.nav.popBackStack()
             RecipeDetailsEvent.Edit -> editRecipe()
             RecipeDetailsEvent.MinusPortionsView -> minusPortionsView()
             RecipeDetailsEvent.PlusPortionsView -> plusPortionsView()
             RecipeDetailsEvent.SwitchFavorite -> switchFavorite()
-            RecipeDetailsEvent.Delete -> delete()
+            is RecipeDetailsEvent.Delete -> delete(event.context)
             is RecipeDetailsEvent.Share -> share(event.context)
         }
     }
 
     private fun share(context: Context) {
-        val text = recipeToText(state.recipe)
+        val text = recipeToText(state.recipe, context)
         val intent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_TEXT, text)
             type = "text/plain"
         }
-        val chooserIntent = Intent.createChooser(intent, "Поделиться через:")
+        val chooserIntent = Intent.createChooser(intent, context.getString(R.string.share))
         context.startActivity(chooserIntent)
     }
 
-    private fun recipeToText(recipeView: RecipeView): String {
+    private fun recipeToText(recipeView: RecipeView, context: Context): String {
         var text = ""
-        text += "Рецепт: " + recipeView.name
+        text += context.getString(R.string.recipe)+ ": " + recipeView.name
         text += "\n"
         text += "\n"
-        text += "Время приготовления: " + recipeView.duration.toSecondOfDay().timeToString()
+        text +=  context.getString(R.string.cook_time)+ ": " + recipeView.duration.toSecondOfDay().timeToString(context)
         text += "\n"
-        text += "Колличество порций: " + recipeView.standardPortionsCount
+        text += context.getString(R.string.portions_count)+ ": "+ recipeView.standardPortionsCount
         text += "\n"
         text += "\n"
-        text += "Ингредиенты:"
+        text += context.getString(R.string.ingredients)+ ": "
         for (ingredient in recipeView.ingredients) {
             text += "\n"
-            val tet = getIngredientCountAndMeasure1000(
+            val tet = getIngredientCountAndMeasure1000(context,
                 ingredient.count,
                 ingredient.ingredientView.measure
             )
@@ -84,28 +85,28 @@ class RecipeDetailsViewModel @Inject constructor(
         }
         text += "\n"
         text += "\n"
-        text += "Приготовление:"
+        text += context.getString(R.string.cooking)
         for ((index, step) in recipeView.steps.withIndex()) {
             text += "\n"
             text += (index + 1).toString() + ". " + step.description
         }
         text += "\n"
         text += "\n"
-        text += "Источник:" + recipeView.link
+        text += context.getString(R.string.source)+ ": " + recipeView.link
         text += "\n"
         text += "\n"
-        text += "Экспортировано из приложения \"Неделя на тарелке\" - книга рецептов, составление меню и список покупок. Только для самых любимых и проверенных рецептов! (\u2060灬\u2060º\u2060‿\u2060º\u2060灬\u2060)\u2060♡"
+        text += context.getString(R.string.signature)
         return text
     }
 
-    private fun addToCart() {
+    private fun addToCart(context: Context) {
         if (state.recipe.ingredients.isNotEmpty()) {
             viewModelScope.launch {
                 mainViewModel.nav.navigate(InventoryDestination)
                 mainViewModel.inventoryViewModel.launchAndGet(state.ingredientsCounts.value)
             }
         } else {
-            mainViewModel.onEvent(MainEvent.ShowSnackBar("Нет ингредиентов в составе."))
+            mainViewModel.onEvent(MainEvent.ShowSnackBar(context.getString(R.string.no_ingredients)))
         }
     }
 
@@ -132,14 +133,12 @@ class RecipeDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun delete() {
+    private fun delete(context: Context) {
         viewModelScope.launch {
             val vm = mainViewModel.deleteApplyViewModel
-            val mes = "Вы уверены, что хотите удалить этот рецепт?\n" +
-                    "Внимание, при удалении рецепта так же удалятся все позиции с ним в меню.\n" +
-                    "Это действие нельзя отменить."
+            val mes = context.getString(R.string.delete_alert)
             mainViewModel.nav.navigate(DeleteApplyDestination)
-            vm.launchAndGet(message = mes) { event ->
+            vm.launchAndGet(context, message = mes) { event ->
                 if (event == DeleteApplyEvent.Apply) {
                     recipeRepository.delete(state.recipe.id)
                     mainViewModel.onEvent(MainEvent.NavigateBack)
@@ -150,6 +149,7 @@ class RecipeDetailsViewModel @Inject constructor(
 
     private fun switchFavorite() {
         viewModelScope.launch {
+            state.isFavorite.value = !state.recipe.inFavorite
             recipeRepository.updateRecipeFavorite(
                 state.recipe,
                 !state.recipe.inFavorite
@@ -205,7 +205,10 @@ class RecipeDetailsViewModel @Inject constructor(
                             it.timer.longValue, it.pinnedIngredientsInd.value
                         )
                     },
-                    link = recipe.source.value, state.recipe.inFavorite, LocalDateTime.now(), recipe.duration.value
+                    link = recipe.source.value,
+                    state.recipe.inFavorite,
+                    LocalDateTime.now(),
+                    recipe.duration.value
                 )
                 viewModelScope.launch {
                     recipeRepository.updateRecipe(state.recipe, newRecipe)
@@ -218,6 +221,7 @@ class RecipeDetailsViewModel @Inject constructor(
     fun launch(recipeId: Long, portionsCount: Int? = null) {
         viewModelScope.launch {
             state.recipe = recipeRepository.getRecipe(recipeId)
+            state.isFavorite.value = state.recipe.inFavorite
             state.ingredientsCounts.value = state.recipe.ingredients
             state.currentPortions.intValue =
                 portionsCount ?: state.recipe.standardPortionsCount

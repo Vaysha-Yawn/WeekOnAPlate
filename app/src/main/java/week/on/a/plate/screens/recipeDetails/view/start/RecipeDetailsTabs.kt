@@ -11,8 +11,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import week.on.a.plate.R
 import week.on.a.plate.data.dataView.example.recipeTom
 import week.on.a.plate.core.uitools.TextSmall
 import week.on.a.plate.screens.recipeDetails.event.RecipeDetailsEvent
@@ -22,7 +25,9 @@ import week.on.a.plate.core.utils.timeToString
 
 @Composable
 fun RecipeDetailsTabs(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) -> Unit) {
-    val tabTitles = listOf("По шагам", "Состав", "Источник")
+    val tabTitles = listOf(stringResource(R.string.step_by_step),
+        stringResource(R.string.recipe_composition), stringResource(R.string.source)
+    )
     TabRow( modifier = Modifier.fillMaxWidth(),
         selectedTabIndex = state.activeTabIndex.intValue,
         indicator = { tabPositions ->
@@ -39,7 +44,7 @@ fun RecipeDetailsTabs(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) -
                         TextSmall(
                             text =
                             when (index) {
-                                0 -> state.recipe.duration.toSecondOfDay().timeToString()
+                                0 -> state.recipe.duration.toSecondOfDay().timeToString(LocalContext.current)
                                 1 -> state.recipe.ingredients.size.toString()
                                 2 -> ""
                                 else -> ""

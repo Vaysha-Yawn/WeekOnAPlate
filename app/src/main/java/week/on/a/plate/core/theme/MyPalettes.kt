@@ -1,10 +1,11 @@
 package week.on.a.plate.core.theme
 
 import androidx.compose.ui.graphics.Color
+import week.on.a.plate.R
 
 val palettes = listOf(
     ColorPaletteGroup(
-        "Классика",
+        R.string.classic,
         ColorPalette(
             primary = LightColorScheme.primary,
             secondary = LightColorScheme.secondary,
@@ -19,7 +20,7 @@ val palettes = listOf(
         )
     ),
     ColorPaletteGroup(
-        "Сумрак",
+        R.string.Evening,
         ColorPalette(
             primary = Color(0xFFFFB6D1),
             secondary = Color(0xFFB9B4FF),

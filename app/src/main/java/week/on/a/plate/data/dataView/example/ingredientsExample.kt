@@ -1,174 +1,230 @@
 package week.on.a.plate.data.dataView.example
 
+import android.content.Context
+import week.on.a.plate.R
 import week.on.a.plate.data.dataView.recipe.IngredientCategoryView
 import week.on.a.plate.data.dataView.recipe.IngredientView
 import week.on.a.plate.data.repository.tables.filters.recipeTagCategory.startCategoryName
 
-enum class Measure(val small: String, val big:String) {
-    Grams("гр", "кг"),
-    Milliliters("мл", "л")
+enum class Measure(val small: Int, val big: Int) {
+    Grams(R.string.gram, R.string.kilogram),
+    Milliliters(R.string.milliliter, R.string.liter)
 }
 
-val ingredients = listOf(
-    IngredientCategoryView(
-        0,
-        startCategoryName,
-        listOf()
-    ),
-    IngredientCategoryView(
-        0, "Мясо и птица",
-        listOf(
-            IngredientView(1, "", "Курица", Measure.Grams.small),
-            IngredientView(2, "", "Говядина", Measure.Grams.small),
-            IngredientView(3, "", "Свинина", Measure.Grams.small),
-            IngredientView(4, "", "Баранина", Measure.Grams.small),
-            IngredientView(5, "", "Индейка", Measure.Grams.small),
-            IngredientView(6, "", "Куриные грудки", Measure.Grams.small),
+fun getStartIngredients(context: Context): List<IngredientCategoryView> {
+    return listOf(
+        IngredientCategoryView(
+            0,
+            startCategoryName,
+            listOf()
         ),
-    ),
-    IngredientCategoryView(
-        1, "Рыба и морепродукты",
-        listOf(
-            IngredientView(7, "", "Лосось", Measure.Grams.small),
-            IngredientView(8, "", "Тунец", Measure.Grams.small),
-            IngredientView(9, "", "Креветки", Measure.Grams.small),
-            IngredientView(10, "", "Треска", Measure.Grams.small),
-            IngredientView(11, "", "Скумбрия", Measure.Grams.small),
-            IngredientView(12, "", "Форель", Measure.Grams.small),
+        IngredientCategoryView(
+            0, context.getString(R.string.ingredient_category_meat_and_poultry),
+            listOf(
+                IngredientView(1, "",
+                    context.getString(R.string.ingredient_chicken), context.getString(Measure.Grams.small)),
+                IngredientView(2, "",
+                    context.getString(R.string.ingredient_beef), context.getString(Measure.Grams.small)),
+                IngredientView(3, "",
+                    context.getString(R.string.ingredient_pork), context.getString(Measure.Grams.small)),
+                IngredientView(4, "",
+                    context.getString(R.string.ingredient_lamb), context.getString(Measure.Grams.small)),
+                IngredientView(5, "",
+                    context.getString(R.string.ingredient_turkey), context.getString(Measure.Grams.small)),
+                IngredientView(6, "",
+                    context.getString(R.string.ingredient_chicken_breasts), context.getString(Measure.Grams.small)),
+            ),
         ),
-    ),
-    IngredientCategoryView(
-        2, "Овощи",
-        listOf(
-            IngredientView(13, "", "Картофель", Measure.Grams.small),
-            IngredientView(14, "", "Лук", Measure.Grams.small),
-            IngredientView(15, "", "Морковь", Measure.Grams.small),
-            IngredientView(16, "", "Чеснок", Measure.Grams.small),
-            IngredientView(17, "", "Помидоры", Measure.Grams.small),
-            IngredientView(17, "", "Огурцы", Measure.Grams.small),
-            IngredientView(17, "", "Зелёный лук", Measure.Grams.small),
-            IngredientView(17, "", "Укроп", Measure.Grams.small),
-            IngredientView(17, "", "Петрушка", Measure.Grams.small),
-            IngredientView(18, "", "Брокколи", Measure.Grams.small),
+        IngredientCategoryView(
+            1, context.getString(R.string.ingredient_category_fish_and_seafood),
+            listOf(
+                IngredientView(7, "",
+                    context.getString(R.string.ingredient_salmon), context.getString(Measure.Grams.small)),
+                IngredientView(8, "",
+                    context.getString(R.string.ingredient_tuna), context.getString(Measure.Grams.small)),
+                IngredientView(9, "",
+                    context.getString(R.string.ingredient_shrimp), context.getString(Measure.Grams.small)),
+                IngredientView(10, "",
+                    context.getString(R.string.ingredient_cod), context.getString(Measure.Grams.small)),
+                IngredientView(11, "",
+                    context.getString(R.string.ingredient_mackerel), context.getString(Measure.Grams.small)),
+                IngredientView(12, "",
+                    context.getString(R.string.ingredient_trout), context.getString(Measure.Grams.small)),
+            ),
         ),
-    ),
-    IngredientCategoryView(
-        3, "Фрукты",
-        listOf(
-            IngredientView(19, "", "Яблоки", Measure.Grams.small),
-            IngredientView(20, "", "Бананы", Measure.Grams.small),
-            IngredientView(21, "", "Лимоны", Measure.Grams.small),
-            IngredientView(22, "", "Апельсины", Measure.Grams.small),
-            IngredientView(23, "", "Клубника", Measure.Grams.small),
-            IngredientView(24, "", "Груши", Measure.Grams.small),
+        IngredientCategoryView(
+            2, context.getString(R.string.ingredient_category_vegetables),
+            listOf(
+                IngredientView(13, "",
+                    context.getString(R.string.ingredient_potatoes), context.getString(Measure.Grams.small)),
+                IngredientView(14, "",
+                    context.getString(R.string.ingredient_onion), context.getString(Measure.Grams.small)),
+                IngredientView(15, "",
+                    context.getString(R.string.ingredient_carrot), context.getString(Measure.Grams.small)),
+                IngredientView(16, "",
+                    context.getString(R.string.ingredient_garlic), context.getString(Measure.Grams.small)),
+                IngredientView(17, "",
+                    context.getString(R.string.ingredient_tomatoes), context.getString(Measure.Grams.small)),
+                IngredientView(17, "",
+                    context.getString(R.string.ingredient_cucumbers), context.getString(Measure.Grams.small)),
+                IngredientView(18, "",
+                    context.getString(R.string.ingredient_broccoli), context.getString(Measure.Grams.small)),
+            ),
         ),
-    ),
-    IngredientCategoryView(
-        4, "Зелень и травы",
-        listOf(
-            IngredientView(25, "", "Петрушка", Measure.Grams.small),
-            IngredientView(26, "", "Укроп", Measure.Grams.small),
-            IngredientView(27, "", "Базилик", Measure.Grams.small),
-            IngredientView(28, "", "Тимьян", Measure.Grams.small),
-            IngredientView(29, "", "Орегано", Measure.Grams.small),
-            IngredientView(30, "", "Мята", Measure.Grams.small),
+        IngredientCategoryView(
+            3, context.getString(R.string.ingredient_category_fruits),
+            listOf(
+                IngredientView(19, "",
+                    context.getString(R.string.ingredient_apples), context.getString(Measure.Grams.small)),
+                IngredientView(20, "",
+                    context.getString(R.string.ingredient_bananas), context.getString(Measure.Grams.small)),
+                IngredientView(21, "",
+                    context.getString(R.string.ingredient_lemons), context.getString(Measure.Grams.small)),
+                IngredientView(22, "",
+                    context.getString(R.string.ingredient_oranges), context.getString(Measure.Grams.small)),
+                IngredientView(23, "",
+                    context.getString(R.string.ingredient_strawberries), context.getString(Measure.Grams.small)),
+                IngredientView(24, "",
+                    context.getString(R.string.ingredient_pears), context.getString(Measure.Grams.small)),
+            ),
         ),
-    ),
-    IngredientCategoryView(
-        5, "Молочные продукты",
-        listOf(
-            IngredientView(31, "", "Молоко", Measure.Milliliters.small),
-            IngredientView(32, "", "Сливочное масло", Measure.Grams.small),
-            IngredientView(33, "", "Творог", Measure.Grams.small),
-            IngredientView(34, "", "Сыр", Measure.Grams.small),
-            IngredientView(35, "", "Сливки", Measure.Milliliters.small),
-            IngredientView(36, "", "Сметана", Measure.Milliliters.small),
+        IngredientCategoryView(
+            4, context.getString(R.string.ingredient_category_greens_and_herbs),
+            listOf(
+                IngredientView(25, "",
+                    context.getString(R.string.ingredient_parsley), context.getString(Measure.Grams.small)),
+                IngredientView(26, "",  context.getString(R.string.ingredient_dill), context.getString(Measure.Grams.small)),
+                IngredientView(27, "",
+                    context.getString(R.string.ingredient_basil), context.getString(Measure.Grams.small)),
+                IngredientView(28, "",
+                    context.getString(R.string.ingredient_thyme), context.getString(Measure.Grams.small)),
+                IngredientView(29, "",
+                    context.getString(R.string.ingredient_oregano), context.getString(Measure.Grams.small)),
+                IngredientView(30, "",
+                    context.getString(R.string.ingredient_mint), context.getString(Measure.Grams.small)),
+            ),
         ),
-    ),
-    IngredientCategoryView(
-        6, "Зерновые и крупы",
-        listOf(
-            IngredientView(37, "", "Рис", Measure.Grams.small),
-            IngredientView(38, "", "Макароны", Measure.Grams.small),
-            IngredientView(39, "", "Овсянка", Measure.Grams.small),
-            IngredientView(40, "", "Киноа", Measure.Grams.small),
-            IngredientView(41, "", "Гречка", Measure.Grams.small),
-            IngredientView(42, "", "Булгур", Measure.Grams.small),
+        IngredientCategoryView(
+            5, context.getString(R.string.ingredient_category_dairy_products),
+            listOf(
+                IngredientView(31, "",
+                    context.getString(R.string.ingredient_milk), context.getString(Measure.Milliliters.small)),
+                IngredientView(32, "",
+                    context.getString(R.string.ingredient_butter), context.getString(Measure.Grams.small)),
+                IngredientView(33, "",
+                    context.getString(R.string.ingredient_cottage_cheese), context.getString(Measure.Grams.small)),
+                IngredientView(34, "",
+                    context.getString(R.string.ingredient_cheese), context.getString(Measure.Grams.small)),
+                IngredientView(35, "",
+                    context.getString(R.string.ingredient_cream), context.getString(Measure.Milliliters.small)),
+                IngredientView(36, "",
+                    context.getString(R.string.ingredient_sour_cream), context.getString(Measure.Milliliters.small)),
+            ),
         ),
-    ),
-    IngredientCategoryView(
-        7, "Бобовые",
-        listOf(
-            IngredientView(43, "", "Фасоль", Measure.Grams.small),
-            IngredientView(44, "", "Горох", Measure.Grams.small),
-            IngredientView(45, "", "Чечевица", Measure.Grams.small),
-            IngredientView(46, "", "Нут", Measure.Grams.small),
-            IngredientView(47, "", "Соевые бобы", Measure.Grams.small),
+        IngredientCategoryView(
+            6, context.getString(R.string.ingredient_category_cereals_and_grains),
+            listOf(
+                IngredientView(37, "",
+                    context.getString(R.string.ingredient_rice), context.getString(Measure.Grams.small)),
+                IngredientView(38, "",
+                    context.getString(R.string.ingredient_pasta), context.getString(Measure.Grams.small)),
+                IngredientView(39, "",
+                    context.getString(R.string.ingredient_oatmeal), context.getString(Measure.Grams.small)),
+                IngredientView(40, "",
+                    context.getString(R.string.ingredient_quinoa), context.getString(Measure.Grams.small)),
+                IngredientView(41, "",
+                    context.getString(R.string.ingredient_buckwheat), context.getString(Measure.Grams.small)),
+                IngredientView(42, "",
+                    context.getString(R.string.ingredient_bulgur), context.getString(Measure.Grams.small)),
+            ),
         ),
-    ),
-    IngredientCategoryView(
-        8, "Орехи и семена",
-        listOf(
-            IngredientView(48, "", "Миндаль", Measure.Grams.small),
-            IngredientView(49, "", "Грецкие орехи", Measure.Grams.small),
-            IngredientView(50, "", "Фундук", Measure.Grams.small),
-            IngredientView(51, "", "Семена подсолнечника", Measure.Grams.small),
-            IngredientView(52, "", "Кедровые орешки", Measure.Grams.small),
+        IngredientCategoryView(
+            7, context.getString(R.string.ingredient_category_legumes),
+            listOf(
+                IngredientView(43, "",
+                    context.getString(R.string.ingredient_beans), context.getString(Measure.Grams.small)),
+                IngredientView(44, "",
+                    context.getString(R.string.ingredient_peas), context.getString(Measure.Grams.small)),
+                IngredientView(45, "",
+                    context.getString(R.string.ingredient_lentils), context.getString(Measure.Grams.small)),
+                IngredientView(46, "",
+                    context.getString(R.string.ingredient_chickpeas), context.getString(Measure.Grams.small)),
+                IngredientView(47, "",
+                    context.getString(R.string.ingredient_soybeans), context.getString(Measure.Grams.small)),
+            ),
         ),
-    ),
-    IngredientCategoryView(
-        9, "Специи и приправы",
-        listOf(
-            IngredientView(53, "", "Соль", Measure.Grams.small),
-            IngredientView(54, "", "Черный перец", Measure.Grams.small),
-            IngredientView(55, "", "Паприка", Measure.Grams.small),
-            IngredientView(56, "", "Корица", Measure.Grams.small),
-            IngredientView(57, "", "Имбирь", Measure.Grams.small),
-            IngredientView(58, "", "Куркума", Measure.Grams.small),
+        IngredientCategoryView(
+            8, context.getString(R.string.ingredient_category_nuts_and_seeds),
+            listOf(
+                IngredientView(48, "",
+                    context.getString(R.string.ingredient_almonds), context.getString(Measure.Grams.small)),
+                IngredientView(49, "",
+                    context.getString(R.string.ingredient_walnuts), context.getString(Measure.Grams.small)),
+                IngredientView(50, "",
+                    context.getString(R.string.ingredient_hazelnuts), context.getString(Measure.Grams.small)),
+                IngredientView(51, "",
+                    context.getString(R.string.ingredient_sunflower_seeds), context.getString(Measure.Grams.small)),
+                IngredientView(52, "",
+                    context.getString(R.string.ingredient_pine_nuts), context.getString(Measure.Grams.small)),
+            ),
         ),
-    ),
-    IngredientCategoryView(
-        10, "Соусы и масла",
-        listOf(
-            IngredientView(59, "", "Оливковое масло", Measure.Milliliters.small),
-            IngredientView(60, "", "Соевый соус", Measure.Milliliters.small),
-            IngredientView(61, "", "Кетчуп", Measure.Milliliters.small),
-            IngredientView(62, "", "Майонез", Measure.Milliliters.small),
-            IngredientView(63, "", "Горчица", Measure.Milliliters.small),
+        IngredientCategoryView(
+            9, context.getString(R.string.ingredient_category_spices_and_seasonings),
+            listOf(
+                IngredientView(53, "",
+                    context.getString(R.string.ingredient_salt), context.getString(Measure.Grams.small)),
+                IngredientView(54, "",
+                    context.getString(R.string.ingredient_black_pepper), context.getString(Measure.Grams.small)),
+                IngredientView(55, "",
+                    context.getString(R.string.ingredient_paprika), context.getString(Measure.Grams.small)),
+                IngredientView(56, "",
+                    context.getString(R.string.ingredient_cinnamon), context.getString(Measure.Grams.small)),
+                IngredientView(57, "",
+                    context.getString(R.string.ingredient_ginger), context.getString(Measure.Grams.small)),
+                IngredientView(58, "",
+                    context.getString(R.string.ingredient_turmeric), context.getString(Measure.Grams.small)),
+            ),
         ),
-    ),
-    IngredientCategoryView(
-        11, "Выпечка и десерты",
-        listOf(
-            IngredientView(64, "", "Мука", Measure.Grams.small),
-            IngredientView(65, "", "Сахар", Measure.Grams.small),
-            IngredientView(66, "", "Дрожжи", Measure.Grams.small),
-            IngredientView(67, "", "Яйца", Measure.Grams.small),
-            IngredientView(68, "", "Мёд", Measure.Grams.small),
-            IngredientView(69, "", "Хлеб", Measure.Grams.small),
+        IngredientCategoryView(
+            10, context.getString(R.string.ingredient_category_sauces_and_oils),
+            listOf(
+                IngredientView(59, "",
+                    context.getString(R.string.ingredient_olive_oil), context.getString(Measure.Milliliters.small)),
+                IngredientView(60, "",
+                    context.getString(R.string.ingredient_soy_sauce), context.getString(Measure.Milliliters.small)),
+                IngredientView(61, "",
+                    context.getString(R.string.ingredient_ketchup), context.getString(Measure.Milliliters.small)),
+                IngredientView(62, "",
+                    context.getString(R.string.ingredient_mayonnaise), context.getString(Measure.Milliliters.small)),
+                IngredientView(63, "",
+                    context.getString(R.string.ingredient_mustard), context.getString(Measure.Milliliters.small)),
+            ),
         ),
-    ),
-    IngredientCategoryView(
-        12, "Алкоголь",
-        listOf(
-            IngredientView(70, "", "Абсент", Measure.Milliliters.small),
-            IngredientView(71, "", "Арманьяк", Measure.Milliliters.small),
-            IngredientView(72, "", "Вино (сухое белое)", Measure.Milliliters.small),
-            IngredientView(73, "", "Водка", Measure.Milliliters.small),
-            IngredientView(74, "", "Коньяк", Measure.Milliliters.small),
-            IngredientView(75, "", "Виски", Measure.Milliliters.small),
-            IngredientView(76, "", "Граппа", Measure.Milliliters.small),
-            IngredientView(77, "", "Джин", Measure.Milliliters.small),
-            IngredientView(78, "", "Бренди", Measure.Milliliters.small),
-            IngredientView(79, "", "Бурбон", Measure.Milliliters.small),
-            IngredientView(80, "", "Вермут", Measure.Milliliters.small),
-        )
-    ),
-    IngredientCategoryView(
-        13, "Прочее",
-        listOf(
-            IngredientView(81, "", "Вода", Measure.Milliliters.small),
-            IngredientView(82, "", "Бульон", Measure.Milliliters.small),
-        )
-    ),
-)
+        IngredientCategoryView(
+            11, context.getString(R.string.ingredient_category_baked_goods_and_desserts),
+            listOf(
+                IngredientView(64, "",
+                    context.getString(R.string.ingredient_flour), context.getString(Measure.Grams.small)),
+                IngredientView(65, "",
+                    context.getString(R.string.ingredient_sugar), context.getString(Measure.Grams.small)),
+                IngredientView(66, "",
+                    context.getString(R.string.ingredient_yeast), context.getString(Measure.Grams.small)),
+                IngredientView(67, "",
+                    context.getString(R.string.ingredient_eggs), context.getString(Measure.Grams.small)),
+                IngredientView(68, "",
+                    context.getString(R.string.ingredient_honey), context.getString(Measure.Grams.small)),
+                IngredientView(69, "",
+                    context.getString(R.string.ingredient_bread), context.getString(Measure.Grams.small)),
+            ),
+        ),
+        IngredientCategoryView(
+            13, context.getString(R.string.ingredient_category_liquids),
+            listOf(
+                IngredientView(81, "",
+                    context.getString(R.string.ingredient_water), context.getString(Measure.Milliliters.small)),
+                IngredientView(82, "",
+                    context.getString(R.string.ingredient_broth), context.getString(Measure.Milliliters.small)),
+            )
+        ),
+    )
+}

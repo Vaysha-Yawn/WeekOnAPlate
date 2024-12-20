@@ -6,9 +6,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import week.on.a.plate.R
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.TextTitle
@@ -23,11 +25,14 @@ fun RecipeDetailsSource(state: RecipeDetailsState, onEventMain: (Event) -> Unit)
     }
     WebPage(url, state.webview, onEventMain, false)
     val mess = if (state.recipe.link.startsWith("http")) {
-        "Страница загружается"
+        stringResource(R.string.page_is_loading)
     } else {
-        "Источник не добавлен"
+        stringResource(R.string.no_source)
     }
-    TextTitle(mess, Modifier.fillMaxWidth().padding(top = 24.dp), textAlign = TextAlign.Center)
+    TextTitle(mess,
+        Modifier
+            .fillMaxWidth()
+            .padding(top = 24.dp), textAlign = TextAlign.Center)
 }
 
 @Preview(showBackground = true)

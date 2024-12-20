@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
@@ -72,13 +73,13 @@ fun ShoppingListContent(state: ShoppingListUIState, onEvent: (ShoppingListEvent)
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             TextTitleLarge(
-                text = "Список покупок",
+                text = stringResource(R.string.shopping_list),
                 modifier = Modifier.weight(1f)
             )
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(painterResource(R.drawable.delete), "", modifier = Modifier
                     .clickNoRipple {
-                        onEvent(ShoppingListEvent.DeleteAll)
+                        onEvent(ShoppingListEvent.DeleteAll(context))
                     }
                     .size(30.dp))
                 Spacer(Modifier.width(12.dp))
@@ -108,7 +109,7 @@ fun ShoppingListContent(state: ShoppingListUIState, onEvent: (ShoppingListEvent)
                             .padding(horizontal = 36.dp, vertical = 5.dp),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        TextBody(text = "Куплено")
+                        TextBody(text = stringResource(R.string.bought))
                         Icon(
                             painter = painterResource(id = R.drawable.delete),
                             contentDescription = "", modifier = Modifier
@@ -130,9 +131,9 @@ fun ShoppingListContent(state: ShoppingListUIState, onEvent: (ShoppingListEvent)
         }
         if (state.listChecked.value.isEmpty() && state.listUnchecked.value.isEmpty()){
             Column(Modifier.padding(24.dp)) {
-                TextTitle("Похоже здесь пусто...")
+                TextTitle(stringResource(R.string.hint_empty))
                 Spacer(Modifier.height(12.dp))
-                TextBody("Нажмите +, чтобы добавить ингредиенты в список покупок.")
+                TextBody(stringResource(R.string.hint_add_to_shopping_list))
             }
         }
     }
@@ -167,7 +168,7 @@ fun ShoppingListPosition(
         Spacer(modifier = Modifier.width(12.dp))
 
         val valueAndMeasure =
-            getIngredientCountAndMeasure1000(item.count, item.ingredientView.measure)
+            getIngredientCountAndMeasure1000(LocalContext.current, item.count, item.ingredientView.measure)
         Column {
             val text = "${item.ingredientView.name} " +
                     valueAndMeasure.first +

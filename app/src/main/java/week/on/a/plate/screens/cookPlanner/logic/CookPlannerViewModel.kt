@@ -1,10 +1,12 @@
 package week.on.a.plate.screens.cookPlanner.logic
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import week.on.a.plate.R
 import week.on.a.plate.core.Event
 import week.on.a.plate.data.dataView.CookPlannerGroupView
 import week.on.a.plate.data.dataView.week.getTitleWeek
@@ -107,8 +109,8 @@ class CookPlannerViewModel @Inject constructor(
                     mainViewModel.onEvent(MainEvent.OpenDialog(vm))
                     vm.launchAndGet {
                         when (it) {
-                            CookStepMoreEvent.ChangeEndRecipeTime -> changeEndRecipeTime(event.groupView)
-                            CookStepMoreEvent.ChangeStartRecipeTime -> changeStartRecipeTime(event.groupView)
+                            CookStepMoreEvent.ChangeEndRecipeTime -> changeEndRecipeTime(event.groupView, event.context)
+                            CookStepMoreEvent.ChangeStartRecipeTime -> changeStartRecipeTime(event.groupView, event.context)
                             CookStepMoreEvent.Close -> {}
                             CookStepMoreEvent.ChangePortionsCount -> changePortionsCount(event.groupView)
                             CookStepMoreEvent.Delete -> delete(event.groupView)
@@ -155,8 +157,8 @@ class CookPlannerViewModel @Inject constructor(
         }
     }
 
-    private fun changeStartRecipeTime(group: CookPlannerGroupView) {
-        getTime("Во сколько начать приготовление?") {
+    private fun changeStartRecipeTime(group: CookPlannerGroupView, context:Context) {
+        getTime(context.getString(R.string.when_recipe_start)) {
             mainViewModel.viewModelScope.launch {
                 repository.changeStartRecipeTime(group.id, it)
                 update()
@@ -164,8 +166,8 @@ class CookPlannerViewModel @Inject constructor(
         }
     }
 
-    private fun changeEndRecipeTime(group: CookPlannerGroupView) {
-        getTime("Ко скольки рассчитать приготовление?") {
+    private fun changeEndRecipeTime(group: CookPlannerGroupView, context:Context) {
+        getTime(context.getString(R.string.when_recipe_end)) {
             mainViewModel.viewModelScope.launch {
                 repository.changeEndRecipeTime(group.id, it)
                 update()

@@ -13,9 +13,9 @@ import week.on.a.plate.dialogs.chooseWeekInMenu.state.ChooseWeekUIState
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.core.utils.dateToLocalDate
-import week.on.a.plate.screens.calendarMy.event.CalendarMyEvent
-import week.on.a.plate.screens.calendarMy.logic.CalendarMyUseCase
-import week.on.a.plate.screens.calendarMy.state.StateCalendarMy
+import week.on.a.plate.dialogs.calendarMy.event.CalendarMyEvent
+import week.on.a.plate.dialogs.calendarMy.logic.CalendarMyUseCase
+import week.on.a.plate.dialogs.calendarMy.state.StateCalendarMy
 import java.time.LocalDate
 import java.util.Locale
 import javax.inject.Inject
@@ -40,11 +40,6 @@ class ChooseWeekViewModel @Inject constructor (
         }
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
-    fun getLocalDate(state: ChooseWeekUIState): LocalDate? {
-        return state.state.selectedDateMillis?.dateToLocalDate()
-    }
-
     fun start(): Flow<LocalDate?> {
         val flow = MutableStateFlow<LocalDate?>(null)
         resultFlow = flow
@@ -53,7 +48,6 @@ class ChooseWeekViewModel @Inject constructor (
 
     fun done() {
         close()
-        //val date = getLocalDate(state)
         resultFlow.value = stateCalendar.activeDate.value
     }
 

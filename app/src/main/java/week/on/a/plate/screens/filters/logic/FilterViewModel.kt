@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import week.on.a.plate.R
 import week.on.a.plate.data.dataView.recipe.IngredientCategoryView
 import week.on.a.plate.data.dataView.recipe.IngredientView
 import week.on.a.plate.data.dataView.recipe.RecipeTagView
@@ -99,10 +100,10 @@ class FilterViewModel @Inject constructor(
             is FilterEvent.VoiceSearchFilters -> voiceSearch(event.context)
             FilterEvent.ClearSearch -> clear()
 
-            is FilterEvent.CreateIngredient -> toCreateIngredient()
-            is FilterEvent.CreateTag -> toCreateTag()
-            is FilterEvent.CreateIngredientCategory -> toCreateIngredientCategory()
-            is FilterEvent.CreateTagCategory -> toCreateTagCategory()
+            is FilterEvent.CreateIngredient -> toCreateIngredient(event.context)
+            is FilterEvent.CreateTag -> toCreateTag(event.context)
+            is FilterEvent.CreateIngredientCategory -> toCreateIngredientCategory(event.context)
+            is FilterEvent.CreateTagCategory -> toCreateTagCategory(event.context)
 
             is FilterEvent.SelectIngredient -> selectIngredient(event.ingredient)
             is FilterEvent.SelectTag -> selectTag(event.tag)
@@ -110,43 +111,43 @@ class FilterViewModel @Inject constructor(
             is FilterEvent.SelectTagCategory -> selectTagCategory(event.tagCategoryView)
 
             is FilterEvent.EditOrDeleteIngredient -> editOrDelete(
-                delete = { deleteIngredient(event.ingredient) },
-                edit = { editIngredient(event.ingredient) })
+                delete = { deleteIngredient(event.ingredient, event.context) },
+                edit = { editIngredient(event.context, event.ingredient) })
 
             is FilterEvent.EditOrDeleteTag -> editOrDelete(
-                delete = { deleteTag(event.tag) },
+                delete = { deleteTag(event.tag, event.context) },
                 edit = { editTag(event.tag) })
 
             is FilterEvent.EditOrDeleteIngredientCategory -> {
                 if (event.ingredientCategory.name == startCategoryName) return
                 editOrDelete(
                     delete = { deleteIngredientCategory(event.ingredientCategory) },
-                    edit = { editIngredientCategory(event.ingredientCategory) })
+                    edit = { editIngredientCategory(event.ingredientCategory, event.context) })
             }
 
             is FilterEvent.EditOrDeleteTagCategory -> {
                 if (event.tagCategory.name == startCategoryName) return
                 editOrDelete(
                     delete = { deleteTagCategory(event.tagCategory) },
-                    edit = { editTagCategory(event.tagCategory) })
+                    edit = { editTagCategory(event.tagCategory, event.context) })
             }
 
-            FilterEvent.CreateActive -> {
-                createFilterElement()
+            is FilterEvent.CreateActive -> {
+                createFilterElement(event.context)
             }
         }
     }
 
-    private fun createFilterElement() {
+    private fun createFilterElement(context:Context) {
         when (state.filterEnum.value) {
-            FilterEnum.Ingredient -> onEvent(FilterEvent.CreateIngredient)
-            FilterEnum.Tag -> onEvent(FilterEvent.CreateTag)
-            FilterEnum.CategoryTag -> onEvent(FilterEvent.CreateTagCategory)
-            FilterEnum.CategoryIngredient -> onEvent(FilterEvent.CreateIngredientCategory)
+            FilterEnum.Ingredient -> onEvent(FilterEvent.CreateIngredient(context))
+            FilterEnum.Tag -> onEvent(FilterEvent.CreateTag(context))
+            FilterEnum.CategoryTag -> onEvent(FilterEvent.CreateTagCategory(context))
+            FilterEnum.CategoryIngredient -> onEvent(FilterEvent.CreateIngredientCategory(context))
             FilterEnum.IngredientAndTag -> if (state.activeFilterTabIndex.intValue == 0) {
-                onEvent(FilterEvent.CreateTag)
+                onEvent(FilterEvent.CreateTag(context))
             } else {
-                onEvent(FilterEvent.CreateIngredient)
+                onEvent(FilterEvent.CreateIngredient(context))
             }
         }
     }
@@ -168,14 +169,12 @@ class FilterViewModel @Inject constructor(
 
     // DELETE
 
-    private fun deleteIngredient(ingredient: IngredientView) {
+    private fun deleteIngredient(ingredient: IngredientView, context:Context) {
         viewModelScope.launch {
             val vmDel = mainViewModel.deleteApplyViewModel
-            val mes = "Вы уверены, что хотите удалить этот ингредиент?\n" +
-                    "Внимание, при удалении ингредиента он удалится из рецептов, меню (позиции этого ингредиента, в набросках) и списка покупок.\n" +
-                    "Это действие нельзя отменить."
+            val mes = context.getString(R.string.delete_ingredient)
             mainViewModel.nav.navigate(DeleteApplyDestination)
-            vmDel.launchAndGet(message = mes) { event ->
+            vmDel.launchAndGet(context, message = mes) { event ->
                 if (event == DeleteApplyEvent.Apply) {
                     ingredientRepository.delete(ingredient.ingredientId)
                 }
@@ -183,14 +182,12 @@ class FilterViewModel @Inject constructor(
         }
     }
 
-    private fun deleteTag(tag: RecipeTagView) {
+    private fun deleteTag(tag: RecipeTagView, context:Context) {
         viewModelScope.launch {
             val vmDel = mainViewModel.deleteApplyViewModel
-            val mes = "Вы уверены, что хотите удалить этот тэг?\n" +
-                    "Внимание, при удалении тэга он удалится из всех набросков и рецептов.\n" +
-                    "Это действие нельзя отменить."
+            val mes = context.getString(R.string.delete_tag)
             mainViewModel.nav.navigate(DeleteApplyDestination)
-            vmDel.launchAndGet(message = mes) { event ->
+            vmDel.launchAndGet(context, message = mes) { event ->
                 if (event == DeleteApplyEvent.Apply) {
                     recipeTagRepository.delete(tag.id)
                 }
@@ -212,7 +209,7 @@ class FilterViewModel @Inject constructor(
 
     /// EDIT
 
-    private fun editIngredientCategory(oldIngredientCat: IngredientCategoryView) {
+    private fun editIngredientCategory(oldIngredientCat: IngredientCategoryView, context:Context) {
         val vm = EditOneStringViewModel()
         vm.mainViewModel = mainViewModel
         mainViewModel.onEvent(MainEvent.OpenDialog(vm))
@@ -220,8 +217,8 @@ class FilterViewModel @Inject constructor(
             vm.launchAndGet(
                 EditOneStringUIState(
                     oldIngredientCat.name,
-                    "Редактировать название категории",
-                    "Введите название категории здесь..."
+                    context.getString(R.string.edit_category_name),
+                    context.getString(R.string.enter_category_name),
                 )
             ) { newName ->
                 ingredientCategoryRepository.updateName(newName, oldIngredientCat.id)
@@ -229,7 +226,7 @@ class FilterViewModel @Inject constructor(
         }
     }
 
-    private fun editTagCategory(oldTagCat: TagCategoryView) {
+    private fun editTagCategory(oldTagCat: TagCategoryView, context:Context) {
         val vm = EditOneStringViewModel()
         vm.mainViewModel = mainViewModel
         mainViewModel.onEvent(MainEvent.OpenDialog(vm))
@@ -237,8 +234,8 @@ class FilterViewModel @Inject constructor(
             vm.launchAndGet(
                 EditOneStringUIState(
                     oldTagCat.name,
-                    "Редактировать название категории",
-                    "Введите название категории здесь..."
+                    context.getString(R.string.edit_category_name),
+                    context.getString(R.string.enter_category_name),
                 )
             ) { newName ->
                 recipeTagCategoryRepository.updateName(newName, oldTagCat.id)
@@ -266,13 +263,14 @@ class FilterViewModel @Inject constructor(
         recipeTagRepository.update(oldTag.id, newName, newCategory.id)
     }
 
-    private fun editIngredient(ingredient: IngredientView) {
+    private fun editIngredient(context: Context, ingredient: IngredientView) {
         val vm = AddIngredientViewModel()
         vm.mainViewModel = mainViewModel
         mainViewModel.onEvent(MainEvent.OpenDialog(vm))
         val oldCategory = allIngredients.value.find { it.ingredientViews.contains(ingredient) }!!
         viewModelScope.launch {
-            vm.launchAndGet(ingredient, oldCategory, oldCategory) { newIngredientAndCategory ->
+            vm.launchAndGet(context,
+                ingredient, oldCategory, oldCategory) { newIngredientAndCategory ->
                 editIngredientDB(
                     ingredient,
                     newIngredientAndCategory.first,
@@ -355,12 +353,12 @@ class FilterViewModel @Inject constructor(
 
     /// CREATE
 
-    private fun toCreateTag() {
+    private fun toCreateTag(context:Context) {
         viewModelScope.launch {
             val vm = AddTagViewModel()
             vm.mainViewModel = mainViewModel
             mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-            val defCategoryView = allTags.value.find { it.name == "Без категории" }!!
+            val defCategoryView = allTags.value.find { it.name == context.getString(R.string.no_category) }!!
             vm.launchAndGet(state.searchText.value, null, defCategoryView) { tagData ->
                 insertNewTagInDB(tagData)
             }
@@ -373,7 +371,7 @@ class FilterViewModel @Inject constructor(
         if (newTag != null) onEvent(FilterEvent.SelectTag(newTag))
     }
 
-    private fun toCreateIngredient() {
+    private fun toCreateIngredient(context: Context,) {
         viewModelScope.launch {
             val vm = AddIngredientViewModel()
             vm.mainViewModel = mainViewModel
@@ -384,8 +382,8 @@ class FilterViewModel @Inject constructor(
                 name = state.searchText.value,
                 measure = ""
             )
-            val defCategoryView = allIngredients.value.find { it.name == "Без категории" }!!
-            vm.launchAndGet(oldIngredient, null, defCategoryView) { ingredientData ->
+            val defCategoryView = allIngredients.value.find { it.name == context.getString(R.string.no_category) }!!
+            vm.launchAndGet(context, oldIngredient, null, defCategoryView) { ingredientData ->
                 insertNewIngredientInDB(ingredientData)
             }
         }
@@ -402,7 +400,7 @@ class FilterViewModel @Inject constructor(
         if (newIngredient != null) onEvent(FilterEvent.SelectIngredient(newIngredient))
     }
 
-    private fun toCreateTagCategory() {
+    private fun toCreateTagCategory( context:Context) {
         viewModelScope.launch {
             val vm = EditOneStringViewModel()
             vm.mainViewModel = mainViewModel
@@ -410,8 +408,8 @@ class FilterViewModel @Inject constructor(
             vm.launchAndGet(
                 EditOneStringUIState(
                     state.searchText.value,
-                    "Добавить категорию",
-                    "Введите название категории здесь..."
+                    context.getString(R.string.add_category),
+                    context.getString(R.string.enter_category_name),
                 )
             ) { name ->
                 insertNewTagCategoryInDB(name)
@@ -425,7 +423,7 @@ class FilterViewModel @Inject constructor(
         if (tagCategoryView != null) onEvent(FilterEvent.SelectTagCategory(tagCategoryView))
     }
 
-    private fun toCreateIngredientCategory() {
+    private fun toCreateIngredientCategory(context:Context) {
         viewModelScope.launch {
             val vm = EditOneStringViewModel()
             vm.mainViewModel = mainViewModel
@@ -433,8 +431,8 @@ class FilterViewModel @Inject constructor(
             vm.launchAndGet(
                 EditOneStringUIState(
                     state.searchText.value,
-                    "Добавить категорию",
-                    "Введите название категории здесь..."
+                    context.getString(R.string.add_category),
+                    context.getString(R.string.enter_category_name),
                 )
             ) { name ->
                 insertNewIngredientCategoryInDB(name)

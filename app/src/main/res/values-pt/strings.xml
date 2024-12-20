@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Semana em um Prato</string>
+    <string name="done">Feito</string>
+    <string name="Portions">Porções</string>
+    <string name="portions_end_of_phrase">porções</string>
+    <string name="data_not_found">Nenhum dado</string>
+    <string name="add_day">Adicionar dia</string>
+    <string name="Change_number_of_servings">Alterar número de porções</string>
+    <string name="add">Adicionar</string>
+    <string name="apply">Confirmar</string>
+    <string name="Ingredient">Ingrediente</string>
+    <string name="Specify_ingredient">Especificar ingrediente</string>
+    <string name="message_non_validate_place_position_in_menu">Selecione uma data e refeição ou selecione a categoria Semanal</string>
+    <string name="message_select_ingredient">Selecione um ingrediente</string>
+    <string name="add_note">Adicionar nota</string>
+    <string name="title_edit_note">Texto da nota</string>
+    <string name="enter_text_note">Digite o texto aqui...</string>
+    <string name="select_day">Selecionar dia</string>
+    <string name="title_in_generally">Geral</string>
+    <string name="title_or_detailed">Ou mais detalhado</string>
+    <string name="title_eating">Comer:</string>
+    <string name="move_position">Mover posição</string>
+
+    <string name="add_to_menu">Adicionar ao menu</string>
+    <string name="add_recipe">Adicionar receita</string>
+    <string name="add_draft">Adicionar rascunho</string>
+    <string name="add_ingredient">Adicionar ingrediente</string>
+    <string name="edit">Editar</string>
+    <string name="move">Mover</string>
+    <string name="doubleR">Duplicar</string>
+    <string name="delete">Excluir</string>
+    <string name="add_shopping_cart">Adicionar às compras</string>
+    <string name="change_recipe">Alterar receita</string>
+    <string name="week_nav"><![CDATA[<- Semana]]></string>
+    <string name="day_nav"><![CDATA[<- Dia]]></string>
+    <string name="for_week">Por uma semana</string>
+    <string name="description">Explicação</string>
+    <string name="Pieces">Em pedaços...</string>
+    <string name="amount">Quantidade</string>
+    <string name="double_position">Posição duplicada</string>
+
+    <string name="add_position">Adicionar uma posição</string>
+    <string name="search_placeholder">O que estamos procurando?</string>
+    <string name="selected_positions">Posições selecionadas</string>
+    <string name="add_positions_voice_apply">Adicionar posições</string>
+    <string name="selected_tags"><![CDATA[Selected >]]></string>
+    <string name="specify_selection">Adicionar uma receita: selecionar uma refeição</string>
+    <string name="add_category">Adicionar uma categoria</string>
+    <string name="enter_category_name">Digite um nome de categoria aqui</string>
+    <string name="error_enter_title">Digite um nome</string>
+    <string name="change_start_recipe_time">Alterar hora de início da receita</string>
+    <string name="change_end_recipe_time">Alterar hora de término da receita</string>
+    <string name="increase_step_time">Estender tempo da etapa</string>
+    <string name="move_step_by_time_start">Atrasar hora de início desta etapa</string>
+    <string name="provide_link_to_image">Fornecer link para imagem</string>
+
+    <string name="select_from_gallery">Selecionar da galeria</string>
+    <string name="select_ingredients">Selecionar ingredientes</string>
+    <string name="cancel">Cancelar</string>
+    <string name="select_hours_and_minutes">Selecionar horas e minutos</string>
+    <string name="create_ingredient">Criar ingrediente</string>
+    <string name="ingredient_name">Nome do ingrediente</string>
+    <string name="enter_ingredient_name">Digite o nome do ingrediente</string>
+    <string name="is_this_a_liquid">Isto é um líquido?</string>
+    <string name="select_category">Selecionar categoria</string>
+    <string name="category">Categoria</string>
+
+    <string name="enter_image_link">Inserir link da imagem</string>
+    <string name="create_tag">Criar tag</string>
+    <string name="tag_name">Nome da tag</string>
+    <string name="enter_tag_name_here">Inserir nome da tag aqui</string>
+    <string name="plan_your_cooking">Planejar culinária</string>
+    <string name="choose_meal_times">Escolher horários das refeições</string>
+    <string name="meal_time_tip">* Os horários das refeições são usados ​​para classificar o menu</string>
+    <string name="ask_exit">Tem certeza de que deseja sair?</string>
+    <string name="exit_tip">As alterações não serão salvas quando você sair.</string>
+    <string name="stay">Ficar</string>
+    <string name="exit">Sair</string>
+
+    <string name="more_filters">Filtros adicionais</string>
+    <string name="only_favorites">Somente favoritos</string>
+    <string name="cook_time">Tempo de cozimento</string>
+    <string name="select_step">Selecionar etapa</string>
+    <string name="step">" etapa"</string>
+    <string name="sort">Classificar</string>
+    <string name="a_z_alphabetically">A-Z em ordem alfabética</string>
+    <string name="z_a_reverse_alphabetical">Z-A em ordem alfabética reversa</string>
+    <string name="from_old_to_new">Do antigo para o novo</string>
+    <string name="from_new_to_old">Do novo para o antigo</string>
+    <string name="random_order">Ordem aleatória</string>
+    <string name="_portions">" porções"</string>
+
+    <string name="seems_empty">Parece que está vazio..</string>
+    <string name="cook_planner_empty_tip"><![CDATA[Programar cozimento via: Receita no menu -> Mais -> Planejar cozimento]]></string>
+    <string name="recipe_description">Descrição da receita</string>
+    <string name="enter_recipe_description">Digite a descrição da receita</string>
+    <string name="recipe_name">Nome da receita</string>
+    <string name="enter_recipe_name">Digite o nome da receita</string>
+    <string name="add_photo">Adicionar foto</string>
+    <string name="portions_count">Número de porções</string>
+    <string name="ingredients">Ingredientes</string>
+
+    <string name="edit_ingredients">Editar ingredientes</string>
+    <string name="step_by_step_recipe">Receita passo a passo</string>
+    <string name="add_step">Adicionar etapa</string>
+    <string name="settings">Configurações</string>
+    <string name="next">Próximo</string>
+    <string name="make_photo">Tirar foto</string>
+    <string name="no_camera_hint">Não foi possível tirar foto, câmera não bloqueada</string>
+    <string name="recipe_duration">Duração do cozimento</string>
+    <string name="no_mic_hint">Microfone não detectado</string>
+    <string name="classic">Clássico</string>
+
+    <string name="Evening">Crepúsculo</string>
+    <string name="_create">"+ Criar: "</string>
+    <string name="necessarily">* este campo é obrigatório</string>
+    <string name="hour_small">" h"</string>
+    <string name="min_small">" min"</string>
+    <string name="tag_category_by_meal">Por refeição</string>
+    <string name="tag_category_by_cuisines_world"> Culinárias do mundo</string>
+    <string name="tag_category_by_advantages">Vantagens</string>
+    <string name="tag_category_by_cooking_method">Por método de cozimento</string>
+    <string name="tag_breakfast">Café da manhã</string>
+
+    <string name="tag_lunch">Almoço</string>
+    <string name="tag_dinner">Jantar</string>
+    <string name="tag_russian">Russo</string>
+    <string name="tag_american">Americano</string >
+    <string name="tag_asian">Asiático</string>
+    <string name="tag_light">Claro</string>
+    <string name="tag_fast">Rápido</string>
+
+    <string name="tag_inexpensive">Barato</string>
+    <string name="tag_in_oven">No forno</string>
+    <string name="tag_griddle">Fritar em frigideira</string>
+    <string name="tag_in_multicooker">Em multicooker</string>
+    <string name="tag_for_a_couple">Cozido no vapor</string>
+    <string name="tag_category_types_dishes">Tipos de pratos</string>
+    <string name="tag_first_course">Primeiro curso</string>
+    <string name="tag_second_course">Segundo curso</string>
+    <string name="tag_drink">Bebida</string>
+
+    <string name="tag_food_preparations">Preparações</string>
+    <string name="tag_bakery">Produtos assados</string>
+    <string name="tag_sauce">Molho</string>
+    <string name="mess_image_link_copied">Link da imagem copiado</string>
+    <string name="exit_selection_mode">Sair do modo de seleção</string>
+    <string name="mess_select_day_first">- Selecione um dia primeiro</string>
+    <string name="mess_specify_another_meal">Especificar outra refeição</string>
+    <string name="add_meal">Adicionar uma refeição</string>
+    <string name="hint_breakfast">Café da manhã...</string>
+
+    <string name="by_start">...começando a partir deste horário</string>
+    <string name="by_end">"...terminando neste horário "</string>
+    <string name="plan_cook">Programar cozimento</string>
+    <string name="time_cook">Horário de cozimento:</string>
+    <string name="get_recipe_done">Cozinhar receita ...</string>
+    <string name="select_time_cook">Selecionar horário de cozimento:</string>
+    <string name="shopping_list">Lista de compras</string>
+    <string name="bought">Comprado</string>
+
+    <string name="hint_empty">Parece que está vazio...</string>
+    <string name="hint_add_to_shopping_list">Clique em + para adicionar ingredientes à sua lista de compras.</string>
+    <string name="hint_cannot_undone">Esta ação não pode ser desfeita.</string>
+    <string name="hint_clear_shopping_list">Limpar compras lista?</string>
+    <string name="share_via">Compartilhar via:</string>
+    <string name="share_text_title">Lista de compras:</string>
+
+    <string name="signature">Exportado do aplicativo \"Semana em um prato\" - livro de receitas, planejamento de menu e lista de compras. Apenas para as receitas mais favoritas e comprovadas! (⁠灬⁠º⁠‿⁠º⁠灬⁠)⁠♡</string>
+    <string name="change_theme">Alterar tema</string>
+    <string name="change_std_portions">Alterar porções padrão</string>
+    <string name="edit_meals">Editar refeições</string>
+    <string name="rate_app">Avaliar o aplicativo</string>
+
+    //todo
+    <string name="pp">Política de privacidade</string>
+    <string name="terms_of_use">Termos de uso</string>
+
+    <string name="no_result">Nenhum resultado para esta consulta</string>
+    <string name="create_recipe">"Criar receita"</string>
+    <string name="special">Especial</string>
+
+    <string name="all_recipes">Todas as receitas</string>
+    <string name="random">Aleatório</string>
+    <string name="favorite_recipes">Favoritos</string>
+    <string name="step_by_step">Passo a passo</string>
+    <string name="recipe_composition">Composição</string>
+    <string name="source">Fonte</string>
+    <string name="page_is_loading">A página está carregando</string>
+    <string name="no_source">Fonte não adicionada</string>
+    <string name="description_title">Descrição</string>
+    <string name="count">Quantidade</string>
+
+    <string name="edit_image_link">Editar link da imagem</string>
+    <string name="enter_new_image_link">Digite um novo link de imagem</string>
+    <string name="ml">ml</string>
+    <string name="no_category">Sem categoria</string>
+    <string name="photo">Foto</string>
+    <string name="select_photo">Selecionar foto</string>
+    <string name="set_meal_time">Definir horário da refeição</string>
+    <string name="under">antes </string>
+
+    <string name="edit_meal">Editar refeição</string>
+    <string name="edit_permanent_meals">Configurar refeições permanentes</string>
+    <string name="tags">Tags</string>
+    <string name="source_title">Fonte da receita, link</string>
+    <string name="enter_recipe_link">Inserir link da receita</string>
+    <string name="recipe">Receita</string>
+    <string name="step_">" Etapa"</string>
+    <string name="enter_step_description">Inserir descrição da etapa</string>
+    <string name="edit_pinned_ingredients">Editar ingredientes fixados</string>
+    <string name="timer">Temporizador</string>
+
+    <string name="edit_tags">Editar tags</string>
+    <string name="recipe_creation">Criar receita</string>
+    <string name="recipe_edition">Editar receita</string>
+    <string name="search_be_name_recipe_in_internet">Pesquisar nome da receita on-line</string>
+    <string name="search_again">Pesquisar novamente</string>
+    <string name="inventory">Inventário</string>
+    <string name="select_items_for_add_to_shopping_list">Selecionar itens para adicionar à lista de compras</string>
+    <string name="last_edit">"Última edição: "</string>
+    <string name="_in">" em "</string>
+
+    <string name="add_recipe_to_menu">Adicionar receita ao menu</string>
+    <string name="ingredients_for">Ingredientes para</string>
+    <string name="edit_time_cook_recipe">Configuração do tempo de cozimento</string>
+    <string name="all_cook_time">"Tempo total de cozimento: "</string>
+    <string name="duration">Duração</string>
+    <string name="no_ingredients">Nenhum ingrediente na composição.</string>
+    <string name="cooking">Cozinhando:</string>
+    <string name="share">Compartilhar via:</string>
+    <string name="delete_alert">Tem certeza de que deseja excluir esta receita?\n Observe que excluir uma receita também excluirá todos os itens com ela no menu.\n Esta ação não pode ser desfeita.</string>
+    <string name="edit_meal_name">Editar nome da refeição</string>
+    <string name="edit_note">Editar nota</string>
+
+    <string name="delete_ingredient">Tem certeza de que deseja excluir este ingrediente?\n Observe que excluir um ingrediente o removerá de receitas, menus (itens para este ingrediente, em esboços) e da lista de compras.\n Esta ação não pode ser desfeita.</string>
+    <string name="edit_category_name">Editar nome da categoria</string>
+    <string name="delete_tag">Tem certeza de que deseja excluir esta tag?\n Observe que excluir uma tag a removerá de todos os esboços e receitas.\n Esta ação não pode ser desfeita.</string>
+    <string name="delete_apply">Tem certeza de que deseja excluir?</string>
+    <string name="set_timer">Por quanto tempo o timer deve ser definido?</string>
+    <string name="when_recipe_start">A que horas devo começar a cozinhar?</string>
+    <string name="when_recipe_end">Quando calcular o cozimento?</string>
+    <string name="gram">gr</string>
+
+    <string name="kilogram">kg</string>
+    <string name="milliliter">ml</string>
+    <string name="liter">l</string>
+    <string name="ingredient_category_meat_and_poultry">Carne e aves</string>
+    <string name="ingredient_category_fish_and_seafood">Peixes e frutos do mar</string>
+    <string name="ingredient_category_vegetables">Vegetais</string>
+    <string name="ingredient_category_fruits">Frutas</string>
+    <string name="ingredient_category_greens_and_herbs">Verduras e ervas</string>
+    <string name="ingredient_category_dairy_products">Produtos lácteos</string>
+    <string name="ingredient_category_cereals_and_grains">Cereais e grãos</string>
+
+    <string name="ingredient_category_legumes">Legumes</string>
+    <string name="ingredient_category_nuts_and_seeds">Nozes e Sementes</string>
+    <string name="ingredient_category_spices_and_seasonings">Especiarias e Temperos</string>
+    <string name="ingredient_category_sauces_and_oils">Molhos e Óleos</string>
+    <string name="ingredient_category_baked_goods_and_desserts">Produtos Assados ​​e Sobremesas</string>
+    <string name="ingredient_category_liquids">Líquidos</string>
+    <string name="ingredient_chicken">Frango</string>
+
+    <string name="ingredient_beef">Carne bovina</string>
+    <string name="ingredient_pork">Carne de porco</string>
+    <string name="ingredient_lamb">Cordeiro</string>
+    <string name="ingredient_turkey">Peru</string>
+    <string name="ingredient_chicken_breasts">Peitos de frango</string>
+    <string name="ingredient_salmon">Salmão</string>
+    <string name="ingredient_tuna">Atum</string>
+    <string name="ingredient_shrimp">Camarão</string>
+
+    <string name="ingredient_cod">Bacalhau</string>
+    <string name="ingredient_mackerel">Cavala</string>
+    <string name="ingredient_trout">Truta</string>
+    <string name="ingredient_potatoes">Batatas</string>
+    <string name="ingredient_onion">Cebola</string>
+    <string name="ingredient_carrot">Cenoura</string>
+    <string name="ingredient_garlic">Alho</string>
+    <string name="ingredient_tomatoes">Tomates</string>
+
+    <string name="ingredient_cucumbers">Pepinos</string>
+    <string name="ingredient_dill">Endo</string>
+    <string name="ingredient_broccoli">Brócolis</string>
+    <string name="ingredient_apples">Maçãs</string>
+    <string name="ingredient_bananas">Bananas</string>
+    <string name="ingredient_lemons">Limões</string>
+    <string name="ingredient_oranges">Laranjas</string>
+    <string name="ingredient_strawberries">Morangos</string>
+    <string name="ingredient_pears">Peras</string>
+    <string name="ingredient_parsley">Salsa</string>
+    <string name="ingredient_basil">Manjericão</string>
+
+    <string name="ingredient_thyme">Tomilho</string>
+    <string name="ingredient_oregano">Orégano</string>
+    <string name="ingredient_mint">Hortelã</string>
+    <string name="ingredient_milk">Leite</string>
+    <string name="ingredient_butter">Manteiga</string>
+    <string name="ingredient_cottage_cheese">Queijo cottage</string>
+    <string name="ingredient_cheese">Queijo</string>
+    <string name="ingredient_cream">Creme</string>
+    <string name="ingredient_sour_cream">Creme de leite</string>
+    <string name="ingredient_rice">Arroz</string>
+    <string name="ingredient_pasta">Massa</string>
+    <string name="ingredient_oatmeal">Aveia</string>
+
+    <string name="ingredient_quinoa">Quinoa</string>
+    <string name="ingredient_buckwheat">Trigo-sarraceno</string>
+    <string name="ingredient_bulgur">Bulgur</string>
+    <string name="ingredient_beans">Feijões</string>
+    <string name="ingredient_peas">Ervilhas</string>
+    <string name="ingredient_lentils">Lentilhas</string>
+    <string name="ingredient_chickpeas">Grão-de-bico</string>
+    <string name="ingredient_soybeans">Soja</string>
+    <string name="ingredient_almonds">Amêndoas</string>
+    <string name="ingredient_walnuts">Nozes</string>
+    <string name="ingredient_hazelnuts">Avelãs</string>
+
+    <string name="ingredient_sunflower_seeds">Sementes de girassol</string>
+    <string name="ingredient_pine_nuts">Pinhões</string>
+    <string name="ingredient_salt">Sal</string>
+    <string name="ingredient_black_pepper">Pimenta preta</string>
+    <string name="ingredient_paprika">Páprica</string>
+    <string name="ingredient_cinnamon">Canela</string>
+    <string name="ingredient_ginger">Gengibre</string>
+    <string name="ingredient_turmeric">Cúrcuma</string>
+    <string name="ingredient_olive_oil">Azeite de oliva</string>
+    <string name="ingredient_soy_sauce">Molho de soja</string>
+
+    <string name="ingredient_ketchup">Ketchup</string>
+    <string name="ingredient_mayonnaise">Maionese</string>
+    <string name="ingredient_mustard">Mostarda</string>
+    <string name="ingredient_flour">Farinha</string>
+    <string name="ingredient_sugar">Açúcar</string>
+    <string name="ingredient_yeast">Levedura</string>
+    <string name="ingredient_eggs">Ovos</string>
+    <string name="ingredient_honey">Mel</string>
+    <string name="ingredient_bread">Pão</string>
+    <string name="ingredient_water">Água</string>
+    <string name="ingredient_broth">Caldo</string>
+</resources>

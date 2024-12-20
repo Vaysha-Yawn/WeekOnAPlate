@@ -13,8 +13,10 @@ import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import week.on.a.plate.R
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.EditTextLine
 import week.on.a.plate.core.uitools.TextBody
@@ -25,15 +27,15 @@ import week.on.a.plate.screens.createRecipe.state.RecipeCreateUIState
 @Composable
 fun SourceRecipeEdit(state: RecipeCreateUIState, onEvent: (RecipeCreateEvent) -> Unit) {
     Column(Modifier.padding(horizontal =  24.dp)) {
-        TextBody(text = "Источник рецепта, ссылка")
+        TextBody(text = stringResource(R.string.source_title))
         Spacer(modifier = Modifier.height(12.dp))
-        EditTextLine(text = state.source, placeholder = "Введите ссылку на рецепт")
+        EditTextLine(text = state.source, placeholder = stringResource(R.string.enter_recipe_link))
     }
 }
 
 @Composable
 fun TabCreateRecipe(state: RecipeCreateUIState, onEvent: (RecipeCreateEvent) -> Unit){
-    val tabTitles = listOf("Рецепт", "Источник")
+    val tabTitles = listOf(stringResource(R.string.recipe), stringResource(R.string.source))
     TabRow( modifier = Modifier.fillMaxWidth(),
         selectedTabIndex = state.activeTabIndex.intValue,
         indicator = { tabPositions ->

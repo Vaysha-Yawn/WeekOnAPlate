@@ -6,8 +6,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import week.on.a.plate.R
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextTitle
@@ -18,13 +20,13 @@ import week.on.a.plate.screens.searchRecipes.view.resultScreen.TagList
 
 @Composable
 fun TagsRecipeEdit(state: RecipeCreateUIState, onEvent: (RecipeCreateEvent) -> Unit) {
-    TextTitle(text = "Тэги")
+    TextTitle(text = stringResource(R.string.tags))
     if (state.tags.value.isNotEmpty()) {
         Spacer(modifier = Modifier.height(12.dp))
         TagList(state.tags.value, listOf())
     }
     Spacer(modifier = Modifier.height(12.dp))
-    CommonButton(text = "Редактировать тэги") {
+    CommonButton(text = stringResource(R.string.edit_tags)) {
         onEvent(RecipeCreateEvent.EditTags)
     }
 }

@@ -15,6 +15,7 @@ class RecipeDetailsState() {
     val ingredientsCounts = mutableStateOf<List<IngredientInRecipeView>>(listOf())
     val activeTabIndex = mutableIntStateOf(0)
     val currentPortions = mutableIntStateOf(2)
+    val isFavorite = mutableStateOf<Boolean>(false)
     val mapPinnedStepIdToIngredients: MutableState<Map<Long, List<IngredientInRecipeView>>> = mutableStateOf(
         mapOf()
     )

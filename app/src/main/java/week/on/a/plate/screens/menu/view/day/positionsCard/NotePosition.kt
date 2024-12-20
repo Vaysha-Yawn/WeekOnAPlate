@@ -16,6 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
@@ -31,13 +32,14 @@ fun WeekNotePosition(
     note: Position.PositionNoteView,
     onEvent: (event: Event) -> Unit
 ) {
+    val context = LocalContext.current
     Column(
         Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(20.dp))
             .padding(20.dp)
             .combinedClickable(
-                onClick = { onEvent(week.on.a.plate.screens.menu.event.MenuEvent.EditOtherPosition(note)) },
+                onClick = { onEvent(week.on.a.plate.screens.menu.event.MenuEvent.EditOtherPosition(note, context)) },
                 onLongClick = { onEvent(WrapperDatePickerEvent.SwitchEditMode) },
             ),
         horizontalAlignment = Alignment.Start,
@@ -50,7 +52,7 @@ fun WeekNotePosition(
                     .size(24.dp),
             )
             MoreButton {
-                onEvent(week.on.a.plate.screens.menu.event.MenuEvent.EditPositionMore(note))
+                onEvent(week.on.a.plate.screens.menu.event.MenuEvent.EditPositionMore(note, context))
             }
         }
         Spacer(modifier = Modifier.size(12.dp))

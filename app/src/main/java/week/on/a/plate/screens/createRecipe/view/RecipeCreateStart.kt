@@ -3,7 +3,9 @@ package week.on.a.plate.screens.createRecipe.view
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -79,7 +81,12 @@ fun RecipeCreateStart(viewModel: RecipeCreateViewModel) {
                         Spacer(modifier = Modifier.height(24.dp))
                         DescriptionRecipeEdit(viewModel.state, onEvent)
                         Spacer(modifier = Modifier.height(24.dp))
-                        PortionsRecipeEdit(viewModel.state, onEvent)
+
+                        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
+                            RecipeDurationEdit(Modifier.weight(1f), viewModel.state, onEvent)
+                            PortionsRecipeEdit(Modifier.weight(1f), viewModel.state, onEvent)
+                        }
+
                         Spacer(modifier = Modifier.height(24.dp))
                         TagsRecipeEdit(viewModel.state, onEvent)
                     }

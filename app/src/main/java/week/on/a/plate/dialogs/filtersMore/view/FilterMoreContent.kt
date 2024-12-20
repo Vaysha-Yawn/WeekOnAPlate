@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,6 +27,7 @@ import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.TagSmall
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextTitle
+import week.on.a.plate.core.utils.timeToString
 import week.on.a.plate.dialogs.filtersMore.logic.FiltersMoreViewModel
 import week.on.a.plate.screens.filters.view.clickNoRipple
 
@@ -66,11 +68,11 @@ fun FilterMoreContent(vm: FiltersMoreViewModel) {
         Spacer(Modifier.height(24.dp))
 
         val listTime = listOf(
-            Pair("до 15 мин", 15),
-            Pair("до 30 мин", 30),
-            Pair("до 1 ч", 60),
-            Pair("до 1 ч и 30 мин", 90),
-            Pair("до 2 ч", 120),
+            15,
+            30,
+            60,
+            90,
+            120,
         )
 
         TextBody(stringResource(R.string.cook_time))
@@ -82,14 +84,15 @@ fun FilterMoreContent(vm: FiltersMoreViewModel) {
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun TagsListFilterTime(value: MutableIntState, listTags: List<Pair<String, Int>>) {
+fun TagsListFilterTime(value: MutableIntState, listTime: List<Int>) {
     FlowRow() {
-        listTags.forEach {
-            TagFilterTime(value.intValue, it.second, it.first) {
-                if (value.intValue == it.second) {
+        listTime.forEach {
+            val text = stringResource(R.string.under) +(it*60).timeToString(LocalContext.current)
+            TagFilterTime(value.intValue, it, text) {
+                if (value.intValue == it) {
                     value.intValue = 0
                 } else {
-                    value.intValue = it.second
+                    value.intValue = it
                 }
             }
         }

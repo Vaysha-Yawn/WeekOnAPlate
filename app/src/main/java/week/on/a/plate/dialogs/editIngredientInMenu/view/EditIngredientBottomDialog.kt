@@ -71,7 +71,7 @@ fun EditOrAddIngredientBottomDialogContent(
         }
         Spacer(modifier = Modifier.height(12.dp))
         TextBody(
-            text = "Описание",
+            text = stringResource(R.string.description_title),
             modifier = Modifier.padding(horizontal = 36.dp)
         )
         Spacer(modifier = Modifier.height(12.dp))
@@ -82,7 +82,7 @@ fun EditOrAddIngredientBottomDialogContent(
         )
 
         TextBody(
-            text = "Колличество" + if (state.ingredientState.value != null) {
+            text = stringResource(R.string.count) + if (state.ingredientState.value != null) {
                 ", " + state.ingredientState.value!!.measure
             } else "",
             modifier = Modifier.padding(horizontal = 36.dp)

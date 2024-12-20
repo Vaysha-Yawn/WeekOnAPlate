@@ -50,7 +50,7 @@ import week.on.a.plate.dialogs.setTheme.event.SetThemeEvent
 import week.on.a.plate.dialogs.setTheme.logic.SetThemesViewModel
 import week.on.a.plate.dialogs.sortMore.event.SortMoreEvent
 import week.on.a.plate.dialogs.sortMore.logic.SortMoreViewModel
-import week.on.a.plate.screens.calendarMy.event.CalendarMyEvent
+import week.on.a.plate.dialogs.calendarMy.event.CalendarMyEvent
 import java.util.Stack
 import javax.inject.Inject
 

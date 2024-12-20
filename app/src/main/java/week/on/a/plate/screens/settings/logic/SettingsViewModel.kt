@@ -13,6 +13,7 @@ import week.on.a.plate.dialogs.setTheme.logic.SetThemesViewModel
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.preference.PreferenceUseCase
+import week.on.a.plate.screens.documentsWeb.navigation.DocumentsWebDestination
 import week.on.a.plate.screens.settings.event.SettingsEvent
 import week.on.a.plate.screens.settings.state.SettingsUIState
 import javax.inject.Inject
@@ -48,6 +49,7 @@ class SettingsViewModel @Inject constructor(val dao: CategorySelectionDAO) : Vie
             is SettingsEvent.SetStdPortionsCount -> setStdPortionsCount(event.context)
             is SettingsEvent.Theme -> theme(event.context)
             is SettingsEvent.Tutorial -> tutorial(event.context)
+            SettingsEvent.TermsOfUse -> termsOfUse()
         }
     }
 
@@ -68,7 +70,13 @@ class SettingsViewModel @Inject constructor(val dao: CategorySelectionDAO) : Vie
     }
 
     private fun privacyPolicy(context: Context) {
+        mainViewModel.documentsWebViewModel.launch(true)
+        mainViewModel.nav.navigate(DocumentsWebDestination)
+    }
 
+    private fun termsOfUse() {
+        mainViewModel.documentsWebViewModel.launch(false)
+        mainViewModel.nav.navigate(DocumentsWebDestination)
     }
 
     private fun profile(context: Context) {

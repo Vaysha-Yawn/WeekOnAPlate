@@ -5,8 +5,8 @@ import androidx.compose.ui.graphics.Color
 
 
 
-class ColorPaletteGroup (
-    val name:String,
+class ColorPaletteGroup(
+    val name: Int,
     val light:ColorPalette,
     val dark:ColorPalette,
 ){

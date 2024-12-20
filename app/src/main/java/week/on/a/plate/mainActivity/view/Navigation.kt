@@ -21,6 +21,8 @@ import week.on.a.plate.screens.createRecipe.navigation.RecipeCreateDestination
 import week.on.a.plate.screens.createRecipe.view.RecipeCreateStart
 import week.on.a.plate.screens.deleteApply.navigation.DeleteApplyDestination
 import week.on.a.plate.screens.deleteApply.view.DeleteApplyStart
+import week.on.a.plate.screens.documentsWeb.navigation.DocumentsWebDestination
+import week.on.a.plate.screens.documentsWeb.view.DocumentsWebStart
 import week.on.a.plate.screens.filters.event.FilterEvent
 import week.on.a.plate.screens.inventory.navigation.InventoryDestination
 import week.on.a.plate.screens.inventory.view.InventoryStart
@@ -28,8 +30,6 @@ import week.on.a.plate.screens.menu.event.MenuEvent
 import week.on.a.plate.screens.menu.view.main.MenuScreen
 import week.on.a.plate.screens.recipeDetails.navigation.RecipeDetailsDestination
 import week.on.a.plate.screens.recipeDetails.view.start.RecipeDetailsStart
-import week.on.a.plate.screens.recipeTimeline.navigation.RecipeTimelineDestination
-import week.on.a.plate.screens.recipeTimeline.view.RecipeTimelineStart
 import week.on.a.plate.screens.searchRecipes.event.SearchScreenEvent
 import week.on.a.plate.screens.searchRecipes.view.main.SearchStart
 import week.on.a.plate.screens.settings.view.SettingsStart
@@ -108,19 +108,13 @@ fun Navigation(
             TutorialStart(viewModel.tutorialViewModel)
         }
 
-        composable<RecipeTimelineDestination> {
-            viewModel.isActiveBaseScreen.value = false
-            viewModel.isActivePlusButton.value = false
-            viewModel.isActiveFilterScreen.value = false
-            RecipeTimelineStart(viewModel.recipeTimelineViewModel)
-        }
-
         composable<FilterDestination>() {
+            val context = LocalContext.current
             viewModel.isActiveBaseScreen.value = false
             viewModel.isActivePlusButton.value = true
             viewModel.isActiveFilterScreen.value = true
             viewModel.actionPlusButton.value =
-                { viewModel.filterViewModel.onEvent(FilterEvent.CreateActive) }
+                { viewModel.filterViewModel.onEvent(FilterEvent.CreateActive(context)) }
             FilterStart(viewModel.filterViewModel)
         }
 
@@ -157,6 +151,13 @@ fun Navigation(
             viewModel.isActivePlusButton.value = false
             viewModel.isActiveFilterScreen.value = false
             SpecifyForCookPlanStart(viewModel.specifyRecipeToCookPlanViewModel)
+        }
+
+        composable<DocumentsWebDestination> {
+            viewModel.isActiveBaseScreen.value = false
+            viewModel.isActivePlusButton.value = false
+            viewModel.isActiveFilterScreen.value = false
+            DocumentsWebStart(viewModel.documentsWebViewModel)
         }
     }
 }

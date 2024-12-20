@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    //todo
+    <string name="app_name">Week on a Plate</string>
+    <string name="done">完了</string>
+    <string name="Portions">サービング</string>
+    <string name="portions_end_of_phrase">サービング</string>
+    <string name="data_not_found">​​データなし</string>
+    <string name="add_day">日付を追加</string>
+    <string name="Change_number_of_servings">サービング数を変更</string>
+    <string name="add">追加</string>
+    <string name="apply">確認</string>
+    <string name="Ingredient">材料</string>
+    <string name="Specify_ingredient">材料を指定</string>
+    <string name="message_non_validate_place_position_in_menu">日付と食事を選択するか、カテゴリを選択してください 週ごと</string>
+    <string name="message_select_ingredient">材料を選択してください</string>
+    <string name="add_note">追加メモ</string>
+    <string name="title_edit_note">メモのテキスト</string>
+    <string name="enter_text_note">ここにテキストを入力...</string>
+    <string name="select_day">日付を選択</string>
+    <string name="title_in_generally">一般</string>
+    <string name="title_or_detailed">または詳細</string>
+    <string name="title_eating">食事:</string>
+    <string name="move_position">位置を移動</string>
+
+    <string name="add_to_menu">メニューに追加</string>
+    <string name="add_recipe">レシピを追加</string>
+    <string name="add_draft">下書きを追加</string>
+    <string name="add_ingredient">材料を追加</string>
+    <string name="edit">編集</string>
+    <string name="move">移動</string>
+    <string name="doubleR">複製</string>
+    <string name="delete">削除</string>
+    <string name="add_shopping_cart">ショッピングに追加</string>
+    <string name="change_recipe">レシピを変更</string>
+    <string name="week_nav"><![CDATA[<- Week]]></string>
+    <string name="day_nav"><![CDATA[<- Day]]></string>
+    <string name="for_week">1 週間</string>
+    <string name="description">説明</string>
+    <string name="Pieces">In個数...</string>
+    <string name="amount">数量</string>
+    <string name="double_position">重複したポジション</string>
+
+    <string name="add_position">ポジションを追加</string>
+    <string name="search_placeholder">何をお探しですか?</string>
+    <string name="selected_positions">選択したポジション</string>
+    <string name="add_positions_voice_apply">ポジションを追加</string>
+    <string name="selected_tags"><![CDATA[選択済み >]]></string>
+    <string name="specify_selection">レシピを追加: 食事を選択</string>
+    <string name="add_category">カテゴリを追加</string>
+    <string name="enter_category_name">カテゴリ名をここに入力</string>
+    <string name="error_enter_title">名前を入力してください</string>
+    <string name="change_start_recipe_time">レシピの開始時間を変更</string>
+    <string name="change_end_recipe_time">レシピの終了時間を変更する</string>
+    <string name="increase_step_time">ステップ時間を延長する</string>
+    <string name="move_step_by_time_start">このステップの開始時間を遅らせる</string>
+    <string name="provide_link_to_image">画像へのリンクを提供する</string>
+
+    <string name="select_from_gallery">ギャラリーから選択</string>
+    <string name="select_ingredients">材料を選択</string>
+    <string name="cancel">キャンセル</string>
+    <string name="select_hours_and_minutes">時間と分を選択</string>
+    <string name="create_ingredient">材料を作成</string>
+    <string name="ingredient_name">材料名</string>
+    <string name="enter_ingredient_name">材料名を入力</string>
+    <string name="is_this_a_liquid">これは液体ですか?</string>
+    <string name="select_category">カテゴリを選択</string>
+    <string name="category">カテゴリ</string>
+
+    <string name="enter_image_link">画像リンクを入力</string>
+    <string name="create_tag">タグを作成</string>
+    <string name="tag_name">タグ名</string>
+    <string name="enter_tag_name_here">タグ名を入力</string>
+    <string name="plan_your_cooking">調理計画</string>
+    <string name="choose_meal_times">食事時間を選択</string>
+    <string name="meal_time_tip">* 食事時間はメニューの並べ替えに使用されます</string>
+    <string name="ask_exit">終了してもよろしいですか?</string>
+    <string name="exit_tip">終了すると変更は保存されません。</string>
+    <string name="stay">滞在</string>
+    <string name="exit">終了</string>
+
+    <string name="more_filters">追加フィルター</string>
+    <string name="only_favorites">お気に入りのみ</string>
+    <string name="cook_time">調理時間</string>
+    <string name="select_step">ステップを選択</string>
+    <string name="step">" ステップ"</string>
+    <string name="sort">並べ替え</string>
+    <string name="a_z_alphabetically">A-Z アルファベット順</string>
+    <string name="z_a_reverse_alphabetical">Z-A 逆アルファベット順</string>
+    <string name="from_old_to_new">古い順から新しい順</string>
+    <string name="from_new_to_old">新しい順から古い順</string>
+    <string name="random_order">ランダム順</string>
+    <string name="_portions">" ポーション"</string>
+
+    <string name="seems_empty">空のようです。</string>
+    <string name="cook_planner_empty_tip"><![CDATA[調理のスケジュール設定: メニューのレシピ -> その他 -> 調理の計画]]></string>
+    <string name="recipe_description">レシピの説明</string>
+    <string name="enter_recipe_description">レシピの説明を入力</string>
+    <string name="recipe_name">レシピ名</string>
+    <string name="enter_recipe_name">レシピ名を入力</string>
+    <string name="add_photo">写真を追加</string>
+    <string name="portions_count">人数</string>
+    <string name="ingredients">材料</string>
+
+    <string name="edit_ingredients">材料を編集</string>
+    <string name="step_by_step_recipe">レシピのステップバイステップ</string>
+    <string name="add_step">ステップを追加</string>
+    <string name="settings">設定</string>
+    <string name="next">次へ</string>
+    <string name="make_photo">写真を撮る</string>
+    <string name="no_camera_hint">写真を撮ることができませんでした。カメラが検出されませんでした</string>
+    <string name="recipe_duration">調理時間</string>
+    <string name="no_mic_hint">マイクが検出されませんでした</string>
+    <string name="classic">クラシック</string>
+
+    <string name="Evening">トワイライト</string>
+    <string name="_create">"+ 作成する: "</string>
+    <string name="necessarily">* このフィールドは必須です</string>
+    <string name="hour_small">" h"</string>
+    <string name="min_small">" min"</string>
+    <string name="tag_category_by_meal">食事別</string>
+    <string name="tag_category_by_cuisines_world">世界の料理</string>
+    <string name="tag_category_by_advantages">利点</string>
+    <string name="tag_category_by_cooking_method">調理方法別</string>
+    <string name="tag_breakfast">朝食</string>
+
+    <string name="tag_lunch">昼食</string>
+    <string name="tag_dinner">夕食</string>
+    <string name="tag_russian">ロシア料理</string>
+    <string name="tag_american">アメリカ料理</string>
+    <string name="tag_asian">アジア料理</string>
+    <string name="tag_light">ライト</string>
+    <string name="tag_fast">ファスト</string>
+
+    <string name="tag_inexpensive">安価</string>
+    <string name="tag_in_oven">オーブンで</string>
+    <string name="tag_griddle">フライパンで揚げる</string>
+    <string name="tag_in_multicooker">マルチクッカーで</string>
+    <string name="tag_for_a_couple">蒸し料理</string>
+    <string name="tag_category_types_dishes">料理の種類</string>
+    <string name="tag_first_course">ファーストコース</string>
+    <string name="tag_second_course">セカンドコース</string>
+    <string name="tag_drink">ドリンク</string>
+
+    <string name="tag_food_preparations">準備</string>
+    <string name="tag_bakery">焼き菓子</string>
+    <string name="tag_sauce">ソース</string>
+    <string name="mess_image_link_copied">画像リンクをコピーしました</string>
+    <string name="exit_selection_mode">選択モードを終了</string>
+    <string name="mess_select_day_first">- 最初に曜日を選択してください</string>
+    <string name="mess_specify_another_meal">別の食事を指定</string>
+    <string name="add_meal">食事を追加</string>
+    <string name="hint_breakfast">朝食...</string>
+
+    <string name="by_start">...この時間から開始</string>
+    <string name="by_end">"...この時間までに終了"</string>
+    <string name="plan_cook">調理のスケジュール</string>
+    <string name="time_cook">調理時間:</string>
+    <string name="get_recipe_done">レシピを調理...</string>
+    <string name="select_time_cook">調理時間を選択:</string>
+    <string name="shopping_list">買い物リスト</string>
+    <string name="bought">購入済み</string>
+
+    <string name="hint_empty">空のようです...</string>
+    <string name="hint_add_to_shopping_list">+ をクリックして買い物リストに材料を追加します。</string>
+    <string name="hint_cannot_undone">この操作は元に戻せません。</string>
+    <string name="hint_clear_shopping_list">買い物リストをクリアしますか?</string>
+    <string name="share_via">共有方法:</string>
+    <string name="share_text_title">買い物リスト:</string>
+
+    <string name="signature">「Week on a Plate」アプリからエクスポート - レシピブック、メニュー計画、買い物リスト。最も人気があり、実績のあるレシピのみ！ (⁠灬⁠º⁠‿⁠º⁠灬⁠)⁠♡</string>
+    <string name="change_theme">テーマを変更</string>
+    <string name="change_std_portions">標準分量を変更</string>
+    <string name="edit_meals">食事を編集</string>
+    <string name="rate_app">アプリを評価する</string>
+
+    //todo
+    <string name="pp">プライバシーポリシー</string>
+    <string name="terms_of_use">利用規約</string>
+
+    <string name="no_result">このクエリに該当する結果はありません</string>
+    <string name="create_recipe">「レシピを作成」</string>
+    <string name="special">スペシャル</string>
+
+    <string name="all_recipes">すべてのレシピ</string>
+    <string name="random">ランダム</string>
+    <string name="favorite_recipes">お気に入り</string>
+    <string name="step_by_step">ステップバイステップ</string>
+    <string name="recipe_composition">構成</string>
+    <string name="source">ソース</string>
+    <string name="page_is_loading">ページを読み込んでいます</string>
+    <string name="no_source">ソースが追加されていません</string>
+    <string name="description_title">説明</string>
+    <string name="count">数量</string>
+
+    <string name="edit_image_link">画像リンクを編集</string>
+    <string name="enter_new_image_link">新しい画像リンクを入力</string>
+    <string name="ml">ml</string>
+    <string name="no_category">未分類</string>
+    <string name="photo">写真</string>
+    <string name="select_photo">写真を選択</string>
+    <string name="set_meal_time">食事時間を設定</string>
+    <string name="under">before</string>
+
+    <string name="edit_meal">食事を編集</string>
+    <string name="edit_permanent_meals">永続的な食事の設定</string>
+    <string name="tags">タグ</string>
+    <string name="source_title">レシピのソース、リンク</string>
+    <string name="enter_recipe_link">レシピのリンクを入力</string>
+    <string name="recipe">レシピ</string>
+    <string name="step_">" ステップ"</string>
+    <string name="enter_step_description">ステップの説明を入力</string>
+    <string name="edit_pinned_ingredients">ピン留めした材料を編集</string>
+    <string name="timer">タイマー</string>
+
+    <string name="edit_tags">タグを編集</string>
+    <string name="recipe_creation">レシピを作成</string>
+    <string name="recipe_edition">レシピを編集</string>
+    <string name="search_be_name_recipe_in_internet">レシピ名をオンラインで検索</string>
+    <string name="search_again">再検索</string>
+    <string name="inventory">在庫</string>
+    <string name="select_items_for_add_to_shopping_list">買い物リストに追加するアイテムを選択</string>
+    <string name="last_edit">最終編集: </string>
+    <string name="_in"> 内 </string>
+
+    <string name="add_recipe_to_menu">メニューにレシピを追加</string>
+    <string name="ingredients_for">材料</string>
+    <string name="edit_time_cook_recipe">調理時間設定</string>
+    <string name="all_cook_time">"調理時間合計: "</string>
+    <string name="duration">所要時間</string>
+    <string name="no_ingredients">材料は含まれていません。</string>
+    <string name="cooking">調理:</string>
+    <string name="share">共有方法:</string>
+    <string name="delete_alert">このレシピを削除してもよろしいですか?\n レシピを削除すると、メニュー内のレシピを含むすべてのアイテムも削除されますのでご注意ください。\n この操作は元に戻せません。</string>
+    <string name="edit_meal_name">食事名の編集</string>
+    <string name="edit_note">メモの編集</string>
+
+    <string name="delete_ingredient">この材料を削除してもよろしいですか?\n 材料を削除すると、レシピ、メニュー (スケッチ内のこの材料の項目)、および買い物リストから削除されます。\n この操作は元に戻せません。</string>
+    <string name="edit_category_name">カテゴリ名の編集</string>
+    <string name="delete_tag">このタグを削除してもよろしいですか?\n タグを削除すると、すべてのスケッチとレシピから削除されます。\n この操作は元に戻せません。</string>
+    <string name="delete_apply">削除してもよろしいですか?</string>
+    <string name="set_timer">タイマーはどのくらいの時間に設定すればよいですか?</string>
+    <string name="when_recipe_start">調理は何時に開始すればよいですか?</string>
+    <string name="when_recipe_end">調理を計算するタイミングは?</string>
+    <string name="gram">gr</string>
+
+    <string name="kilogram">kg</string>
+    <string name="milliliter">ml</string>
+    <string name="liter">l</string>
+    <string name="ingredient_category_meat_and_poultry">肉類および鶏肉類</string>
+    <string name="ingredient_category_fish_and_seafood">魚類およびシーフード</string>
+    <string name="ingredient_category_vegetables">野菜</string>
+    <string name="ingredient_category_fruits">果物</string>
+    <string name="ingredient_category_greens_and_herbs">緑黄色野菜およびハーブ</string>
+    <string name="ingredient_category_dairy_products">乳製品</string>
+    <string name="ingredient_category_cereals_and_grains">穀類および穀物</string>
+
+    <string name="ingredient_category_legumes">豆類</string>
+    <string name="ingredient_category_nuts_and_seeds">ナッツと種子</string>
+    <string name="ingredient_category_spices_and_seasonings">スパイスと調味料</string>
+    <string name="ingredient_category_sauces_and_oils">ソースとオイル</string>
+    <string name="ingredient_category_baked_goods_and_desserts">焼き菓子とデザート</string>
+    <string name="ingredient_category_liquids">液体</string>
+    <string name="ingredient_chicken">鶏肉</string>
+
+    <string name="ingredient_beef">牛肉</string>
+    <string name="ingredient_pork">豚肉</string>
+    <string name="ingredient_lamb">ラム肉</string>
+    <string name="ingredient_turkey">七面鳥</string>
+    <string name="ingredient_chicken_breasts">鶏胸肉</string>
+    <string name="ingredient_salmon">サーモン</string>
+    <string name="ingredient_tuna">マグロ</string>
+    <string name="ingredient_shrimp">エビ</string>
+
+    <string name="ingredient_cod">タラ</string>
+    <string name="ingredient_mackerel">サバ</string>
+    <string name="ingredient_trout">マス</string>
+    <string name="ingredient_potatoes">ジャガイモ</string>
+    <string name="ingredient_onion">タマネギ</string>
+    <string name="ingredient_carrot">ニンジン</string>
+    <string name="ingredient_garlic">ニンニク</string>
+    <string name="ingredient_tomatoes">トマト</string>
+
+    <string name="ingredient_cucumbers">キュウリ</string>
+    <string name="ingredient_dill">ディル</string>
+    <string name="ingredient_broccoli">ブロッコリー</string>
+    <string name="ingredient_apples">リンゴ</string>
+    <string name="ingredient_bananas">バナナ</string>
+    <string name="ingredient_lemons">レモン</string>
+    <string name="ingredient_oranges">オレンジ</string>
+    <string name="ingredient_strawberries">イチゴ</string>
+    <string name="ingredient_pears">洋ナシ</string>
+    <string name="ingredient_parsley">パセリ</string>
+    <string name="ingredient_basil">バジル</string>
+
+    <string name="ingredient_thyme">タイム</string>
+    <string name="ingredient_oregano">オレガノ</string>
+    <string name="ingredient_mint">ミント</string>
+    <string name="ingredient_milk">牛乳</string>
+    <string name="ingredient_butter">バター</string>
+    <string name="ingredient_cottage_cheese">カッテージチーズ</string>
+    <string name="ingredient_cheese">チーズ</string>
+    <string name="ingredient_cream">クリーム</string>
+    <string name="ingredient_sour_cream">サワークリーム</string>
+    <string name="ingredient_rice">ライス</string>
+    <string name="ingredient_pasta">パスタ</string>
+    <string name="ingredient_oatmeal">オートミール</string>
+
+    <string name="ingredient_quinoa">キヌア</string>
+    <string name="ingredient_buckwheat">ソバ</string>
+    <string name="ingredient_bulgur">ブルグル</string>
+    <string name="ingredient_beans">豆</string>
+    <string name="ingredient_peas">エンドウ豆</string>
+    <string name="ingredient_lentils">レンズ豆</string>
+    <string name="ingredient_chickpeas">ひよこ豆</string>
+    <string name="ingredient_soybeans">大豆</string>
+    <string name="ingredient_almonds">アーモンド</string>
+    <string name="ingredient_walnuts">クルミ</string>
+    <string name="ingredient_hazelnuts">ヘーゼルナッツ</string>
+
+    <string name="ingredient_sunflower_seeds">ヒマワリの種</string>
+    <string name="ingredient_pine_nuts">松の実</string>
+    <string name="ingredient_salt">塩</string>
+    <string name="ingredient_black_pepper">黒コショウ</string>
+    <string name="ingredient_paprika">パプリカ</string>
+    <string name="ingredient_cinnamon">シナモン</string>
+    <string name="ingredient_ginger">生姜</string>
+    <string name="ingredient_turmeric">ターメリック</string>
+    <string name="ingredient_olive_oil">オリーブオイル</string>
+    <string name="ingredient_soy_sauce">醤油</string>
+
+    <string name="ingredient_ketchup">ケチャップ</string>
+    <string name="ingredient_mayonnaise">マヨネーズ</string>
+    <string name="ingredient_mustard">マスタード</string>
+    <string name="ingredient_flour">小麦粉</string>
+    <string name="ingredient_sugar">砂糖</string>
+    <string name="ingredient_yeast">イースト</string>
+    <string name="ingredient_eggs">卵</string>
+    <string name="ingredient_honey">ハチミツ</string>
+    <string name="ingredient_bread">パン</string>
+    <string name="ingredient_water">水</string>
+    <string name="ingredient_broth">スープ</string>
+</resources>

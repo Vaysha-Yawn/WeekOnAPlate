@@ -30,6 +30,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,8 +41,8 @@ import week.on.a.plate.core.uitools.CreateTagOrIngredient
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.DoneButton
-import week.on.a.plate.data.dataView.example.ingredients
-import week.on.a.plate.data.dataView.example.tags
+import week.on.a.plate.data.dataView.example.getStartIngredients
+import week.on.a.plate.data.dataView.example.getTags
 import week.on.a.plate.data.dataView.recipe.IngredientCategoryView
 import week.on.a.plate.data.dataView.recipe.IngredientView
 import week.on.a.plate.data.dataView.recipe.RecipeTagView
@@ -53,6 +54,7 @@ import week.on.a.plate.screens.filters.state.FilterUIState
 
 @Composable
 fun FilterScreen(stateUI: FilterUIState, onEvent: (FilterEvent) -> Unit) {
+    val context = LocalContext.current
     Column(
         Modifier
             .background(MaterialTheme.colorScheme.surface)
@@ -76,7 +78,7 @@ fun FilterScreen(stateUI: FilterUIState, onEvent: (FilterEvent) -> Unit) {
                     Spacer(modifier = Modifier.height(24.dp))
                     if (checkNotHaveFilter(stateUI)) {
                         CreateTagOrIngredient(stateUI.searchText.value) {
-                            onEvent(FilterEvent.CreateActive)
+                            onEvent(FilterEvent.CreateActive(context))
                         }
                     }
                 }
@@ -93,7 +95,7 @@ fun FilterScreen(stateUI: FilterUIState, onEvent: (FilterEvent) -> Unit) {
                             stateUI.selectedIngredients.value.contains(stateUI.resultSearchIngredients.value[it]),
                             false,
                             click = { onEvent(FilterEvent.SelectTag(stateUI.resultSearchTags.value[it])) })
-                        { onEvent(FilterEvent.EditOrDeleteTag(stateUI.resultSearchTags.value[it])) }
+                        { onEvent(FilterEvent.EditOrDeleteTag(context, stateUI.resultSearchTags.value[it])) }
                     }
                 } else {
                     items(stateUI.allTagsCategories.value.size) {
@@ -115,7 +117,7 @@ fun FilterScreen(stateUI: FilterUIState, onEvent: (FilterEvent) -> Unit) {
                             stateUI.selectedIngredients.value.contains(stateUI.resultSearchIngredients.value[it]),
                             true,
                             click = { onEvent(FilterEvent.SelectIngredient(stateUI.resultSearchIngredients.value[it])) })
-                        { onEvent(FilterEvent.EditOrDeleteIngredient(stateUI.resultSearchIngredients.value[it])) }
+                        { onEvent(FilterEvent.EditOrDeleteIngredient(context, stateUI.resultSearchIngredients.value[it])) }
                     }
                 } else {
                     items(stateUI.allIngredientsCategories.value.size) {
@@ -135,7 +137,7 @@ fun FilterScreen(stateUI: FilterUIState, onEvent: (FilterEvent) -> Unit) {
                             stateUI.selectedTagsCategories.value.contains(stateUI.resultSearchTagsCategories.value[it]),
                             false,
                             click = { onEvent(FilterEvent.SelectTagCategory(stateUI.resultSearchTagsCategories.value[it])) })
-                        { onEvent(FilterEvent.EditOrDeleteTagCategory(stateUI.resultSearchTagsCategories.value[it])) }
+                        { onEvent(FilterEvent.EditOrDeleteTagCategory(stateUI.resultSearchTagsCategories.value[it], context), ) }
                     }
                 } else {
                     items(stateUI.allTagsCategories.value.size) {
@@ -144,7 +146,7 @@ fun FilterScreen(stateUI: FilterUIState, onEvent: (FilterEvent) -> Unit) {
                             stateUI.selectedTagsCategories.value.contains(stateUI.allTagsCategories.value[it]),
                             false,
                             click = { onEvent(FilterEvent.SelectTagCategory(stateUI.allTagsCategories.value[it])) })
-                        { onEvent(FilterEvent.EditOrDeleteTagCategory(stateUI.allTagsCategories.value[it])) }
+                        { onEvent(FilterEvent.EditOrDeleteTagCategory(stateUI.allTagsCategories.value[it], context)) }
                     }
                 }
             }
@@ -159,7 +161,7 @@ fun FilterScreen(stateUI: FilterUIState, onEvent: (FilterEvent) -> Unit) {
                             ),
                             true,
                             click = { onEvent(FilterEvent.SelectIngredientCategory(stateUI.resultSearchIngredientsCategories.value[it])) })
-                        { onEvent(FilterEvent.EditOrDeleteIngredientCategory(stateUI.resultSearchIngredientsCategories.value[it])) }
+                        { onEvent(FilterEvent.EditOrDeleteIngredientCategory(stateUI.resultSearchIngredientsCategories.value[it], context)) }
                     }
                 } else {
                     items(stateUI.allIngredientsCategories.value.size) {
@@ -168,7 +170,7 @@ fun FilterScreen(stateUI: FilterUIState, onEvent: (FilterEvent) -> Unit) {
                             stateUI.selectedIngredientsCategories.value.contains(stateUI.allIngredientsCategories.value[it]),
                             true,
                             click = { onEvent(FilterEvent.SelectIngredientCategory(stateUI.allIngredientsCategories.value[it])) })
-                        { onEvent(FilterEvent.EditOrDeleteIngredientCategory(stateUI.allIngredientsCategories.value[it])) }
+                        { onEvent(FilterEvent.EditOrDeleteIngredientCategory(stateUI.allIngredientsCategories.value[it], context)) }
                     }
                 }
             }
@@ -226,7 +228,7 @@ fun TabRowFilter(
     selectedTagsSize: Int,
     selectedIngredientsSize: Int
 ) {
-    val tabTitles = listOf("Тэги", "Ингредиенты")
+    val tabTitles = listOf(stringResource(R.string.tags), stringResource(R.string.ingredients))
     TabRow(
         selectedTabIndex = activeFilterTabIndex.intValue,
         indicator = { tabPositions ->
@@ -242,7 +244,7 @@ fun TabRowFilter(
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         TextBody(
                             text =
-                            if (title == "Тэги") selectedTagsSize.toString()
+                            if (title == stringResource(R.string.tags)) selectedTagsSize.toString()
                             else selectedIngredientsSize.toString()
                         )
                         TextBody(text = title)
@@ -262,6 +264,7 @@ fun CategoriesTags(
     selectedTags: MutableState<List<RecipeTagView>>,
     onEvent: (FilterEvent) -> Unit,
 ) {
+    val context = LocalContext.current
     Spacer(modifier = Modifier.height(12.dp))
     TextTitle(text = tagCategoryView.name)
     Spacer(modifier = Modifier.height(12.dp))
@@ -274,7 +277,7 @@ fun CategoriesTags(
             ) {
                 FilterItemWithMore(tag.tagName, selectedTags.value.contains(tag), false,
                     click = { onEvent(FilterEvent.SelectTag(tag)) })
-                { onEvent(FilterEvent.EditOrDeleteTag(tag)) }
+                { onEvent(FilterEvent.EditOrDeleteTag(context, tag)) }
             }
         }
     }
@@ -287,6 +290,7 @@ fun IngredientCategories(
     selectedIngredients: MutableState<List<IngredientView>>,
     onEvent: (FilterEvent) -> Unit,
 ) {
+    val context = LocalContext.current
     Spacer(modifier = Modifier.height(12.dp))
     TextTitle(text = ingredientCategory.name)
     Spacer(modifier = Modifier.height(12.dp))
@@ -301,7 +305,7 @@ fun IngredientCategories(
                     selectedIngredients.value.contains(ingredient),
                     true,
                     click = { onEvent(FilterEvent.SelectIngredient(ingredient)) })
-                { onEvent(FilterEvent.EditOrDeleteIngredient(ingredient)) }
+                { onEvent(FilterEvent.EditOrDeleteIngredient(context, ingredient)) }
             }
         }
     }
@@ -327,7 +331,8 @@ fun FilterItemWithMore(
                 } else MaterialTheme.colorScheme.background,
                 RoundedCornerShape(30.dp)
             )
-            .padding(horizontal = 12.dp, vertical = 6.dp).padding(start = 12.dp), verticalAlignment = Alignment.CenterVertically
+            .padding(horizontal = 12.dp, vertical = 6.dp)
+            .padding(start = 12.dp), verticalAlignment = Alignment.CenterVertically
     ) {
         TextBody(
             text, modifier = Modifier
@@ -350,6 +355,7 @@ fun Modifier.clickNoRipple(click: () -> Unit):Modifier{
 @Composable
 fun PreviewFilterScreen() {
     WeekOnAPlateTheme {
+        val tags = getTags(LocalContext.current)
         FilterScreen(FilterUIState().apply {
             searchText.value = "По"
             activeFilterTabIndex.intValue = 1
@@ -360,6 +366,7 @@ fun PreviewFilterScreen() {
                 this.removeAt(1)
                 this.removeAt(2)
             }
+            val ingredients = getStartIngredients(LocalContext.current)
             selectedIngredients.value = selectedIngredients.value.toMutableList().apply {
                 ingredients.map { it -> it.ingredientViews }.forEach { list ->
                     this.addAll(list)

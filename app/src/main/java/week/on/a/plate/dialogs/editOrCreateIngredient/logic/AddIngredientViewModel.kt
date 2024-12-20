@@ -1,9 +1,12 @@
 package week.on.a.plate.dialogs.editOrCreateIngredient.logic
 
+import android.content.Context
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import week.on.a.plate.R
 import week.on.a.plate.dialogs.core.DialogViewModel
 import week.on.a.plate.data.dataView.example.Measure
 import week.on.a.plate.data.dataView.recipe.IngredientCategoryView
@@ -31,10 +34,11 @@ class AddIngredientViewModel() : DialogViewModel() {
         return flow
     }
 
-    fun done() {
+    fun done(context:Context) {
         close()
+        val value = if (state.isLiquid.value) Measure.Milliliters.small else Measure.Grams.small
         resultFlow.value = Pair(
-            IngredientView(0, state.photoUri.value.lowercase(), state.name.value, if (state.isLiquid.value) Measure.Milliliters.small else Measure.Grams.small ),
+            IngredientView(0, state.photoUri.value.lowercase(), state.name.value, context.getString(value) ),
             state.category.value!!
         )
     }
@@ -47,7 +51,7 @@ class AddIngredientViewModel() : DialogViewModel() {
     fun onEvent(event: AddIngredientEvent) {
         when (event) {
             AddIngredientEvent.Close -> close()
-            AddIngredientEvent.Done -> done()
+            is AddIngredientEvent.Done -> done(event.context)
             AddIngredientEvent.ChooseCategory -> toSearchCategory()
             AddIngredientEvent.PickImage -> pickImage()
         }
@@ -87,6 +91,7 @@ class AddIngredientViewModel() : DialogViewModel() {
     }
 
     suspend fun launchAndGet(
+        context: Context,
         oldIngredient: IngredientView?,
         oldCategory: IngredientCategoryView?,
         defaultCategoryView: IngredientCategoryView,
@@ -94,7 +99,7 @@ class AddIngredientViewModel() : DialogViewModel() {
     ) {
         state = AddIngredientUIState(
             oldIngredient?.name ?: "",
-            oldIngredient?.measure == "мл",
+            oldIngredient?.measure == context.getString(R.string.ml),
             oldCategory,
             oldIngredient?.img ?: ""
         )

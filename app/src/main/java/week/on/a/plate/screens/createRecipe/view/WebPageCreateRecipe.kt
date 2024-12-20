@@ -20,7 +20,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import week.on.a.plate.R
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.uitools.buttons.DoneButtonSmall
 import week.on.a.plate.core.uitools.buttons.TextButton
@@ -30,10 +33,12 @@ import week.on.a.plate.screens.filters.view.clickNoRipple
 
 @Composable
 fun WebPageCreateRecipe(state: RecipeCreateUIState, onEvent: (Event) -> Unit) {
+    val context = LocalContext.current
     if (state.source.value == "") {
-        DoneButtonSmall(text = "Искать по названию рецепта в интернете", Modifier.padding(24.dp)) {
+        //todo ru????
+        DoneButtonSmall(text = stringResource(R.string.search_be_name_recipe_in_internet), Modifier.padding(24.dp)) {
             state.source.value =
-                "https://www.google.ru/search?q=Рецепт ${state.name.value.replace(" ", "+")}"
+                "https://www.google.ru/search?q="+context.getString(R.string.recipe)+ {state.name.value.replace(" ", "+")}.toString()
         }
     } else {
         WebPage(url = state.source, state.webview, onEvent, true)
@@ -68,9 +73,10 @@ fun RowWebActions(state: RecipeCreateUIState) {
             state.webview.value?.reload()
         }
         Spacer(Modifier.width(10.dp))
-        TextButton("Искать заново") {
+        val context = LocalContext.current
+        TextButton(stringResource(R.string.search_again)) {
             state.source.value =
-                "https://www.google.ru/search?q=Рецепт ${state.name.value.replace(" ", "+")}"
+                "https://www.google.ru/search?q="+context.getString(R.string.recipe)+ {state.name.value.replace(" ", "+")}.toString()
             state.webview.value?.loadUrl(state.source.value)
         }
     }

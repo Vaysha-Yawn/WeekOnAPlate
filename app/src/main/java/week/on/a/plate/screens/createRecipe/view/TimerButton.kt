@@ -2,7 +2,6 @@ package week.on.a.plate.screens.createRecipe.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -13,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
@@ -34,6 +34,6 @@ fun TimerButton(time:Int, edit:()->Unit){
     ) {
         Icon(painter = painterResource(id = R.drawable.timer), contentDescription = "")
         Spacer(modifier = Modifier.width(5.dp))
-        TextBody(text = time.timeToString())
+        TextBody(text = time.timeToString(LocalContext.current))
     }
 }

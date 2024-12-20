@@ -12,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.core.theme.ColorSubTextGrey
 import week.on.a.plate.core.uitools.TextBody
@@ -41,7 +42,7 @@ fun PinnedIngredientsForStep(
                 }
 
                 val valueAndMeasure =
-                    getIngredientCountAndMeasure1000(item.count, item.ingredientView.measure)
+                    getIngredientCountAndMeasure1000(LocalContext.current, item.count, item.ingredientView.measure)
                 if (valueAndMeasure.first!="") {
                     Spacer(modifier = Modifier.width(10.dp))
                     TextSmall(

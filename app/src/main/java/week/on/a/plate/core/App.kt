@@ -8,8 +8,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import week.on.a.plate.data.dataView.example.ingredients
-import week.on.a.plate.data.dataView.example.tags
+import week.on.a.plate.data.dataView.example.getStartIngredients
+import week.on.a.plate.data.dataView.example.getTags
 import week.on.a.plate.data.dataView.week.stdCategoriesSelection
 import week.on.a.plate.data.repository.tables.filters.ingredient.IngredientRepository
 import week.on.a.plate.data.repository.tables.filters.ingredientCategory.IngredientCategoryRepository
@@ -38,12 +38,14 @@ class App:Application(){
         CoroutineScope(Dispatchers.IO).launch {
             val b = tagCategoryRepository.isStartCategoryInstalled()
             if (!b){
+                val tags = getTags(this@App)
                 tags.forEach { category ->
                     val catId = tagCategoryRepository.create(category.name)
                     category.tags.forEach { tag ->
                         tagRepository.insert(tag.tagName, catId)
                     }
                 }
+                val ingredients = getStartIngredients(this@App)
                 ingredients.forEach { category ->
                     val catId = ingredientCategoryRepository.create(category.name)
                     category.ingredientViews.forEach { ingredientView ->

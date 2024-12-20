@@ -13,9 +13,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import week.on.a.plate.R
 import week.on.a.plate.core.theme.ColorPanelLightGrey
 import week.on.a.plate.core.theme.ColorTextBlack
 import week.on.a.plate.core.theme.ColorTransparent
@@ -48,7 +50,7 @@ fun EditTextLine(
             },
             supportingText = {
                 if (isRequired && text.value=="") {
-                    TextSmall(text = "* это поле обязательное", color = MaterialTheme.colorScheme.onBackground)
+                    TextSmall(text = stringResource(R.string.necessarily), color = MaterialTheme.colorScheme.onBackground)
                 }
             },
             singleLine = false,
@@ -61,11 +63,6 @@ fun EditTextLine(
                 unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
                 unfocusedBorderColor = MaterialTheme.colorScheme.outline,
                 unfocusedContainerColor =  MaterialTheme.colorScheme.background,
-
-                errorTextColor = Color.Red,
-                errorPlaceholderColor = Color.Red,
-                errorBorderColor = Color.Red,
-                errorContainerColor = ColorTransparent
             )
         )
     }
@@ -95,15 +92,10 @@ fun EditNumberLine(
         colors = OutlinedTextFieldDefaults.colors(
             focusedTextColor = MaterialTheme.colorScheme.onBackground,
             unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
-            disabledTextColor = MaterialTheme.colorScheme.onBackground,
-            errorTextColor = MaterialTheme.colorScheme.onBackground,
-            focusedContainerColor = if (isSystemInDarkTheme()) ColorTextBlack else ColorPanelLightGrey,
-            unfocusedContainerColor = if (isSystemInDarkTheme()) ColorTextBlack else ColorPanelLightGrey,
-            disabledContainerColor = if (isSystemInDarkTheme()) ColorTextBlack else ColorPanelLightGrey,
+            focusedContainerColor = MaterialTheme.colorScheme.background,
+            unfocusedContainerColor = MaterialTheme.colorScheme.background,
             focusedBorderColor = MaterialTheme.colorScheme.outline,
             unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-            disabledBorderColor = MaterialTheme.colorScheme.outline,
-            errorBorderColor = MaterialTheme.colorScheme.outline,
         ),
         keyboardOptions = KeyboardOptions(
             imeAction = ImeAction.Next,

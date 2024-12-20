@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import week.on.a.plate.R
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.navigation.SearchDestination
 import week.on.a.plate.core.navigation.ShoppingListDestination
@@ -132,14 +133,14 @@ class MenuViewModel @Inject constructor(
             is MenuEvent.EditPositionMore -> {
                 when (event.position) {
                     is Position.PositionRecipeView -> editPositionRecipe(event.position)
-                    else -> editOtherPositionMore(event.position)
+                    else -> editOtherPositionMore(event.position, event.context)
                 }
             }
 
             is MenuEvent.EditOtherPosition -> {
                 when (event.position) {
                     is Position.PositionRecipeView -> {}
-                    else -> editOtherPosition(event.position)
+                    else -> editOtherPosition(event.position, event.context)
                 }
             }
 
@@ -190,8 +191,8 @@ class MenuViewModel @Inject constructor(
                 event.context
             )
 
-            is MenuEvent.EditOrDeleteSelection -> editOrDeleteSelection(event.sel)
-            is MenuEvent.CreateSelection -> createSelection(event.date, event.isForWeek)
+            is MenuEvent.EditOrDeleteSelection -> editOrDeleteSelection(event.sel, event.context)
+            is MenuEvent.CreateSelection -> createSelection(event.date, event.isForWeek, event.context)
             is MenuEvent.CreateWeekSelIdAndCreatePosition -> createWeekSelIdAndCreatePosition(event.context)
         }
     }
@@ -209,15 +210,15 @@ class MenuViewModel @Inject constructor(
         }
     }
 
-    private fun createSelection(date: LocalDate, isForWeek: Boolean) {
+    private fun createSelection(date: LocalDate, isForWeek: Boolean, context:Context) {
         val vmCategory = EditSelectionViewModel()
         vmCategory.mainViewModel = mainViewModel
         mainViewModel.onEvent(MainEvent.OpenDialog(vmCategory))
         viewModelScope.launch {
             vmCategory.launchAndGet(
                 EditSelectionUIState(
-                    startTitle = "Добавить приём пищи",
-                    startPlaceholder = "Завтрак..."
+                    startTitle = context.getString(R.string.add_meal),
+                    startPlaceholder = context.getString(R.string.hint_breakfast)
                 )
             ) { state ->
                 val newName = state.text.value
@@ -233,9 +234,8 @@ class MenuViewModel @Inject constructor(
         }
     }
 
-    private fun editOrDeleteSelection(sel: SelectionView) {
-        //todo get suggest from bd and add NonPosed
-        if (sel.isForWeek /*|| CategoriesSelection.entries.find { it.fullName == sel.name } != null*/) return//мы не можем удалить или изменить предложенные варианты из меню
+    private fun editOrDeleteSelection(sel: SelectionView, context:Context) {
+        if (sel.isForWeek || sel.id == 0L) return
         val vm = EditOrDeleteViewModel()
         vm.mainViewModel = mainViewModel
         mainViewModel.onEvent(MainEvent.OpenDialog(vm))
@@ -244,20 +244,20 @@ class MenuViewModel @Inject constructor(
                 when (event) {
                     EditOrDeleteEvent.Close -> {}
                     EditOrDeleteEvent.Delete -> deleteSelection(sel)
-                    EditOrDeleteEvent.Edit -> editSelection(sel)
+                    EditOrDeleteEvent.Edit -> editSelection(sel, context)
                 }
             }
         }
     }
 
-    private suspend fun editSelection(sel: SelectionView) {
+    private suspend fun editSelection(sel: SelectionView, context:Context) {
         val vmCategory = EditSelectionViewModel()
         vmCategory.mainViewModel = mainViewModel
         mainViewModel.onEvent(MainEvent.OpenDialog(vmCategory))
         vmCategory.launchAndGet(
             EditSelectionUIState(
-                sel.name, startTitle = "Изменение названия приёма пищи",
-                startPlaceholder = "Завтрак..."
+                sel.name, startTitle = context.getString(R.string.edit_meal_name),
+                startPlaceholder = context.getString(R.string.hint_breakfast)
             ).apply {
                 this.selectedTime.value = sel.dateTime.toLocalTime()
             }
@@ -459,7 +459,7 @@ class MenuViewModel @Inject constructor(
                 when (event) {
                     AddPositionEvent.AddDraft -> addDraft(selId)
                     AddPositionEvent.AddIngredient -> addIngredientPosition(selId)
-                    AddPositionEvent.AddNote -> addNote(selId)
+                    AddPositionEvent.AddNote -> addNote(selId, context)
                     AddPositionEvent.AddRecipe -> onEvent(
                         MenuEvent.NavToAddRecipe(
                             selId, context
@@ -527,7 +527,7 @@ class MenuViewModel @Inject constructor(
         }
     }
 
-    private fun editOtherPositionMore(position: Position) {
+    private fun editOtherPositionMore(position: Position, context:Context) {
         viewModelScope.launch {
             val vm = EditOtherPositionViewModel()
             vm.mainViewModel = mainViewModel
@@ -548,7 +548,7 @@ class MenuViewModel @Inject constructor(
                         when (position) {
                             is Position.PositionDraftView -> editDraft(position)
                             is Position.PositionIngredientView -> editIngredientPosition(position)
-                            is Position.PositionNoteView -> editNote(position)
+                            is Position.PositionNoteView -> editNote(position, context)
                             is Position.PositionRecipeView -> {}
                         }
                     }
@@ -602,11 +602,11 @@ class MenuViewModel @Inject constructor(
         }
     }
 
-    private fun editOtherPosition(position: Position) {
+    private fun editOtherPosition(position: Position, context:Context) {
         when (position) {
             is Position.PositionDraftView -> editDraft(position)
             is Position.PositionIngredientView -> editIngredientPosition(position)
-            is Position.PositionNoteView -> editNote(position)
+            is Position.PositionNoteView -> editNote(position, context)
             is Position.PositionRecipeView -> {}
         }
     }
@@ -728,7 +728,7 @@ class MenuViewModel @Inject constructor(
         }
     }
 
-    private fun editNote(note: Position.PositionNoteView) {
+    private fun editNote(note: Position.PositionNoteView, context:Context) {
         viewModelScope.launch {
             val vm = EditOneStringViewModel()
             vm.mainViewModel = mainViewModel
@@ -736,8 +736,8 @@ class MenuViewModel @Inject constructor(
             vm.launchAndGet(
                 EditOneStringUIState(
                     note.note,
-                    "Изменение заметки",
-                    "Введите текст заметки здесь..."
+                    context.getString(R.string.edit_note),
+                    context.getString(R.string.enter_text_note)
                 )
             ) { updatedNote ->
                 onEvent(
@@ -751,7 +751,7 @@ class MenuViewModel @Inject constructor(
         }
     }
 
-    private fun addNote(selId: Long) {
+    private fun addNote(selId: Long, context:Context) {
         viewModelScope.launch {
             val vm = EditOneStringViewModel()
             vm.mainViewModel = mainViewModel
@@ -759,8 +759,8 @@ class MenuViewModel @Inject constructor(
             vm.launchAndGet(
                 EditOneStringUIState(
                     "",
-                    "Добавить заметку",
-                    "Введите текст заметки здесь..."
+                    context.getString(R.string.add_note),
+                    context.getString(R.string.enter_text_note)
                 )
             ) { updatedNote ->
                 onEvent(

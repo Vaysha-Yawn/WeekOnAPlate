@@ -10,9 +10,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import week.on.a.plate.R
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.ImageLoad
 import week.on.a.plate.core.uitools.SubText
@@ -50,8 +52,8 @@ fun RecipeBase(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) -> Unit)
         }
         Spacer(modifier = Modifier.height(12.dp))
         SubText(
-            text = "Последнее редактирование: " + state.recipe.lastEdit.toLocalDate()
-                .dateToStringShort() + " в " + state.recipe.lastEdit.format(
+            text = stringResource(R.string.last_edit) + state.recipe.lastEdit.toLocalDate()
+                .dateToStringShort() + stringResource(R.string._in) + state.recipe.lastEdit.format(
                 DateTimeFormatter.ofPattern("HH:mm")
             ), textAlign = TextAlign.Start
         )
@@ -62,7 +64,7 @@ fun RecipeBase(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) -> Unit)
     }
     Spacer(modifier = Modifier.height(36.dp))
     DoneButton(
-        "Добавить рецепт в меню",
+        stringResource(R.string.add_recipe_to_menu),
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 36.dp)

@@ -19,6 +19,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -87,7 +88,7 @@ fun ChooseIngredientsForStep(viewModel: ChooseIngredientsForStepViewModel) {
                         }
                     }
                     Row {
-                        val valueAndMeasure = getIngredientCountAndMeasure1000(item.count, item.ingredientView.measure)
+                        val valueAndMeasure = getIngredientCountAndMeasure1000(LocalContext.current, item.count, item.ingredientView.measure)
                         TextBody(
                             text = valueAndMeasure.first, color = MaterialTheme.colorScheme.onBackground
                         )

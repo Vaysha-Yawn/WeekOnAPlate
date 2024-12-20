@@ -2,7 +2,6 @@ package week.on.a.plate.screens.settings.view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,8 +28,6 @@ import week.on.a.plate.R
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.TextBody
-import week.on.a.plate.core.uitools.TextDisplayItalic
-import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.TextTitleLarge
 import week.on.a.plate.screens.filters.view.clickNoRipple
 import week.on.a.plate.screens.settings.event.SettingsEvent
@@ -51,28 +48,33 @@ fun SettingsStart(vm: SettingsViewModel) {
 @Composable
 fun SettingsContent(state: SettingsUIState, onEvent: (Event) -> Unit) {
     val context = LocalContext.current
-
     val listSettingsItems = remember {
         listOf(
-            SettingItem("Изменить тему", null, SettingsEvent.Theme(context)),
+            SettingItem(context.getString(R.string.change_theme), null, SettingsEvent.Theme(context)),
             //SettingItem("Обучение", null, SettingsEvent.Tutorial(context)),
             SettingItem(
-                "Изменить стандартное количество порций",
+                context.getString(R.string.change_std_portions),
                 null,
                 SettingsEvent.SetStdPortionsCount(context)
             ),
-            SettingItem("Редактировать приёмы пищи", null, SettingsEvent.SetMenuSelections(context)),
+            SettingItem(context.getString(R.string.edit_meals), null, SettingsEvent.SetMenuSelections(context)),
             //SettingItem("Импортировать рецепты", null, SettingsEvent.Import(context)),
             //SettingItem("Экспортировать рецепты", null, SettingsEvent.Export(context)),
             //SettingItem("Включить большие шрифты", null, SettingsEvent.BigType(context)),
             //SettingItem("Аккаунт", null, SettingsEvent.Profile(context)),
-            SettingItem("Оценить приложение", null, SettingsEvent.RateApp(context)),
+            SettingItem(context.getString(R.string.rate_app), null, SettingsEvent.RateApp(context)),
             //SettingItem("Премиум", null, SettingsEvent.Premium(context)),
             SettingItem(
-                "Политика конфиденциальности и условия использования",
+                context.getString(R.string.pp),
                 null,
                 SettingsEvent.PrivacyPolicy(context)
             ),
+            SettingItem(
+                context.getString(R.string.terms_of_use),
+                null,
+                SettingsEvent.TermsOfUse
+            ),
+
         )
     }
 

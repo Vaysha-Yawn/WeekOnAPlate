@@ -7,7 +7,7 @@ import week.on.a.plate.data.repository.tables.menu.selection.WeekMenuRepository
 import week.on.a.plate.dialogs.chooseWeekInMenu.logic.ChooseWeekViewModel
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
-import week.on.a.plate.screens.calendarMy.logic.CalendarMyUseCase
+import week.on.a.plate.dialogs.calendarMy.logic.CalendarMyUseCase
 import week.on.a.plate.screens.wrapperDatePicker.event.WrapperDatePickerEvent
 import week.on.a.plate.screens.wrapperDatePicker.state.WrapperDatePickerUIState
 import java.time.LocalDate

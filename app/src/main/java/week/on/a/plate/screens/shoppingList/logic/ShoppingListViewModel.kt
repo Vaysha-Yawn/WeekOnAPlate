@@ -2,6 +2,7 @@ package week.on.a.plate.screens.shoppingList.logic
 
 import android.content.Context
 import android.content.Intent
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -9,6 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import week.on.a.plate.R
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.navigation.ShoppingListDestination
 import week.on.a.plate.core.utils.getIngredientCountAndMeasure1000
@@ -65,16 +67,19 @@ class ShoppingListViewModel @Inject constructor(
             is ShoppingListEvent.Uncheck -> updateCheck(false, event.position)
             is ShoppingListEvent.Edit -> editIngredient(event.ingredient)
             is ShoppingListEvent.Share -> share(event.context)
-            ShoppingListEvent.DeleteAll -> deleteAllApply()
+            is ShoppingListEvent.DeleteAll -> deleteAllApply(event.context)
         }
     }
 
-    private fun deleteAllApply() {
+    private fun deleteAllApply(context: Context) {
         viewModelScope.launch {
             val vmDel = mainViewModel.deleteApplyViewModel
-            val mes = "Это действие нельзя отменить."
+            val mes = context.getString(R.string.hint_cannot_undone)
             mainViewModel.nav.navigate(DeleteApplyDestination)
-            vmDel.launchAndGet(title = "Очистить список покупок?", message = mes) { event ->
+            vmDel.launchAndGet(context,
+                title = context.getString(R.string.hint_clear_shopping_list),
+                message = mes
+            ) { event ->
                 if (event == DeleteApplyEvent.Apply) {
                     shoppingItemRepository.deleteAll()
 
@@ -84,27 +89,27 @@ class ShoppingListViewModel @Inject constructor(
     }
 
     private fun share(context: Context) {
-        val text = shoppingListToText(state.listUnchecked.value)
+        val text = shoppingListToText(state.listUnchecked.value, context)
         val intent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_TEXT, text)
             type = "text/plain"
         }
-        val chooserIntent = Intent.createChooser(intent, "Поделиться через:")
+        val chooserIntent = Intent.createChooser(intent, context.getString(R.string.share_via))
         context.startActivity(chooserIntent)
     }
 
-    private fun shoppingListToText(listToShop: List<IngredientInRecipeView>): String {
+    private fun shoppingListToText(listToShop: List<IngredientInRecipeView>, context: Context): String {
         var text = ""
-        text+= "Список покупок:"
-        for (item in listToShop){
-            text+= "\n"
-            val tet = getIngredientCountAndMeasure1000(item.count, item.ingredientView.measure)
-            text+= "- "+ item.ingredientView.name +  " " + item.description +" " + tet.first + " " + tet.second
+        text += context.getString(R.string.share_text_title)
+        for (item in listToShop) {
+            text += "\n"
+            val tet = getIngredientCountAndMeasure1000(context,  item.count, item.ingredientView.measure)
+            text += "- " + item.ingredientView.name + " " + item.description + " " + tet.first + " " + tet.second
         }
-        text+= "\n"
-        text+= "\n"
-        text+= "Экспортировано из приложения \"Неделя на тарелке\" - книга рецептов, составление меню и список покупок. Только для самых любимых и проверенных рецептов! (\u2060灬\u2060º\u2060‿\u2060º\u2060灬\u2060)\u2060♡"
+        text += "\n"
+        text += "\n"
+        text += context.getString(R.string.signature)
         return text
     }
 

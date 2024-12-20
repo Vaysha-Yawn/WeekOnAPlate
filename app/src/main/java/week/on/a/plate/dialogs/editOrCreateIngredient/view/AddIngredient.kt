@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -106,21 +107,22 @@ fun AddIngredient(
             }
             Spacer(modifier = Modifier.height(24.dp))
             TextBody(
-                text = "Фото",
+                text = stringResource(R.string.photo),
                 modifier = Modifier
                     .padding(start = 12.dp)
                     .padding(bottom = 12.dp), textAlign = TextAlign.Start
             )
-            CommonButton("Выберите фото") {
+            CommonButton(stringResource(R.string.select_photo)) {
                 onEvent(AddIngredientEvent.PickImage)
             }
             Spacer(modifier = Modifier.height(24.dp))
+            val context = LocalContext.current
             DoneButton(
                 text = stringResource(id = R.string.add),
                 modifier = Modifier
             ) {
                 if (state.name.value != "" && state.category.value != null) {
-                    onEvent(AddIngredientEvent.Done)
+                    onEvent(AddIngredientEvent.Done(context))
                 } else {
                     isError.value = true
                 }

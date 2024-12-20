@@ -45,8 +45,7 @@ fun BottomBar(
                 val sel = remember {
                     mutableStateOf(false)
                 }
-                val isSelected =
-                    currentDestination?.hierarchy?.any { it.route?.substringBefore("?") == topLevelRoute.route::class.qualifiedName } == true
+                val isSelected = currentDestination?.hierarchy?.any { it.route?.substringBefore("?") == topLevelRoute.route::class.qualifiedName } == true
                 sel.value = isSelected
                 val radius by animateFloatAsState(
                     if (isSelected) 10.0f else 0.0f,

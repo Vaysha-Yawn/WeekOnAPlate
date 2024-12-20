@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
@@ -26,11 +27,12 @@ fun DraftPosition(
     onEvent: (event: MenuEvent) -> Unit,
     rowScope: RowScope
 ) {
+    val context = LocalContext.current
     with(rowScope) {
         Spacer(modifier = Modifier.width(20.dp))
         Row(Modifier
             .weight(3f)
-            .padding(vertical = 5.dp).clickNoRipple {  onEvent(MenuEvent.EditOtherPosition(draft)) },
+            .padding(vertical = 5.dp).clickNoRipple {  onEvent(MenuEvent.EditOtherPosition(draft, context)) },
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically) {
             TagListHidden(draft.tags, draft.ingredients)
@@ -44,7 +46,7 @@ fun DraftPosition(
         )
         Spacer(modifier = Modifier.width(10.dp))
         MoreButton {
-            onEvent(MenuEvent.EditPositionMore(draft))
+            onEvent(MenuEvent.EditPositionMore(draft, context))
         }
         Spacer(modifier = Modifier.width(12.dp))
     }

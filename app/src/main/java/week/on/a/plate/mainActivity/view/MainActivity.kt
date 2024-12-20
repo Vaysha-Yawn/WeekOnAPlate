@@ -22,7 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -34,18 +33,18 @@ import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screens.cookPlanner.logic.CookPlannerViewModel
 import week.on.a.plate.screens.createRecipe.logic.RecipeCreateViewModel
-import week.on.a.plate.screens.createRecipe.navigation.RecipeCreateDestination
 import week.on.a.plate.screens.deleteApply.logic.DeleteApplyViewModel
+import week.on.a.plate.screens.documentsWeb.logic.DocumentsWebViewModel
 import week.on.a.plate.screens.filters.logic.FilterViewModel
 import week.on.a.plate.screens.inventory.logic.InventoryViewModel
 import week.on.a.plate.screens.recipeDetails.logic.RecipeDetailsViewModel
-import week.on.a.plate.screens.recipeTimeline.logic.RecipeTimelineViewModel
 import week.on.a.plate.screens.searchRecipes.logic.SearchViewModel
 import week.on.a.plate.screens.settings.logic.SettingsViewModel
 import week.on.a.plate.screens.shoppingList.logic.ShoppingListViewModel
 import week.on.a.plate.screens.specifyRecipeToCookPlan.logic.SpecifyRecipeToCookPlanViewModel
 import week.on.a.plate.screens.specifySelection.logic.SpecifySelectionViewModel
 import week.on.a.plate.screens.tutorial.logic.TutorialViewModel
+
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -62,9 +61,9 @@ class MainActivity : ComponentActivity() {
     private val deleteApplyViewModel: DeleteApplyViewModel by viewModels()
     private val cookPlannerViewModel: CookPlannerViewModel by viewModels()
     private val specifyRecipeToCookPlanViewModel: SpecifyRecipeToCookPlanViewModel by viewModels()
-    private val recipeTimelineViewModel: RecipeTimelineViewModel by viewModels()
     private val settingsViewModel: SettingsViewModel by viewModels()
     private val tutorialViewModel: TutorialViewModel by viewModels()
+    private val documentsWebViewModel: DocumentsWebViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -123,9 +122,9 @@ class MainActivity : ComponentActivity() {
                     deleteApplyViewModel,
                     cookPlannerViewModel,
                     specifyRecipeToCookPlanViewModel,
-                    recipeTimelineViewModel,
                     settingsViewModel,
-                    tutorialViewModel
+                    tutorialViewModel,
+                    documentsWebViewModel
                 )
 
                 Scaffold(modifier = Modifier
@@ -172,7 +171,13 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-        //todo test work?
+
+        //todo test
+        if (intent.action == Intent.ACTION_SEND) {
+            val text = intent.getStringExtra(Intent.EXTRA_TEXT) ?: return
+            viewModel.sharedLink = text
+        }
+
         if (viewModel.sharedLink != "" && !viewModel.isCheckedSharedAction) {
             viewModel.onEvent(MainEvent.UseSharedLink(viewModel.sharedLink))
         }
@@ -188,7 +193,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onResume() {
         super.onResume()
-        //work!
+
         if (viewModel.sharedLink != "" && !viewModel.isCheckedSharedAction) {
             viewModel.onEvent(MainEvent.UseSharedLink(viewModel.sharedLink))
         }

@@ -39,7 +39,7 @@ fun RecipeDetailsStart(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.surface)
     ) {
-        TopPanelRecipeDetail(state.recipe.inFavorite, onEvent)
+        TopPanelRecipeDetail(state.isFavorite.value, onEvent)
         LazyColumn {
             item {
                 RecipeBase(state, onEvent)

@@ -4,6 +4,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.webkit.WebView
+import week.on.a.plate.R
 import week.on.a.plate.core.Event
 import week.on.a.plate.mainActivity.event.MainEvent
 
@@ -12,8 +13,7 @@ fun copyLinkToClipboard(context: Context, url: String?, onEvent:(Event)->Unit) {
         val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val clip = ClipData.newPlainText("Image URL", url)
         clipboard.setPrimaryClip(clip)
-
-        onEvent(MainEvent.ShowSnackBar("Ссылка на изображение скопирована"))
+        onEvent(MainEvent.ShowSnackBar(context.getString(R.string.mess_image_link_copied)))
     }
 }
 

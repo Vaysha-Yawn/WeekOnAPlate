@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,7 +28,6 @@ import week.on.a.plate.core.uitools.ImageLoad
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.DoneButton
-import week.on.a.plate.screens.recipeTimeline.view.Empty
 import week.on.a.plate.screens.tutorial.event.TutorialEvent
 import week.on.a.plate.screens.tutorial.logic.TutorialViewModel
 import week.on.a.plate.screens.tutorial.state.TutorialStateUI
@@ -130,6 +130,11 @@ fun TutorialWrapper(
             }
         }
     }
+}
+
+@Composable
+fun Empty(){
+    Spacer(Modifier.size(24.dp  ))
 }
 
 @Preview(showBackground = true)

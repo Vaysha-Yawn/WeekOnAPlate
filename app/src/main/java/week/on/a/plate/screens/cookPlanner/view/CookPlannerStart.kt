@@ -66,9 +66,10 @@ fun CookPlannerContent(state: CookPlannerUIState, onEvent: (Event) -> Unit) {
                         TextTitle(
                             "${
                                 day.key.dayOfWeek.getDisplayName(
-                                    TextStyle.SHORT,
-                                    Locale.getDefault()
-                                ).capitalize()
+                                                                TextStyle.SHORT,
+                                                                Locale.getDefault()
+                                                            )
+                                    .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
                             }, ${day.key.dayOfMonth}",
                             Modifier.padding(start = 24.dp)
                         )

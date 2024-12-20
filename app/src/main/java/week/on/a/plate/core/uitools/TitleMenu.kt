@@ -22,6 +22,7 @@ import java.time.LocalDateTime
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TitleMenu(selection: SelectionView, modifier: Modifier, onEvent: (event: Event) -> Unit) {
+    val context = LocalContext.current
     Row(
         modifier,
         verticalAlignment = Alignment.CenterVertically
@@ -33,7 +34,7 @@ fun TitleMenu(selection: SelectionView, modifier: Modifier, onEvent: (event: Eve
                 .combinedClickable(
                     onClick = {},
                     onLongClick = {
-                        onEvent(MenuEvent.EditOrDeleteSelection(selection))
+                        onEvent(MenuEvent.EditOrDeleteSelection(selection, context))
                     }
                 ),
         )
@@ -51,6 +52,7 @@ fun TitleMenu(selection: SelectionView, modifier: Modifier, onEvent: (event: Eve
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TitleMenuS(selection: SelectionView, modifier: Modifier, onEvent: (event: Event) -> Unit) {
+    val context = LocalContext.current
     Row(
         modifier,
         verticalAlignment = Alignment.CenterVertically
@@ -62,7 +64,7 @@ fun TitleMenuS(selection: SelectionView, modifier: Modifier, onEvent: (event: Ev
                 .combinedClickable(
                     onClick = {},
                     onLongClick = {
-                        onEvent(week.on.a.plate.screens.menu.event.MenuEvent.EditOrDeleteSelection(selection))
+                        onEvent(week.on.a.plate.screens.menu.event.MenuEvent.EditOrDeleteSelection(selection, context))
                     }
                 ),
             color = ColorSubTextGrey

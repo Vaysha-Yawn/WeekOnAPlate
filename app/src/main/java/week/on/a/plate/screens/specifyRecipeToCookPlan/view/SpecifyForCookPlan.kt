@@ -18,6 +18,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,8 +31,8 @@ import week.on.a.plate.core.uitools.TextTitleItalic
 import week.on.a.plate.core.uitools.buttons.CloseButton
 import week.on.a.plate.core.uitools.buttons.CommonButton
 import week.on.a.plate.core.uitools.buttons.DoneButton
-import week.on.a.plate.screens.calendarMy.state.StateCalendarMy
-import week.on.a.plate.screens.calendarMy.view.CalendarMy
+import week.on.a.plate.dialogs.calendarMy.state.StateCalendarMy
+import week.on.a.plate.dialogs.calendarMy.view.CalendarMy
 import week.on.a.plate.screens.specifyRecipeToCookPlan.event.SpecifyRecipeToCookPlanEvent
 import week.on.a.plate.screens.specifyRecipeToCookPlan.logic.SpecifyRecipeToCookPlanViewModel
 import week.on.a.plate.screens.specifyRecipeToCookPlan.state.SpecifyRecipeToCookPlanUIState
@@ -63,7 +64,7 @@ fun SpecifyForCookPlan(
         ) {
             CloseButton { onEvent(SpecifyRecipeToCookPlanEvent.Close) }
             TextTitleItalic(
-                text = "Запланировать готовку",
+                text = stringResource(R.string.plan_cook),
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.End
             )
@@ -73,17 +74,17 @@ fun SpecifyForCookPlan(
             onEvent(SpecifyRecipeToCookPlanEvent.SelectDate(date))
         }
         Spacer(modifier = Modifier.height(24.dp))
-
-        TextBody("Время приготовления:")
+        TextBody(stringResource(R.string.time_cook))
         Spacer(modifier = Modifier.height(12.dp))
+        val context = LocalContext.current
         CommonButton(
             state.time.value.format(DateTimeFormatter.ofPattern("HH:mm")),
             image = R.drawable.time
         ) {
-            onEvent(SpecifyRecipeToCookPlanEvent.OpenTimePick)
+            onEvent(SpecifyRecipeToCookPlanEvent.OpenTimePick(context))
         }
         Spacer(modifier = Modifier.height(24.dp))
-        TextBody("Приготовить рецепт ...")
+        TextBody(stringResource(R.string.get_recipe_done))
         Row(
             Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
@@ -103,9 +104,9 @@ fun SpecifyForCookPlan(
             )
             Spacer(modifier = Modifier.width(12.dp))
             if (state.isStart.value) {
-                TextBody("...начиная с этого времени")
+                TextBody(stringResource(R.string.by_start))
             } else {
-                TextBody("...заканчивая к этому времени ")
+                TextBody(stringResource(R.string.by_end))
             }
         }
 

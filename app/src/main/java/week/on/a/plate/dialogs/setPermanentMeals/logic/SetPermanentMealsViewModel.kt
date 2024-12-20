@@ -1,8 +1,10 @@
 package week.on.a.plate.dialogs.setPermanentMeals.logic
 
 
+import android.content.Context
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import week.on.a.plate.R
 import week.on.a.plate.data.repository.tables.menu.category_selection.CategorySelectionDAO
 import week.on.a.plate.data.repository.tables.menu.category_selection.CategorySelectionRoom
 import week.on.a.plate.dialogs.core.DialogViewModel
@@ -23,10 +25,10 @@ class SetPermanentMealsViewModel @Inject constructor(val dao: CategorySelectionD
 
     fun onEvent(event: SetPermanentMealsEvent) {
         when (event) {
-            SetPermanentMealsEvent.Add -> add()
+            is SetPermanentMealsEvent.Add -> add(event.context)
             SetPermanentMealsEvent.Close -> close()
             is SetPermanentMealsEvent.Delete -> delete(event.sel)
-            is SetPermanentMealsEvent.Edit -> edit(event.sel)
+            is SetPermanentMealsEvent.Edit -> edit(event.sel, event.context)
         }
     }
 
@@ -53,13 +55,13 @@ class SetPermanentMealsViewModel @Inject constructor(val dao: CategorySelectionD
         }
     }
 
-    private fun edit(sel: CategorySelectionRoom) {
+    private fun edit(sel: CategorySelectionRoom, context:Context) {
         mainViewModel.viewModelScope.launch {
             val vm = EditSelectionViewModel()
             vm.mainViewModel = mainViewModel
             val stateToEdit = EditSelectionUIState(
-                startTitle = "Редактировать приём пищи",
-                startPlaceholder = "Завтрак..."
+                startTitle = context.getString(R.string.edit_meal),
+                startPlaceholder = context.getString(R.string.hint_breakfast)
             )
             stateToEdit.text.value = sel.name
             stateToEdit.selectedTime.value = sel.stdTime
@@ -93,15 +95,15 @@ class SetPermanentMealsViewModel @Inject constructor(val dao: CategorySelectionD
     }
 
 
-    private fun add() {
+    private fun add(context:Context) {
         mainViewModel.viewModelScope.launch {
             val vm = EditSelectionViewModel()
             vm.mainViewModel = mainViewModel
             mainViewModel.viewModelScope.launch {
                 vm.launchAndGet(
                     EditSelectionUIState(
-                        startTitle = "Добавить приём пищи",
-                        startPlaceholder = "Завтрак..."
+                        startTitle = context.getString(R.string.add_meal),
+                        startPlaceholder = context.getString(R.string.hint_breakfast)
                     )
                 ) { selState ->
                     mainViewModel.viewModelScope.launch {

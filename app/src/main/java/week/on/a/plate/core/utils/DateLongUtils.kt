@@ -1,5 +1,7 @@
 package week.on.a.plate.core.utils
 
+import android.content.Context
+import week.on.a.plate.R
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.ZoneId
@@ -38,16 +40,16 @@ fun LocalDate.getDayInWeekShort(local: Locale):String{
     return this.dayOfWeek.getDisplayName(TextStyle.SHORT, local)
 }
 
-fun Int.timeToString(): String {
+fun Int.timeToString(context:Context): String {
     val sec = this
     val min = (sec / 60)
     val hour = min / 60
     val minView = min-hour*60
     val hourTxt = if (hour>0){
-        "$hour ч "
+        hour.toString() + context.getString(R.string.hour_small)
     }else ""
     val minuteTxt = if (minView>0){
-        "$minView мин"
+        minView.toString()+ context.getString(R.string.min_small)
     }else ""
     return hourTxt+minuteTxt
 }

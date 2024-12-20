@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,21 +40,11 @@ import week.on.a.plate.screens.cookPlanner.event.CookPlannerEvent
 import week.on.a.plate.screens.createRecipe.view.PinnedIngredientsForStep
 import week.on.a.plate.screens.filters.view.clickNoRipple
 import week.on.a.plate.screens.recipeDetails.view.steps.TimerButton
-import week.on.a.plate.screens.recipeTimeline.view.Empty
 import java.time.LocalDateTime
 
 @Composable
 fun CardStep(step: CookPlannerStepView, onEvent: (Event) -> Unit, index:Int) {
     Row {
-        /*ImageLoad(
-            step.stepView.image,
-            Modifier
-                .padding(start = 12.dp)
-                .clip(RoundedCornerShape(20.dp))
-                .clipToBounds()
-                .scale(2f)
-                .height(150.dp)
-        )*/
         Column {
             Row(
                 Modifier.fillMaxWidth(),
@@ -92,6 +83,7 @@ fun CardStep(step: CookPlannerStepView, onEvent: (Event) -> Unit, index:Int) {
 
 @Composable
 fun CookGroup(group: CookPlannerGroupView, onEvent: (Event) -> Unit) {
+    val context = LocalContext.current
     Column(Modifier
         .clickNoRipple {
             onEvent(CookPlannerEvent.NavToFullStep(group))
@@ -109,7 +101,7 @@ fun CookGroup(group: CookPlannerGroupView, onEvent: (Event) -> Unit) {
             ) {
                 TextTitle(group.recipeName +", "+ + group.portionsCount +" "+ stringResource(R.string.portions_end_of_phrase))
                 MoreButton {
-                    onEvent(CookPlannerEvent.ShowStepMore(group))
+                    onEvent(CookPlannerEvent.ShowStepMore(group, context))
                 }
             }
             Spacer(Modifier.height(12.dp))

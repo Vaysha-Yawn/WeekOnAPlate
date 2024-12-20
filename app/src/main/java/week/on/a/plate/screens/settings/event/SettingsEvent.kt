@@ -4,6 +4,7 @@ import android.content.Context
 import week.on.a.plate.core.Event
 
 sealed class SettingsEvent : Event() {
+    data object TermsOfUse : SettingsEvent()
     data class Theme (val context: Context):SettingsEvent()
     data class Tutorial (val context: Context):SettingsEvent()
     data class SetStdPortionsCount (val context: Context):SettingsEvent()

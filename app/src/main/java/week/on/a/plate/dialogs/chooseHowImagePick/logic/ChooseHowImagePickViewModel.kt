@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import week.on.a.plate.R
 import week.on.a.plate.dialogs.chooseHowImagePick.event.ChooseHowImagePickEvent
 import week.on.a.plate.dialogs.chooseHowImagePick.state.ChooseHowImagePickUIState
 import week.on.a.plate.dialogs.core.DialogViewModel
@@ -39,7 +40,7 @@ class ChooseHowImagePickViewModel() : DialogViewModel() {
 
     fun onEvent(event: ChooseHowImagePickEvent) {
         when (event) {
-            ChooseHowImagePickEvent.ByUrl -> {
+            is ChooseHowImagePickEvent.ByUrl -> {
                 mainViewModel.viewModelScope.launch {
                     val vm = EditOneStringViewModel()
                     vm.mainViewModel = mainViewModel
@@ -47,8 +48,8 @@ class ChooseHowImagePickViewModel() : DialogViewModel() {
                     vm.launchAndGet(
                         EditOneStringUIState(
                             old ?: "",
-                            "Редактировать ссылку на изображение",
-                            "Введите новую ссылку на изображение"
+                            event.context.getString(R.string.edit_image_link),
+                            event.context.getString(R.string.enter_new_image_link)
                         )
                     ) { note ->
                         done(note.lowercase())

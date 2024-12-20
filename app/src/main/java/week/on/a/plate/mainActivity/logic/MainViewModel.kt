@@ -25,11 +25,12 @@ import week.on.a.plate.screens.filters.logic.FilterViewModel
 import week.on.a.plate.screens.inventory.logic.InventoryViewModel
 import week.on.a.plate.screens.menu.logic.useCase.CRUDRecipeInMenu
 import week.on.a.plate.screens.recipeDetails.logic.RecipeDetailsViewModel
-import week.on.a.plate.screens.recipeTimeline.logic.RecipeTimelineViewModel
 import week.on.a.plate.screens.searchRecipes.logic.SearchViewModel
 import week.on.a.plate.mainActivity.logic.imageFromGallery.ImageFromGalleryUseCase
 import week.on.a.plate.mainActivity.logic.takePicture.TakePictureUseCase
 import week.on.a.plate.mainActivity.logic.voice.VoiceInputUseCase
+import week.on.a.plate.screens.documentsWeb.logic.DocumentsWebViewModel
+import week.on.a.plate.screens.menu.logic.MenuViewModel
 import week.on.a.plate.screens.settings.logic.SettingsViewModel
 import week.on.a.plate.screens.shoppingList.logic.ShoppingListViewModel
 import week.on.a.plate.screens.specifyRecipeToCookPlan.logic.SpecifyRecipeToCookPlanViewModel
@@ -58,8 +59,8 @@ class MainViewModel @Inject constructor(
     lateinit var deleteApplyViewModel: DeleteApplyViewModel
     lateinit var cookPlannerViewModel: CookPlannerViewModel
     lateinit var specifyRecipeToCookPlanViewModel: SpecifyRecipeToCookPlanViewModel
-    lateinit var recipeTimelineViewModel: RecipeTimelineViewModel
     lateinit var tutorialViewModel: TutorialViewModel
+    lateinit var documentsWebViewModel: DocumentsWebViewModel
 
     fun initViewModels(
         specifySelection: SpecifySelectionViewModel,
@@ -68,14 +69,14 @@ class MainViewModel @Inject constructor(
         recipeDetails: RecipeDetailsViewModel,
         shoppingList: ShoppingListViewModel,
         recipeCreate: RecipeCreateViewModel,
-        menuView: week.on.a.plate.screens.menu.logic.MenuViewModel,
+        menuView: MenuViewModel,
         inventory: InventoryViewModel,
         delete: DeleteApplyViewModel,
         cookPlanner: CookPlannerViewModel,
         specifyRecipeToCookPlan: SpecifyRecipeToCookPlanViewModel,
-        recipeTimeline: RecipeTimelineViewModel,
         settings: SettingsViewModel,
-        tutorial: TutorialViewModel
+        tutorial: TutorialViewModel,
+        documentsWeb: DocumentsWebViewModel
     ) {
         specifySelectionViewModel = specifySelection
         filterViewModel = filter
@@ -88,9 +89,9 @@ class MainViewModel @Inject constructor(
         deleteApplyViewModel = delete
         cookPlannerViewModel = cookPlanner
         specifyRecipeToCookPlanViewModel = specifyRecipeToCookPlan
-        recipeTimelineViewModel = recipeTimeline
         settingsViewModel = settings
         tutorialViewModel = tutorial
+        documentsWebViewModel = documentsWeb
 
         specifySelectionViewModel.mainViewModel = this
         filterViewModel.mainViewModel = this
@@ -103,10 +104,10 @@ class MainViewModel @Inject constructor(
         deleteApplyViewModel.mainViewModel = this
         cookPlannerViewModel.mainViewModel = this
         specifyRecipeToCookPlanViewModel.mainViewModel = this
-        recipeTimelineViewModel.mainViewModel = this
         searchViewModel.mainViewModel = this
         tutorialViewModel.mainViewModel = this
         settingsViewModel.mainViewModel = this
+        documentsWebViewModel.mainViewModel = this
     }
 
     lateinit var locale: Locale

@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">一周餐盘</string>
+    <string name="done">完成</string>
+    <string name="Portions">份数</string>
+    <string name="portions_end_of_phrase">份数</string>
+    <string name="data_not_found">​​无数据</string>
+    <string name="add_day">添加日期</string>
+    <string name="Change_number_of_servings">更改份数</string>
+    <string name="add">添加</string>
+    <string name="apply">确认</string>
+    <string name="Ingredient">配料</string>
+    <string name="Specify_ingredient">指定配料</string>
+    <string name="message_non_validate_place_position_in_menu">请选择日期和餐点或选择类别 每周</string>
+    <string name="message_select_ingredient">请选择配料</string>
+    <string name="add_note">添加note</string>
+    <string name="title_edit_note">注释文本</string>
+    <string name="enter_text_note">在此处输入文本...</string>
+    <string name="select_day">选择日期</string>
+    <string name="title_in_generally">一般</string>
+    <string name="title_or_detailed">或更详细</string>
+    <string name="title_eating">饮食：</string>
+    <string name="move_position">移动位置</string>
+
+    <string name="add_to_menu">添加到菜单</string>
+    <string name="add_recipe">添加菜谱</string>
+    <string name="add_draft">添加草稿</string>
+    <string name="add_ingredient">添加配料</string>
+    <string name="edit">编辑</string>
+    <string name="move">移动</string>
+    <string name="doubleR">复制</string>
+    <string name="delete">删除</string>
+    <string name="add_shopping_cart">添加到购物</string>
+    <string name="change_recipe">更改食谱</string>
+    <string name="week_nav"><![CDATA[<- Week]]></string>
+    <string name="day_nav"><![CDATA[<- Day]]></string>
+    <string name="for_week">一周</string>
+    <string name="description">说明</string>
+    <string name="Pieces">分件...</string>
+    <string name="amount">数量</string>
+    <string name="double_position">重复位置</string>
+
+    <string name="add_position">添加职位</string>
+    <string name="search_placeholder">我们在寻找什么？</string>
+    <string name="selected_positions">选定职位</string>
+    <string name="add_positions_voice_apply">添加职位</string>
+    <string name="selected_tags"><![CDATA[Selected >]]></string>
+    <string name="specify_selection">添加菜谱：选择一餐</string>
+    <string name="add_category">添加类别</string>
+    <string name="enter_category_name">在此处输入类别名称</string>
+    <string name="error_enter_title">请输入名称</string>
+    <string name="change_start_recipe_time">更改菜谱开始时间</string>
+    <string name="change_end_recipe_time">更改菜谱结束时间</string>
+    <string name="increase_step_time">延长步骤时间</string>
+    <string name="move_step_by_time_start">延迟此步骤的开始时间</string>
+    <string name="provide_link_to_image">提供图片链接</string>
+
+    <string name="select_from_gallery">从图库中选择</string>
+    <string name="select_ingredients">选择配料</string>
+    <string name="cancel">取消</string>
+    <string name="select_hours_and_minutes">选择小时和分钟</string>
+    <string name="create_ingredient">创建配料</string>
+    <string name="ingredient_name">配料名称</string>
+    <string name="enter_ingredient_name">输入配料名称</string>
+    <string name="is_this_a_liquid">这是液体吗？</string>
+    <string name="select_category">选择类别</string>
+    <string name="category">类别</string>
+
+    <string name="enter_image_link">输入图片链接</string>
+    <string name="create_tag">创建标签</string>
+    <string name="tag_name">标签名称</string>
+    <string name="enter_tag_name_here">在此输入标签名称</string>
+    <string name="plan_your_cooking">计划烹饪</string>
+    <string name="choose_meal_times">选择用餐时间</string>
+    <string name="meal_time_tip">* 用餐时间用于对菜单进行排序</string>
+    <string name="ask_exit">您确定要退出吗？</string>
+    <string name="exit_tip">退出时不会保存更改。</string>
+    <string name="stay">留下</string>
+    <string name="exit">退出</string>
+
+    <string name="more_filters">其他过滤器</string>
+    <string name="only_favorites">仅限收藏</string>
+    <string name="cook_time">烹饪时间</string>
+    <string name="select_step">选择步骤</string>
+    <string name="step">" 步骤"</string>
+    <string name="sort">排序</string>
+    <string name="a_z_alphabetically">按字母顺序 A-Z 排序</string>
+    <string name="z_a_reverse_alphabetical">按字母顺序 Z-A 反向排序</string>
+    <string name="from_old_to_new">从旧到新</string>
+    <string name="from_new_to_old">从新到旧</string>
+    <string name="random_order">随机顺序</string>
+    <string name="_portions">" 份量"</string>
+
+    <string name="seems_empty">看起来这是空的..</string>
+    <string name="cook_planner_empty_tip"><![CDATA[通过以下方式安排烹饪：菜单中的食谱 -> 更多 -> 计划烹饪]]></string>
+    <string name="recipe_description">食谱说明</string>
+    <string name="enter_recipe_description">输入食谱说明</string>
+    <string name="recipe_name">食谱名称</string>
+    <string name="enter_recipe_name">输入食谱名称</string>
+    <string name="add_photo">添加照片</string>
+    <string name="portions_count">份数</string>
+    <string name="ingredients">配料</string>
+
+    <string name="edit_ingredients">编辑配料</string>
+    <string name="step_by_step_recipe">分步食谱</string>
+    <string name="add_step">添加步骤</string>
+    <string name="settings">设置</string>
+    <string name="next">下一步</string>
+    <string name="make_photo">拍照</string>
+    <string name="no_camera_hint">无法拍照，未检测到相机</string>
+    <string name="recipe_duration">烹饪时长</string>
+    <string name="no_mic_hint">未检测到麦克风</string>
+    <string name="classic">经典</string>
+
+    <string name="Evening">黄昏</string>
+    <string name="_create">"+ 创建："</string>
+    <string name="necessarily">* 此字段为必填项</string>
+    <string name="hour_small">" h"</string>
+    <string name="min_small">" min"</string>
+    <string name="tag_category_by_meal">按餐点</string>
+    <string name="tag_category_by_cuisines_world">世界美食</string>
+    <string name="tag_category_by_advantages">优点</string>
+    <string name="tag_category_by_cooking_method">按烹饪方法</string>
+    <string name="tag_breakfast">早餐</string>
+
+    <string name="tag_lunch">午餐</string>
+    <string name="tag_dinner">晚餐</string>
+    <string name="tag_russian">俄罗斯</string>
+    <string name="tag_american">美国</string>
+    <string name="tag_asian">亚洲</string>
+    <string name="tag_light">清淡</string>
+    <string name="tag_fast">快速</string>
+
+    <string name="tag_inexpensive">便宜</string>
+    <string name="tag_in_oven">烤箱中</string>
+    <string name="tag_griddle">煎锅中煎炸</string>
+    <string name="tag_in_multicooker">多功能炊具中</string>
+    <string name="tag_for_a_couple">蒸</string>
+    <string name="tag_category_types_dishes">菜肴类型</string>
+    <string name="tag_first_course">第一道菜课程</string>
+    <string name="tag_second_course">第二道菜</string>
+    <string name="tag_drink">饮料</string>
+
+    <string name="tag_food_preparations">准备工作</string>
+    <string name="tag_bakery">烘焙食品</string>
+    <string name="tag_sauce">酱料</string>
+    <string name="mess_image_link_copied">图片链接已复制</string>
+    <string name="exit_selection_mode">退出选择模式</string>
+    <string name="mess_select_day_first">- 先选择一天</string>
+    <string name="mess_specify_another_meal">指定另一餐</string>
+    <string name="add_meal">添加餐点</string>
+    <string name="hint_breakfast">早餐...</string>
+
+    <string name="by_start">...从此时间开始</string>
+    <string name="by_end">“...在此时间结束”</string>
+    <string name="plan_cook">安排烹饪</string>
+    <string name="time_cook">烹饪时间：</string>
+    <string name="get_recipe_done">烹饪食谱...</string>
+    <string name="select_time_cook">选择烹饪时间：</string>
+    <string name="shopping_list">购物清单</string>
+    <string name="bought">已购买</string>
+
+    <string name="hint_empty">看起来是空的...</string>
+    <string name="hint_add_to_shopping_list">点击 + 将食材添加到您的购物清单。</string>
+    <string name="hint_cannot_undone">此操作无法撤消。</string>
+    <string name="hint_clear_shopping_list">清除购物列表？</string>
+    <string name="share_via">分享方式：</string>
+    <string name="share_text_title">购物清单：</string>
+
+    <string name="signature">从“一周盘点”应用导出 - 食谱书、菜单规划和购物清单。只针对最受欢迎和最可靠的食谱！ (⁠灬⁠º⁠‿⁠º⁠灬⁠)⁠♡</string>
+    <string name="change_theme">更改主题</string>
+    <string name="change_std_portions">更改标准份量</string>
+    <string name="edit_meals">编辑餐点</string>
+    <string name="rate_app">为应用评分</string>
+
+    //tod
+    <string name="pp">隐私政策</string>
+    <string name="terms_of_use">使用条款</string>
+
+    <string name="no_result">此查询无结果</string>
+    <string name="create_recipe">“创建食谱”</string>
+    <string name="special">特别</string>
+
+    <string name="all_recipes">所有食谱</string>
+    <string name="random">随机</string>
+    <string name="favorite_recipes">收藏</string>
+    <string name="step_by_step">分步</string>
+    <string name="recipe_composition">组成</string>
+    <string name="source">来源</string>
+    <string name="page_is_loading">页面正在加载</string>
+    <string name="no_source">未添加来源</string>
+    <string name="description_title">描述</string>
+    <string name="count">数量</string>
+
+    <string name="edit_image_link">编辑图片链接</string>
+    <string name="enter_new_image_link">输入新图片链接</string>
+    <string name="ml">ml</string>
+    <string name="no_category">未分类</string>
+    <string name="photo">照片</string>
+    <string name="select_photo">选择照片</string>
+    <string name="set_meal_time">设置用餐时间</string>
+    <string name="under">之前</string>
+
+    <string name="edit_meal">编辑餐点</string>
+    <string name="edit_permanent_meals">设置永久餐点</string>
+    <string name="tags">标签</string>
+    <string name="source_title">食谱来源，链接</string>
+    <string name="enter_recipe_link">输入食谱链接</string>
+    <string name="recipe">食谱</string>
+    <string name="step_">“步骤”</string>
+    <string name="enter_step_description">输入步骤说明</string>
+    <string name="edit_pinned_ingredients">编辑固定食材</string>
+    <string name="timer">计时器</string>
+
+    <string name="edit_tags">编辑标签</string>
+    <string name="recipe_creation">创建食谱</string>
+    <string name="recipe_edition">编辑食谱</string>
+    <string name="search_be_name_recipe_in_internet">在线搜索食谱名称</string>
+    <string name="search_again">再次搜索</string>
+    <string name="inventory">库存</string>
+    <string name="select_items_for_add_to_shopping_list">选择要添加到购物清单的商品</string>
+    <string name="last_edit">“上次编辑：”</string>
+    <string name="_in">“在”中</string>
+
+    <string name="add_recipe_to_menu">将食谱添加到菜单</string>
+    <string name="ingredients_for">配料</string>
+    <string name="edit_time_cook_recipe">烹饪时间设置</string>
+    <string name="all_cook_time">“总烹饪时间：”</string>
+    <string name="duration">持续时间</string>
+    <string name="no_ingredients">配方中无配料。</string>
+    <string name="cooking">烹饪：</string>
+    <string name="share">分享方式：</string>
+    <string name="delete_alert">您确定要删除此食谱吗？\n 请注意，删除食谱也会删除菜单中包含该食谱的所有菜品。\n 此操作无法撤消。</string>
+    <string name="edit_meal_name">编辑餐点名称</string>
+    <string name="edit_note">编辑注释</string>
+
+    <string name="delete_ingredient">您确定要删除此食材吗？\n请注意，删除食材会将其从食谱、菜单（草图中此食材的项目）和购物清单中删除。\n此操作无法撤消。</string>
+    <string name="edit_category_name">编辑类别名称</string>
+    <string name="delete_tag">您确定要删除此标签吗？\n请注意，删除标签会将其从所有草图和食谱中删除。\n此操作无法撤消。</string>
+    <string name="delete_apply">您确定要删除吗？</string>
+    <string name="set_timer">计时器应设置多长时间？</string>
+    <string name="when_recipe_start">我应该在什么时间开始烹饪？</string>
+    <string name="when_recipe_end">何时计算烹饪量？</string>
+    <string name="gram">克</string>
+
+    <string name="kilogram">公斤</string>
+    <string name="milliliter">毫升</string>
+    <string name="liter">升</string>
+    <string name="ingredient_category_meat_and_poultry">肉类和家禽</string>
+    <string name="ingredient_category_fish_and_seafood">鱼类和海鲜</string>
+    <string name="ingredient_category_vegetables">蔬菜</string>
+    <string name="ingredient_category_fruits">水果</string>
+    <string name="ingredient_category_greens_and_herbs">绿叶蔬菜和香草</string>
+    <string name="ingredient_category_dairy_products">乳制品</string>
+    <string name="ingredient_category_cereals_and_grains">谷物和谷类</string>
+
+    <string name="ingredient_category_legumes">豆类</string>
+    <string name="ingredient_category_nuts_and_seeds">坚果和种子</string>
+    <string name="ingredient_category_spices_and_seasonings">香料和调味料</string>
+    <string name="ingredient_category_sauces_and_oils">酱汁和油</string>
+    <string name="ingredient_category_baked_goods_and_desserts">烘焙食品和甜点</string>
+    <string name="ingredient_category_liquids">液体</string>
+    <string name="ingredient_chicken">鸡肉</string>
+
+    <string name="ingredient_beef">牛肉</string>
+    <string name="ingredient_pork">猪肉</string>
+    <string name="ingredient_lamb">羊肉</string>
+    <string name="ingredient_turkey">火鸡</string>
+    <string name="ingredient_chicken_breasts">鸡胸肉</string>
+    <string name="ingredient_salmon">三文鱼</string>
+    <string name="ingredient_tuna">金枪鱼</string>
+    <string name="ingredient_shrimp">虾</string>
+
+    <string name="ingredient_cod">鳕鱼</string>
+    <string name="ingredient_mackerel">鲭鱼</string>
+    <string name="ingredient_trout">鳟鱼</string>
+    <string name="ingredient_potatoes">土豆</string>
+    <string name="ingredient_onion">洋葱</string>
+    <string name="ingredient_carrot">胡萝卜</string>
+    <string name="ingredient_garlic">大蒜</string>
+    <string name="ingredient_tomatoes">西红柿</string>
+
+    <string name="ingredient_cucumbers">黄瓜</string>
+    <string name="ingredient_dill">莳萝</string>
+    <string name="ingredient_broccoli">西兰花</string>
+    <string name="ingredient_apples">苹果</string>
+    <string name="ingredient_bananas">香蕉</string>
+    <string name="ingredient_lemons">柠檬</string>
+    <string name="ingredient_oranges">橙子</string>
+    <string name="ingredient_strawberries">草莓</string>
+    <string name="ingredient_pears">梨</string>
+    <string name="ingredient_parsley">欧芹</string>
+    <string name="ingredient_basil">罗勒</string>
+
+    <string name="ingredient_thyme">百里香</string>
+    <string name="ingredient_oregano">牛至</string>
+    <string name="ingredient_mint">薄荷</string>
+    <string name="ingredient_milk">牛奶</string>
+    <string name="ingredient_butter">黄油</string>
+    <string name="ingredient_cottage_cheese">白软干酪</string>
+    <string name="ingredient_cheese">奶酪</string>
+    <string name="ingredient_cream">奶油</string>
+    <string name="ingredient_sour_cream">酸奶油</string>
+    <string name="ingredient_rice">米饭</string>
+    <string name="ingredient_pasta">意大利面</string>
+    <string name="ingredient_oatmeal">燕麦片</string>
+
+    <string name="ingredient_quinoa">藜麦</string>
+    <string name="ingredient_buckwheat">荞麦</string>
+    <string name="ingredient_bulgur">碾碎干小麦</string>
+    <string name="ingredient_beans">豆类</string>
+    <string name="ingredient_peas">豌豆</string>
+    <string name="ingredient_lentils">小扁豆</string>
+    <string name="ingredient_chickpeas">鹰嘴豆</string>
+    <string name="ingredient_soybeans">大豆</string>
+    <string name="ingredient_almonds">杏仁</string>
+    <string name="ingredient_walnuts">核桃</string>
+    <string name="ingredient_hazelnuts">榛子</string>
+
+    <string name="ingredient_sunflower_seeds">葵花籽</string>
+    <string name="ingredient_pine_nuts">松子</string>
+    <string name="ingredient_salt">盐</string>
+    <string name="ingredient_black_pepper">黑胡椒</string>
+    <string name="ingredient_paprika">辣椒粉</string>
+    <string name="ingredient_cinnamon">肉桂</string>
+    <string name="ingredient_ginger">生姜</string>
+    <string name="ingredient_turmeric">姜黄</string>
+    <string name="ingredient_olive_oil">橄榄油</string>
+    <string name="ingredient_soy_sauce">酱油</string>
+
+    <string name="ingredient_ketchup">番茄酱</string>
+    <string name="ingredient_mayonnaise">蛋黄酱</string>
+    <string name="ingredient_mustard">芥末</string>
+    <string name="ingredient_flour">面粉</string>
+    <string name="ingredient_sugar">糖</string>
+    <string name="ingredient_yeast">酵母</string>
+    <string name="ingredient_eggs">鸡蛋</string>
+    <string name="ingredient_honey">蜂蜜</string>
+    <string name="ingredient_bread">面包</string>
+    <string name="ingredient_water">水</string>
+    <string name="ingredient_broth">肉汤</string>
+</resources>

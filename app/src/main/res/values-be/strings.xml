@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Тыдзень у талерцы</string>
+    <string name="done">Гатова</string>
+    <string name="Portions">Порцыі</string>
+    <string name="portions_end_of_phrase">порцыі</string>
+    <string name="data_not_found">Няма дадзеных</string>
+    <string name="add_day">Дадаць дзень</string>
+    <string name="Change_number_of_servings">Змяніць колькасць порцый</string>
+    <string name="add">Дадаць</string>
+    <string name="apply">Пацвердзіць</string>
+    <string name="Ingredient">Інгрэдыент</string>
+    <string name="Specify_ingredient">Укажыце інгрэдыент</string>
+    <string name="message_non_validate_place_position_in_menu">Калі ласка, выберыце дату і прыём ежы або абярыце катэгорыю Штотыдзень</string>
+    <string name="message_select_ingredient">Калі ласка, выберыце інгрэдыент</string>
+    <string name="add_note">Дадаць нататку</string>
+    <string name="title_edit_note">Тэкст нататкі</string>
+    <string name="enter_text_note">Увядзіце тэкст тут...</string>
+    <string name="select_day">Выберыце дзень</string>
+    <string name="title_in_generally">Агульныя</string>
+    <string name="title_or_detailed">Або больш падрабязна</string>
+    <string name="title_eating">Ежа:</string>
+    <string name="move_position">Перамясціць пазіцыю</string>
+
+    <string name="add_to_menu">Дадаць у меню</string>
+    <string name="add_recipe">Дадаць рэцэпт</string>
+    <string name="add_draft">Дадаць чарнавік</string>
+    <string name="add_ingredient">Дадаць інгрэдыент</string>
+    <string name="edit">Рэдагаваць</string>
+    <string name="move">Перанесці</string>
+    <string name="doubleR">Дублікат</string>
+    <string name="delete">Выдаліць</string>
+    <string name="add_shopping_cart">Дадаць у пакупкі</string>
+    <string name="change_recipe">Змяніць рэцэпт</string>
+    <string name="week_nav"><![CDATA[<- Тыдзень]]></string>
+    <string name="day_nav"><![CDATA[<- Day]]></string>
+    <string name="for_week">На тыдзень</string>
+    <string name="description">Тлумачэнне</string>
+    <string name="Pieces">Па кавалках...</string>
+    <string name="amount">Сума</string>
+    <string name="double_position">Дублікат пазіцыі</string>
+
+    <string name="add_position">Дадаць пасаду</string>
+    <string name="search_placeholder">Што мы шукаем?</string>
+    <string name="selected_positions">Абраныя пазіцыі</string>
+    <string name="add_positions_voice_apply">Дадаць пазіцыі</string>
+    <string name="selected_tags"><![CDATA[Selected >]]></string>
+    <string name="specify_selection">Дадаць рэцэпт: выбраць ежу</string>
+    <string name="add_category">Дадаць катэгорыю</string>
+    <string name="enter_category_name">Увядзіце тут назву катэгорыі</string>
+    <string name="error_enter_title">Калі ласка, увядзіце імя</string>
+    <string name="change_start_recipe_time">Змяніць час пачатку рэцэпту</string>
+    <string name="change_end_recipe_time">Змяніць час заканчэння рэцэпту</string>
+    <string name="increase_step_time">Павялічыць час кроку</string>
+    <string name="move_step_by_time_start">Адкласці час пачатку гэтага кроку</string>
+    <string name="provide_link_to_image">Дайце спасылку на выяву</string>
+
+    <string name="select_from_gallery">Выбраць з галерэі</string>
+    <string name="select_ingredients">Выберыце інгрэдыенты</string>
+    <string name="cancel">Адмена</string>
+    <string name="select_hours_and_minutes">Выберыце гадзіны і хвіліны</string>
+    <string name="create_ingredient">Стварыць інгрэдыент</string>
+    <string name="ingredient_name">Назва інгрэдыента</string>
+    <string name="enter_ingredient_name">Увядзіце назву інгрэдыента</string>
+    <string name="is_this_a_liquid">Гэта вадкасць?</string>
+    <string name="select_category">Выберыце катэгорыю</string>
+    <string name="category">Катэгорыя</string>
+
+    <string name="enter_image_link">Увядзіце спасылку на выяву</string>
+    <string name="create_tag">Стварыць тэг</string>
+    <string name="tag_name">Назва тэга</string>
+    <string name="enter_tag_name_here">Увядзіце назву тэга тут</string>
+    <string name="plan_your_cooking">План прыгатавання ежы</string>
+    <string name="choose_meal_times">Выберыце час прыёму ежы</string>
+    <string name="meal_time_tip">* Для сартавання меню выкарыстоўваецца час прыёму ежы</string>
+    <string name="ask_exit">Вы ўпэўнены, што хочаце выйсці?</string>
+    <string name="exit_tip">Змены не будуць захаваны пры выхадзе.</string>
+    <string name="stay">Застацца</string>
+    <string name="exit">Выхад</string>
+
+    <string name="more_filters">Дадатковыя фільтры</string>
+    <string name="only_favorites">Толькі абраныя</string>
+    <string name="cook_time">Час прыгатавання</string>
+    <string name="select_step">Выберыце крок</string>
+    <string name="step">" крок"</string>
+    <string name="sort">Сартаваць</string>
+    <string name="a_z_alphabetically">А-Я ў алфавітным парадку</string>
+    <string name="z_a_reverse_alphabetical">З-А ў алфавітным парадку</string>
+    <string name="from_old_to_new">Ад старога да новага</string>
+    <string name="from_new_to_old">Ад новага да старога</string>
+    <string name="random_order">Выпадковы парадак</string>
+    <string name="_portions"> порцыі</string>
+
+    <string name="seems_empty">Здаецца, тут пуста..</string>
+    <string name="cook_planner_empty_tip"><![CDATA[Расклад гатавання праз: Рэцэпт у меню -> Яшчэ -> План гатавання]]></string>
+    <string name="recipe_description">Апісанне рэцэпту</string>
+    <string name="enter_recipe_description">Увядзіце апісанне рэцэпту</string>
+    <string name="recipe_name">Назва рэцэпту</string>
+    <string name="enter_recipe_name">Увядзіце назву рэцэпту</string>
+    <string name="add_photo">Дадаць фота</string>
+    <string name="portions_count">Колькасць порцый</string>
+    <string name="ingredients">Інгрэдыенты</string>
+
+    <string name="edit_ingredients">Рэдагаваць інгрэдыенты</string>
+    <string name="step_by_step_recipe">Пакрокавы рэцэпт</string>
+    <string name="add_step">Дадаць крок</string>
+    <string name="settings">Настройкі</string>
+    <string name="next">Далей</string>
+    <string name="make_photo">Зрабіць фота</string>
+    <string name="no_camera_hint">Немагчыма зрабіць фота, камера не вызначана</string>
+    <string name="recipe_duration">Працягласць гатавання</string>
+    <string name="no_mic_hint">Мікрафон не выяўлены</string>
+    <string name="classic">Класічны</string>
+
+    <string name="Evening">Змярканне</string>
+    <string name="_create">"+ Стварыць: "</string>
+    <string name="necessarily">* гэта поле абавязкова для запаўнення</string>
+    <string name="hour_small"> h</string>
+    <string name="min_small"> мін</string>
+    <string name="tag_category_by_meal">Па ежы</string>
+    <string name="tag_category_by_cuisines_world">Кухні свету</string>
+    <string name="tag_category_by_advantages">Перавагі</string>
+    <string name="tag_category_by_cooking_method">Па спосабе прыгатавання</string>
+    <string name="tag_breakfast">Сняданак</string>
+
+    <string name="tag_lunch">Абед</string>
+    <string name="tag_dinner">Вячэра</string>
+    <string name="tag_russian">Руская</string>
+    <string name="tag_american">Амерыканскі</string>
+    <string name="tag_asian">Азіяцкая</string>
+    <string name="tag_light">Святло</string>
+    <string name="tag_fast">Хутка</string>
+
+    <string name="tag_inexpensive">Нядорага</string>
+    <string name="tag_in_oven">У духоўцы</string>
+    <string name="tag_griddle">Смажыць на патэльні</string>
+    <string name="tag_in_multicooker">У мультиварке</string>
+    <string name="tag_for_a_couple">На пару</string>
+    <string name="tag_category_types_dishes">Тыпы страў</string>
+    <string name="tag_first_course">Першая страва</string>
+    <string name="tag_second_course">Другі курс</string>
+    <string name="tag_drink">Напой</string>
+
+    <string name="tag_food_preparations">Падрыхтоўка</string>
+    <string name="tag_bakery">Выпечка</string>
+    <string name="tag_sauce">Соус</string>
+    <string name="mess_image_link_copied">Спасылка на выяву скапіравана</string>
+    <string name="exit_selection_mode">Выйсці з рэжыму выбару</string>
+    <string name="mess_select_day_first">- Спачатку абярыце дзень</string>
+    <string name="mess_specify_another_meal">Указаць іншы прыём ежы</string>
+    <string name="add_meal">Дадаць ежу</string>
+    <string name="hint_breakfast">Сняданак...</string>
+
+    <string name="by_start">...пачынаючы з гэтага часу</string>
+    <string name="by_end">"...заканчваецца да гэтага часу "</string>
+    <string name="plan_cook">Запланаваць кулінарыю</string>
+    <string name="time_cook">Час прыгатавання:</string>
+    <string name="get_recipe_done">Рэцэпт прыгатавання ...</string>
+    <string name="select_time_cook">Выберыце час прыгатавання:</string>
+    <string name="shopping_list">Спіс пакупак</string>
+    <string name="bought">Набыта</string>
+
+    <string name="hint_empty">Здаецца, тут пуста...</string>
+    <string name="hint_add_to_shopping_list">Націсніце +, каб дадаць інгрэдыенты ў спіс пакупак.</string>
+    <string name="hint_cannot_undone">Гэта дзеянне не можа быць адменена.</string>
+    <string name="hint_clear_shopping_list">Ачысціць спіс пакупак?</string>
+    <string name="share_via">Абагуліць праз:</string>
+    <string name="share_text_title">Спіс пакупак:</string>
+
+    <string name="signature">Экспартавана з праграмы \"Тыдзень у талерцы\" - кніга рэцэптаў, планаванне меню і спіс пакупак. Толькі для самых любімых і правераных рэцэптаў! (⁠灬⁠º⁠‿⁠º⁠灬⁠)⁠♡</string>
+    <string name="change_theme">Змяніць тэму</string>
+    <string name="change_std_portions">Змяніць стандартныя порцыі</string>
+    <string name="edit_meals">Рэдагаваць стравы</string>
+    <string name="rate_app">Ацаніце праграму</string>
+    //todo
+    <string name="pp">Палітыка прыватнасці</string>
+    <string name="terms_of_use">Правілы выкарыстання</string>
+
+    <string name="no_result">На гэты запыт няма вынікаў</string>
+    <string name="create_recipe">"Стварыць рэцэпт "</string>
+    <string name="special">Спецыяльны</string>
+
+    <string name="all_recipes">Усе рэцэпты</string>
+    <string name="random">Выпадковы</string>
+    <string name="favorite_recipes">Абранае</string>
+    <string name="step_by_step">Крок за крокам</string>
+    <string name="recipe_composition">Склад</string>
+    <string name="source">Крыніца</string>
+    <string name="page_is_loading">Старонка загружаецца</string>
+    <string name="no_source">Крыніца не дададзена</string>
+    <string name="description_title">Апісанне</string>
+    <string name="count">Колькасць</string>
+
+    <string name="edit_image_link">Рэдагаваць спасылку на выяву</string>
+    <string name="enter_new_image_link">Увядзіце спасылку на новую выяву</string>
+    <string name="ml">ml</string>
+    <string name="no_category">Без катэгорыі</string>
+    <string name="photo">Фота</string>
+    <string name="select_photo">Выберыце фота</string>
+    <string name="set_meal_time">Усталяваць час прыёму ежы</string>
+    <string name="under">перад </string>
+
+    <string name="edit_meal">Рэдагаваць ежу</string>
+    <string name="edit_permanent_meals">Наладзіць пастаяннае харчаванне</string>
+    <string name="tags">Тэгі</string>
+    <string name="source_title">Крыніца рэцэпту, спасылка</string>
+    <string name="enter_recipe_link">Увядзіце спасылку на рэцэпт</string>
+    <string name="recipe">Рэцэпт</string>
+    <string name="step_">"Крок"</string>
+    <string name="enter_step_description">Увядзіце апісанне кроку</string>
+    <string name="edit_pinned_ingredients">Рэдагаваць замацаваныя інгрэдыенты</string>
+    <string name="timer">Таймер</string>
+
+    <string name="edit_tags">Рэдагаваць тэгі</string>
+    <string name="recipe_creation">Стварыць рэцэпт</string>
+    <string name="recipe_edition">Рэдагаваць рэцэпт</string>
+    <string name="search_be_name_recipe_in_internet">Шукаць назву рэцэпта ў Інтэрнэце</string>
+    <string name="search_again">Шукаць яшчэ раз</string>
+    <string name="inventory">Інвентар</string>
+    <string name="select_items_for_add_to_shopping_list">Выберыце тавары для дадання ў спіс пакупак</string>
+    <string name="last_edit">Апошняя рэдакцыя: </string>
+    <string name="_in"> у </string>
+
+    <string name="add_recipe_to_menu">Дадаць рэцэпт у меню</string>
+    <string name="ingredients_for">Інгрэдыенты для</string>
+    <string name="edit_time_cook_recipe">Настройка часу прыгатавання</string>
+    <string name="all_cook_time">"Агульны час прыгатавання: "</string>
+    <string name="duration">Працягласць</string>
+    <string name="no_ingredients">У кампазіцыі няма інгрэдыентаў.</string>
+    <string name="cooking">Кулінарыя:</string>
+    <string name="share">Абагуліць праз:</string>
+    <string name="delete_alert">Вы ўпэўнены, што жадаеце выдаліць гэты рэцэпт?\n Калі ласка, звярніце ўвагу, што выдаленне рэцэпту прывядзе да выдалення ўсіх пунктаў з ім у меню.\n Гэта дзеянне нельга адрабіць.</string>
+    <string name="edit_meal_name">Рэдагаваць назву ежы</string>
+    <string name="edit_note">Рэдагаваць нататку</string>
+
+    <string name="delete_ingredient">Вы ўпэўнены, што жадаеце выдаліць гэты інгрэдыент?\n Калі ласка, звярніце ўвагу, выдаленне інгрэдыента прывядзе да яго выдалення з рэцэптаў, меню (элементаў для гэтага інгрэдыента ў эскізах) і спісу пакупак.\n Гэта дзеянне нельга адмяніць.</string>
+    <string name="edit_category_name">Рэдагаваць назву катэгорыі</string>
+    <string name="delete_tag">Вы ўпэўнены, што жадаеце выдаліць гэты тэг?\n Звярніце ўвагу, выдаленне тэга прывядзе да яго выдалення з усіх эскізаў і рэцэптаў.\n Гэта дзеянне нельга адрабіць.</string>
+    <string name="delete_apply">Вы ўпэўнены, што хочаце выдаліць?</string>
+    <string name="set_timer">Як доўга павінен быць усталяваны таймер?</string>
+    <string name="when_recipe_start">У які час я павінен пачаць гатаваць?</string>
+    <string name="when_recipe_end">Калі разлічваць гатаванне?</string>
+    <string name="gram">гр</string>
+
+    <string name="kilogram">кг</string>
+    <string name="milliliter">мл</string>
+    <string name="liter">l</string>
+    <string name="ingredient_category_meat_and_poultry">Мяса і птушка</string>
+    <string name="ingredient_category_fish_and_seafood">Рыба і морапрадукты</string>
+    <string name="ingredient_category_vegetables">Гародніна</string>
+    <string name="ingredient_category_fruits">Садавіна</string>
+    <string name="ingredient_category_greens_and_herbs">Зеляніна і травы</string>
+    <string name="ingredient_category_dairy_products">Малочныя прадукты</string>
+    <string name="ingredient_category_cereals_and_grains">Крупы і збожжа</string>
+
+    <string name="ingredient_category_legumes">Бабовыя</string>
+    <string name="ingredient_category_nuts_and_seeds">Арэхі і насенне</string>
+    <string name="ingredient_category_spices_and_seasonings">Спецыі і прыправы</string>
+    <string name="ingredient_category_sauces_and_oils">Соусы і масла</string>
+    <string name="ingredient_category_baked_goods_and_desserts">Выпечка і дэсерты</string>
+    <string name="ingredient_category_liquids">Вадкасці</string>
+    <string name="ingredient_chicken">Курыца</string>
+
+    <string name="ingredient_beef">Ялавічына</string>
+    <string name="ingredient_pork">Свініна</string>
+    <string name="ingredient_lamb">Бараніна</string>
+    <string name="ingredient_turkey">Турцыя</string>
+    <string name="ingredient_chicken_breasts">Курыныя грудкі</string>
+    <string name="ingredient_salmon">Ласось</string>
+    <string name="ingredient_tuna">Тунец</string>
+    <string name="ingredient_shrimp">Крэветкі</string>
+
+    <string name="ingredient_cod">Трэска</string>
+    <string name="ingredient_mackerel">Скумбрыя</string>
+    <string name="ingredient_trout">Фарэль</string>
+    <string name="ingredient_potatoes">Бульба</string>
+    <string name="ingredient_onion">Цыбуля</string>
+    <string name="ingredient_carrot">Морква</string>
+    <string name="ingredient_garlic">Часнок</string>
+    <string name="ingredient_tomatoes">Таматы</string>
+
+    <string name="ingredient_cucumbers">Агуркі</string>
+    <string name="ingredient_dill">Кроп</string>
+    <string name="ingredient_broccoli">Бракалі</string>
+    <string name="ingredient_apples">Яблыкі</string>
+    <string name="ingredient_bananas">Бананы</string>
+    <string name="ingredient_lemons">Лімоны</string>
+    <string name="ingredient_oranges">Апельсіны</string>
+    <string name="ingredient_strawberries">Клубніцы</string>
+    <string name="ingredient_pears">Грушы</string>
+    <string name="ingredient_parsley">Пятрушка</string>
+    <string name="ingredient_basil">Базілік</string>
+
+    <string name="ingredient_thyme">Чабор</string>
+    <string name="ingredient_oregano">Арэгана</string>
+    <string name="ingredient_mint">Мята</string>
+    <string name="ingredient_milk">Малако</string>
+    <string name="ingredient_butter">Сметанковае масла</string>
+    <string name="ingredient_cottage_cheese">Тварог</string>
+    <string name="ingredient_cheese">Сыр</string>
+    <string name="ingredient_cream">Крэм</string>
+    <string name="ingredient_sour_cream">Смятана</string>
+    <string name="ingredient_rice">Рыс</string>
+    <string name="ingredient_pasta">Паста</string>
+    <string name="ingredient_oatmeal">Аўсяныя шматкі</string>
+
+    <string name="ingredient_quinoa">Квіноа</string>
+    <string name="ingredient_buckwheat">Грэчка</string>
+    <string name="ingredient_bulgur">Булгур</string>
+    <string name="ingredient_beans">Бабы</string>
+    <string name="ingredient_peas">Гарох</string>
+    <string name="ingredient_lentils">Сачавіца</string>
+    <string name="ingredient_chickpeas">Нут</string>
+    <string name="ingredient_soybeans">Соевыя бабы</string>
+    <string name="ingredient_almonds">Міндаль</string>
+    <string name="ingredient_walnuts">Грэцкія арэхі</string>
+    <string name="ingredient_hazelnuts">Лясныя арэхі</string>
+
+    <string name="ingredient_sunflower_seeds">Семечкі сланечніка</string>
+    <string name="ingredient_pine_nuts">Кедравыя арэхі</string>
+    <string name="ingredient_salt">Соль</string>
+    <string name="ingredient_black_pepper">Чорны перац</string>
+    <string name="ingredient_paprika">Папрыка</string>
+    <string name="ingredient_cinnamon">Карыца</string>
+    <string name="ingredient_ginger">Імбір</string>
+    <string name="ingredient_turmeric">Куркума</string>
+    <string name="ingredient_olive_oil">Аліўкавы алей</string>
+    <string name="ingredient_soy_sauce">Соевы соус</string>
+
+    <string name="ingredient_ketchup">Кетчуп</string>
+    <string name="ingredient_mayonnaise">Маянэз</string>
+    <string name="ingredient_mustard">Гарчыца</string>
+    <string name="ingredient_flour">Мука</string>
+    <string name="ingredient_sugar">Цукар</string>
+    <string name="ingredient_yeast">Дрожджы</string>
+    <string name="ingredient_eggs">Яйкі</string>
+    <string name="ingredient_honey">Мёд</string>
+    <string name="ingredient_bread">Хлеб</string>
+    <string name="ingredient_water">Вада</string>
+    <string name="ingredient_broth">Булён</string>
+</resources>

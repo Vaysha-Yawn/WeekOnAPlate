@@ -109,34 +109,6 @@ val recipeTom =
         false, LocalDateTime.now(), LocalTime.now(),
     )
 
-val recipeShort = RecipeView(
-    0,
-    name = "Клубника в шоколаде",
-    description = "Нежная, сладкая, сочная, попробуйте. Рекомендуется растапливать шоколад на паровой бане",
-    img = "https://static.1000.menu/res/640/img/content-v2/dc/1d/36406/salat-iz-pomidorov-s-ogurcom-i-lukom_1613988871_7_max.jpg",
-    tags = listOf(RecipeTagView(0, tagName = "Десерт")),
-    standardPortionsCount = 4,
-    ingredients = listOf(
-        IngredientInRecipeView(
-            0,
-            IngredientView(ingredientId = 0, img = "https://static.1000.menu/res/380/img/content/36406/salat-iz-pomidorov-s-ogurcom-i-lukom_1562163876_2_max.jpg", name = "Клубника", measure = "гр"),
-            "Целая без хвостиков",
-            60
-        )
-    ),
-    steps = listOf(
-        RecipeStepView(
-            0,
-            "Перемешайте все подготовленные ингредиенты и подавайте салат из свежих огурцов и помидоров с луком сразу же после приготовления. Он вкусен именно свежим.",
-            "https://static.1000.menu/res/380/img/content/36406/salat-iz-pomidorov-s-ogurcom-i-lukom_1562165388_5_max.jpg",
-            0, listOf()
-        ),
-    ),
-    link = "https://eda.ru/media/vopros/zagotovki-tri-prostyh-pravila",
-    inFavorite = false, LocalDateTime.now(), LocalTime.now(),
-)
-
-
 val shortRecipe = RecipeShortView(0, "Салат из помидоров с огурцом и луком", "https://static.1000.menu/res/380/img/content/36406/salat-iz-pomidorov-s-ogurcom-i-lukom_1562165388_5_max.jpg")
 
 

@@ -1,8 +1,10 @@
 package week.on.a.plate.screens.deleteApply.logic
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import week.on.a.plate.R
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screens.deleteApply.event.DeleteApplyEvent
@@ -33,8 +35,9 @@ class DeleteApplyViewModel @Inject constructor(
         mainViewModel.onEvent(MainEvent.NavigateBack)
     }
 
-    suspend fun launchAndGet(title:String?=null, message: String, use: suspend (DeleteApplyEvent) -> Unit) {
-        if (title!=null) state.title.value = title else state.title.value = "Уверены, что хотите удалить?"
+    suspend fun launchAndGet(context: Context, title:String?=null, message: String, use: suspend (DeleteApplyEvent) -> Unit) {
+        if (title!=null) state.title.value = title else state.title.value =
+            context.getString(R.string.delete_apply)
         state.message.value = message
         resultFlow.value = null
         resultFlow.collect { value ->

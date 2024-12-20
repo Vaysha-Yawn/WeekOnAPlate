@@ -18,6 +18,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -54,13 +55,13 @@ fun InventoryScreen(
         ) {
             CloseButton { onEvent(InventoryEvent.Back) }
             TextTitleItalic(
-                text = "Инвентаризация",
+                text = stringResource(R.string.inventory),
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.End
             )
         }
         TextBodyDisActive(
-            "Выберите позиции для добавления в список покупок",
+            stringResource(R.string.select_items_for_add_to_shopping_list),
             Modifier
                 .padding(start = 24.dp)
                 .padding(bottom = 24.dp)
@@ -90,7 +91,7 @@ fun CardInventory(data: InventoryPositionData, onEvent: (InventoryEvent) -> Unit
         val checkState = data.answer
         Column(Modifier.weight(1f), horizontalAlignment = Alignment.Start) {
             TextBody(text = data.ingredient.name)
-            val valueAndMeasure = getIngredientCountAndMeasure1000(data.countTarget, data.ingredient.measure)
+            val valueAndMeasure = getIngredientCountAndMeasure1000(LocalContext.current, data.countTarget, data.ingredient.measure)
             TextBodyDisActive(text = "${valueAndMeasure.first} ${valueAndMeasure.second}")
         }
         Checkbox(

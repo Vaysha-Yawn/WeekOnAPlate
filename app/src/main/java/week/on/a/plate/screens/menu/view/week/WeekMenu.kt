@@ -111,6 +111,7 @@ fun WeekMenu(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SellTitleWeek(sel: SelectionView, onEvent: (event: Event) -> Unit) {
+    val context = LocalContext.current
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.background(MaterialTheme.colorScheme.surface, RoundedCornerShape(10.dp))
@@ -122,7 +123,7 @@ fun SellTitleWeek(sel: SelectionView, onEvent: (event: Event) -> Unit) {
                 .combinedClickable(
                     onClick = {},
                     onLongClick = {
-                        onEvent(MenuEvent.EditOrDeleteSelection(sel))
+                        onEvent(MenuEvent.EditOrDeleteSelection(sel, context))
                     }
                 ),
         )

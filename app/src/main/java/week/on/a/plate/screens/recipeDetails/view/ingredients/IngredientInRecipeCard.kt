@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
@@ -61,7 +62,7 @@ fun IngredientInRecipeCard(
             }
         }
         Row {
-            val valueAndMeasure = getIngredientCountAndMeasure1000(count?:ingredient.count, ingredient.ingredientView.measure)
+            val valueAndMeasure = getIngredientCountAndMeasure1000(LocalContext.current, count?:ingredient.count, ingredient.ingredientView.measure)
             TextBody(
                 text = valueAndMeasure.first, color = MaterialTheme.colorScheme.onBackground
             )

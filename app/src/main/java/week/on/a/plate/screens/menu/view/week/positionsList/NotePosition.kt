@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
@@ -29,12 +30,13 @@ fun NotePosition(
     onEvent: (event: Event) -> Unit,
     rowScope: RowScope
 ) {
+    val context = LocalContext.current
     with(rowScope) {
         Row(
             Modifier
                 .weight(3f)
                 .combinedClickable(
-                    onClick = { onEvent(week.on.a.plate.screens.menu.event.MenuEvent.EditOtherPosition(note)) },
+                    onClick = { onEvent(week.on.a.plate.screens.menu.event.MenuEvent.EditOtherPosition(note, context)) },
                     onLongClick =
                     { onEvent(WrapperDatePickerEvent.SwitchEditMode) },
                 )
@@ -56,7 +58,7 @@ fun NotePosition(
             )
         }
         MoreButton {
-            onEvent(week.on.a.plate.screens.menu.event.MenuEvent.EditPositionMore(note))
+            onEvent(week.on.a.plate.screens.menu.event.MenuEvent.EditPositionMore(note, context))
         }
         Spacer(modifier = Modifier.width(12.dp))
     }

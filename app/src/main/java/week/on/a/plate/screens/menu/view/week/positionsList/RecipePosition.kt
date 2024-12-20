@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
@@ -41,6 +42,7 @@ fun RecipePosition(
     onEvent: (event: Event) -> Unit,
     rowScope: RowScope
 ) {
+    val context = LocalContext.current
     with(rowScope) {
         Row(
             Modifier
@@ -97,7 +99,7 @@ fun RecipePosition(
             }
         }
         MoreButton {
-            onEvent(MenuEvent.EditPositionMore(recipe))
+            onEvent(MenuEvent.EditPositionMore(recipe, context))
         }
         Spacer(modifier = Modifier.width(12.dp))
     }

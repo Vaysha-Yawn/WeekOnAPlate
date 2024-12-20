@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
@@ -50,10 +51,10 @@ fun RecipeDetailsSteps(state: RecipeDetailsState,   onEvent: (RecipeDetailsEvent
                 .padding(vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            TextBody(text = "Время приготовления: ")
+            TextBody(text = stringResource(R.string.time_cook))
             if (state.recipe.steps.isNotEmpty()) {
                 TextBody(
-                    text = state.recipe.duration.toSecondOfDay().timeToString()
+                    text = state.recipe.duration.toSecondOfDay().timeToString(LocalContext.current)
                 )
             }
         }
@@ -126,7 +127,7 @@ fun TimerButton(timer: Int) {
         )
         Spacer(modifier = Modifier.width(12.dp))
         TextInApp(
-            text = timer.timeToString(),
+            text = timer.timeToString(LocalContext.current),
             textStyle = Typography.bodyLarge,
             color = MaterialTheme.colorScheme.onBackground,
         )

@@ -1,9 +1,11 @@
 package week.on.a.plate.screens.specifyRecipeToCookPlan.logic
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import week.on.a.plate.R
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.navigation.CookPlannerDestination
 import week.on.a.plate.data.dataView.recipe.RecipeView
@@ -13,9 +15,9 @@ import week.on.a.plate.data.repository.tables.recipe.recipe.RecipeRepository
 import week.on.a.plate.dialogs.dialogTimePick.logic.TimePickViewModel
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
-import week.on.a.plate.screens.calendarMy.event.CalendarMyEvent
-import week.on.a.plate.screens.calendarMy.logic.CalendarMyUseCase
-import week.on.a.plate.screens.calendarMy.state.StateCalendarMy
+import week.on.a.plate.dialogs.calendarMy.event.CalendarMyEvent
+import week.on.a.plate.dialogs.calendarMy.logic.CalendarMyUseCase
+import week.on.a.plate.dialogs.calendarMy.state.StateCalendarMy
 import week.on.a.plate.screens.specifyRecipeToCookPlan.event.SpecifyRecipeToCookPlanEvent
 import week.on.a.plate.screens.specifyRecipeToCookPlan.state.SpecifyRecipeToCookPlanUIState
 import java.time.LocalDate
@@ -65,18 +67,18 @@ class SpecifyRecipeToCookPlanViewModel @Inject constructor(
         when (event) {
             SpecifyRecipeToCookPlanEvent.Close -> close()
             SpecifyRecipeToCookPlanEvent.Done -> done()
-            SpecifyRecipeToCookPlanEvent.OpenTimePick -> openTimePick()
+            is SpecifyRecipeToCookPlanEvent.OpenTimePick -> openTimePick(event.context)
             is SpecifyRecipeToCookPlanEvent.SelectDate -> {state.date.value = event.date }
             SpecifyRecipeToCookPlanEvent.SwitchStartEnd -> {state.isStart.value = !state.isStart.value}
         }
     }
 
-    private fun openTimePick(){
+    private fun openTimePick(context: Context) {
         mainViewModel.viewModelScope.launch {
             val vm = TimePickViewModel()
             vm.mainViewModel = mainViewModel
             mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-            vm.launchAndGet("Выберите время приготовления:"){time->
+            vm.launchAndGet(context.getString(R.string.select_time_cook)){ time->
                 state.time.value = LocalTime.ofSecondOfDay(time)
             }
         }

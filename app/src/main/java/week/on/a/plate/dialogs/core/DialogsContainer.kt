@@ -89,7 +89,7 @@ import week.on.a.plate.dialogs.setTheme.view.SetThemeStart
 import week.on.a.plate.dialogs.sortMore.event.SortMoreEvent
 import week.on.a.plate.dialogs.sortMore.logic.SortMoreViewModel
 import week.on.a.plate.dialogs.sortMore.view.SortMoreContent
-import week.on.a.plate.screens.calendarMy.view.CalendarMy
+import week.on.a.plate.dialogs.calendarMy.view.CalendarMy
 
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -37,7 +37,7 @@ fun TopPanelRecipeDetail(inFavorite: Boolean, onEvent: (RecipeDetailsEvent) -> U
                 onEvent(RecipeDetailsEvent.Share(context))
             }
             ImageButton(R.drawable.delete) {
-                onEvent(RecipeDetailsEvent.Delete)
+                onEvent(RecipeDetailsEvent.Delete(context))
             }
             ImageButton(R.drawable.edit) {
                 onEvent(RecipeDetailsEvent.Edit)
@@ -48,7 +48,7 @@ fun TopPanelRecipeDetail(inFavorite: Boolean, onEvent: (RecipeDetailsEvent) -> U
                 onEvent(RecipeDetailsEvent.SwitchFavorite)
             }
             ImageButton(R.drawable.add_shopping_cart) {
-                onEvent(RecipeDetailsEvent.AddToCart)
+                onEvent(RecipeDetailsEvent.AddToCart(context))
             }
         }
     }

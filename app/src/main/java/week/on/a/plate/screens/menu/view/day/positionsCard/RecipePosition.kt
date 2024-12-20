@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -54,6 +55,7 @@ fun WeekRecipePosition(
     menuUIState: MenuUIState,
     onEvent: (event: Event) -> Unit,
 ) {
+    val context = LocalContext.current
     Box(
         Modifier
             .fillMaxWidth()
@@ -122,7 +124,7 @@ fun WeekRecipePosition(
                 }
             }
             MoreButtonWithBackg {
-                onEvent(MenuEvent.EditPositionMore(recipe))
+                onEvent(MenuEvent.EditPositionMore(recipe, context))
             }
         }
         Column {

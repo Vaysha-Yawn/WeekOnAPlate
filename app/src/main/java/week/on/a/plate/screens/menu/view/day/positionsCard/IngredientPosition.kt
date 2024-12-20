@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.core.Event
@@ -43,6 +44,7 @@ fun WeekIngredientPosition(
     ingredient: Position.PositionIngredientView,
     onEvent: (event: Event) -> Unit
 ) {
+    val context = LocalContext.current
     Box(
         Modifier
             .fillMaxWidth()
@@ -50,7 +52,7 @@ fun WeekIngredientPosition(
                 onClick = {
                     onEvent(
                         week.on.a.plate.screens.menu.event.MenuEvent.EditOtherPosition(
-                            ingredient
+                            ingredient, context
                         )
                     )
                 },
@@ -83,7 +85,7 @@ fun WeekIngredientPosition(
         ) {
             Spacer(Modifier)
             MoreButtonWithBackg {
-                onEvent(week.on.a.plate.screens.menu.event.MenuEvent.EditPositionMore(ingredient))
+                onEvent(week.on.a.plate.screens.menu.event.MenuEvent.EditPositionMore(ingredient, context))
             }
         }
         Column {
@@ -105,7 +107,7 @@ fun WeekIngredientPosition(
                     )
                 }
                 if (ingredient.ingredient.count != 0) {
-                    val ingredientCount = getIngredientCountAndMeasure1000(
+                    val ingredientCount = getIngredientCountAndMeasure1000(LocalContext.current,
                         ingredient.ingredient.count,
                         ingredient.ingredient.ingredientView.measure
                     )

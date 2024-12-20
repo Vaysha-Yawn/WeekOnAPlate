@@ -8,8 +8,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import week.on.a.plate.R
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.uitools.TextTitleLarge
 import week.on.a.plate.core.uitools.buttons.DoneButtonSmall
@@ -22,9 +24,9 @@ fun SearchNothingFound(state: SearchUIState, onEvent: (Event) -> Unit) {
         Modifier
             .fillMaxSize()
             .padding(24.dp)) {
-        TextTitleLarge(text = "По этому запросу ничего не найдено", modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Start)
+        TextTitleLarge(text = stringResource(R.string.no_result), modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Start)
         Spacer(modifier = Modifier.height(24.dp))
-        DoneButtonSmall(text = "Создать рецепт ${state.searchText.value}") {
+        DoneButtonSmall(text = stringResource(R.string.create_recipe) + state.searchText.value) {
             onEvent(SearchScreenEvent.CreateRecipe)
         }
     }

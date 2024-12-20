@@ -1,10 +1,11 @@
 package week.on.a.plate.dialogs.editOrCreateIngredient.event
 
 
+import android.content.Context
 import week.on.a.plate.core.Event
 
 sealed class AddIngredientEvent: Event() {
-    data object Done: AddIngredientEvent()
+    data class Done(val context:Context): AddIngredientEvent()
     data object Close: AddIngredientEvent()
     data object ChooseCategory: AddIngredientEvent()
     data object PickImage : AddIngredientEvent()

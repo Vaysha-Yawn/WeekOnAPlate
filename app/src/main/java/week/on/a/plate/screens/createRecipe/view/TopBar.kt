@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
@@ -44,9 +45,9 @@ fun TopBarRecipeCreate(state: RecipeCreateUIState, onEvent: (RecipeCreateEvent) 
         }
         TextBody(text =
         if (state.isForCreate.value){
-            "Создание рецепта"
+            stringResource(R.string.recipe_creation)
         }else{
-            "Редактирование рецепта"
+            stringResource(R.string.recipe_edition)
         }
         )
         Spacer(modifier = Modifier.width(12.dp))
@@ -56,11 +57,7 @@ fun TopBarRecipeCreate(state: RecipeCreateUIState, onEvent: (RecipeCreateEvent) 
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.secondary, RoundedCornerShape(10.dp))
                 .clickable {
-                    /*if (state.steps.value.isNotEmpty()) {
-                        onEvent(RecipeCreateEvent.SetTimeline)
-                    }else{*/
-                        onEvent(RecipeCreateEvent.Done)
-                    //}
+                    onEvent(RecipeCreateEvent.Done)
                 }
                 .size(36.dp)
         )

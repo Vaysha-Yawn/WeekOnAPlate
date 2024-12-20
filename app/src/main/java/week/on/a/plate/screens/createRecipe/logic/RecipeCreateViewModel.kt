@@ -1,7 +1,5 @@
 package week.on.a.plate.screens.createRecipe.logic
 
-import androidx.compose.runtime.mutableLongStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import week.on.a.plate.R
 import week.on.a.plate.core.Event
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.data.dataView.recipe.RecipeView
@@ -25,10 +24,8 @@ import week.on.a.plate.screens.createRecipe.state.RecipeStepState
 import week.on.a.plate.screens.filters.navigation.FilterDestination
 import week.on.a.plate.screens.filters.state.FilterEnum
 import week.on.a.plate.screens.filters.state.FilterMode
-import week.on.a.plate.screens.recipeTimeline.navigation.RecipeTimelineDestination
-import week.on.a.plate.screens.recipeTimeline.state.RecipeTimelineUIState
-import week.on.a.plate.screens.recipeTimeline.state.StepTimelineData
 import week.on.a.plate.mainActivity.logic.imageFromGallery.getSavedPicture
+import java.time.LocalTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,9 +33,6 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
     lateinit var mainViewModel: MainViewModel
     var state = RecipeCreateUIState()
     var isFirstTimeline:Boolean = true
-    private var stateTimeline = RecipeTimelineUIState(
-        mutableStateOf(listOf())
-    )
 
     private lateinit var resultFlow: MutableStateFlow<RecipeCreateUIState?>
 
@@ -105,7 +99,7 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
                 }.toList()
             }
 
-            is RecipeCreateEvent.ClearTime -> {
+            is RecipeCreateEvent.ClearTimer -> {
                 event.recipeStepState.timer.longValue = 0
             }
 
@@ -114,7 +108,7 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
             }
 
             is RecipeCreateEvent.EditTimer -> {
-                getTime("На сколько поставить таймер?") { time ->
+                getTime(event.context.getString(R.string.set_timer)) { time ->
                     event.recipeStepState.timer.longValue = time
                 }
             }
@@ -149,14 +143,10 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
 
             RecipeCreateEvent.AddManyIngredients -> addManyIngredients()
             is RecipeCreateEvent.DeleteIngredient -> deleteIngredient(event.ingredient)
-            RecipeCreateEvent.SetTimeline -> setTimeline()
             is RecipeCreateEvent.EditPinnedIngredients -> editPinnedIngredients(event.recipeStepState)
-            is RecipeCreateEvent.EditStepDuration -> {
-               // event.stepState.duration = event.time.toLong()
-            }
-            is RecipeCreateEvent.SetCustomDuration -> {
-                getTime("Длительность шага"){time->
-                   // event.state.duration = time
+            is RecipeCreateEvent.EditRecipeDuration -> {
+                getTime(event.context.getString(R.string.recipe_duration)){time->
+                   state.duration.value = LocalTime.ofSecondOfDay(time)
                 }
             }
         }
@@ -239,37 +229,6 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
                 recipeStepState.pinnedIngredientsInd.value = newList
             }
         }
-    }
-
-    private fun setTimeline() {
-        mainViewModel.onEvent(MainEvent.Navigate(RecipeTimelineDestination))
-        viewModelScope.launch {
-            updateTimelineState()
-            mainViewModel.recipeTimelineViewModel.launchAndGet(
-                stateTimeline, isFirstTimeline
-            ) { stateTL ->
-                stateTimeline = stateTL
-                state.steps.value.forEach { step ->
-                    val stepState = stateTL.allUISteps.value.find { it.id == step.id }!!
-                  //  step.start = stepState.start.value
-                  //  step.duration = stepState.duration.value
-                }
-                if (isFirstTimeline) {
-                    isFirstTimeline = false
-                }
-            }
-        }
-    }
-
-    private fun updateTimelineState() {
-        /*stateTimeline.allUISteps.value = state.steps.value.map {
-            StepTimelineData(
-                id = it.id,
-                description = it.description.value,
-                start = mutableLongStateOf(it.start),
-                duration = mutableLongStateOf(it.duration)
-            )
-        }*/
     }
 
     private fun getTime(title: String, use: (Long) -> Unit) {

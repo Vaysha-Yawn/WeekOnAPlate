@@ -26,13 +26,14 @@ import week.on.a.plate.dialogs.exitApply.event.ExitApplyEvent
 
 @Composable
 fun ChooseHowImagePickContent(onEvent: (ChooseHowImagePickEvent) -> Unit) {
+    val context = LocalContext.current
     Column(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.surface)
             .padding(24.dp)
     ) {
         DoneButton(stringResource(R.string.provide_link_to_image)) {
-            onEvent(ChooseHowImagePickEvent.ByUrl)
+            onEvent(ChooseHowImagePickEvent.ByUrl(context))
         }
         Spacer(Modifier.height(12.dp))
         val context = LocalContext.current

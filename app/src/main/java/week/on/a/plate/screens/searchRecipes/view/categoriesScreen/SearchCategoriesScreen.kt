@@ -1,7 +1,6 @@
 package week.on.a.plate.screens.searchRecipes.view.categoriesScreen
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,12 +17,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import week.on.a.plate.R
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.TagSmall
 import week.on.a.plate.core.uitools.TextTitle
-import week.on.a.plate.data.dataView.example.tags
+import week.on.a.plate.data.dataView.example.getTags
 import week.on.a.plate.data.dataView.recipe.RecipeTagView
 import week.on.a.plate.data.dataView.recipe.TagCategoryView
 import week.on.a.plate.data.repository.tables.filters.recipeTagCategory.startCategoryName
@@ -38,7 +40,7 @@ fun SearchCategoriesScreen(stateUI: SearchUIState, onEvent: (SearchScreenEvent) 
             .padding(horizontal = 12.dp)
     ) {
         item {
-            TextTitle(text = "Особое", Modifier.padding(start = 12.dp))
+            TextTitle(text = stringResource(R.string.special), Modifier.padding(start = 12.dp))
             Spacer(modifier = Modifier.size(12.dp))
             LazyRow {
                 item {
@@ -89,21 +91,21 @@ fun CardAbstractCategoryRecipe(name: String, click: () -> Unit) {
 
 @Composable
 fun CardAll(onEvent: (SearchScreenEvent) -> Unit) {
-    CardAbstractCategoryRecipe("Все рецепты") {
+    CardAbstractCategoryRecipe(stringResource(R.string.all_recipes)) {
         onEvent(SearchScreenEvent.SearchAll)
     }
 }
 
 @Composable
 fun CardRandom(onEvent: (SearchScreenEvent) -> Unit) {
-    CardAbstractCategoryRecipe("Случайные") {
+    CardAbstractCategoryRecipe(stringResource(R.string.random)) {
         onEvent(SearchScreenEvent.SearchRandom)
     }
 }
 
 @Composable
 fun CardFavorite(onEvent: (SearchScreenEvent) -> Unit) {
-    CardAbstractCategoryRecipe("Избранное") {
+    CardAbstractCategoryRecipe(stringResource(R.string.favorite_recipes)) {
         onEvent(SearchScreenEvent.SearchFavorite)
     }
 }
@@ -130,6 +132,7 @@ fun CardTag(recipeTagView: RecipeTagView, onEvent: (SearchScreenEvent) -> Unit) 
 @Composable
 fun PreviewSearchCategoriesScreen() {
     WeekOnAPlateTheme {
+        val tags = getTags(LocalContext.current)
         SearchCategoriesScreen(SearchUIState().apply {
             allTagsCategories = mutableStateOf(tags)
         }) {}
