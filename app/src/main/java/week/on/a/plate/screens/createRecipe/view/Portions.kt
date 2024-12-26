@@ -11,6 +11,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
+import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.ButtonsCounterSmall
 import week.on.a.plate.screens.createRecipe.event.RecipeCreateEvent
@@ -23,7 +24,7 @@ fun PortionsRecipeEdit(
     onEvent: (RecipeCreateEvent) -> Unit
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier) {
-        TextTitle(
+        TextBody(
             text = stringResource(R.string.portions_count), Modifier.fillMaxWidth(),
             textAlign = TextAlign.Start
         )

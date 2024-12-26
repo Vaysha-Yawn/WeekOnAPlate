@@ -17,6 +17,7 @@ import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -30,15 +31,16 @@ import week.on.a.plate.core.uitools.buttons.TextButton
 import week.on.a.plate.core.uitools.webview.WebPage
 import week.on.a.plate.screens.createRecipe.state.RecipeCreateUIState
 import week.on.a.plate.screens.filters.view.clickNoRipple
+import java.util.Locale
 
 @Composable
 fun WebPageCreateRecipe(state: RecipeCreateUIState, onEvent: (Event) -> Unit) {
     val context = LocalContext.current
+    val countryCode = remember{Locale.getDefault().language}
     if (state.source.value == "") {
-        //todo ru????
         DoneButtonSmall(text = stringResource(R.string.search_be_name_recipe_in_internet), Modifier.padding(24.dp)) {
             state.source.value =
-                "https://www.google.ru/search?q="+context.getString(R.string.recipe)+ {state.name.value.replace(" ", "+")}.toString()
+                "https://www.google.$countryCode/search?q="+context.getString(R.string.recipe)+"+"+ (state.name.value.replace(" ", "+"))
         }
     } else {
         WebPage(url = state.source, state.webview, onEvent, true)

@@ -82,7 +82,7 @@
     <string name="only_favorites">Толькі абраныя</string>
     <string name="cook_time">Час прыгатавання</string>
     <string name="select_step">Выберыце крок</string>
-    <string name="step">" крок"</string>
+    <string name="step_">" крок"</string>
     <string name="sort">Сартаваць</string>
     <string name="a_z_alphabetically">А-Я ў алфавітным парадку</string>
     <string name="z_a_reverse_alphabetical">З-А ў алфавітным парадку</string>
@@ -206,7 +206,7 @@
     <string name="source_title">Крыніца рэцэпту, спасылка</string>
     <string name="enter_recipe_link">Увядзіце спасылку на рэцэпт</string>
     <string name="recipe">Рэцэпт</string>
-    <string name="step_">"Крок"</string>
+    <string name="step">"Крок"</string>
     <string name="enter_step_description">Увядзіце апісанне кроку</string>
     <string name="edit_pinned_ingredients">Рэдагаваць замацаваныя інгрэдыенты</string>
     <string name="timer">Таймер</string>

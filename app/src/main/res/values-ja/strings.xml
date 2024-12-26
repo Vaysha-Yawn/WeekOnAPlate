@@ -83,7 +83,7 @@
     <string name="only_favorites">お気に入りのみ</string>
     <string name="cook_time">調理時間</string>
     <string name="select_step">ステップを選択</string>
-    <string name="step">" ステップ"</string>
+    <string name="step_">"ステップ"</string>
     <string name="sort">並べ替え</string>
     <string name="a_z_alphabetically">A-Z アルファベット順</string>
     <string name="z_a_reverse_alphabetical">Z-A 逆アルファベット順</string>
@@ -174,7 +174,6 @@
     <string name="edit_meals">食事を編集</string>
     <string name="rate_app">アプリを評価する</string>
 
-    //todo
     <string name="pp">プライバシーポリシー</string>
     <string name="terms_of_use">利用規約</string>
 
@@ -208,7 +207,7 @@
     <string name="source_title">レシピのソース、リンク</string>
     <string name="enter_recipe_link">レシピのリンクを入力</string>
     <string name="recipe">レシピ</string>
-    <string name="step_">" ステップ"</string>
+    <string name="step">" ステップ"</string>
     <string name="enter_step_description">ステップの説明を入力</string>
     <string name="edit_pinned_ingredients">ピン留めした材料を編集</string>
     <string name="timer">タイマー</string>

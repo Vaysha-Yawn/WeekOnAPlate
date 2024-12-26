@@ -82,7 +82,6 @@
     <string name="only_favorites">Только избранные рецепты</string>
     <string name="cook_time">Время приготовления</string>
     <string name="select_step">Выберите шаг</string>
-    <string name="step">" шаг"</string>
     <string name="sort">Сортировка</string>
     <string name="a_z_alphabetically">А-Я по алфавиту</string>
     <string name="z_a_reverse_alphabetical">Я-А по алфавиту обратный</string>
@@ -206,7 +205,7 @@
     <string name="source_title">Источник рецепта, ссылка</string>
     <string name="enter_recipe_link">Введите ссылку на рецепт</string>
     <string name="recipe">Рецепт</string>
-    <string name="step_">" шаг"</string>
+    <string name="step">"Шаг"</string>
     <string name="enter_step_description">Введите описание шага</string>
     <string name="edit_pinned_ingredients">Редактировать прикреплённые ингредиенты</string>
     <string name="timer">Таймер</string>
@@ -338,4 +337,5 @@
     <string name="ingredient_bread">Хлеб</string>
     <string name="ingredient_water">Вода</string>
     <string name="ingredient_broth">Бульон</string>
+    <string name="step_">" шаг"</string>
 </resources>

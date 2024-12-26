@@ -62,7 +62,7 @@ fun StepRecipeEdit(
                     }
             )
             Spacer(modifier = Modifier.width(6.dp))
-            TextTitleItalic(text = {index + 1}.toString() + stringResource(R.string.step_))
+            TextTitleItalic(text = (index + 1).toString() + stringResource(R.string.step_))
             Spacer(modifier = Modifier.width(6.dp))
         }
         if (recipeStepState.image.value == "") {

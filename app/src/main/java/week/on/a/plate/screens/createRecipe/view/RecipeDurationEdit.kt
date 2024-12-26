@@ -12,6 +12,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
+import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.screens.createRecipe.event.RecipeCreateEvent
 import week.on.a.plate.screens.createRecipe.state.RecipeCreateUIState
@@ -24,7 +25,7 @@ fun RecipeDurationEdit(
 ) {
     val context = LocalContext.current
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier) {
-        TextTitle(
+        TextBody(
             text = stringResource(R.string.recipe_duration), Modifier.fillMaxWidth(),
             textAlign = TextAlign.Start
         )

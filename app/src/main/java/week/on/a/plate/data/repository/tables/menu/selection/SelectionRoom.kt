@@ -1,5 +1,6 @@
 package week.on.a.plate.data.repository.tables.menu.selection
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters

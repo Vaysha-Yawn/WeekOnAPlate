@@ -5,6 +5,12 @@ plugins {
     id("com.google.dagger.hilt.android")
     id("kotlinx-serialization")
     alias(libs.plugins.compose.compiler)
+    id ("androidx.room")
+}
+
+room {
+    schemaDirectory("release", "$projectDir/schemas/release")
+    schemaDirectory("debug", "$projectDir/schemas/debug")
 }
 
 android {
@@ -60,9 +66,16 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
 }
 
+
+
 dependencies {
+
+
+    implementation ("com.yandex.android:mobileads:7.8.0")
+
     implementation("io.coil-kt:coil-compose:2.7.0")
 
     //nav

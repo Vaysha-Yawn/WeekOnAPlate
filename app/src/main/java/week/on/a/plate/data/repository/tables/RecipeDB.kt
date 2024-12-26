@@ -56,7 +56,10 @@ import week.on.a.plate.data.repository.tables.shoppingList.ShoppingItemRoom
         RecipeTagRoom::class, RecipeTagCategoryRoom::class, PositionRecipeRoom::class, SelectionRoom::class,
         PositionIngredientRoom::class, PositionNoteRoom::class, PositionDraftRoom::class, DraftAndIngredientCrossRef::class, DraftAndTagCrossRef::class,
         ShoppingItemRoom::class, CookPlannerStepRoom::class, CookPlannerGroupRoom::class, CategorySelectionRoom::class
-    ], version = 1, exportSchema = true
+    ], version = 1,
+    /*autoMigrations = [
+       AutoMigration (from = 1, to = 2)
+    ],*/ exportSchema = true,
 )
 
 @TypeConverters(

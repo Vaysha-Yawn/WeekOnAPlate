@@ -82,7 +82,7 @@
     <string name="only_favorites">Nur Favoriten</string>
     <string name="cook_time">Kochzeit</string>
     <string name="select_step">Schritt auswählen</string>
-    <string name="step">"Schritt"</string>
+    <string name="step_">" schritt"</string>
     <string name="sort">Sortieren</string>
     <string name="a_z_alphabetically">A-Z alphabetisch</string>
     <string name="z_a_reverse_alphabetical">Z-A alphabetisch umgekehrt</string>
@@ -207,7 +207,7 @@
     <string name="source_title">Rezeptquelle, Link</string>
     <string name="enter_recipe_link">Rezeptlink eingeben</string>
     <string name="recipe">Rezept</string>
-    <string name="step_">"Schritt"</string>
+    <string name="step">"Schritt"</string>
     <string name="enter_step_description">Schrittbeschreibung eingeben</string>
     <string name="edit_pinned_ingredients">Angepinnte Zutaten bearbeiten</string>
     <string name="timer">Timer</string>

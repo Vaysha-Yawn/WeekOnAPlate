@@ -42,6 +42,7 @@ import week.on.a.plate.screens.filters.view.clickNoRipple
 import week.on.a.plate.screens.recipeDetails.view.steps.TimerButton
 import java.time.LocalDateTime
 
+
 @Composable
 fun CardStep(step: CookPlannerStepView, onEvent: (Event) -> Unit, index:Int) {
     Row {
@@ -61,7 +62,7 @@ fun CardStep(step: CookPlannerStepView, onEvent: (Event) -> Unit, index:Int) {
                         onEvent(CookPlannerEvent.CheckStep(step))
                     },
                 )
-                TextBody("Шаг ${index+1}")
+                TextBody(stringResource(R.string.step)+" "+ (index+1).toString())
             }
             Column(Modifier.padding(start = 12.dp)) {
                 TextBody(

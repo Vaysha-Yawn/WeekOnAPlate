@@ -83,7 +83,7 @@
     <string name="only_favorites">Solo favoritos</string>
     <string name="cook_time">Tiempo de cocción</string>
     <string name="select_step">Seleccionar paso</string>
-    <string name="step">" paso"</string>
+    <string name="step_">" paso"</string>
     <string name="sort">Ordenar</string>
     <string name="a_z_alphabetically">A-Z alfabéticamente</string>
     <string name="z_a_reverse_alphabetical">Z-A alfabéticamente en orden inverso</string>
@@ -174,7 +174,6 @@
     <string name="edit_meals">Editar comidas</string>
     <string name="rate_app">Calificar la aplicación</string>
 
-    //todo
     <string name="pp">Política de privacidad</string>
     <string name="terms_of_use">Condiciones de uso</string>
 
@@ -208,7 +207,7 @@
     <string name="source_title">Fuente de la receta, enlace</string>
     <string name="enter_recipe_link">Ingresar enlace de la receta</string>
     <string name="recipe">Receta</string>
-    <string name="step_">"Paso"</string>
+    <string name="step">"Paso"</string>
     <string name="enter_step_description">Ingresar descripción del paso</string>
     <string name="edit_pinned_ingredients">Editar ingredientes fijados</string>
     <string name="timer">Temporizador</string>

@@ -42,3 +42,5 @@ public final kotlinx.serialization.KSerializer serializer(...);
 -keepclassmembers class ** implements kotlinx.serialization.Serializable {
 static final kotlinx.serialization.KSerializer serializer;
 }
+
+-keep class week.on.a.plate.core.navigation.** {*;}

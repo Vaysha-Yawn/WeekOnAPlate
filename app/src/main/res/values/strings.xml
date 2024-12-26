@@ -81,7 +81,7 @@
     <string name="only_favorites">Only favorites</string>
     <string name="cook_time">Cook time</string>
     <string name="select_step">Select step</string>
-    <string name="step">" step"</string>
+    <string name="step_">" step"</string>
     <string name="sort">Sort</string>
     <string name="a_z_alphabetically">A-Z alphabetically</string>
     <string name="z_a_reverse_alphabetical">Z-A reverse alphabetically</string>
@@ -203,7 +203,7 @@
     <string name="source_title">Recipe Source, Link</string>
     <string name="enter_recipe_link">Enter Recipe Link</string>
     <string name="recipe">Recipe</string>
-    <string name="step_">" Step"</string>
+    <string name="step">" Step"</string>
     <string name="enter_step_description">Enter Step Description</string>
     <string name="edit_pinned_ingredients">Edit Pinned Ingredients</string>
     <string name="timer">Timer</string>
