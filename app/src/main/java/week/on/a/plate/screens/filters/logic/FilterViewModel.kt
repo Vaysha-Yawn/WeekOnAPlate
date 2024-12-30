@@ -119,14 +119,14 @@ class FilterViewModel @Inject constructor(
                 edit = { editTag(event.tag) })
 
             is FilterEvent.EditOrDeleteIngredientCategory -> {
-                if (event.ingredientCategory.name == startCategoryName) return
+                if (event.ingredientCategory.name == event.context.getString(startCategoryName) ) return
                 editOrDelete(
                     delete = { deleteIngredientCategory(event.ingredientCategory) },
                     edit = { editIngredientCategory(event.ingredientCategory, event.context) })
             }
 
             is FilterEvent.EditOrDeleteTagCategory -> {
-                if (event.tagCategory.name == startCategoryName) return
+                if (event.tagCategory.name == event.context.getString(startCategoryName)) return
                 editOrDelete(
                     delete = { deleteTagCategory(event.tagCategory) },
                     edit = { editTagCategory(event.tagCategory, event.context) })

@@ -7,8 +7,8 @@ import java.time.LocalDate
 sealed class SpecifySelectionEvent : Event() {
     data class UpdatePreview(val date:LocalDate) : SpecifySelectionEvent()
     data class AddCustomSelection(val context: Context) : SpecifySelectionEvent()
-    data object Done : SpecifySelectionEvent()
+    data class Done(val context: Context) : SpecifySelectionEvent()
     data object Back : SpecifySelectionEvent()
     data class ApplyDate(val date:LocalDate) : SpecifySelectionEvent()
-    data object UpdateSelections : SpecifySelectionEvent()
+    data class UpdateSelections (val context: Context): SpecifySelectionEvent()
 }

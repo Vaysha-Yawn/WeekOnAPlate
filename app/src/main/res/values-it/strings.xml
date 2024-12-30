@@ -340,4 +340,6 @@
     <string name="ingredient_bread">Pane</string>
     <string name="ingredient_water">Acqua</string>
     <string name="ingredient_broth">Brodo</string>
+    <string name="for_day">На день</string>
+    <string name="tag_snack">Перекус</string>
 </resources>

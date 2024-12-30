@@ -336,4 +336,6 @@
     <string name="ingredient_bread">Bread</string>
     <string name="ingredient_water">Water</string>
     <string name="ingredient_broth">Broth</string>
+    <string name="for_day">На день</string>
+    <string name="tag_snack">Перекус</string>
 </resources>

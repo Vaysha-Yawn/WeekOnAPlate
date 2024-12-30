@@ -15,6 +15,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,6 +41,7 @@ fun SpecifySelectionAltStart(vm: SpecifySelectionViewModel){
 
 @Composable
 fun SpecifySelectionAltContent(state: SpecifySelectionUIState, stateCalendarMy: StateCalendarMy, onEvent:(Event)->Unit){
+    val context = LocalContext.current
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -61,7 +63,7 @@ fun SpecifySelectionAltContent(state: SpecifySelectionUIState, stateCalendarMy: 
         }
         Spacer(modifier = Modifier.height(24.dp))
         CalendarMy(stateCalendarMy, onEvent){date->
-            onEvent(SpecifySelectionEvent.UpdateSelections)
+            onEvent(SpecifySelectionEvent.UpdateSelections(context))
             onEvent(SpecifySelectionEvent.ApplyDate(date))
         }
         Spacer(modifier = Modifier.height(24.dp))
@@ -76,7 +78,7 @@ fun SpecifySelectionAltContent(state: SpecifySelectionUIState, stateCalendarMy: 
             stringResource(id = R.string.apply),
         ) {
             if (state.checkWeek.value || state.checkDayCategory.value != null) {
-                onEvent(SpecifySelectionEvent.Done)
+                onEvent(SpecifySelectionEvent.Done(context))
             } else {
                 onEvent(MainEvent.ShowSnackBar(messageError))
             }

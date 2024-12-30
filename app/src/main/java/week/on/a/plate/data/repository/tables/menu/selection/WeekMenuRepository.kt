@@ -1,5 +1,6 @@
 package week.on.a.plate.data.repository.tables.menu.selection
 
+import android.content.Context
 import week.on.a.plate.data.dataView.week.DayView
 import week.on.a.plate.data.dataView.week.ForWeek
 import week.on.a.plate.data.dataView.week.NonPosed
@@ -31,6 +32,7 @@ class WeekMenuRepository @Inject constructor(
     private val selectionDAO: SelectionDAO,
     private val categorySelectionDAO: CategorySelectionDAO,
     ) {
+
     private val selectionMapper = SelectionMapper()
 
     suspend fun getSelIdOrCreate(
@@ -67,7 +69,7 @@ class WeekMenuRepository @Inject constructor(
         return daysOfWeek
     }
 
-    suspend fun getCurrentWeek(date: LocalDate, locale: Locale): WeekView {
+    suspend fun getCurrentWeek(nonPosedFullName: String, forWeekFullName:String, date: LocalDate, locale: Locale): WeekView {
         val calendar = Calendar.getInstance(locale)
         calendar.set(date.year, date.monthValue, date.dayOfMonth)
         val weekOfYear = calendar.get(Calendar.WEEK_OF_YEAR)
@@ -76,7 +78,7 @@ class WeekMenuRepository @Inject constructor(
         val dayViews = dayDates.map { dateDay ->
             val listSelections = getSelectionsByDate(dateDay)
             var listSuggest = categorySelectionDAO.getAll().toMutableList()
-            listSuggest.add(CategorySelectionRoom(NonPosed.fullName, NonPosed.stdTime))
+            listSuggest.add(CategorySelectionRoom(nonPosedFullName, NonPosed.stdTime))
             listSuggest =  listSuggest.sortedBy { it.stdTime }.toMutableList()
             for (i in listSuggest) {
                 if (listSelections.find { it.name == i.name } == null) {
@@ -101,7 +103,7 @@ class WeekMenuRepository @Inject constructor(
         } else {
             SelectionView(
                 0,
-                ForWeek.fullName,
+                forWeekFullName,
                 LocalDateTime.of(date, ForWeek.stdTime),
                 weekOfYear,
                 true,

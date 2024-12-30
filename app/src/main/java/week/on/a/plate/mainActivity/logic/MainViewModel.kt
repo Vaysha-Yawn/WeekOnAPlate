@@ -12,6 +12,8 @@ import week.on.a.plate.core.Event
 import week.on.a.plate.data.dataView.example.emptyRecipe
 import week.on.a.plate.data.dataView.recipe.RecipeStepView
 import week.on.a.plate.data.dataView.recipe.RecipeView
+import week.on.a.plate.data.dataView.week.ForWeek
+import week.on.a.plate.data.dataView.week.NonPosed
 import week.on.a.plate.data.repository.tables.recipe.recipe.RecipeRepository
 import week.on.a.plate.dialogs.core.DialogUseCase
 import week.on.a.plate.dialogs.exitApply.event.ExitApplyEvent
@@ -29,6 +31,7 @@ import week.on.a.plate.screens.searchRecipes.logic.SearchViewModel
 import week.on.a.plate.mainActivity.logic.imageFromGallery.ImageFromGalleryUseCase
 import week.on.a.plate.mainActivity.logic.takePicture.TakePictureUseCase
 import week.on.a.plate.mainActivity.logic.voice.VoiceInputUseCase
+import week.on.a.plate.mainActivity.view.MainActivity
 import week.on.a.plate.screens.documentsWeb.logic.DocumentsWebViewModel
 import week.on.a.plate.screens.menu.logic.MenuViewModel
 import week.on.a.plate.screens.settings.logic.SettingsViewModel
@@ -76,7 +79,8 @@ class MainViewModel @Inject constructor(
         specifyRecipeToCookPlan: SpecifyRecipeToCookPlanViewModel,
         settings: SettingsViewModel,
         tutorial: TutorialViewModel,
-        documentsWeb: DocumentsWebViewModel
+        documentsWeb: DocumentsWebViewModel,
+        mainActivity: MainActivity
     ) {
         specifySelectionViewModel = specifySelection
         filterViewModel = filter
@@ -108,6 +112,15 @@ class MainViewModel @Inject constructor(
         tutorialViewModel.mainViewModel = this
         settingsViewModel.mainViewModel = this
         documentsWebViewModel.mainViewModel = this
+
+
+        val nonPosedText = mainActivity.getString(NonPosed.fullName)
+        val forWeek = mainActivity.getString(ForWeek.fullName)
+        specifySelectionViewModel.state.nonPosedText = nonPosedText
+        menuViewModel.menuUIState.forWeekFullName = forWeek
+        menuViewModel.menuUIState.nonPosedFullName = nonPosedText
+        specifySelectionViewModel.updateSelections()
+        menuViewModel.updateWeek()
     }
 
     lateinit var locale: Locale

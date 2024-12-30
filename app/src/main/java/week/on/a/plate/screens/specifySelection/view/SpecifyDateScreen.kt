@@ -47,7 +47,7 @@ fun ChooseSelectionSpecifySelection(
                 .padding(horizontal = 12.dp, vertical = 12.dp),
             horizontalArrangement = Arrangement.Start
         ) {
-            CheckBoxAndText(ForWeek.fullName, state.checkWeek) {
+            CheckBoxAndText(stringResource(ForWeek.fullName) , state.checkWeek) {
                 if (state.checkWeek.value) {
                     state.checkWeek.value = false
                 } else {

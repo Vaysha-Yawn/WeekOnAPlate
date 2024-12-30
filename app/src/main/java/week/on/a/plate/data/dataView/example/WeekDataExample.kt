@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 
 val WeekDataExample = WeekView(0,
     SelectionView(7,
-        ForWeek.fullName,
+        "На неделю",
         LocalDateTime.now(), 0, true, mutableListOf(),
     ),
     mutableListOf()

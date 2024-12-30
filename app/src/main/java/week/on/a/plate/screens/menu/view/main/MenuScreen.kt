@@ -3,6 +3,7 @@ package week.on.a.plate.screens.menu.view.main
 import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import week.on.a.plate.ads.NativeAdRow
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.data.dataView.example.WeekDataExample

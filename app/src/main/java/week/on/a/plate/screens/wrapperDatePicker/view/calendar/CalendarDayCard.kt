@@ -42,12 +42,12 @@ fun CalendarDayCard(
                 }, RoundedCornerShape(10.dp)
             )
             .clickable(onClick = {change(currentInd)})
-            .padding(horizontal = 5.dp, vertical = 5.dp), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally
+            .padding( vertical = 5.dp), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally
     ) {
         TextInApp(
             text = dayInWeek,
             modifier = Modifier
-                .padding(horizontal = 4.dp)
+                .padding(horizontal = 3.dp)
         )
         TextInApp(
             dayNumber.dayOfMonth.toString(), modifier = Modifier

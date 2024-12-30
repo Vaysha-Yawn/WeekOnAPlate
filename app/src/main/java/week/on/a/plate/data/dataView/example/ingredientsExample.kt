@@ -15,7 +15,7 @@ fun getStartIngredients(context: Context): List<IngredientCategoryView> {
     return listOf(
         IngredientCategoryView(
             0,
-            startCategoryName,
+            context.getString(startCategoryName),
             listOf()
         ),
         IngredientCategoryView(

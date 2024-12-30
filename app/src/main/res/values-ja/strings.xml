@@ -339,4 +339,6 @@
     <string name="ingredient_bread">パン</string>
     <string name="ingredient_water">水</string>
     <string name="ingredient_broth">スープ</string>
+    <string name="for_day">На день</string>
+    <string name="tag_snack">Перекус</string>
 </resources>

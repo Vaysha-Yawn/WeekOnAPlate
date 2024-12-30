@@ -47,9 +47,8 @@ class IngredientCategoryRepository @Inject constructor(
     suspend fun delete(id: Long) {
         dao.deleteById(id)
         val ingredientRooms = daoIngredient.getAllByCategoryId(id)
-        val startCategory = dao.findCategoryByName(startCategoryName)!!
         ingredientRooms.forEach {
-            daoIngredient.update(it.apply { ingredientCategoryId = startCategory.ingredientCategoryId })
+            daoIngredient.update(it.apply { ingredientCategoryId = 1 })
         }
     }
 

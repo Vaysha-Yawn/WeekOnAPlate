@@ -10,7 +10,7 @@ fun getTags(context:Context): List<TagCategoryView> {
     return listOf(
         TagCategoryView(
             0,
-            startCategoryName,
+            context.getString(startCategoryName),
             listOf()
         ),
         TagCategoryView(

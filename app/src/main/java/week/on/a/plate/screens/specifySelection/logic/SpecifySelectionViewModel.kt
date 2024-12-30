@@ -71,7 +71,7 @@ class SpecifySelectionViewModel @Inject constructor(
     fun onEvent(event: SpecifySelectionEvent) {
         when (event) {
             SpecifySelectionEvent.Back -> close()
-            SpecifySelectionEvent.Done -> done()
+            is SpecifySelectionEvent.Done -> done(event.context)
             is SpecifySelectionEvent.AddCustomSelection -> addCustomSelection(event.context)
             is SpecifySelectionEvent.UpdatePreview -> updatePreview(event.date)
             is SpecifySelectionEvent.UpdateSelections -> updateSelections()
@@ -122,7 +122,7 @@ class SpecifySelectionViewModel @Inject constructor(
             val allSelections = weekMenuRepository.getSelectionsByDate(state.date.value)
             val listSelName = allSelections.map { it.name }.toMutableList()
             var listSuggest = categorySelectionDAO.getAll().toMutableList()
-            listSuggest.add(CategorySelectionRoom(NonPosed.fullName, NonPosed.stdTime))
+            listSuggest.add(CategorySelectionRoom(state.nonPosedText , NonPosed.stdTime))
             listSuggest =  listSuggest.sortedBy { it.stdTime }.toMutableList()
             for (i in listSuggest) {
                 if (listSelName.find { it == i.name } == null) {
@@ -135,15 +135,15 @@ class SpecifySelectionViewModel @Inject constructor(
         }
     }
 
-    private fun getCategory(): String? {
+    private fun getCategory(context: Context): String? {
         if (!state.checkWeek.value && state.checkDayCategory.value == null) return null
-        if (state.checkWeek.value) return ForWeek.fullName
+        if (state.checkWeek.value) return context.getString(ForWeek.fullName)
         return state.checkDayCategory.value
     }
 
-    fun done() {
+    fun done(context: Context) {
         close()
-        val category = getCategory() ?: return
+        val category = getCategory(context) ?: return
         mainViewModel.viewModelScope.launch {
             val selId = weekMenuRepository.getSelIdOrCreate(
                 LocalDateTime.of(state.date.value, LocalTime.of(0,0)),

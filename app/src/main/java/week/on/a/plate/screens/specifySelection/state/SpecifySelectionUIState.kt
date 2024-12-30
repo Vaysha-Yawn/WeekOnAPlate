@@ -7,6 +7,7 @@ import week.on.a.plate.data.dataView.week.SelectionView
 import java.time.LocalDate
 
 class SpecifySelectionUIState() {
+    var nonPosedText = ""
     val checkWeek = mutableStateOf<Boolean>(false)
     val checkDayCategory = mutableStateOf<String?>(null)
     val date = mutableStateOf<LocalDate>(LocalDate.now())

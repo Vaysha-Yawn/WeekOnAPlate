@@ -11,7 +11,6 @@ import week.on.a.plate.core.navigation.SearchDestination
 import week.on.a.plate.core.navigation.ShoppingListDestination
 import week.on.a.plate.data.dataView.ShoppingItemView
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
-import week.on.a.plate.data.dataView.week.CategoriesSelection
 import week.on.a.plate.data.dataView.week.ForWeek
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.data.dataView.week.RecipeShortView
@@ -53,7 +52,6 @@ import week.on.a.plate.screens.wrapperDatePicker.event.WrapperDatePickerEvent
 import week.on.a.plate.screens.wrapperDatePicker.logic.WrapperDatePickerManager
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.LocalTime
 import java.util.Locale
 import javax.inject.Inject
 
@@ -80,7 +78,7 @@ class MenuViewModel @Inject constructor(
 
     fun updateWeek() {
         viewModelScope.launch {
-            val week = sCRUDRecipeInMenu.menuR.getCurrentWeek(activeDay.value, Locale.getDefault())
+            val week = sCRUDRecipeInMenu.menuR.getCurrentWeek(menuUIState.nonPosedFullName, menuUIState.forWeekFullName, activeDay.value, Locale.getDefault())
             week.days.forEach { day ->
                 day.selections = day.selections.sortedBy { it.dateTime }
             }
@@ -192,7 +190,12 @@ class MenuViewModel @Inject constructor(
             )
 
             is MenuEvent.EditOrDeleteSelection -> editOrDeleteSelection(event.sel, event.context)
-            is MenuEvent.CreateSelection -> createSelection(event.date, event.isForWeek, event.context)
+            is MenuEvent.CreateSelection -> createSelection(
+                event.date,
+                event.isForWeek,
+                event.context
+            )
+
             is MenuEvent.CreateWeekSelIdAndCreatePosition -> createWeekSelIdAndCreatePosition(event.context)
         }
     }
@@ -204,13 +207,13 @@ class MenuViewModel @Inject constructor(
                     activeDay.value,
                     ForWeek.stdTime
                 ),
-                true, ForWeek.fullName, mainViewModel.locale,
+                true, context.getString(ForWeek.fullName) , mainViewModel.locale,
             )
             addPosition(id, context)
         }
     }
 
-    private fun createSelection(date: LocalDate, isForWeek: Boolean, context:Context) {
+    private fun createSelection(date: LocalDate, isForWeek: Boolean, context: Context) {
         val vmCategory = EditSelectionViewModel()
         vmCategory.mainViewModel = mainViewModel
         mainViewModel.onEvent(MainEvent.OpenDialog(vmCategory))
@@ -234,7 +237,7 @@ class MenuViewModel @Inject constructor(
         }
     }
 
-    private fun editOrDeleteSelection(sel: SelectionView, context:Context) {
+    private fun editOrDeleteSelection(sel: SelectionView, context: Context) {
         if (sel.isForWeek || sel.id == 0L) return
         val vm = EditOrDeleteViewModel()
         vm.mainViewModel = mainViewModel
@@ -250,7 +253,7 @@ class MenuViewModel @Inject constructor(
         }
     }
 
-    private suspend fun editSelection(sel: SelectionView, context:Context) {
+    private suspend fun editSelection(sel: SelectionView, context: Context) {
         val vmCategory = EditSelectionViewModel()
         vmCategory.mainViewModel = mainViewModel
         mainViewModel.onEvent(MainEvent.OpenDialog(vmCategory))
@@ -302,7 +305,11 @@ class MenuViewModel @Inject constructor(
         onEvent(MenuEvent.ActionWrapperDatePicker(WrapperDatePickerEvent.SwitchEditMode))
     }
 
-    private fun createFirstNonPosedPosition(date: LocalDate, selectionView: SelectionView, context: Context) {
+    private fun createFirstNonPosedPosition(
+        date: LocalDate,
+        selectionView: SelectionView,
+        context: Context
+    ) {
         viewModelScope.launch {
             val time = selectionView.dateTime.toLocalTime()
             val sel = sCRUDRecipeInMenu.menuR.getSelIdOrCreate(
@@ -527,7 +534,7 @@ class MenuViewModel @Inject constructor(
         }
     }
 
-    private fun editOtherPositionMore(position: Position, context:Context) {
+    private fun editOtherPositionMore(position: Position, context: Context) {
         viewModelScope.launch {
             val vm = EditOtherPositionViewModel()
             vm.mainViewModel = mainViewModel
@@ -602,7 +609,7 @@ class MenuViewModel @Inject constructor(
         }
     }
 
-    private fun editOtherPosition(position: Position, context:Context) {
+    private fun editOtherPosition(position: Position, context: Context) {
         when (position) {
             is Position.PositionDraftView -> editDraft(position)
             is Position.PositionIngredientView -> editIngredientPosition(position)
@@ -728,7 +735,7 @@ class MenuViewModel @Inject constructor(
         }
     }
 
-    private fun editNote(note: Position.PositionNoteView, context:Context) {
+    private fun editNote(note: Position.PositionNoteView, context: Context) {
         viewModelScope.launch {
             val vm = EditOneStringViewModel()
             vm.mainViewModel = mainViewModel
@@ -751,7 +758,7 @@ class MenuViewModel @Inject constructor(
         }
     }
 
-    private fun addNote(selId: Long, context:Context) {
+    private fun addNote(selId: Long, context: Context) {
         viewModelScope.launch {
             val vm = EditOneStringViewModel()
             vm.mainViewModel = mainViewModel

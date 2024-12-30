@@ -338,4 +338,6 @@
     <string name="ingredient_water">Вода</string>
     <string name="ingredient_broth">Бульон</string>
     <string name="step_">" шаг"</string>
+    <string name="for_day">На день</string>
+    <string name="tag_snack">Перекус</string>
 </resources>

@@ -338,4 +338,6 @@
     <string name="ingredient_bread">Хлеб</string>
     <string name="ingredient_water">Вада</string>
     <string name="ingredient_broth">Булён</string>
+    <string name="for_day">На день</string>
+    <string name="tag_snack">Перекус</string>
 </resources>

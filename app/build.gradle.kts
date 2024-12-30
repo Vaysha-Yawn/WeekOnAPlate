@@ -72,7 +72,7 @@ android {
 
 
 dependencies {
-
+    implementation ("com.yandex.android:mobileads:7.8.1")
 
     implementation ("com.yandex.android:mobileads:7.8.0")
 

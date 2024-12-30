@@ -52,7 +52,7 @@ fun SearchCategoriesScreen(stateUI: SearchUIState, onEvent: (SearchScreenEvent) 
             Spacer(modifier = Modifier.size(24.dp))
         }
         items(stateUI.allTagsCategories.value) {
-            if (it.name != startCategoryName)
+            if (it.name != stringResource(startCategoryName))
                 CategorySelection(it, onEvent)
         }
         item {

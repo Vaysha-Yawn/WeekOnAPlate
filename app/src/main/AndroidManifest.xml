@@ -5,7 +5,6 @@
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
     <uses-feature android:name="android.hardware.camera" android:required="false"/>
     <uses-feature android:name="android.hardware.microphone" android:required="false"/>
 
@@ -21,12 +20,14 @@
         android:theme="@style/Theme.WeekOnAPlate"
         android:usesCleartextTraffic="true"
         android:enableOnBackInvokedCallback="true"
+        android:hardwareAccelerated="true"
         tools:targetApi="33">
         <activity
             android:name=".mainActivity.view.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.WeekOnAPlate"
             android:screenOrientation="portrait"
+            android:hardwareAccelerated="true"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

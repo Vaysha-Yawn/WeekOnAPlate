@@ -124,7 +124,8 @@ class MainActivity : ComponentActivity() {
                     specifyRecipeToCookPlanViewModel,
                     settingsViewModel,
                     tutorialViewModel,
-                    documentsWebViewModel
+                    documentsWebViewModel,
+                    this@MainActivity
                 )
 
                 Scaffold(modifier = Modifier
