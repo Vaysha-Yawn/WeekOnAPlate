@@ -31,6 +31,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
+import week.on.a.plate.ads.NativeAdRow
 import week.on.a.plate.core.theme.ColorSubTextGrey
 import week.on.a.plate.core.theme.Typography
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
@@ -121,6 +122,11 @@ fun ShoppingListContent(state: ShoppingListUIState, onEvent: (ShoppingListEvent)
                     }
                 }
             }
+            item {
+                Spacer(Modifier.height(12.dp))
+                NativeAdRow("R-M-13419544-6")
+                Spacer(Modifier.height(12.dp))
+            }
             items(state.listChecked.value.size) { index ->
                 ShoppingListPosition(state.listChecked.value[index], true, {
                     onEvent(ShoppingListEvent.Edit(it))
@@ -134,6 +140,8 @@ fun ShoppingListContent(state: ShoppingListUIState, onEvent: (ShoppingListEvent)
                 TextTitle(stringResource(R.string.hint_empty))
                 Spacer(Modifier.height(12.dp))
                 TextBody(stringResource(R.string.hint_add_to_shopping_list))
+                Spacer(Modifier.height(24.dp))
+                NativeAdRow("R-M-13419544-6")
             }
         }
     }

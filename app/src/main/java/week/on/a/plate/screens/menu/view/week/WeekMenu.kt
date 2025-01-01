@@ -23,6 +23,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
+import week.on.a.plate.ads.NativeAdRow
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.uitools.SubText
 import week.on.a.plate.core.uitools.TextTitle
@@ -70,6 +71,8 @@ fun WeekMenu(
                     }
                 }
             }
+            Spacer(modifier = Modifier.size(12.dp))
+            NativeAdRow("R-M-13419544-4")
             Spacer(modifier = Modifier.size(12.dp))
         }
         items(week.days.size) { dayId ->

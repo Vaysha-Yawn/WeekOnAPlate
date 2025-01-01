@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -13,6 +14,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
+import week.on.a.plate.ads.NativeAdRow
 import week.on.a.plate.data.dataView.week.DayView
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.uitools.TextTitle
@@ -29,6 +31,10 @@ fun DayView(day: DayView, menuUIState: MenuUIState, onEvent: (event: Event) -> U
             BlockSelection(
                 selection = day.selections[index], menuUIState = menuUIState, onEvent
             )
+            if(index==0){
+                NativeAdRow("R-M-13419544-5")
+            }
+            Spacer(modifier = Modifier.size(12.dp))
         }
         item {
             Row(

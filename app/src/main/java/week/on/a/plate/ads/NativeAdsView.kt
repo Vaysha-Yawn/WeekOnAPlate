@@ -12,34 +12,30 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import com.yandex.mobile.ads.common.AdRequestError
-import com.yandex.mobile.ads.common.ImpressionData
 import com.yandex.mobile.ads.nativeads.NativeAd
-import com.yandex.mobile.ads.nativeads.NativeAdEventListener
 import com.yandex.mobile.ads.nativeads.NativeAdLoadListener
 import com.yandex.mobile.ads.nativeads.NativeAdLoader
 import com.yandex.mobile.ads.nativeads.NativeAdRequestConfiguration
 import com.yandex.mobile.ads.nativeads.template.NativeBannerView
 
 @Composable
-fun NativeAdLoader() {
+fun NativeAdRow(id: String) {
     val context = LocalContext.current
-    //state
     val nativeAds = remember { mutableStateListOf<NativeAd>() }
-    
+
     LaunchedEffect(Unit) {
-        loadNativeAd(nativeAds, context)
+        loadNativeAd(id, nativeAds, context)
     }
-    //todo place row
-    if (nativeAds.isNotEmpty()){
-        NativeAdRow(nativeAds.first())
+
+    if (nativeAds.isNotEmpty()) {
+        NativeAdItem(nativeAds.first())
     }
 }
 
 @Composable
-fun NativeAdRow(nativeAd: NativeAd) {
+fun NativeAdItem(nativeAd: NativeAd) {
     val context = LocalContext.current
     val adView = remember { NativeBannerView(context) }
-    nativeAd.setNativeAdEventListener(NativeAdEventLogger())
     adView.setAd(nativeAd)
     AndroidView(
         factory = { adView },
@@ -48,7 +44,7 @@ fun NativeAdRow(nativeAd: NativeAd) {
     )
 }
 
-private fun loadNativeAd(nativeAds: SnapshotStateList<NativeAd>, context: Context) {
+private fun loadNativeAd(id: String, nativeAds: SnapshotStateList<NativeAd>, context: Context) {
     val nativeAdLoader = NativeAdLoader(context).apply {
         setNativeAdLoadListener(object : NativeAdLoadListener {
             override fun onAdFailedToLoad(error: AdRequestError) {
@@ -60,23 +56,5 @@ private fun loadNativeAd(nativeAds: SnapshotStateList<NativeAd>, context: Contex
             }
         })
     }
-    nativeAdLoader.loadAd(NativeAdRequestConfiguration.Builder("R-M-13419544-2").build())
-}
-
-private class NativeAdEventLogger : NativeAdEventListener {
-    override fun onAdClicked() {
-        // Called when a click is recorded for an ad.
-    }
-
-    override fun onLeftApplication() {
-        // Called when the user is about to leave the application (e.g., to go to the browser), as a result of clicking on the ad.
-    }
-
-    override fun onReturnedToApplication() {
-        // Called when the user returns to the application after a click.
-    }
-
-    override fun onImpression(data: ImpressionData?) {
-        // Called when an impression is recorded for an ad.
-    }
+    nativeAdLoader.loadAd(NativeAdRequestConfiguration.Builder(id).build())
 }

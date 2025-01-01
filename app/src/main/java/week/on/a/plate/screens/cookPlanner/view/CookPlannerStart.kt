@@ -1,7 +1,5 @@
 package week.on.a.plate.screens.cookPlanner.view
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,23 +8,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
+import week.on.a.plate.ads.NativeAdRow
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.TextBody
-import week.on.a.plate.core.uitools.TextDisplayItalic
-import week.on.a.plate.core.uitools.TextSmall
 import week.on.a.plate.core.uitools.TextTitle
-import week.on.a.plate.core.uitools.TextTitleItalic
-import week.on.a.plate.core.uitools.TextTitleLarge
-import week.on.a.plate.core.uitools.TextTitleLargeItalic
 import week.on.a.plate.data.dataView.CookPlannerGroupView
-import week.on.a.plate.data.dataView.CookPlannerStepView
 import week.on.a.plate.screens.cookPlanner.logic.CookPlannerViewModel
 import week.on.a.plate.screens.cookPlanner.state.CookPlannerUIState
 import week.on.a.plate.screens.wrapperDatePicker.view.WrapperDatePicker
@@ -66,9 +58,9 @@ fun CookPlannerContent(state: CookPlannerUIState, onEvent: (Event) -> Unit) {
                         TextTitle(
                             "${
                                 day.key.dayOfWeek.getDisplayName(
-                                                                TextStyle.SHORT,
-                                                                Locale.getDefault()
-                                                            )
+                                    TextStyle.SHORT,
+                                    Locale.getDefault()
+                                )
                                     .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
                             }, ${day.key.dayOfMonth}",
                             Modifier.padding(start = 24.dp)
@@ -77,6 +69,10 @@ fun CookPlannerContent(state: CookPlannerUIState, onEvent: (Event) -> Unit) {
                     items(day.value) {
                         Spacer(Modifier.height(24.dp))
                         CookGroup(it, onEvent)
+                    }
+                    item {
+                        Spacer(Modifier.height(12.dp))
+                        NativeAdRow("R-M-13419544-2")
                     }
                 }
             }
@@ -89,11 +85,15 @@ fun DayViewCookPlan(
     date: LocalDate,
     onEvent: (Event) -> Unit
 ) {
-    if (week.keys.contains(date) && week[date] != null && week[date]?.isNotEmpty()==true) {
+    if (week.keys.contains(date) && week[date] != null && week[date]?.isNotEmpty() == true) {
         LazyColumn {
             items(week[date]!!.size) { ind ->
                 CookGroup(week[date]!![ind], onEvent)
-                Spacer(Modifier.height(24.dp))
+                Spacer(Modifier.height(12.dp))
+                if (ind == 0) {
+                    NativeAdRow("R-M-13419544-3")
+                    Spacer(Modifier.height(12.dp))
+                }
             }
         }
     } else {
@@ -103,13 +103,16 @@ fun DayViewCookPlan(
 
 @Composable
 fun EmptyTip() {
-    Column (
+    Column(
         Modifier
             .fillMaxSize()
-            .padding(horizontal = 24.dp)) {
+            .padding(horizontal = 24.dp)
+    ) {
         TextTitle(stringResource(R.string.seems_empty))
         Spacer(Modifier.height(24.dp))
         TextBody(stringResource(R.string.cook_planner_empty_tip))
+        Spacer(Modifier.height(24.dp))
+        NativeAdRow("R-M-13419544-6")
     }
 }
 
