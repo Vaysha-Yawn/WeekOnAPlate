@@ -60,7 +60,7 @@ fun TimePickDialog(
         },
     ) {
         val contentModifier = Modifier.padding(horizontal = 24.dp)
-        val colors= TimePickerDefaults.colors(
+        val colors = TimePickerDefaults.colors(
             clockDialColor = MaterialTheme.colorScheme.background,
             clockDialSelectedContentColor = MaterialTheme.colorScheme.onBackground,
             clockDialUnselectedContentColor = ColorSubTextGrey,
@@ -101,7 +101,7 @@ fun PickerDialog(
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally, modifier =  Modifier.background(MaterialTheme.colorScheme.surface)) {
                 Spacer(modifier = Modifier.height(12.dp))
-                TextBody(state.title.value)
+                TextBody(stringResource(state.title) )
                 Spacer(modifier = Modifier.height(12.dp))
                 content()
                 Row(

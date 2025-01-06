@@ -9,6 +9,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -17,14 +18,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
-import week.on.a.plate.core.uitools.EditTextLine
-import week.on.a.plate.core.uitools.buttons.DoneButton
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
+import week.on.a.plate.core.uitools.EditTextLine
 import week.on.a.plate.core.uitools.TextSmall
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.CommonButton
+import week.on.a.plate.core.uitools.buttons.DoneButton
 import week.on.a.plate.dialogs.editSelection.event.EditSelectionEvent
 import week.on.a.plate.dialogs.editSelection.logic.EditSelectionViewModel
+import week.on.a.plate.dialogs.editSelection.state.EditSelectionUIState
 import java.time.format.DateTimeFormatter
 
 @Composable
@@ -32,23 +34,25 @@ fun EditSelectionContent(
     vm: EditSelectionViewModel
 ) {
     val state = vm.state
-    val onEvent = {event: EditSelectionEvent ->
+    val onEvent = { event: EditSelectionEvent ->
         vm.onEvent(event)
     }
     val context = LocalContext.current
     val focusRequester = remember { FocusRequester() }
+
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
     }
     Column(
         Modifier
             .background(MaterialTheme.colorScheme.surface)
-            .padding(24.dp)) {
-        TextTitle(text = state.title.value)
+            .padding(24.dp)
+    ) {
+        TextTitle(text = stringResource(state.title))
         Spacer(modifier = Modifier.height(24.dp))
         EditTextLine(
             state.text,
-            state.placeholder.value, modifier = Modifier.focusRequester(focusRequester)
+            stringResource(state.placeholder), modifier = Modifier.focusRequester(focusRequester)
         )
         Spacer(modifier = Modifier.height(24.dp))
         TextTitle(text = stringResource(R.string.choose_meal_times))
@@ -62,7 +66,7 @@ fun EditSelectionContent(
         }
         Spacer(modifier = Modifier.height(48.dp))
 
-        DoneButton(text = stringResource(R.string.apply)) {  onEvent(EditSelectionEvent.Done) }
+        DoneButton(text = stringResource(R.string.apply)) { onEvent(EditSelectionEvent.Done) }
     }
 }
 
@@ -70,6 +74,13 @@ fun EditSelectionContent(
 @Composable
 fun PreviewEditSelectionContent() {
     WeekOnAPlateTheme {
-        EditSelectionContent(EditSelectionViewModel())
+        EditSelectionContent(
+            EditSelectionViewModel(
+                EditSelectionUIState(
+                    title = R.string.specify_selection,
+                    placeholder = R.string.enter_text_note
+                ), rememberCoroutineScope(), {}, {}, {}
+            )
+        )
     }
 }

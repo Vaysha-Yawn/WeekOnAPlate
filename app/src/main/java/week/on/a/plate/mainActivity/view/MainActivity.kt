@@ -173,14 +173,11 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        //todo test
-        if (intent.action == Intent.ACTION_SEND) {
-            val text = intent.getStringExtra(Intent.EXTRA_TEXT) ?: return
-            viewModel.sharedLink = text
-        }
 
-        if (viewModel.sharedLink != "" && !viewModel.isCheckedSharedAction) {
-            viewModel.onEvent(MainEvent.UseSharedLink(viewModel.sharedLink))
+        val text = intent.getStringExtra(Intent.EXTRA_TEXT) ?: return
+        viewModel.getSharedLinkUseCase.setLink(text)
+        viewModel.getSharedLinkUseCase.checkAndStart {
+            viewModel.onEvent(MainEvent.UseSharedLink)
         }
     }
 
@@ -188,15 +185,14 @@ class MainActivity : ComponentActivity() {
         super.onNewIntent(intent)
         if (intent.action == Intent.ACTION_SEND) {
             val text = intent.getStringExtra(Intent.EXTRA_TEXT) ?: return
-            viewModel.sharedLink = text
+            viewModel.getSharedLinkUseCase.setLink(text)
         }
     }
 
     override fun onResume() {
         super.onResume()
-
-        if (viewModel.sharedLink != "" && !viewModel.isCheckedSharedAction) {
-            viewModel.onEvent(MainEvent.UseSharedLink(viewModel.sharedLink))
+        viewModel.getSharedLinkUseCase.checkAndStart {
+            viewModel.onEvent(MainEvent.UseSharedLink)
         }
     }
 }

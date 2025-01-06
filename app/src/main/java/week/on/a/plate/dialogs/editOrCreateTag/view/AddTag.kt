@@ -44,32 +44,9 @@ fun AddTag(
             modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(24.dp))
-        TextBody(
-            text = stringResource(R.string.tag_name),
-            modifier = Modifier
-                .padding(start = 12.dp)
-                .padding(bottom = 12.dp),
-            textAlign = TextAlign.Start
-        )
-        EditTextLine(
-            state.text,
-            stringResource(R.string.enter_tag_name_here),
-            modifier = Modifier, isRequired = true, isError = isError
-        )
+        TagName(state, isError)
         Spacer(modifier = Modifier.height(24.dp))
-        TextBody(
-            text = stringResource(R.string.category),
-            modifier = Modifier
-                .padding(start = 12.dp)
-                .padding(bottom = 12.dp),
-            textAlign = TextAlign.Start
-        )
-        CommonButton(
-            if (state.category.value?.name == "") stringResource(R.string.select_category) else state.category.value?.name?:"",
-            image = R.drawable.search,
-        ) {
-            onEvent(AddTagEvent.ChooseCategory)
-        }
+        ChooseCategoryTag(state, onEvent)
         Spacer(modifier = Modifier.height(36.dp))
         DoneButton(
             text = stringResource(id = R.string.add),
@@ -82,6 +59,46 @@ fun AddTag(
             }
         }
     }
+}
+
+@Composable
+private fun ChooseCategoryTag(
+    state: AddTagUIState,
+    onEvent: (AddTagEvent) -> Unit
+) {
+    TextBody(
+        text = stringResource(R.string.category),
+        modifier = Modifier
+            .padding(start = 12.dp)
+            .padding(bottom = 12.dp),
+        textAlign = TextAlign.Start
+    )
+    CommonButton(
+        if (state.category.value?.name == "") stringResource(R.string.select_category) else state.category.value?.name
+            ?: "",
+        image = R.drawable.search,
+    ) {
+        onEvent(AddTagEvent.ChooseCategory)
+    }
+}
+
+@Composable
+private fun TagName(
+    state: AddTagUIState,
+    isError: MutableState<Boolean>
+) {
+    TextBody(
+        text = stringResource(R.string.tag_name),
+        modifier = Modifier
+            .padding(start = 12.dp)
+            .padding(bottom = 12.dp),
+        textAlign = TextAlign.Start
+    )
+    EditTextLine(
+        state.text,
+        stringResource(R.string.enter_tag_name_here),
+        modifier = Modifier, isRequired = true, isError = isError
+    )
 }
 
 @Preview(showBackground = true)

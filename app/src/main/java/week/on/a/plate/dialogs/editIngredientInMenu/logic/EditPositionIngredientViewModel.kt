@@ -1,12 +1,13 @@
 package week.on.a.plate.dialogs.editIngredientInMenu.logic
 
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import week.on.a.plate.dialogs.core.DialogViewModel
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.data.dataView.week.Position
+import week.on.a.plate.dialogs.core.DialogViewModel
 import week.on.a.plate.dialogs.editIngredientInMenu.event.EditPositionIngredientEvent
 import week.on.a.plate.dialogs.editIngredientInMenu.state.EditPositionIngredientUIState
 import week.on.a.plate.mainActivity.event.MainEvent
@@ -16,12 +17,30 @@ import week.on.a.plate.screens.filters.state.FilterEnum
 import week.on.a.plate.screens.filters.state.FilterMode
 
 
-class EditPositionIngredientViewModel() : DialogViewModel() {
+class EditPositionIngredientViewModel(
+    positionIngredient: Position.PositionIngredientView?, isForAdd: Boolean,
+    use: suspend (Position.PositionIngredientView) -> Unit,
+) : DialogViewModel() {
 
     lateinit var mainViewModel: MainViewModel
-    lateinit var state: EditPositionIngredientUIState
+    var state: EditPositionIngredientUIState = EditPositionIngredientUIState(positionIngredient)
     private var resultFlow: MutableStateFlow<Position.PositionIngredientView?> =
         MutableStateFlow(null)
+
+    init {
+        mainViewModel.onEvent(MainEvent.OpenDialog(this))
+
+        if (isForAdd) chooseIngredient()
+
+        mainViewModel.viewModelScope.launch {
+            val flow: Flow<Position.PositionIngredientView?> = resultFlow
+            flow.collect { value ->
+                if (value != null) {
+                    use(value)
+                }
+            }
+        }
+    }
 
     fun done() {
         close()
@@ -46,45 +65,23 @@ class EditPositionIngredientViewModel() : DialogViewModel() {
         when (event) {
             EditPositionIngredientEvent.Close -> close()
             EditPositionIngredientEvent.Done -> done()
-            EditPositionIngredientEvent.ChooseIngredient -> {
-                mainViewModel.viewModelScope.launch {
-                    chooseIngredient()
-                }
-            }
+            EditPositionIngredientEvent.ChooseIngredient -> chooseIngredient()
         }
     }
 
-    private suspend fun chooseIngredient() {
-        mainViewModel.nav.navigate(FilterDestination)
-        mainViewModel.onEvent(MainEvent.HideDialog)
-
+    private fun chooseIngredient() {
         mainViewModel.viewModelScope.launch {
-            mainViewModel.filterViewModel.launchAndGet(
-                FilterMode.One, FilterEnum.Ingredient,
-                Pair(listOf(), listOf()), false
-            ) {
-                mainViewModel.onEvent(MainEvent.ShowDialog)
-                val new = it.ingredients?.getOrNull(0)
-                if (new != null) state.ingredientState.value = new
-            }
-        }
-    }
+            mainViewModel.nav.navigate(FilterDestination)
+            mainViewModel.onEvent(MainEvent.HideDialog)
 
-
-    suspend fun launchAndGet(
-        positionIngredient: Position.PositionIngredientView?, isForAdd: Boolean,
-        use: suspend (Position.PositionIngredientView) -> Unit,
-    ) {
-        state = EditPositionIngredientUIState(positionIngredient)
-        mainViewModel.onEvent(MainEvent.OpenDialog(this))
-
-        if (isForAdd) chooseIngredient()
-
-        mainViewModel.viewModelScope.launch {
-            val flow: Flow<Position.PositionIngredientView?> = resultFlow
-            flow.collect { value ->
-                if (value != null) {
-                    use(value)
+            mainViewModel.viewModelScope.launch {
+                mainViewModel.filterViewModel.launchAndGet(
+                    FilterMode.One, FilterEnum.Ingredient,
+                    Pair(listOf(), listOf()), false
+                ) {
+                    mainViewModel.onEvent(MainEvent.ShowDialog)
+                    val new = it.ingredients?.getOrNull(0)
+                    if (new != null) state.ingredientState.value = new
                 }
             }
         }

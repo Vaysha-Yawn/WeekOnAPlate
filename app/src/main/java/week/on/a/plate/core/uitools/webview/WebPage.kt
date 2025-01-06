@@ -5,6 +5,8 @@ import android.webkit.WebView
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
@@ -15,6 +17,7 @@ import week.on.a.plate.core.Event
 @Composable
 fun WebPage(url: MutableState<String>, webview: MutableState<WebView?>, onEvent: (Event) -> Unit, allowGo:Boolean) {
     val isDark = isSystemInDarkTheme()
+    val scrollState = rememberScrollState()
     AndroidView(
         { context ->
             if (webview.value == null) {
@@ -44,6 +47,7 @@ fun WebPage(url: MutableState<String>, webview: MutableState<WebView?>, onEvent:
         }, modifier = Modifier
             .fillMaxSize()
             .animateContentSize()
+            .verticalScroll(scrollState)
     )
 }
 

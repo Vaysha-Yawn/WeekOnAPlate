@@ -17,9 +17,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.clipToBounds
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -28,16 +25,14 @@ import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
-import week.on.a.plate.core.uitools.ImageLoad
 import week.on.a.plate.core.uitools.TextBody
-import week.on.a.plate.core.uitools.TextSmall
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.MoreButton
 import week.on.a.plate.data.dataView.CookPlannerGroupView
 import week.on.a.plate.data.dataView.CookPlannerStepView
 import week.on.a.plate.data.dataView.example.recipeExampleBase
 import week.on.a.plate.screens.cookPlanner.event.CookPlannerEvent
-import week.on.a.plate.screens.createRecipe.view.PinnedIngredientsForStep
+import week.on.a.plate.screens.createRecipe.view.recipe.PinnedIngredientsForStep
 import week.on.a.plate.screens.filters.view.clickNoRipple
 import week.on.a.plate.screens.recipeDetails.view.steps.TimerButton
 import java.time.LocalDateTime

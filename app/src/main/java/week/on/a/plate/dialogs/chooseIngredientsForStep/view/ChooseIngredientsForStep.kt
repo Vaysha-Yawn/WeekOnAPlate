@@ -16,6 +16,7 @@ import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,8 +34,11 @@ import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.DoneButton
 import week.on.a.plate.core.utils.getIngredientCountAndMeasure1000
 import week.on.a.plate.data.dataView.example.recipes
+import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.dialogs.chooseIngredientsForStep.event.ChooseIngredientsForStepEvent
 import week.on.a.plate.dialogs.chooseIngredientsForStep.logic.ChooseIngredientsForStepViewModel
+import week.on.a.plate.dialogs.chooseIngredientsForStep.state.ChooseIngredientsForStepUIState
+import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screens.filters.view.clickNoRipple
 
 
@@ -55,47 +59,7 @@ fun ChooseIngredientsForStep(viewModel: ChooseIngredientsForStepViewModel) {
 
         LazyColumn() {
             itemsIndexed(state.ingredientsAll){ind, item->
-                Row(
-                    Modifier
-                        .fillMaxWidth()
-                        .clickNoRipple { onEvent(ChooseIngredientsForStepEvent.ClickToIngredient(item.ingredientView.ingredientId)) }
-                        .padding(vertical = 6.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Checkbox(
-                        checked = state.chosenIngredients.value.contains(item.ingredientView.ingredientId),
-                        colors = CheckboxDefaults.colors(
-                            checkedColor = MaterialTheme.colorScheme.secondary,
-                            checkmarkColor = MaterialTheme.colorScheme.onBackground
-                        ),
-                        onCheckedChange = {
-                            onEvent(ChooseIngredientsForStepEvent.ClickToIngredient(item.ingredientView.ingredientId))
-                        },
-                    )
-                    if (item.ingredientView.img!="") {
-                        ImageLoad(
-                            url = item.ingredientView.img, modifier = Modifier
-                                .height(40.dp)
-                                .clip(RoundedCornerShape(10.dp))
-                        )
-                        Spacer(modifier = Modifier.width(24.dp))
-                    }
-                    Column(Modifier.weight(1f)) {
-                        TextBody(text = item.ingredientView.name, color = MaterialTheme.colorScheme.onBackground)
-                        if (item.description != "") {
-                            TextBodyDisActive(text = item.description)
-                        }
-                    }
-                    Row {
-                        val valueAndMeasure = getIngredientCountAndMeasure1000(LocalContext.current, item.count, item.ingredientView.measure)
-                        TextBody(
-                            text = valueAndMeasure.first, color = MaterialTheme.colorScheme.onBackground
-                        )
-                        Spacer(modifier = Modifier.width(5.dp))
-                        TextBody(text = valueAndMeasure.second, color = MaterialTheme.colorScheme.onBackground)
-                    }
-                }
+                IngredientRow(onEvent, item, state)
             }
         }
         Spacer(modifier = Modifier.height(24.dp))
@@ -105,14 +69,83 @@ fun ChooseIngredientsForStep(viewModel: ChooseIngredientsForStepViewModel) {
     }
 }
 
+@Composable
+private fun IngredientRow(
+    onEvent: (ChooseIngredientsForStepEvent) -> Unit,
+    item: IngredientInRecipeView,
+    state: ChooseIngredientsForStepUIState
+) {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .clickNoRipple { onEvent(ChooseIngredientsForStepEvent.ClickToIngredient(item.ingredientView.ingredientId)) }
+            .padding(vertical = 6.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        CheckBoxCustom(state, item, onEvent)
+        if (item.ingredientView.img != "") {
+            ImageLoad(
+                url = item.ingredientView.img, modifier = Modifier
+                    .height(40.dp)
+                    .clip(RoundedCornerShape(10.dp))
+            )
+            Spacer(modifier = Modifier.width(24.dp))
+        }
+        Column(Modifier.weight(1f)) {
+            //name
+            TextBody(
+                text = item.ingredientView.name,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            //description
+            if (item.description != "") {
+                TextBodyDisActive(text = item.description)
+            }
+        }
+        Measure(item)
+    }
+}
+
+@Composable
+private fun Measure(item: IngredientInRecipeView) {
+    Row {
+        val valueAndMeasure = getIngredientCountAndMeasure1000(
+            LocalContext.current,
+            item.count,
+            item.ingredientView.measure
+        )
+        TextBody(
+            text = valueAndMeasure.first, color = MaterialTheme.colorScheme.onBackground
+        )
+        Spacer(modifier = Modifier.width(5.dp))
+        TextBody(text = valueAndMeasure.second, color = MaterialTheme.colorScheme.onBackground)
+    }
+}
+
+@Composable
+private fun CheckBoxCustom(
+    state: ChooseIngredientsForStepUIState,
+    item: IngredientInRecipeView,
+    onEvent: (ChooseIngredientsForStepEvent) -> Unit
+) {
+    Checkbox(
+        checked = state.chosenIngredients.value.contains(item.ingredientView.ingredientId),
+        colors = CheckboxDefaults.colors(
+            checkedColor = MaterialTheme.colorScheme.secondary,
+            checkmarkColor = MaterialTheme.colorScheme.onBackground
+        ),
+        onCheckedChange = {
+            onEvent(ChooseIngredientsForStepEvent.ClickToIngredient(item.ingredientView.ingredientId))
+        },
+    )
+}
+
 @Preview(showBackground = true)
 @Composable
 fun PreviewChooseIngredientsForStep() {
     WeekOnAPlateTheme {
-        val vm = ChooseIngredientsForStepViewModel()
-        LaunchedEffect(true) {
-            vm.launchAndGet(recipes[0].ingredients, listOf(0, 2)) {}
-        }
+        val vm = ChooseIngredientsForStepViewModel(recipes[0].ingredients, listOf(0, 2), rememberCoroutineScope(), {}, {})
         ChooseIngredientsForStep(vm)
     }
 }

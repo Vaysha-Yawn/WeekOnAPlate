@@ -25,7 +25,6 @@ fun CookStepMoreContent( onEvent: (CookStepMoreEvent) -> Unit) {
             text= stringResource(R.string.change_start_recipe_time),
         ){
             onEvent(CookStepMoreEvent.ChangeStartRecipeTime)
-
         }
 
         ButtonRow(

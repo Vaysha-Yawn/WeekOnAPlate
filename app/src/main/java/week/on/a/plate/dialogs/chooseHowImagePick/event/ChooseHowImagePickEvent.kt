@@ -5,7 +5,15 @@ import week.on.a.plate.core.Event
 
 sealed class ChooseHowImagePickEvent: Event() {
     data object FromGallery: ChooseHowImagePickEvent()
-    data class ByUrl(val context:Context): ChooseHowImagePickEvent()
+    data object ByUrl: ChooseHowImagePickEvent()
     data object Close: ChooseHowImagePickEvent()
-    data class MakePhoto(val context:Context) : ChooseHowImagePickEvent()
+    data class MakePhoto(val contextProvider:ContextProvider) : ChooseHowImagePickEvent()
+}
+
+interface ContextProvider {
+    fun provideContext():Context
+}
+
+class BaseContextProvider(val context: Context):ContextProvider {
+    override fun provideContext() = context
 }

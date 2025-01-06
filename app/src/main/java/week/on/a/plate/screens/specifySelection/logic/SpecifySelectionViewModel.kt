@@ -15,16 +15,16 @@ import week.on.a.plate.data.dataView.week.NonPosed
 import week.on.a.plate.data.repository.tables.menu.category_selection.CategorySelectionDAO
 import week.on.a.plate.data.repository.tables.menu.category_selection.CategorySelectionRoom
 import week.on.a.plate.data.repository.tables.menu.selection.WeekMenuRepository
+import week.on.a.plate.dialogs.calendarMy.event.CalendarMyEvent
+import week.on.a.plate.dialogs.calendarMy.logic.CalendarMyUseCase
+import week.on.a.plate.dialogs.calendarMy.state.StateCalendarMy
 import week.on.a.plate.dialogs.editSelection.logic.EditSelectionViewModel
 import week.on.a.plate.dialogs.editSelection.state.EditSelectionUIState
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
-import week.on.a.plate.dialogs.calendarMy.event.CalendarMyEvent
-import week.on.a.plate.dialogs.calendarMy.logic.CalendarMyUseCase
-import week.on.a.plate.screens.wrapperDatePicker.event.WrapperDatePickerEvent
 import week.on.a.plate.screens.specifySelection.event.SpecifySelectionEvent
 import week.on.a.plate.screens.specifySelection.state.SpecifySelectionUIState
-import week.on.a.plate.dialogs.calendarMy.state.StateCalendarMy
+import week.on.a.plate.screens.wrapperDatePicker.event.WrapperDatePickerEvent
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -35,16 +35,16 @@ import javax.inject.Inject
 @HiltViewModel
 class SpecifySelectionViewModel @Inject constructor(
     private val weekMenuRepository: WeekMenuRepository,
-    private val calendarMyUseCase : CalendarMyUseCase,
+    private val calendarMyUseCase: CalendarMyUseCase,
     private val categorySelectionDAO: CategorySelectionDAO,
-    ) : ViewModel() {
-     lateinit var mainViewModel: MainViewModel
+) : ViewModel() {
+    lateinit var mainViewModel: MainViewModel
     val state: SpecifySelectionUIState = SpecifySelectionUIState()
     private lateinit var resultFlow: MutableStateFlow<SpecifySelectionResult?>
-    var stateCalendar : StateCalendarMy = StateCalendarMy.emptyState
+    var stateCalendar: StateCalendarMy = StateCalendarMy.emptyState
 
     init {
-        val firstRow =  calendarMyUseCase.getFirstRow(Locale.getDefault())
+        val firstRow = calendarMyUseCase.getFirstRow(Locale.getDefault())
         stateCalendar.firstRow.value = firstRow
         val now = LocalDate.now()
         viewModelScope.launch {
@@ -59,9 +59,11 @@ class SpecifySelectionViewModel @Inject constructor(
             is MainEvent -> {
                 mainViewModel.onEvent(event)
             }
+
             is CalendarMyEvent -> {
                 calendarMyUseCase.onEvent(event, stateCalendar, true)
             }
+
             is SpecifySelectionEvent -> {
                 onEvent(event)
             }
@@ -72,7 +74,7 @@ class SpecifySelectionViewModel @Inject constructor(
         when (event) {
             SpecifySelectionEvent.Back -> close()
             is SpecifySelectionEvent.Done -> done(event.context)
-            is SpecifySelectionEvent.AddCustomSelection -> addCustomSelection(event.context)
+            is SpecifySelectionEvent.AddCustomSelection -> addCustomSelection()
             is SpecifySelectionEvent.UpdatePreview -> updatePreview(event.date)
             is SpecifySelectionEvent.UpdateSelections -> updateSelections()
             is SpecifySelectionEvent.ApplyDate -> applyDate(event.date)
@@ -92,23 +94,29 @@ class SpecifySelectionViewModel @Inject constructor(
 
     }
 
-    private fun addCustomSelection(context: Context) {
+    private fun addCustomSelection() {
         viewModelScope.launch {
-            val vm = EditSelectionViewModel()
-            vm.mainViewModel = mainViewModel
-            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-            vm.launchAndGet(
+            val vm = EditSelectionViewModel(
                 EditSelectionUIState(
-                    startTitle = context.getString(R.string.add_meal),
-                    startPlaceholder = context.getString(R.string.hint_breakfast)
-                )
+                    title = R.string.add_meal,
+                    placeholder = R.string.hint_breakfast
+                ), viewModelScope, {
+                    mainViewModel.onEvent(MainEvent.OpenDialog(it))
+                }, {
+                    mainViewModel.onEvent(MainEvent.CloseDialog)
+                }
             ) { selState ->
                 state.allSelectionsIdDay.value =
                     state.allSelectionsIdDay.value.toMutableList().apply {
                         add(selState.text.value)
                     }
                 viewModelScope.launch {
-                    weekMenuRepository.getSelIdOrCreate(LocalDateTime.of(state.date.value, selState.selectedTime.value), false, selState.text.value, mainViewModel.locale, )
+                    weekMenuRepository.getSelIdOrCreate(
+                        LocalDateTime.of(
+                            state.date.value,
+                            selState.selectedTime.value
+                        ), false, selState.text.value, mainViewModel.locale,
+                    )
                 }
                 state.checkWeek.value = false
                 state.checkDayCategory.value = selState.text.value
@@ -122,8 +130,8 @@ class SpecifySelectionViewModel @Inject constructor(
             val allSelections = weekMenuRepository.getSelectionsByDate(state.date.value)
             val listSelName = allSelections.map { it.name }.toMutableList()
             var listSuggest = categorySelectionDAO.getAll().toMutableList()
-            listSuggest.add(CategorySelectionRoom(state.nonPosedText , NonPosed.stdTime))
-            listSuggest =  listSuggest.sortedBy { it.stdTime }.toMutableList()
+            listSuggest.add(CategorySelectionRoom(state.nonPosedText, NonPosed.stdTime))
+            listSuggest = listSuggest.sortedBy { it.stdTime }.toMutableList()
             for (i in listSuggest) {
                 if (listSelName.find { it == i.name } == null) {
                     listSelName.add(
@@ -146,7 +154,7 @@ class SpecifySelectionViewModel @Inject constructor(
         val category = getCategory(context) ?: return
         mainViewModel.viewModelScope.launch {
             val selId = weekMenuRepository.getSelIdOrCreate(
-                LocalDateTime.of(state.date.value, LocalTime.of(0,0)),
+                LocalDateTime.of(state.date.value, LocalTime.of(0, 0)),
                 state.checkWeek.value,
                 category,
                 mainViewModel.locale,

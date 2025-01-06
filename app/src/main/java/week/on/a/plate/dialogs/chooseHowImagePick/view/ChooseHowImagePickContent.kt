@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -21,24 +22,27 @@ import week.on.a.plate.core.uitools.TextSmall
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.CommonButton
 import week.on.a.plate.core.uitools.buttons.DoneButton
+import week.on.a.plate.dialogs.chooseHowImagePick.event.BaseContextProvider
 import week.on.a.plate.dialogs.chooseHowImagePick.event.ChooseHowImagePickEvent
 import week.on.a.plate.dialogs.exitApply.event.ExitApplyEvent
 
 @Composable
 fun ChooseHowImagePickContent(onEvent: (ChooseHowImagePickEvent) -> Unit) {
     val context = LocalContext.current
+    val contextProvider = remember { BaseContextProvider(context) }
     Column(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.surface)
             .padding(24.dp)
     ) {
-        DoneButton(stringResource(R.string.provide_link_to_image)) {
-            onEvent(ChooseHowImagePickEvent.ByUrl(context))
-        }
+        DoneButton(stringResource(R.string.provide_link_to_image),  click = {
+            onEvent(
+                ChooseHowImagePickEvent.ByUrl
+            )
+        })
         Spacer(Modifier.height(12.dp))
-        val context = LocalContext.current
         CommonButton (stringResource(R.string.make_photo)) {
-            onEvent(ChooseHowImagePickEvent.MakePhoto(context))
+            onEvent(ChooseHowImagePickEvent.MakePhoto(contextProvider))
         }
         Spacer(Modifier.height(12.dp))
         CommonButton (stringResource(R.string.select_from_gallery)) {

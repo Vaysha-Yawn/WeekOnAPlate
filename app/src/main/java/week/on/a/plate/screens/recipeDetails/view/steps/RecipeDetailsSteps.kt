@@ -3,7 +3,6 @@ package week.on.a.plate.screens.recipeDetails.view.steps
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,7 +32,7 @@ import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextInApp
 import week.on.a.plate.core.utils.timeToString
 import week.on.a.plate.data.dataView.example.recipeTom
-import week.on.a.plate.screens.createRecipe.view.PinnedIngredientsForStep
+import week.on.a.plate.screens.createRecipe.view.recipe.PinnedIngredientsForStep
 import week.on.a.plate.screens.filters.view.clickNoRipple
 import week.on.a.plate.screens.recipeDetails.event.RecipeDetailsEvent
 import week.on.a.plate.screens.recipeDetails.logic.setTimer

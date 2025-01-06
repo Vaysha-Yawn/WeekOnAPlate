@@ -15,6 +15,7 @@ import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableIntState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -44,41 +45,52 @@ fun FilterMoreContent(vm: FiltersMoreViewModel) {
             textAlign = TextAlign.Center
         )
         Spacer(Modifier.height(24.dp))
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .clickNoRipple {
-                    vm.state.favoriteIsChecked.value = !vm.state.favoriteIsChecked.value
-                }, verticalAlignment = Alignment.CenterVertically
-
-        ) {
-            Checkbox(
-                checked = vm.state.favoriteIsChecked.value,
-                colors = CheckboxDefaults.colors(
-                    checkedColor = MaterialTheme.colorScheme.secondary,
-                    checkmarkColor = MaterialTheme.colorScheme.onBackground
-                ),
-                onCheckedChange = {
-                    vm.state.favoriteIsChecked.value = !vm.state.favoriteIsChecked.value
-                },
-            )
-            Spacer(Modifier.width(6.dp))
-            TextBody(stringResource(R.string.only_favorites))
-        }
+        FilterFavorites(vm)
         Spacer(Modifier.height(24.dp))
 
-        val listTime = listOf(
+        FilterCookTime(vm)
+    }
+}
+
+@Composable
+private fun FilterCookTime(vm: FiltersMoreViewModel) {
+    val listTime = remember {
+        listOf(
             15,
             30,
             60,
             90,
             120,
         )
+    }
+    TextBody(stringResource(R.string.cook_time))
+    Spacer(Modifier.height(24.dp))
+    TagsListFilterTime(vm.state.allTime, listTime)
+    Spacer(Modifier.height(24.dp))
+}
 
-        TextBody(stringResource(R.string.cook_time))
-        Spacer(Modifier.height(24.dp))
-        TagsListFilterTime(vm.state.allTime, listTime)
-        Spacer(Modifier.height(24.dp))
+@Composable
+private fun FilterFavorites(vm: FiltersMoreViewModel) {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .clickNoRipple {
+                vm.state.favoriteIsChecked.value = !vm.state.favoriteIsChecked.value
+            }, verticalAlignment = Alignment.CenterVertically
+
+    ) {
+        Checkbox(
+            checked = vm.state.favoriteIsChecked.value,
+            colors = CheckboxDefaults.colors(
+                checkedColor = MaterialTheme.colorScheme.secondary,
+                checkmarkColor = MaterialTheme.colorScheme.onBackground
+            ),
+            onCheckedChange = {
+                vm.state.favoriteIsChecked.value = !vm.state.favoriteIsChecked.value
+            },
+        )
+        Spacer(Modifier.width(6.dp))
+        TextBody(stringResource(R.string.only_favorites))
     }
 }
 
@@ -87,7 +99,7 @@ fun FilterMoreContent(vm: FiltersMoreViewModel) {
 fun TagsListFilterTime(value: MutableIntState, listTime: List<Int>) {
     FlowRow() {
         listTime.forEach {
-            val text = stringResource(R.string.under) +(it*60).timeToString(LocalContext.current)
+            val text = stringResource(R.string.under)+ " " +(it*60).timeToString(LocalContext.current)
             TagFilterTime(value.intValue, it, text) {
                 if (value.intValue == it) {
                     value.intValue = 0

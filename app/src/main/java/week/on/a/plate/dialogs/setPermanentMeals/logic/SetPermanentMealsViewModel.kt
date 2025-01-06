@@ -1,7 +1,6 @@
 package week.on.a.plate.dialogs.setPermanentMeals.logic
 
 
-import android.content.Context
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import week.on.a.plate.R
@@ -25,10 +24,10 @@ class SetPermanentMealsViewModel @Inject constructor(val dao: CategorySelectionD
 
     fun onEvent(event: SetPermanentMealsEvent) {
         when (event) {
-            is SetPermanentMealsEvent.Add -> add(event.context)
+            is SetPermanentMealsEvent.Add -> add()
             SetPermanentMealsEvent.Close -> close()
             is SetPermanentMealsEvent.Delete -> delete(event.sel)
-            is SetPermanentMealsEvent.Edit -> edit(event.sel, event.context)
+            is SetPermanentMealsEvent.Edit -> edit(event.sel)
         }
     }
 
@@ -55,80 +54,84 @@ class SetPermanentMealsViewModel @Inject constructor(val dao: CategorySelectionD
         }
     }
 
-    private fun edit(sel: CategorySelectionRoom, context:Context) {
+    private fun openDialog(vm: DialogViewModel) {
+        mainViewModel.onEvent(MainEvent.OpenDialog(vm))
+    }
+
+    private fun closeDialog() {
+        mainViewModel.onEvent(MainEvent.CloseDialog)
+    }
+
+    private fun edit(sel: CategorySelectionRoom) {
         mainViewModel.viewModelScope.launch {
-            val vm = EditSelectionViewModel()
-            vm.mainViewModel = mainViewModel
             val stateToEdit = EditSelectionUIState(
-                startTitle = context.getString(R.string.edit_meal),
-                startPlaceholder = context.getString(R.string.hint_breakfast)
+                title = R.string.edit_meal,
+                placeholder = R.string.hint_breakfast
             )
             stateToEdit.text.value = sel.name
             stateToEdit.selectedTime.value = sel.stdTime
-            mainViewModel.viewModelScope.launch {
-                vm.launchAndGet(
-                    stateToEdit
-                ) { selState ->
-                    mainViewModel.viewModelScope.launch {
-                        state.selections.value =
-                            state.selections.value.toMutableList().apply {
-                                remove(sel)
-                                add(
-                                    CategorySelectionRoom(
-                                        selState.text.value,
-                                        selState.selectedTime.value
-                                    )
+            EditSelectionViewModel(
+                stateToEdit,
+                mainViewModel.viewModelScope,
+                ::openDialog,
+                ::closeDialog
+            ) { selState ->
+                mainViewModel.viewModelScope.launch {
+                    state.selections.value =
+                        state.selections.value.toMutableList().apply {
+                            remove(sel)
+                            add(
+                                CategorySelectionRoom(
+                                    selState.text.value,
+                                    selState.selectedTime.value
                                 )
-                            }.sortedBy { it.stdTime }
-                        dao.update(
-                            CategorySelectionRoom(
-                                selState.text.value,
-                                selState.selectedTime.value
-                            ).apply { id = sel.id })
-                        mainViewModel.dialogUseCase.show()
-                    }
+                            )
+                        }.sortedBy { it.stdTime }
+                    dao.update(
+                        CategorySelectionRoom(
+                            selState.text.value,
+                            selState.selectedTime.value
+                        ).apply { id = sel.id })
+                    mainViewModel.onEvent(MainEvent.ShowDialog)
                 }
             }
-            mainViewModel.dialogUseCase.hide()
-            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
+            mainViewModel.onEvent(MainEvent.HideDialog)
         }
     }
 
 
-    private fun add(context:Context) {
+    private fun add() {
         mainViewModel.viewModelScope.launch {
-            val vm = EditSelectionViewModel()
-            vm.mainViewModel = mainViewModel
-            mainViewModel.viewModelScope.launch {
-                vm.launchAndGet(
-                    EditSelectionUIState(
-                        startTitle = context.getString(R.string.add_meal),
-                        startPlaceholder = context.getString(R.string.hint_breakfast)
-                    )
-                ) { selState ->
-                    mainViewModel.viewModelScope.launch {
-                        state.selections.value =
-                            state.selections.value.toMutableList().apply {
-                                add(
-                                    CategorySelectionRoom(
-                                        selState.text.value,
-                                        selState.selectedTime.value
-                                    )
+            EditSelectionViewModel(
+                EditSelectionUIState(
+                    title = R.string.add_meal,
+                    placeholder = R.string.hint_breakfast
+                ),
+                mainViewModel.viewModelScope,
+                ::openDialog,
+                ::closeDialog
+            ) { selState ->
+                mainViewModel.viewModelScope.launch {
+                    state.selections.value =
+                        state.selections.value.toMutableList().apply {
+                            add(
+                                CategorySelectionRoom(
+                                    selState.text.value,
+                                    selState.selectedTime.value
                                 )
-                            }.sortedBy { it.stdTime }
-
-                        dao.insert(
-                            CategorySelectionRoom(
-                                selState.text.value,
-                                selState.selectedTime.value
                             )
+                        }.sortedBy { it.stdTime }
+
+                    dao.insert(
+                        CategorySelectionRoom(
+                            selState.text.value,
+                            selState.selectedTime.value
                         )
-                    }
-                    mainViewModel.dialogUseCase.show()
+                    )
                 }
+                mainViewModel.onEvent(MainEvent.ShowDialog)
             }
-            mainViewModel.dialogUseCase.hide()
-            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
+            mainViewModel.onEvent(MainEvent.HideDialog)
         }
     }
 

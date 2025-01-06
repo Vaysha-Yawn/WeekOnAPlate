@@ -18,13 +18,13 @@ import week.on.a.plate.dialogs.dialogTimePick.logic.TimePickViewModel
 import week.on.a.plate.dialogs.editIngredientInMenu.logic.EditPositionIngredientViewModel
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
+import week.on.a.plate.mainActivity.logic.imageFromGallery.getSavedPicture
 import week.on.a.plate.screens.createRecipe.event.RecipeCreateEvent
 import week.on.a.plate.screens.createRecipe.state.RecipeCreateUIState
 import week.on.a.plate.screens.createRecipe.state.RecipeStepState
 import week.on.a.plate.screens.filters.navigation.FilterDestination
 import week.on.a.plate.screens.filters.state.FilterEnum
 import week.on.a.plate.screens.filters.state.FilterMode
-import week.on.a.plate.mainActivity.logic.imageFromGallery.getSavedPicture
 import java.time.LocalTime
 import javax.inject.Inject
 
@@ -32,7 +32,7 @@ import javax.inject.Inject
 class RecipeCreateViewModel @Inject constructor() : ViewModel() {
     lateinit var mainViewModel: MainViewModel
     var state = RecipeCreateUIState()
-    var isFirstTimeline:Boolean = true
+    var isFirstTimeline: Boolean = true
 
     private lateinit var resultFlow: MutableStateFlow<RecipeCreateUIState?>
 
@@ -65,24 +65,23 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
 
             RecipeCreateEvent.AddIngredient -> {
                 viewModelScope.launch {
-                    val vm = EditPositionIngredientViewModel()
-                    vm.mainViewModel = mainViewModel
-                    vm.launchAndGet(
-                        null, true
-                    ) { ingredient ->
+                    val vm = EditPositionIngredientViewModel(null, true) { ingredient ->
                         state.ingredients.value = state.ingredients.value.toMutableList().apply {
                             this.add(ingredient.ingredient)
                         }.toList()
                     }
+                    vm.mainViewModel = mainViewModel
                 }
             }
 
             is RecipeCreateEvent.EditIngredient -> {
                 viewModelScope.launch {
-                    val vm = EditPositionIngredientViewModel()
-                    vm.mainViewModel = mainViewModel
-                    vm.launchAndGet(
-                        Position.PositionIngredientView(0, event.ingredient, 0), false
+                    val vm = EditPositionIngredientViewModel(
+                        Position.PositionIngredientView(
+                            0,
+                            event.ingredient,
+                            0
+                        ), false
                     ) { ingredient ->
                         state.ingredients.value = state.ingredients.value.toMutableList().apply {
                             val index = this.indexOf(event.ingredient)
@@ -90,6 +89,7 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
                             this.add(index, ingredient.ingredient)
                         }.toList()
                     }
+                    vm.mainViewModel = mainViewModel
                 }
             }
 
@@ -108,7 +108,7 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
             }
 
             is RecipeCreateEvent.EditTimer -> {
-                getTime(event.context.getString(R.string.set_timer)) { time ->
+                getTime(R.string.set_timer) { time ->
                     event.recipeStepState.timer.longValue = time
                 }
             }
@@ -124,7 +124,7 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
             is RecipeCreateEvent.EditImage -> getImage(event.recipeStepState.image.value) { nameImage ->
                 viewModelScope.launch {
                     event.recipeStepState.image.value = nameImage
-                    if (!nameImage.startsWith("http")){
+                    if (!nameImage.startsWith("http")) {
                         val picture = getSavedPicture(event.context, nameImage)
                         event.recipeStepState.imageContainer.value = picture?.asImageBitmap()
                     }
@@ -134,7 +134,7 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
             is RecipeCreateEvent.EditMainImage -> getImage(state.photoLink.value) { nameImage ->
                 viewModelScope.launch {
                     state.photoLink.value = nameImage
-                    if (!nameImage.startsWith("http")){
+                    if (!nameImage.startsWith("http")) {
                         val picture = getSavedPicture(event.context, nameImage)
                         state.mainImageContainer.value = picture?.asImageBitmap()
                     }
@@ -145,8 +145,8 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
             is RecipeCreateEvent.DeleteIngredient -> deleteIngredient(event.ingredient)
             is RecipeCreateEvent.EditPinnedIngredients -> editPinnedIngredients(event.recipeStepState)
             is RecipeCreateEvent.EditRecipeDuration -> {
-                getTime(event.context.getString(R.string.recipe_duration)){time->
-                   state.duration.value = LocalTime.ofSecondOfDay(time)
+                getTime(R.string.recipe_duration) { time ->
+                    state.duration.value = LocalTime.ofSecondOfDay(time)
                 }
             }
         }
@@ -219,24 +219,24 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
 
     private fun editPinnedIngredients(recipeStepState: RecipeStepState) {
         viewModelScope.launch {
-            val vm = ChooseIngredientsForStepViewModel()
-            vm.mainViewModel = mainViewModel
-            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-            vm.launchAndGet(
+            val vm = ChooseIngredientsForStepViewModel(
                 state.ingredients.value,
-                recipeStepState.pinnedIngredientsInd.value
+                recipeStepState.pinnedIngredientsInd.value,
+                mainViewModel.viewModelScope,
+                { mainViewModel.onEvent(MainEvent.CloseDialog) }
             ) { newList ->
                 recipeStepState.pinnedIngredientsInd.value = newList
             }
+            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
         }
     }
 
-    private fun getTime(title: String, use: (Long) -> Unit) {
+    private fun getTime(title: Int, use: (Long) -> Unit) {
         viewModelScope.launch {
-            val vm = TimePickViewModel()
-            vm.mainViewModel = mainViewModel
+            val vm = TimePickViewModel(title, mainViewModel.viewModelScope, {
+                mainViewModel.onEvent(MainEvent.CloseDialog)
+            }, use)
             mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-            vm.launchAndGet(title, use)
         }
     }
 
@@ -252,7 +252,7 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
     ) {
         if (oldRecipe != null) setStateByOldRecipe(oldRecipe) else state = RecipeCreateUIState()
 
-        isFirstTimeline = oldRecipe==null
+        isFirstTimeline = oldRecipe == null
 
         state.isForCreate.value = isForCreate
         val flow = start()

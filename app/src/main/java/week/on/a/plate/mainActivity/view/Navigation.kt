@@ -18,7 +18,7 @@ import week.on.a.plate.screens.filters.view.FilterStart
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screens.cookPlanner.view.CookPlannerStart
 import week.on.a.plate.screens.createRecipe.navigation.RecipeCreateDestination
-import week.on.a.plate.screens.createRecipe.view.RecipeCreateStart
+import week.on.a.plate.screens.createRecipe.view.base.RecipeCreateStart
 import week.on.a.plate.screens.deleteApply.navigation.DeleteApplyDestination
 import week.on.a.plate.screens.deleteApply.view.DeleteApplyStart
 import week.on.a.plate.screens.documentsWeb.navigation.DocumentsWebDestination

@@ -1,17 +1,13 @@
 package week.on.a.plate.dialogs.editIngredientInMenu.view
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -19,7 +15,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -41,74 +36,70 @@ fun EditOrAddIngredientBottomDialogContent(
     state: EditPositionIngredientUIState,
     onEvent: (EditPositionIngredientEvent) -> Unit,
 ) {
-    val isError: MutableState<Boolean> = remember { mutableStateOf(false) }
     Column(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.surface)
             .padding(vertical = 24.dp)
     ) {
-        if (state.ingredientState.value != null) {
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp)
-                    .padding(horizontal = 12.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                TextTitle(state.ingredientState.value!!.name, Modifier.weight(1f))
-            }
-            Spacer(modifier = Modifier.height(12.dp))
-            HorizontalDivider(Modifier, 1.dp, MaterialTheme.colorScheme.outline)
-        } else {
-            AnimateErrorBox(isError) {
-                CommonButton(
-                    stringResource(R.string.Specify_ingredient),
-                    image = R.drawable.search, modifier = Modifier.padding(horizontal = 24.dp)
-                ) {
-                    onEvent(EditPositionIngredientEvent.ChooseIngredient)
-                }
-            }
-        }
+        IngredientName(state)
         Spacer(modifier = Modifier.height(12.dp))
-        TextBody(
-            text = stringResource(R.string.description_title),
-            modifier = Modifier.padding(horizontal = 36.dp)
-        )
-        Spacer(modifier = Modifier.height(12.dp))
-        EditTextLine(
-            state.description,
-            stringResource(R.string.Pieces),
-            modifier = Modifier.padding(horizontal = 24.dp)
-        )
-
-        TextBody(
-            text = stringResource(R.string.count) + if (state.ingredientState.value != null) {
-                ", " + state.ingredientState.value!!.measure
-            } else "",
-            modifier = Modifier.padding(horizontal = 36.dp)
-        )
-        Spacer(modifier = Modifier.height(12.dp))
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            EditNumberLine(
-                state.count,
-                "0",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp)
-            )
-        }
+        Description(state)
+        Count(state)
         Spacer(modifier = Modifier.height(36.dp))
         DoneButton(
             text = stringResource(id = R.string.apply),
             modifier = Modifier.padding(horizontal = 24.dp)
         ) {
-            if (state.ingredientState.value != null) {
-                onEvent(EditPositionIngredientEvent.Done)
-            } else {
-                isError.value = true
-            }
+            onEvent(EditPositionIngredientEvent.Done)
         }
     }
+}
+
+@Composable
+private fun Count(state: EditPositionIngredientUIState) {
+    TextBody(
+        text = stringResource(R.string.count) + if (state.ingredientState.value != null) {
+            ", " + state.ingredientState.value!!.measure
+        } else "",
+        modifier = Modifier.padding(horizontal = 36.dp)
+    )
+    Spacer(modifier = Modifier.height(12.dp))
+    EditNumberLine(
+        state.count,
+        "0",
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp)
+    )
+}
+
+@Composable
+private fun Description(state: EditPositionIngredientUIState) {
+    TextBody(
+        text = stringResource(R.string.description_title),
+        modifier = Modifier.padding(horizontal = 36.dp)
+    )
+    Spacer(modifier = Modifier.height(12.dp))
+    EditTextLine(
+        state.description,
+        stringResource(R.string.Pieces),
+        modifier = Modifier.padding(horizontal = 24.dp)
+    )
+}
+
+@Composable
+private fun IngredientName(state: EditPositionIngredientUIState) {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp)
+            .padding(horizontal = 12.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        TextTitle(state.ingredientState.value!!.name, Modifier.weight(1f))
+    }
+    Spacer(modifier = Modifier.height(12.dp))
+    HorizontalDivider(Modifier, 1.dp, MaterialTheme.colorScheme.outline)
 }
 
 

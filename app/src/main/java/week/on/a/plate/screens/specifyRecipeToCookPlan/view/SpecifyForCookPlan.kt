@@ -81,7 +81,7 @@ fun SpecifyForCookPlan(
             state.time.value.format(DateTimeFormatter.ofPattern("HH:mm")),
             image = R.drawable.time
         ) {
-            onEvent(SpecifyRecipeToCookPlanEvent.OpenTimePick(context))
+            onEvent(SpecifyRecipeToCookPlanEvent.OpenTimePick)
         }
         Spacer(modifier = Modifier.height(24.dp))
         TextBody(stringResource(R.string.get_recipe_done))

@@ -37,7 +37,6 @@ fun SetPermanentMealsStart(
     state: SetPermanentMealsUIState,
     onEvent: (SetPermanentMealsEvent) -> Unit
 ) {
-    val context = LocalContext.current
     Column(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.surface)
@@ -52,14 +51,13 @@ fun SetPermanentMealsStart(
         }
         Spacer(modifier = Modifier.height(24.dp))
         DoneButton(stringResource(R.string.add)) {
-            onEvent(SetPermanentMealsEvent.Add(context))
+            onEvent(SetPermanentMealsEvent.Add)
         }
     }
 }
 
 @Composable
 fun CategoriesSelectionRow(sel: CategorySelectionRoom, onEvent: (SetPermanentMealsEvent) -> Unit) {
-    val context = LocalContext.current
     Row(
         Modifier
             .fillMaxWidth()
@@ -69,7 +67,7 @@ fun CategoriesSelectionRow(sel: CategorySelectionRoom, onEvent: (SetPermanentMea
         horizontalArrangement = Arrangement.SpaceAround
     ) {
         Icon(painterResource(R.drawable.edit), "", tint = MaterialTheme.colorScheme.onBackground, modifier = Modifier.clickNoRipple {
-            onEvent(SetPermanentMealsEvent.Edit(sel, context))
+            onEvent(SetPermanentMealsEvent.Edit(sel))
         })
         Spacer(modifier = Modifier.width(24.dp))
         TextBody("${sel.stdTime.hour}:${sel.stdTime.minute.normalizeTimeToText()} - ${sel.name}")

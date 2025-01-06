@@ -122,14 +122,14 @@ class FilterViewModel @Inject constructor(
                 if (event.ingredientCategory.name == event.context.getString(startCategoryName) ) return
                 editOrDelete(
                     delete = { deleteIngredientCategory(event.ingredientCategory) },
-                    edit = { editIngredientCategory(event.ingredientCategory, event.context) })
+                    edit = { editIngredientCategory(event.ingredientCategory) })
             }
 
             is FilterEvent.EditOrDeleteTagCategory -> {
                 if (event.tagCategory.name == event.context.getString(startCategoryName)) return
                 editOrDelete(
                     delete = { deleteTagCategory(event.tagCategory) },
-                    edit = { editTagCategory(event.tagCategory, event.context) })
+                    edit = { editTagCategory(event.tagCategory) })
             }
 
             is FilterEvent.CreateActive -> {
@@ -209,7 +209,7 @@ class FilterViewModel @Inject constructor(
 
     /// EDIT
 
-    private fun editIngredientCategory(oldIngredientCat: IngredientCategoryView, context:Context) {
+    private fun editIngredientCategory(oldIngredientCat: IngredientCategoryView) {
         val vm = EditOneStringViewModel()
         vm.mainViewModel = mainViewModel
         mainViewModel.onEvent(MainEvent.OpenDialog(vm))
@@ -217,8 +217,8 @@ class FilterViewModel @Inject constructor(
             vm.launchAndGet(
                 EditOneStringUIState(
                     oldIngredientCat.name,
-                    context.getString(R.string.edit_category_name),
-                    context.getString(R.string.enter_category_name),
+                    R.string.edit_category_name,
+                    R.string.enter_category_name,
                 )
             ) { newName ->
                 ingredientCategoryRepository.updateName(newName, oldIngredientCat.id)
@@ -226,7 +226,7 @@ class FilterViewModel @Inject constructor(
         }
     }
 
-    private fun editTagCategory(oldTagCat: TagCategoryView, context:Context) {
+    private fun editTagCategory(oldTagCat: TagCategoryView) {
         val vm = EditOneStringViewModel()
         vm.mainViewModel = mainViewModel
         mainViewModel.onEvent(MainEvent.OpenDialog(vm))
@@ -234,8 +234,8 @@ class FilterViewModel @Inject constructor(
             vm.launchAndGet(
                 EditOneStringUIState(
                     oldTagCat.name,
-                    context.getString(R.string.edit_category_name),
-                    context.getString(R.string.enter_category_name),
+                    R.string.edit_category_name,
+                    R.string.enter_category_name,
                 )
             ) { newName ->
                 recipeTagCategoryRepository.updateName(newName, oldTagCat.id)
@@ -408,8 +408,8 @@ class FilterViewModel @Inject constructor(
             vm.launchAndGet(
                 EditOneStringUIState(
                     state.searchText.value,
-                    context.getString(R.string.add_category),
-                    context.getString(R.string.enter_category_name),
+                    R.string.add_category,
+                    R.string.enter_category_name,
                 )
             ) { name ->
                 insertNewTagCategoryInDB(name)
@@ -431,8 +431,8 @@ class FilterViewModel @Inject constructor(
             vm.launchAndGet(
                 EditOneStringUIState(
                     state.searchText.value,
-                    context.getString(R.string.add_category),
-                    context.getString(R.string.enter_category_name),
+                    R.string.add_category,
+                    R.string.enter_category_name,
                 )
             ) { name ->
                 insertNewIngredientCategoryInDB(name)

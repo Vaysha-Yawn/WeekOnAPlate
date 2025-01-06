@@ -40,11 +40,11 @@ fun EditOneStringContent(
             .background(MaterialTheme.colorScheme.surface)
             .padding(24.dp)
             .imePadding()) {
-        TextTitle(text = state.title.value)
+        TextTitle(text = stringResource(state.title))
         Spacer(modifier = Modifier.height(24.dp))
         EditTextLine(
             state.text,
-            state.placeholder.value, modifier = Modifier.focusRequester(focusRequester), isRequired = true, isError = isError
+            stringResource(state.placeholder), modifier = Modifier.focusRequester(focusRequester), isRequired = true, isError = isError
         )
         Spacer(modifier = Modifier.height(24.dp))
         DoneButton(text = stringResource(R.string.apply)) {
@@ -62,9 +62,6 @@ fun EditOneStringContent(
 @Composable
 fun PreviewEditNoteBottomDialog() {
     WeekOnAPlateTheme {
-        val text = remember {
-            mutableStateOf("")
-        }
         EditOneStringContent(EditOneStringUIState()){}
     }
 }

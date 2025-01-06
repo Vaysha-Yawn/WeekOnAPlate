@@ -9,49 +9,52 @@ import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.Event
-import week.on.a.plate.data.dataView.example.emptyRecipe
-import week.on.a.plate.data.dataView.recipe.RecipeStepView
-import week.on.a.plate.data.dataView.recipe.RecipeView
 import week.on.a.plate.data.dataView.week.ForWeek
 import week.on.a.plate.data.dataView.week.NonPosed
-import week.on.a.plate.data.repository.tables.recipe.recipe.RecipeRepository
 import week.on.a.plate.dialogs.core.DialogUseCase
 import week.on.a.plate.dialogs.exitApply.event.ExitApplyEvent
 import week.on.a.plate.dialogs.exitApply.logic.ExitApplyViewModel
 import week.on.a.plate.mainActivity.event.MainEvent
-import week.on.a.plate.screens.cookPlanner.logic.CookPlannerViewModel
-import week.on.a.plate.screens.createRecipe.logic.RecipeCreateViewModel
-import week.on.a.plate.screens.createRecipe.navigation.RecipeCreateDestination
-import week.on.a.plate.screens.deleteApply.logic.DeleteApplyViewModel
-import week.on.a.plate.screens.filters.logic.FilterViewModel
-import week.on.a.plate.screens.inventory.logic.InventoryViewModel
-import week.on.a.plate.screens.menu.logic.useCase.CRUDRecipeInMenu
-import week.on.a.plate.screens.recipeDetails.logic.RecipeDetailsViewModel
-import week.on.a.plate.screens.searchRecipes.logic.SearchViewModel
 import week.on.a.plate.mainActivity.logic.imageFromGallery.ImageFromGalleryUseCase
 import week.on.a.plate.mainActivity.logic.takePicture.TakePictureUseCase
 import week.on.a.plate.mainActivity.logic.voice.VoiceInputUseCase
 import week.on.a.plate.mainActivity.view.MainActivity
+import week.on.a.plate.screens.cookPlanner.logic.CookPlannerViewModel
+import week.on.a.plate.screens.createRecipe.logic.RecipeCreateViewModel
+import week.on.a.plate.screens.deleteApply.logic.DeleteApplyViewModel
 import week.on.a.plate.screens.documentsWeb.logic.DocumentsWebViewModel
+import week.on.a.plate.screens.filters.logic.FilterViewModel
+import week.on.a.plate.screens.inventory.logic.InventoryViewModel
 import week.on.a.plate.screens.menu.logic.MenuViewModel
+import week.on.a.plate.screens.recipeDetails.logic.RecipeDetailsViewModel
+import week.on.a.plate.screens.searchRecipes.logic.SearchViewModel
 import week.on.a.plate.screens.settings.logic.SettingsViewModel
 import week.on.a.plate.screens.shoppingList.logic.ShoppingListViewModel
 import week.on.a.plate.screens.specifyRecipeToCookPlan.logic.SpecifyRecipeToCookPlanViewModel
 import week.on.a.plate.screens.specifySelection.logic.SpecifySelectionViewModel
 import week.on.a.plate.screens.tutorial.logic.TutorialViewModel
-import java.time.LocalDateTime
 import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
     val dialogUseCase: DialogUseCase,
-    private val sCRUDRecipeInMenu: CRUDRecipeInMenu,
-    private val recipeRepository: RecipeRepository,
+    val getSharedLinkUseCase: GetSharedLinkUseCase
 ) : ViewModel() {
 
+    lateinit var locale: Locale
+    val actionPlusButton = mutableStateOf({})
+    val voiceInputUseCase = VoiceInputUseCase(this)
+    val imageFromGalleryUseCase = ImageFromGalleryUseCase(this)
+    val takePictureUseCase = TakePictureUseCase(this)
+    val snackbarHostState = SnackbarHostState()
+    lateinit var nav: NavHostController
+    val isActiveBaseScreen = mutableStateOf(true)
+    val isActivePlusButton = mutableStateOf(true)
+    val isActiveFilterScreen = mutableStateOf(false)
+
     lateinit var settingsViewModel: SettingsViewModel
-    lateinit var menuViewModel: week.on.a.plate.screens.menu.logic.MenuViewModel
+    lateinit var menuViewModel: MenuViewModel
     lateinit var specifySelectionViewModel: SpecifySelectionViewModel
     lateinit var filterViewModel: FilterViewModel
     lateinit var searchViewModel: SearchViewModel
@@ -123,20 +126,6 @@ class MainViewModel @Inject constructor(
         menuViewModel.updateWeek()
     }
 
-    lateinit var locale: Locale
-    val actionPlusButton = mutableStateOf({})
-    val voiceInputUseCase = VoiceInputUseCase(this)
-    val imageFromGalleryUseCase = ImageFromGalleryUseCase(this)
-    val takePictureUseCase = TakePictureUseCase(this)
-    val snackbarHostState = SnackbarHostState()
-    lateinit var nav: NavHostController
-    val isActiveBaseScreen = mutableStateOf(true)
-    val isActivePlusButton = mutableStateOf(true)
-    val isActiveFilterScreen = mutableStateOf(false)
-
-    var isCheckedSharedAction = false
-    var sharedLink = ""
-
     fun onEvent(event: Event) {
         when (event) {
             is MainEvent -> onEvent(event)
@@ -146,12 +135,6 @@ class MainViewModel @Inject constructor(
 
     fun onEvent(event: MainEvent) {
         when (event) {
-            is MainEvent.ActionDBMenu -> {
-                viewModelScope.launch {
-                    sCRUDRecipeInMenu.onEvent(event.actionMenuDBData)
-                }
-            }
-
             MainEvent.CloseDialog -> dialogUseCase.closeDialog()
             is MainEvent.OpenDialog -> dialogUseCase.openDialog(event.dialog)
             is MainEvent.ShowSnackBar -> showSnackBar(event.message)
@@ -160,7 +143,9 @@ class MainViewModel @Inject constructor(
             MainEvent.HideDialog -> dialogUseCase.hide()
             MainEvent.ShowDialog -> dialogUseCase.show()
             is MainEvent.VoiceToText -> voiceToText(event.context, event.use)
-            is MainEvent.UseSharedLink -> useSharedLink(event.link)
+            is MainEvent.UseSharedLink -> useSharedLink()
+
+            //todo переделать в обычный вызов диалога
             MainEvent.OpenDialogExitApplyFromCreateRecipe -> openDialogExitApplyFromCreateRecipe()
         }
     }
@@ -169,8 +154,8 @@ class MainViewModel @Inject constructor(
         val vm = ExitApplyViewModel()
         vm.mainViewModel = this
         viewModelScope.launch {
-            vm.launchAndGet {event->
-                if (event == ExitApplyEvent.Exit){
+            vm.launchAndGet { event ->
+                if (event == ExitApplyEvent.Exit) {
                     nav.popBackStack()
                 }
             }
@@ -178,40 +163,9 @@ class MainViewModel @Inject constructor(
         onEvent(MainEvent.OpenDialog(vm))
     }
 
-    private fun useSharedLink(text: String) {
-        if (!isCheckedSharedAction && ::nav.isInitialized) {
-            nav.navigate(RecipeCreateDestination)
-            isCheckedSharedAction = true
-            val recipeBase = emptyRecipe.apply {
-                link = text
-            }
-            viewModelScope.launch {
-                recipeCreateViewModel.launchAndGet(recipeBase, true) { recipe ->
-                    viewModelScope.launch {
-                        val newRecipe = RecipeView(
-                            id = 0,
-                            name = recipe.name.value,
-                            description = recipe.description.value,
-                            img = recipe.photoLink.value,
-                            tags = recipe.tags.value,
-                            standardPortionsCount = recipe.portionsCount.intValue,
-                            ingredients = recipe.ingredients.value,
-                            steps = recipe.steps.value.map {
-                                RecipeStepView(
-                                    0,
-                                    it.description.value,
-                                    it.image.value,
-                                    it.timer.longValue,
-                                    it.pinnedIngredientsInd.value
-                                )
-                            },
-                            link = recipe.source.value, false, LocalDateTime.now(),
-                            recipe.duration.value
-                        )
-                        recipeRepository.create(newRecipe)
-                    }
-                }
-            }
+    private fun useSharedLink() {
+        if (!getSharedLinkUseCase.isCheckedSharedAction && ::nav.isInitialized) {
+            getSharedLinkUseCase.useSharedLink(viewModelScope, nav, recipeCreateViewModel)
         }
     }
 

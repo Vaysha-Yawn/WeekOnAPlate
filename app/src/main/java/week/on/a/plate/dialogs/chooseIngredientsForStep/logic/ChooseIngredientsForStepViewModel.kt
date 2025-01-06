@@ -1,8 +1,11 @@
 package week.on.a.plate.dialogs.chooseIngredientsForStep.logic
 
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.dialogs.chooseIngredientsForStep.event.ChooseIngredientsForStepEvent
 import week.on.a.plate.dialogs.chooseIngredientsForStep.state.ChooseIngredientsForStepUIState
@@ -11,11 +14,28 @@ import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
 
 
-class ChooseIngredientsForStepViewModel() : DialogViewModel() {
+class ChooseIngredientsForStepViewModel(
+    ingredientsAll: List<IngredientInRecipeView>,
+    chosenIngredients: List<Long>,
+    scope: CoroutineScope,
+    val closeDialog:()->Unit,
+    val use: (List<Long>) -> Unit
+) : DialogViewModel() {
 
-    lateinit var mainViewModel: MainViewModel
-    lateinit var state: ChooseIngredientsForStepUIState
+    var state: ChooseIngredientsForStepUIState =
+        ChooseIngredientsForStepUIState(ingredientsAll, mutableStateOf(chosenIngredients))
     private lateinit var resultFlow: MutableStateFlow<List<Long>?>
+
+    init {
+        val flow = start()
+        scope.launch {
+            flow.collect { value ->
+                if (value != null) {
+                    use(value)
+                }
+            }
+        }
+    }
 
     fun start(): Flow<List<Long>?> {
         val flow = MutableStateFlow<List<Long>?>(null)
@@ -30,40 +50,28 @@ class ChooseIngredientsForStepViewModel() : DialogViewModel() {
 
     fun close() {
         state.show.value = false
-        mainViewModel.onEvent(MainEvent.CloseDialog)
+        closeDialog()
     }
 
     fun onEvent(event: ChooseIngredientsForStepEvent) {
         when (event) {
             ChooseIngredientsForStepEvent.Close -> close()
             ChooseIngredientsForStepEvent.Done -> done()
-            is ChooseIngredientsForStepEvent.ClickToIngredient -> {
-                if (state.chosenIngredients.value.contains(event.indIngredient)) {
-                    state.chosenIngredients.value =
-                        state.chosenIngredients.value.toMutableList().apply {
-                            remove(event.indIngredient)
-                        }.toList()
-                } else {
-                    state.chosenIngredients.value =
-                        state.chosenIngredients.value.toMutableList().apply {
-                            add(event.indIngredient)
-                        }.toList()
-                }
-            }
+            is ChooseIngredientsForStepEvent.ClickToIngredient -> clickToIngredient(event)
         }
     }
 
-    suspend fun launchAndGet(
-        ingredientsAll: List<IngredientInRecipeView>,
-        chosenIngredients: List<Long>,
-        use: (List<Long>) -> Unit
-    ) {
-        state = ChooseIngredientsForStepUIState(ingredientsAll, mutableStateOf(chosenIngredients))
-        val flow = start()
-        flow.collect { value ->
-            if (value != null) {
-                use(value)
-            }
+    private fun clickToIngredient(event: ChooseIngredientsForStepEvent.ClickToIngredient) {
+        if (state.chosenIngredients.value.contains(event.indIngredient)) {
+            state.chosenIngredients.value =
+                state.chosenIngredients.value.toMutableList().apply {
+                    remove(event.indIngredient)
+                }.toList()
+        } else {
+            state.chosenIngredients.value =
+                state.chosenIngredients.value.toMutableList().apply {
+                    add(event.indIngredient)
+                }.toList()
         }
     }
 

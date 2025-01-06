@@ -2,7 +2,6 @@ package week.on.a.plate.dialogs.sortMore.event
 
 
 import week.on.a.plate.core.Event
-import week.on.a.plate.dialogs.core.appDialogExampleStructure.dialogAbstract.event.DialogEvent
 
 sealed class SortMoreEvent: Event() {
     data object AlphabetNormal: SortMoreEvent()

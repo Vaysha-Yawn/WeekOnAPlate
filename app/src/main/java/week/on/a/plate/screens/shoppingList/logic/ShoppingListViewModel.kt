@@ -89,28 +89,7 @@ class ShoppingListViewModel @Inject constructor(
     }
 
     private fun share(context: Context) {
-        val text = shoppingListToText(state.listUnchecked.value, context)
-        val intent = Intent().apply {
-            action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_TEXT, text)
-            type = "text/plain"
-        }
-        val chooserIntent = Intent.createChooser(intent, context.getString(R.string.share_via))
-        context.startActivity(chooserIntent)
-    }
-
-    private fun shoppingListToText(listToShop: List<IngredientInRecipeView>, context: Context): String {
-        var text = ""
-        text += context.getString(R.string.share_text_title)
-        for (item in listToShop) {
-            text += "\n"
-            val tet = getIngredientCountAndMeasure1000(context,  item.count, item.ingredientView.measure)
-            text += "- " + item.ingredientView.name + " " + item.description + " " + tet.first + " " + tet.second
-        }
-        text += "\n"
-        text += "\n"
-        text += context.getString(R.string.signature)
-        return text
+        ShareShoppingListUseCase(context).shareShoppingList(state.listUnchecked.value)
     }
 
     private fun deleteChecked() {
@@ -138,15 +117,11 @@ class ShoppingListViewModel @Inject constructor(
 
     private fun editIngredient(ingredient: IngredientInRecipeView) {
         viewModelScope.launch {
-            val vm = EditPositionIngredientViewModel()
-            vm.mainViewModel = mainViewModel
-            vm.launchAndGet(
-                Position.PositionIngredientView(
-                    0,
-                    ingredient,
-                    0
-                ), false
-            ) { updatedIngredient ->
+            val vm = EditPositionIngredientViewModel( Position.PositionIngredientView(
+                0,
+                ingredient,
+                0
+            ), false){ updatedIngredient ->
                 viewModelScope.launch {
                     val item = shoppingItemRepository.getAll().find { it ->
                         it.ingredientInRecipe.id ==
@@ -166,6 +141,7 @@ class ShoppingListViewModel @Inject constructor(
                     }
                 }
             }
+            vm.mainViewModel = mainViewModel
         }
     }
 

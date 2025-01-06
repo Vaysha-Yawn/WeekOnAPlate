@@ -67,9 +67,8 @@ fun ChooseSelectionSpecifySelection(
             if (state.allSelectionsIdDay.value.isEmpty()) {
                 TextBody(text = stringResource(R.string.mess_select_day_first))
             } else {
-                val context = LocalContext.current
                 TitleMenuSmall(name = stringResource(R.string.mess_specify_another_meal)) {
-                    onEvent(SpecifySelectionEvent.AddCustomSelection(context))
+                    onEvent(SpecifySelectionEvent.AddCustomSelection )
                 }
                 Spacer(modifier = Modifier.height(24.dp))
                 LazyColumn(

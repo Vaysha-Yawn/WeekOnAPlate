@@ -77,9 +77,6 @@ import week.on.a.plate.dialogs.exitApply.view.ExitApplyContent
 import week.on.a.plate.dialogs.filtersMore.event.FiltersMoreEvent
 import week.on.a.plate.dialogs.filtersMore.logic.FiltersMoreViewModel
 import week.on.a.plate.dialogs.filtersMore.view.FilterMoreContent
-import week.on.a.plate.dialogs.selectNStep.event.SelectNStepEvent
-import week.on.a.plate.dialogs.selectNStep.logic.SelectNStepViewModel
-import week.on.a.plate.dialogs.selectNStep.view.SelectNStep
 import week.on.a.plate.dialogs.setPermanentMeals.event.SetPermanentMealsEvent
 import week.on.a.plate.dialogs.setPermanentMeals.logic.SetPermanentMealsViewModel
 import week.on.a.plate.dialogs.setPermanentMeals.view.SetPermanentMealsStart
@@ -306,18 +303,6 @@ fun DialogsContainer(
                 CookStepMoreContent() { event: CookStepMoreEvent ->
                     onEvent(event)
                 }
-            }
-        }
-
-        is SelectNStepViewModel -> {
-            val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-            BottomDialogContainer(
-                sheetState,
-                { onEvent(SelectNStepEvent.Close) }) {
-                SelectNStep(data)
-            }
-            LaunchedEffect(true) {
-                sheetState.show()
             }
         }
 

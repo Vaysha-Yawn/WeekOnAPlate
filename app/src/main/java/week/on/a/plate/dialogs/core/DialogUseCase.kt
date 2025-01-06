@@ -42,8 +42,6 @@ import week.on.a.plate.dialogs.exitApply.event.ExitApplyEvent
 import week.on.a.plate.dialogs.exitApply.logic.ExitApplyViewModel
 import week.on.a.plate.dialogs.filtersMore.event.FiltersMoreEvent
 import week.on.a.plate.dialogs.filtersMore.logic.FiltersMoreViewModel
-import week.on.a.plate.dialogs.selectNStep.event.SelectNStepEvent
-import week.on.a.plate.dialogs.selectNStep.logic.SelectNStepViewModel
 import week.on.a.plate.dialogs.setPermanentMeals.event.SetPermanentMealsEvent
 import week.on.a.plate.dialogs.setPermanentMeals.logic.SetPermanentMealsViewModel
 import week.on.a.plate.dialogs.setTheme.event.SetThemeEvent
@@ -149,9 +147,6 @@ class DialogUseCase @Inject constructor() {
             }
             is CookStepMoreEvent -> if (activeDialog.value is CookStepMoreDialogViewModel) {
                 (activeDialog.value as CookStepMoreDialogViewModel).onEvent(event)
-            }
-            is SelectNStepEvent -> if (activeDialog.value is SelectNStepViewModel) {
-                (activeDialog.value as SelectNStepViewModel).onEvent(event)
             }
             is ChooseIngredientsForStepEvent -> if (activeDialog.value is ChooseIngredientsForStepViewModel) {
                 (activeDialog.value as ChooseIngredientsForStepViewModel).onEvent(event)

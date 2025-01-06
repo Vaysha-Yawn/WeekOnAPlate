@@ -27,9 +27,9 @@ class ChooseHowImagePickViewModel() : DialogViewModel() {
         return flow
     }
 
-    fun done(event: String) {
+    fun done(url: String) {
         close()
-        resultFlow.value = event
+        resultFlow.value = url
     }
 
     fun close() {
@@ -40,38 +40,42 @@ class ChooseHowImagePickViewModel() : DialogViewModel() {
 
     fun onEvent(event: ChooseHowImagePickEvent) {
         when (event) {
-            is ChooseHowImagePickEvent.ByUrl -> {
-                mainViewModel.viewModelScope.launch {
-                    val vm = EditOneStringViewModel()
-                    vm.mainViewModel = mainViewModel
-                    mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-                    vm.launchAndGet(
-                        EditOneStringUIState(
-                            old ?: "",
-                            event.context.getString(R.string.edit_image_link),
-                            event.context.getString(R.string.enter_new_image_link)
-                        )
-                    ) { note ->
-                        done(note.lowercase())
-                    }
-                }
-            }
-
+            is ChooseHowImagePickEvent.ByUrl -> choosePickImageByUrl()
             ChooseHowImagePickEvent.Close -> close()
-            ChooseHowImagePickEvent.FromGallery -> {
-                mainViewModel.viewModelScope.launch {
-                    mainViewModel.imageFromGalleryUseCase.start { imgPath ->
-                        done(imgPath ?: "")
-                    }
-                }
-            }
+            ChooseHowImagePickEvent.FromGallery -> choosePickImageFromFallery()
+            is ChooseHowImagePickEvent.MakePhoto -> choosePickImageByMakePhoto(event)
+        }
+    }
 
-            is ChooseHowImagePickEvent.MakePhoto -> {
-                mainViewModel.viewModelScope.launch {
-                    mainViewModel.takePictureUseCase.start(event.context) { imgPath ->
-                        done(imgPath ?: "")
-                    }
-                }
+    private fun choosePickImageByMakePhoto(event: ChooseHowImagePickEvent.MakePhoto) {
+        mainViewModel.viewModelScope.launch {
+            mainViewModel.takePictureUseCase.start(event.contextProvider.provideContext()) { imgPath ->
+                done(imgPath ?: "")
+            }
+        }
+    }
+
+    private fun choosePickImageFromFallery() {
+        mainViewModel.viewModelScope.launch {
+            mainViewModel.imageFromGalleryUseCase.start { imgPath ->
+                done(imgPath ?: "")
+            }
+        }
+    }
+
+    private fun choosePickImageByUrl() {
+        mainViewModel.viewModelScope.launch {
+            val vm = EditOneStringViewModel()
+            vm.mainViewModel = mainViewModel
+            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
+            vm.launchAndGet(
+                EditOneStringUIState(
+                    old ?: "",
+                    R.string.edit_image_link,
+                    R.string.enter_new_image_link
+                )
+            ) { url ->
+                done(url.lowercase())
             }
         }
     }

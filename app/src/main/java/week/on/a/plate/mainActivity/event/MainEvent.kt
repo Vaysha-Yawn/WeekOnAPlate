@@ -8,13 +8,12 @@ import week.on.a.plate.dialogs.core.DialogViewModel
 sealed class MainEvent : Event() {
     data object CloseDialog : MainEvent()
     class OpenDialog(val dialog: DialogViewModel) : MainEvent()
-    class ActionDBMenu(val actionMenuDBData: week.on.a.plate.screens.menu.event.ActionWeekMenuDB) : MainEvent()
     class ShowSnackBar(val message: String) : MainEvent()
     class Navigate(val destination: Any) : MainEvent()
     data object NavigateBack : MainEvent()
     data object HideDialog : MainEvent()
     data object ShowDialog : MainEvent()
-    class UseSharedLink(val link: String) : MainEvent()
+    data object UseSharedLink : MainEvent()
     class VoiceToText(val context:Context, val use:(ArrayList<String>?)->Unit) : MainEvent()
     data object OpenDialogExitApplyFromCreateRecipe : MainEvent()
 }

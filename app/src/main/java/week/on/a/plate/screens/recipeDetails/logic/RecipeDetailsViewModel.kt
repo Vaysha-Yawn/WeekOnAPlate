@@ -1,15 +1,12 @@
 package week.on.a.plate.screens.recipeDetails.logic
 
 import android.content.Context
-import android.content.Intent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import week.on.a.plate.R
-import week.on.a.plate.core.utils.getIngredientCountAndMeasure1000
-import week.on.a.plate.core.utils.timeToString
 import week.on.a.plate.data.dataView.recipe.RecipeStepView
 import week.on.a.plate.data.dataView.recipe.RecipeView
 import week.on.a.plate.data.dataView.week.Position
@@ -54,49 +51,7 @@ class RecipeDetailsViewModel @Inject constructor(
     }
 
     private fun share(context: Context) {
-        val text = recipeToText(state.recipe, context)
-        val intent = Intent().apply {
-            action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_TEXT, text)
-            type = "text/plain"
-        }
-        val chooserIntent = Intent.createChooser(intent, context.getString(R.string.share))
-        context.startActivity(chooserIntent)
-    }
-
-    private fun recipeToText(recipeView: RecipeView, context: Context): String {
-        var text = ""
-        text += context.getString(R.string.recipe)+ ": " + recipeView.name
-        text += "\n"
-        text += "\n"
-        text +=  context.getString(R.string.cook_time)+ ": " + recipeView.duration.toSecondOfDay().timeToString(context)
-        text += "\n"
-        text += context.getString(R.string.portions_count)+ ": "+ recipeView.standardPortionsCount
-        text += "\n"
-        text += "\n"
-        text += context.getString(R.string.ingredients)+ ": "
-        for (ingredient in recipeView.ingredients) {
-            text += "\n"
-            val tet = getIngredientCountAndMeasure1000(context,
-                ingredient.count,
-                ingredient.ingredientView.measure
-            )
-            text += "- " + ingredient.ingredientView.name + " " + ingredient.description + " " + tet.first + " " + tet.second
-        }
-        text += "\n"
-        text += "\n"
-        text += context.getString(R.string.cooking)
-        for ((index, step) in recipeView.steps.withIndex()) {
-            text += "\n"
-            text += (index + 1).toString() + ". " + step.description
-        }
-        text += "\n"
-        text += "\n"
-        text += context.getString(R.string.source)+ ": " + recipeView.link
-        text += "\n"
-        text += "\n"
-        text += context.getString(R.string.signature)
-        return text
+        ShareRecipeUseCase(context).shareRecipe(state.recipe)
     }
 
     private fun addToCart(context: Context) {
@@ -189,28 +144,28 @@ class RecipeDetailsViewModel @Inject constructor(
             val vm = mainViewModel.recipeCreateViewModel
             mainViewModel.nav.navigate(RecipeCreateDestination)
             vm.launchAndGet(state.recipe, false) { recipe ->
-                val newRecipe = RecipeView(
-                    id = state.recipe.id,
-                    name = recipe.name.value,
-                    description = recipe.description.value,
-                    img = recipe.photoLink.value,
-                    tags = recipe.tags.value,
-                    standardPortionsCount = recipe.portionsCount.intValue,
-                    ingredients = recipe.ingredients.value,
-                    steps = recipe.steps.value.map {
-                        RecipeStepView(
-                            it.id,
-                            it.description.value,
-                            it.image.value,
-                            it.timer.longValue, it.pinnedIngredientsInd.value
-                        )
-                    },
-                    link = recipe.source.value,
-                    state.recipe.inFavorite,
-                    LocalDateTime.now(),
-                    recipe.duration.value
-                )
                 viewModelScope.launch {
+                    val newRecipe = RecipeView(
+                        id = state.recipe.id,
+                        name = recipe.name.value,
+                        description = recipe.description.value,
+                        img = recipe.photoLink.value,
+                        tags = recipe.tags.value,
+                        standardPortionsCount = recipe.portionsCount.intValue,
+                        ingredients = recipe.ingredients.value,
+                        steps = recipe.steps.value.map {
+                            RecipeStepView(
+                                it.id,
+                                it.description.value,
+                                it.image.value,
+                                it.timer.longValue, it.pinnedIngredientsInd.value
+                            )
+                        },
+                        link = recipe.source.value,
+                        state.recipe.inFavorite,
+                        LocalDateTime.now(),
+                        recipe.duration.value
+                    )
                     recipeRepository.updateRecipe(state.recipe, newRecipe)
                     update()
                 }
@@ -220,13 +175,13 @@ class RecipeDetailsViewModel @Inject constructor(
 
     fun launch(recipeId: Long, portionsCount: Int? = null) {
         viewModelScope.launch {
-            state.recipe = recipeRepository.getRecipe(recipeId)
-            state.isFavorite.value = state.recipe.inFavorite
-            state.ingredientsCounts.value = state.recipe.ingredients
+            val recipe = recipeRepository.getRecipe(recipeId)
+            state.recipe = recipe
+            state.isFavorite.value = recipe.inFavorite
+            state.ingredientsCounts.value = recipe.ingredients
             state.currentPortions.intValue =
-                portionsCount ?: state.recipe.standardPortionsCount
+                portionsCount ?: recipe.standardPortionsCount
 
-            val recipe = state.recipe
             state.mapPinnedStepIdToIngredients.value = recipe.steps.associate { stepView ->
                 Pair(
                     stepView.id,
