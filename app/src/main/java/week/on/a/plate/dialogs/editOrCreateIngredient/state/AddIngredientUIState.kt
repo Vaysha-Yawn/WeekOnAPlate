@@ -9,9 +9,8 @@ class AddIngredientUIState(
     photoUri: String,
 ) {
     val name: MutableState<String> = mutableStateOf(name)
-    val isLiquid: MutableState<Boolean> = mutableStateOf(false)
+    val isLiquid: MutableState<Boolean> = mutableStateOf(isLiquid)
     val category: MutableState<IngredientCategoryView?> = mutableStateOf(category)
     val photoUri: MutableState<String> = mutableStateOf(photoUri)
-    val show: MutableState<Boolean> = mutableStateOf(true)
 }
 

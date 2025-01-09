@@ -12,8 +12,7 @@ import week.on.a.plate.core.Event
 import week.on.a.plate.data.dataView.week.ForWeek
 import week.on.a.plate.data.dataView.week.NonPosed
 import week.on.a.plate.dialogs.core.DialogUseCase
-import week.on.a.plate.dialogs.exitApply.event.ExitApplyEvent
-import week.on.a.plate.dialogs.exitApply.logic.ExitApplyViewModel
+import week.on.a.plate.dialogs.core.DialogViewModel
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.imageFromGallery.ImageFromGalleryUseCase
 import week.on.a.plate.mainActivity.logic.takePicture.TakePictureUseCase
@@ -124,6 +123,9 @@ class MainViewModel @Inject constructor(
         menuViewModel.menuUIState.nonPosedFullName = nonPosedText
         specifySelectionViewModel.updateSelections()
         menuViewModel.updateWeek()
+
+        cookPlannerViewModel.initWithMainVM(this)
+        recipeCreateViewModel.initWithMainVM(this)
     }
 
     fun onEvent(event: Event) {
@@ -144,24 +146,18 @@ class MainViewModel @Inject constructor(
             MainEvent.ShowDialog -> dialogUseCase.show()
             is MainEvent.VoiceToText -> voiceToText(event.context, event.use)
             is MainEvent.UseSharedLink -> useSharedLink()
-
-            //todo переделать в обычный вызов диалога
-            MainEvent.OpenDialogExitApplyFromCreateRecipe -> openDialogExitApplyFromCreateRecipe()
         }
     }
 
-    private fun openDialogExitApplyFromCreateRecipe() {
-        val vm = ExitApplyViewModel()
-        vm.mainViewModel = this
-        viewModelScope.launch {
-            vm.launchAndGet { event ->
-                if (event == ExitApplyEvent.Exit) {
-                    nav.popBackStack()
-                }
-            }
-        }
-        onEvent(MainEvent.OpenDialog(vm))
+    fun openDialog(dialog: DialogViewModel<*>) {
+        onEvent(MainEvent.OpenDialog(dialog))
     }
+
+    fun closeDialog() {
+        onEvent(MainEvent.CloseDialog)
+    }
+
+    fun getCoroutineScope() = viewModelScope
 
     private fun useSharedLink() {
         if (!getSharedLinkUseCase.isCheckedSharedAction && ::nav.isInitialized) {

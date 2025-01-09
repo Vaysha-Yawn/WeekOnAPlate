@@ -1,8 +1,6 @@
 package week.on.a.plate.screens.shoppingList.logic
 
 import android.content.Context
-import android.content.Intent
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,7 +11,6 @@ import kotlinx.coroutines.launch
 import week.on.a.plate.R
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.navigation.ShoppingListDestination
-import week.on.a.plate.core.utils.getIngredientCountAndMeasure1000
 import week.on.a.plate.data.dataView.ShoppingItemView
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.data.dataView.week.Position
@@ -76,7 +73,8 @@ class ShoppingListViewModel @Inject constructor(
             val vmDel = mainViewModel.deleteApplyViewModel
             val mes = context.getString(R.string.hint_cannot_undone)
             mainViewModel.nav.navigate(DeleteApplyDestination)
-            vmDel.launchAndGet(context,
+            vmDel.launchAndGet(
+                context,
                 title = context.getString(R.string.hint_clear_shopping_list),
                 message = mes
             ) { event ->
@@ -117,11 +115,15 @@ class ShoppingListViewModel @Inject constructor(
 
     private fun editIngredient(ingredient: IngredientInRecipeView) {
         viewModelScope.launch {
-            val vm = EditPositionIngredientViewModel( Position.PositionIngredientView(
-                0,
-                ingredient,
-                0
-            ), false){ updatedIngredient ->
+            EditPositionIngredientViewModel.launch(
+                Position.PositionIngredientView(
+                    0,
+                    ingredient,
+                    0
+                ),
+                false,
+                mainViewModel,
+            ) { updatedIngredient ->
                 viewModelScope.launch {
                     val item = shoppingItemRepository.getAll().find { it ->
                         it.ingredientInRecipe.id ==
@@ -141,7 +143,6 @@ class ShoppingListViewModel @Inject constructor(
                     }
                 }
             }
-            vm.mainViewModel = mainViewModel
         }
     }
 

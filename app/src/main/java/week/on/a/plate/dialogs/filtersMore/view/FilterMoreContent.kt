@@ -30,10 +30,11 @@ import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.utils.timeToString
 import week.on.a.plate.dialogs.filtersMore.logic.FiltersMoreViewModel
+import week.on.a.plate.dialogs.filtersMore.state.FiltersMoreUIState
 import week.on.a.plate.screens.filters.view.clickNoRipple
 
 @Composable
-fun FilterMoreContent(vm: FiltersMoreViewModel) {
+fun FilterMoreContent(state: FiltersMoreUIState) {
     Column(
         Modifier
             .background(MaterialTheme.colorScheme.surface)
@@ -45,15 +46,15 @@ fun FilterMoreContent(vm: FiltersMoreViewModel) {
             textAlign = TextAlign.Center
         )
         Spacer(Modifier.height(24.dp))
-        FilterFavorites(vm)
+        FilterFavorites(state)
         Spacer(Modifier.height(24.dp))
 
-        FilterCookTime(vm)
+        FilterCookTime(state)
     }
 }
 
 @Composable
-private fun FilterCookTime(vm: FiltersMoreViewModel) {
+private fun FilterCookTime(state: FiltersMoreUIState) {
     val listTime = remember {
         listOf(
             15,
@@ -65,28 +66,28 @@ private fun FilterCookTime(vm: FiltersMoreViewModel) {
     }
     TextBody(stringResource(R.string.cook_time))
     Spacer(Modifier.height(24.dp))
-    TagsListFilterTime(vm.state.allTime, listTime)
+    TagsListFilterTime(state.allTime, listTime)
     Spacer(Modifier.height(24.dp))
 }
 
 @Composable
-private fun FilterFavorites(vm: FiltersMoreViewModel) {
+private fun FilterFavorites(state: FiltersMoreUIState) {
     Row(
         Modifier
             .fillMaxWidth()
             .clickNoRipple {
-                vm.state.favoriteIsChecked.value = !vm.state.favoriteIsChecked.value
+                state.favoriteIsChecked.value = !state.favoriteIsChecked.value
             }, verticalAlignment = Alignment.CenterVertically
 
     ) {
         Checkbox(
-            checked = vm.state.favoriteIsChecked.value,
+            checked = state.favoriteIsChecked.value,
             colors = CheckboxDefaults.colors(
                 checkedColor = MaterialTheme.colorScheme.secondary,
                 checkmarkColor = MaterialTheme.colorScheme.onBackground
             ),
             onCheckedChange = {
-                vm.state.favoriteIsChecked.value = !vm.state.favoriteIsChecked.value
+                state.favoriteIsChecked.value = !state.favoriteIsChecked.value
             },
         )
         Spacer(Modifier.width(6.dp))
@@ -126,6 +127,6 @@ fun TagFilterTime(currentValue: Int, targetValue: Int, text: String, onClick: ()
 @Composable
 fun PreviewSortMoreContent() {
     WeekOnAPlateTheme {
-        FilterMoreContent(FiltersMoreViewModel())
+        FilterMoreContent(FiltersMoreUIState())
     }
 }

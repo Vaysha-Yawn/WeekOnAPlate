@@ -13,7 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
-import week.on.a.plate.ads.NativeAdRow
+import week.on.a.plate.core.ads.NativeAdRow
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.TextBody
@@ -21,7 +21,7 @@ import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.data.dataView.CookPlannerGroupView
 import week.on.a.plate.screens.cookPlanner.logic.CookPlannerViewModel
 import week.on.a.plate.screens.cookPlanner.state.CookPlannerUIState
-import week.on.a.plate.screens.wrapperDatePicker.view.WrapperDatePicker
+import week.on.a.plate.core.wrapperDatePicker.view.WrapperDatePicker
 import java.time.LocalDate
 import java.time.format.TextStyle
 import java.util.Locale

@@ -1,35 +1,44 @@
 package week.on.a.plate.screens.cookPlanner.logic
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import week.on.a.plate.R
 import week.on.a.plate.core.Event
-import week.on.a.plate.data.dataView.CookPlannerGroupView
 import week.on.a.plate.data.dataView.week.getTitleWeek
 import week.on.a.plate.data.repository.tables.cookPlanner.CookPlannerStepRepository
-import week.on.a.plate.dialogs.changePortions.logic.ChangePortionsCountViewModel
-import week.on.a.plate.dialogs.cookStepMore.event.CookStepMoreEvent
-import week.on.a.plate.dialogs.cookStepMore.logic.CookStepMoreDialogViewModel
-import week.on.a.plate.dialogs.dialogTimePick.logic.TimePickViewModel
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screens.cookPlanner.event.CookPlannerEvent
 import week.on.a.plate.screens.cookPlanner.state.CookPlannerUIState
-import week.on.a.plate.screens.wrapperDatePicker.event.WrapperDatePickerEvent
-import week.on.a.plate.screens.wrapperDatePicker.logic.WrapperDatePickerManager
+import week.on.a.plate.core.wrapperDatePicker.event.WrapperDatePickerEvent
+import week.on.a.plate.core.wrapperDatePicker.logic.WrapperDatePickerManager
 import javax.inject.Inject
 
 @HiltViewModel
 class CookPlannerViewModel @Inject constructor(
     private val wrapperDatePickerManager: WrapperDatePickerManager,
-    private val repository: CookPlannerStepRepository
+    val repository: CookPlannerStepRepository
 ) : ViewModel() {
     lateinit var mainViewModel: MainViewModel
     val state: CookPlannerUIState = CookPlannerUIState()
+    private lateinit var cookPlannerCardActionsUseCase: CookPlannerCardActionsUseCase
+    private lateinit var cookPlannerWrapperDatePickerUseCase: CookPlannerWrapperDatePickerUseCase
+
+    fun initWithMainVM(mainViewModel: MainViewModel) {
+        cookPlannerCardActionsUseCase = CookPlannerCardActionsUseCase(
+            repository,
+            ::update,
+            mainViewModel
+        )
+        cookPlannerWrapperDatePickerUseCase = CookPlannerWrapperDatePickerUseCase(
+            wrapperDatePickerManager = wrapperDatePickerManager,
+            ::update,
+            mainViewModel,
+            state.wrapperDatePickerUIState
+        )
+    }
 
     init {
         val activeDate = state.wrapperDatePickerUIState.activeDay.value
@@ -55,41 +64,11 @@ class CookPlannerViewModel @Inject constructor(
 
     fun onEvent(event: Event) {
         when (event) {
-            is MainEvent -> {
-                mainViewModel.onEvent(event)
-            }
+            is MainEvent -> mainViewModel.onEvent(event)
 
             is WrapperDatePickerEvent -> {
                 wrapperDatePickerManager.onEvent(event, state.wrapperDatePickerUIState)
-                when (event) {
-                    is WrapperDatePickerEvent.ChangeWeek -> {
-                        wrapperDatePickerManager.changeWeek(
-                            event.date,
-                            state.wrapperDatePickerUIState
-                        ) { date ->
-                            state.wrapperDatePickerUIState.activeDay.value = date
-                            state.wrapperDatePickerUIState.activeDayInd.value =
-                                date.dayOfWeek.ordinal
-                            update()
-                        }
-                    }
-
-                    WrapperDatePickerEvent.ChooseWeek -> {
-                        wrapperDatePickerManager.chooseWeek(
-                            mainViewModel,
-                            state.wrapperDatePickerUIState,
-                            false
-                        ) { date ->
-                            state.wrapperDatePickerUIState.activeDay.value = date
-                            state.wrapperDatePickerUIState.activeDayInd.value =
-                                date.dayOfWeek.ordinal
-                            update()
-                        }
-                    }
-
-                    WrapperDatePickerEvent.SwitchEditMode -> {}
-                    WrapperDatePickerEvent.SwitchWeekOrDayView -> {}
-                }
+                cookPlannerWrapperDatePickerUseCase.onEvent(event)
             }
 
             is CookPlannerEvent -> onEvent(event)
@@ -98,86 +77,12 @@ class CookPlannerViewModel @Inject constructor(
 
     fun onEvent(event: CookPlannerEvent) {
         when (event) {
-            is CookPlannerEvent.CheckStep -> checkStep(event)
-            is CookPlannerEvent.ShowStepMore -> showStepMore(event)
+            is CookPlannerEvent.CheckStep -> cookPlannerCardActionsUseCase.checkStep(event)
+            is CookPlannerEvent.ShowStepMore -> cookPlannerCardActionsUseCase.showStepMore(event)
             is CookPlannerEvent.NavToFullStep -> mainViewModel.recipeDetailsViewModel.launch(
                 event.groupView.recipeId,
                 event.groupView.portionsCount
             )
-        }
-    }
-
-    private fun checkStep(event: CookPlannerEvent.CheckStep) {
-        viewModelScope.launch {
-            repository.check(event.step)
-            update()
-        }
-    }
-
-    private fun showStepMore(event: CookPlannerEvent.ShowStepMore) {
-        val vm = CookStepMoreDialogViewModel()
-        vm.mainViewModel = mainViewModel
-        viewModelScope.launch {
-            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-            vm.launchAndGet {
-                when (it) {
-                    CookStepMoreEvent.ChangeEndRecipeTime -> changeEndRecipeTime(event.groupView)
-                    CookStepMoreEvent.ChangeStartRecipeTime -> changeStartRecipeTime(event.groupView)
-                    CookStepMoreEvent.Close -> {}
-                    CookStepMoreEvent.ChangePortionsCount -> changePortionsCount(event.groupView)
-                    CookStepMoreEvent.Delete -> delete(event.groupView)
-                }
-            }
-        }
-    }
-
-    private fun getTime(title: Int, use: (Long) -> Unit) {
-        mainViewModel.viewModelScope.launch {
-            val vm = TimePickViewModel(title, mainViewModel.viewModelScope, {
-                mainViewModel.onEvent(MainEvent.CloseDialog)
-            }) { timeSec ->
-                use(timeSec)
-            }
-            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-        }
-    }
-
-    private fun changePortionsCount(group: CookPlannerGroupView) {
-        viewModelScope.launch {
-            val vm = ChangePortionsCountViewModel()
-            vm.mainViewModel = mainViewModel
-            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-            vm.launchAndGet(group.portionsCount) { portionsCount ->
-                viewModelScope.launch {
-                    repository.changePortionsCount(group, portionsCount)
-                    update()
-                }
-            }
-        }
-    }
-
-    private fun delete(group: CookPlannerGroupView) {
-        viewModelScope.launch {
-            repository.deleteGroup(group.id)
-            update()
-        }
-    }
-
-    private fun changeStartRecipeTime(group: CookPlannerGroupView) {
-        getTime(R.string.when_recipe_start) {
-            mainViewModel.viewModelScope.launch {
-                repository.changeStartRecipeTime(group.id, it)
-                update()
-            }
-        }
-    }
-
-    private fun changeEndRecipeTime(group: CookPlannerGroupView) {
-        getTime(R.string.when_recipe_end) {
-            mainViewModel.viewModelScope.launch {
-                repository.changeEndRecipeTime(group.id, it)
-                update()
-            }
         }
     }
 

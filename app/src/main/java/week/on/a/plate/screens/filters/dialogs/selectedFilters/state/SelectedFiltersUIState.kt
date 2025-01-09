@@ -1,6 +1,5 @@
 package week.on.a.plate.screens.filters.dialogs.selectedFilters.state
 
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import week.on.a.plate.data.dataView.recipe.IngredientView
@@ -12,7 +11,6 @@ class SelectedFiltersUIState(
     val selectedTags = mutableStateOf<List<RecipeTagView>>(selectedTags)
     val selectedIngredients = mutableStateOf<List<IngredientView>>(selectedIngredients)
     val activeFilterTabIndex = mutableIntStateOf(0)
-    val show: MutableState<Boolean> = mutableStateOf(true)
 }
 
 

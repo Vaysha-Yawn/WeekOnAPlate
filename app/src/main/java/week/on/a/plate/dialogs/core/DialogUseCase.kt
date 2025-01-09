@@ -53,11 +53,11 @@ import java.util.Stack
 import javax.inject.Inject
 
 class DialogUseCase @Inject constructor() {
-    val activeDialog = mutableStateOf<DialogViewModel?>(null)
-    private val hiddenDialog = Stack<DialogViewModel>()
-    private val dialogsVMMap = Stack<DialogViewModel>()
+    val activeDialog = mutableStateOf<DialogViewModel<*>?>(null)
+    private val hiddenDialog = Stack<DialogViewModel<*>>()
+    private val dialogsStack = Stack<DialogViewModel<*>>()
 
-    private fun showTopDialog(dialog: DialogViewModel) {
+    private fun showTopDialog(dialog: DialogViewModel<*>) {
         activeDialog.value = dialog
     }
 
@@ -67,10 +67,10 @@ class DialogUseCase @Inject constructor() {
     }
 
     fun closeDialog() {
-        if (dialogsVMMap.isNotEmpty()) {
-            dialogsVMMap.pop()
-            if (dialogsVMMap.isNotEmpty()) {
-                val next = dialogsVMMap.peek()
+        if (dialogsStack.isNotEmpty()) {
+            dialogsStack.pop()
+            if (dialogsStack.isNotEmpty()) {
+                val next = dialogsStack.peek()
                 if (next != hiddenDialog){
                     showTopDialog(next)
                 }else{
@@ -84,8 +84,8 @@ class DialogUseCase @Inject constructor() {
         }
     }
 
-    fun openDialog(vm: DialogViewModel) {
-        dialogsVMMap.add(vm)
+    fun openDialog(vm: DialogViewModel<*>) {
+        dialogsStack.add(vm)
         showTopDialog(vm)
     }
 

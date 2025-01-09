@@ -1,4 +1,4 @@
-package week.on.a.plate.screens.wrapperDatePicker.event
+package week.on.a.plate.core.wrapperDatePicker.event
 
 import week.on.a.plate.core.Event
 import java.time.LocalDate

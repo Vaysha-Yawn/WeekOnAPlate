@@ -75,12 +75,9 @@ class SpecifyRecipeToCookPlanViewModel @Inject constructor(
 
     private fun openTimePick() {
         mainViewModel.viewModelScope.launch {
-            val vm = TimePickViewModel(R.string.select_time_cook, mainViewModel.viewModelScope, {
-                mainViewModel.onEvent(MainEvent.CloseDialog)
-            }) { time ->
+            TimePickViewModel.launch(mainViewModel, R.string.select_time_cook) { time ->
                 state.time.value = LocalTime.ofSecondOfDay(time)
             }
-            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
         }
     }
 

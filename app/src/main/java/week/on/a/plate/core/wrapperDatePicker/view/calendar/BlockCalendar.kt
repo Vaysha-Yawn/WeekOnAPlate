@@ -1,4 +1,4 @@
-package week.on.a.plate.screens.wrapperDatePicker.view.calendar
+package week.on.a.plate.core.wrapperDatePicker.view.calendar
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -12,7 +12,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import week.on.a.plate.R
 import week.on.a.plate.core.utils.getDayInWeekShort
-import week.on.a.plate.screens.wrapperDatePicker.state.WrapperDatePickerUIState
+import week.on.a.plate.core.wrapperDatePicker.state.WrapperDatePickerUIState
 import java.time.LocalDate
 
 @Composable

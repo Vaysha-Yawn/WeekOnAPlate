@@ -1,4 +1,4 @@
-package week.on.a.plate.screens.wrapperDatePicker.view
+package week.on.a.plate.core.wrapperDatePicker.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -14,10 +14,10 @@ import androidx.compose.ui.unit.dp
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.utils.dateToString
 import week.on.a.plate.screens.menu.event.MenuEvent
-import week.on.a.plate.screens.wrapperDatePicker.event.WrapperDatePickerEvent
-import week.on.a.plate.screens.wrapperDatePicker.state.WrapperDatePickerUIState
-import week.on.a.plate.screens.wrapperDatePicker.view.calendar.BlockCalendar
-import week.on.a.plate.screens.wrapperDatePicker.view.topBar.TopBar
+import week.on.a.plate.core.wrapperDatePicker.event.WrapperDatePickerEvent
+import week.on.a.plate.core.wrapperDatePicker.state.WrapperDatePickerUIState
+import week.on.a.plate.core.wrapperDatePicker.view.calendar.BlockCalendar
+import week.on.a.plate.core.wrapperDatePicker.view.topBar.TopBar
 import java.time.LocalDate
 
 @Composable

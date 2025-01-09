@@ -10,7 +10,7 @@ import week.on.a.plate.data.dataView.week.WeekView
 import week.on.a.plate.screens.menu.state.MenuUIState
 import week.on.a.plate.screens.menu.view.day.DayView
 import week.on.a.plate.screens.menu.view.week.WeekMenu
-import week.on.a.plate.screens.wrapperDatePicker.view.WrapperDatePicker
+import week.on.a.plate.core.wrapperDatePicker.view.WrapperDatePicker
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable

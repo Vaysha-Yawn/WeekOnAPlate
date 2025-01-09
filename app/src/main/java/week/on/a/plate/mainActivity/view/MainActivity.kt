@@ -104,6 +104,14 @@ class MainActivity : ComponentActivity() {
         }
         viewModel.takePictureUseCase.imageLauncher = getPhotoLauncher
 
+        //SharedLinkUse
+        val text = intent.getStringExtra(Intent.EXTRA_TEXT) ?: return
+        viewModel.getSharedLinkUseCase.setLink(text)
+        viewModel.getSharedLinkUseCase.checkAndStart {
+            viewModel.onEvent(MainEvent.UseSharedLink)
+        }
+
+
         setContent {
             WeekOnAPlateTheme {
                 viewModel.locale = LocalContext.current.resources.configuration.locales[0]
@@ -171,13 +179,6 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
-        }
-
-
-        val text = intent.getStringExtra(Intent.EXTRA_TEXT) ?: return
-        viewModel.getSharedLinkUseCase.setLink(text)
-        viewModel.getSharedLinkUseCase.checkAndStart {
-            viewModel.onEvent(MainEvent.UseSharedLink)
         }
     }
 

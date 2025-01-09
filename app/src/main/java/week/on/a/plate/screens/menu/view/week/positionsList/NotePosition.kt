@@ -21,7 +21,7 @@ import week.on.a.plate.core.Event
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.buttons.MoreButton
 import week.on.a.plate.data.dataView.week.Position
-import week.on.a.plate.screens.wrapperDatePicker.event.WrapperDatePickerEvent
+import week.on.a.plate.core.wrapperDatePicker.event.WrapperDatePickerEvent
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

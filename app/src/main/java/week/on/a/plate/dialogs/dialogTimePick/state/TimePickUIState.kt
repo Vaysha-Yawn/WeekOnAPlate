@@ -8,7 +8,6 @@ import androidx.compose.runtime.mutableStateOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 class TimePickUIState(val title: Int){
-    val show: MutableState<Boolean> = mutableStateOf(true)
     val mode =  mutableStateOf(DisplayMode.Picker)
     val timeState: TimePickerState = TimePickerState(
         initialHour = 0,

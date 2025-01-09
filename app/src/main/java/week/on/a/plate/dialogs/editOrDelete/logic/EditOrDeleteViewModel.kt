@@ -1,36 +1,27 @@
 package week.on.a.plate.dialogs.editOrDelete.logic
 
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
+import week.on.a.plate.dialogs.chooseIngredientsForStep.logic.ChooseIngredientsForStepViewModel
 import week.on.a.plate.dialogs.core.DialogViewModel
 import week.on.a.plate.dialogs.editOrDelete.event.EditOrDeleteEvent
-import week.on.a.plate.dialogs.editOrDelete.state.EditOrDeleteUIState
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
 
 
-class EditOrDeleteViewModel (): DialogViewModel() {
-
-    lateinit var mainViewModel: MainViewModel
-    val state = EditOrDeleteUIState()
-    private lateinit var resultFlow: MutableStateFlow< EditOrDeleteEvent?>
-
-    fun start(): Flow<EditOrDeleteEvent?> {
-        val flow = MutableStateFlow<EditOrDeleteEvent?>(null)
-        resultFlow = flow
-        return flow
-    }
-
-     fun done(event: EditOrDeleteEvent) {
-         close()
-         resultFlow.value = event
-    }
-
-     fun close(){
-        state.show.value = false
-        mainViewModel.onEvent(MainEvent.CloseDialog)
-    }
-
+class EditOrDeleteViewModel (
+    scope: CoroutineScope,
+    openDialog: (DialogViewModel<*>) -> Unit,
+    closeDialog: () -> Unit,
+    use: (EditOrDeleteEvent) -> Unit
+): DialogViewModel<EditOrDeleteEvent>(
+    scope,
+    openDialog,
+    closeDialog,
+    use
+) {
     fun onEvent(event: EditOrDeleteEvent){
         when(event) {
             EditOrDeleteEvent.Close -> close()
@@ -38,13 +29,16 @@ class EditOrDeleteViewModel (): DialogViewModel() {
         }
     }
 
-    suspend fun launchAndGet( use: suspend (EditOrDeleteEvent) -> Unit) {
-        val flow = start()
-        flow.collect { value ->
-            if (value != null) {
-                use(value)
-            }
+    companion object {
+        fun launch(
+            mainViewModel: MainViewModel, useResult: (EditOrDeleteEvent) -> Unit
+        ) {
+            EditOrDeleteViewModel(
+                mainViewModel.getCoroutineScope(),
+                mainViewModel::openDialog,
+                mainViewModel::closeDialog,
+                useResult
+            )
         }
     }
-
 }

@@ -27,7 +27,7 @@ import week.on.a.plate.dialogs.sortMore.logic.SortMoreViewModel
 import week.on.a.plate.screens.filters.view.clickNoRipple
 
 @Composable
-fun SortMoreContent(vm:SortMoreViewModel){
+fun SortMoreContent( onEvent:(SortMoreEvent) -> Unit){
     Column(
         Modifier
             .background(MaterialTheme.colorScheme.surface)
@@ -45,7 +45,7 @@ fun SortMoreContent(vm:SortMoreViewModel){
                 Modifier
                     .fillMaxWidth()
                     .clickNoRipple {
-                        vm.onEvent(event)
+                        onEvent(event)
                     }
                     .padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
                 Icon(painterResource(res), "", tint = MaterialTheme.colorScheme.onBackground)
@@ -60,6 +60,6 @@ fun SortMoreContent(vm:SortMoreViewModel){
 @Composable
 fun PreviewSortMoreContent(){
     WeekOnAPlateTheme {
-        SortMoreContent(SortMoreViewModel())
+        SortMoreContent(){}
     }
 }

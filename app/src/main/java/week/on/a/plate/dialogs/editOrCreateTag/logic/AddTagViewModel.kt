@@ -1,11 +1,14 @@
 package week.on.a.plate.dialogs.editOrCreateTag.logic
 
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import week.on.a.plate.dialogs.core.DialogViewModel
 import week.on.a.plate.data.dataView.recipe.TagCategoryView
+import week.on.a.plate.dialogs.addPositionChoose.event.AddPositionEvent
+import week.on.a.plate.dialogs.addPositionChoose.logic.AddPositionViewModel
 import week.on.a.plate.dialogs.editOrCreateTag.event.AddTagEvent
 import week.on.a.plate.dialogs.editOrCreateTag.state.AddTagUIState
 import week.on.a.plate.mainActivity.event.MainEvent
@@ -15,40 +18,44 @@ import week.on.a.plate.screens.filters.state.FilterEnum
 import week.on.a.plate.screens.filters.state.FilterMode
 
 
-class AddTagViewModel() : DialogViewModel() {
+class AddTagViewModel(
+    val mainViewModel: MainViewModel,
+    oldName:String?,
+    oldCategory:TagCategoryView?,
+    defaultCategoryView:TagCategoryView,
+    scope: CoroutineScope,
+    openDialog: (DialogViewModel<*>) -> Unit,
+    closeDialog: () -> Unit,
+    use: (Pair<String, TagCategoryView>) -> Unit
+) : DialogViewModel<Pair<String, TagCategoryView>>(
+    scope,
+    openDialog,
+    closeDialog,
+    use
+) {
 
-    lateinit var mainViewModel: MainViewModel
     val state: AddTagUIState = AddTagUIState()
-    private lateinit var resultFlow: MutableStateFlow<Pair<String, TagCategoryView>?>
 
-    fun start(): Flow<Pair<String, TagCategoryView>?> {
-        val flow = MutableStateFlow<Pair<String, TagCategoryView>?>(null)
-        resultFlow = flow
-        return flow
+    init {
+        state.text.value = oldName ?: ""
+        state.category.value = oldCategory ?: defaultCategoryView
     }
 
-    fun done() {
-        close()
-        if (state.category.value == null) return
-        val result = Pair(state.text.value, state.category.value!!)
-        resultFlow.value = result
-    }
-
-    fun close() {
-        state.show.value = false
-        mainViewModel.onEvent(MainEvent.CloseDialog)
-    }
 
     fun onEvent(event: AddTagEvent) {
         when (event) {
             AddTagEvent.Close -> close()
-            AddTagEvent.Done -> done()
+            AddTagEvent.Done -> {
+                if (state.category.value == null) return
+                val result = Pair(state.text.value, state.category.value!!)
+                done(result)
+            }
             AddTagEvent.ChooseCategory -> toSearchCategory()
         }
     }
 
     private fun toSearchCategory() {
-        mainViewModel.viewModelScope.launch {
+        viewModelScope.launch {
             val vm = mainViewModel.filterViewModel
             vm.state.selectedTagsCategories.value = listOf()
             vm.state.resultSearchTagsCategories.value = listOf()
@@ -68,19 +75,24 @@ class AddTagViewModel() : DialogViewModel() {
         }
     }
 
-    suspend fun launchAndGet(
-        oldName: String?,
-        oldCategory: TagCategoryView?,
-        defaultCategoryView: TagCategoryView,
-        use: suspend (Pair<String, TagCategoryView>) -> Unit
-    ) {
-        state.text.value = oldName ?: ""
-        state.category.value = oldCategory ?: defaultCategoryView
-        val flow = start()
-        flow.collect { value ->
-            if (value != null) {
-                use(value)
-            }
+
+    companion object {
+        fun launch(
+            oldName: String?,
+            oldCategory: TagCategoryView?,
+            defaultCategoryView: TagCategoryView,
+            mainViewModel: MainViewModel, useResult: (Pair<String, TagCategoryView>) -> Unit
+        ) {
+            AddTagViewModel(
+                mainViewModel,
+                oldName,
+                oldCategory,
+                defaultCategoryView,
+                mainViewModel.getCoroutineScope(),
+                mainViewModel::openDialog,
+                mainViewModel::closeDialog,
+                useResult
+            )
         }
     }
 

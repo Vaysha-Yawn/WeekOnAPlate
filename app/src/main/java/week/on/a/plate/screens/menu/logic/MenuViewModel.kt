@@ -49,8 +49,8 @@ import week.on.a.plate.screens.menu.state.MenuUIState
 import week.on.a.plate.screens.specifyRecipeToCookPlan.navigation.SpecifyForCookPlanDestination
 import week.on.a.plate.screens.specifySelection.logic.SpecifySelectionResult
 import week.on.a.plate.screens.specifySelection.navigation.SpecifySelectionDestination
-import week.on.a.plate.screens.wrapperDatePicker.event.WrapperDatePickerEvent
-import week.on.a.plate.screens.wrapperDatePicker.logic.WrapperDatePickerManager
+import week.on.a.plate.core.wrapperDatePicker.event.WrapperDatePickerEvent
+import week.on.a.plate.core.wrapperDatePicker.logic.WrapperDatePickerManager
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.Locale
@@ -195,11 +195,10 @@ class MenuViewModel @Inject constructor(
                 event.context
             )
 
-            is MenuEvent.EditOrDeleteSelection -> editOrDeleteSelection(event.sel, event.context)
+            is MenuEvent.EditOrDeleteSelection -> editOrDeleteSelection(event.sel)
             is MenuEvent.CreateSelection -> createSelection(
                 event.date,
-                event.isForWeek,
-                event.context
+                event.isForWeek
             )
 
             is MenuEvent.CreateWeekSelIdAndCreatePosition -> createWeekSelIdAndCreatePosition(event.context)
@@ -219,35 +218,30 @@ class MenuViewModel @Inject constructor(
         }
     }
 
-    private fun createSelection(date: LocalDate, isForWeek: Boolean, context: Context) {
-        EditSelectionViewModel(EditSelectionUIState(
+    private fun createSelection(date: LocalDate, isForWeek: Boolean,) {
+        EditSelectionViewModel.launch(EditSelectionUIState(
             title = R.string.add_meal,
             placeholder = R.string.hint_breakfast
-        ), viewModelScope, { vm ->
-            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-        }, {
-            mainViewModel.onEvent(MainEvent.CloseDialog)
-        }
+        ), mainViewModel
         ) { state ->
-            val newName = state.text.value
-            val time = state.selectedTime.value
-            sCRUDRecipeInMenu.onEvent(
-                ActionWeekMenuDB.CreateSelection(
-                    date,
-                    newName, mainViewModel.locale, isForWeek, time
+            viewModelScope.launch {
+                val newName = state.text.value
+                val time = state.selectedTime.value
+                sCRUDRecipeInMenu.onEvent(
+                    ActionWeekMenuDB.CreateSelection(
+                        date,
+                        newName, mainViewModel.locale, isForWeek, time
+                    )
                 )
-            )
-            updateWeek()
+                updateWeek()
+            }
         }
     }
 
-    private fun editOrDeleteSelection(sel: SelectionView, context: Context) {
+    private fun editOrDeleteSelection(sel: SelectionView) {
         if (sel.isForWeek || sel.id == 0L) return
-        val vm = EditOrDeleteViewModel()
-        vm.mainViewModel = mainViewModel
-        mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-        viewModelScope.launch {
-            vm.launchAndGet { event ->
+        EditOrDeleteViewModel.launch(mainViewModel) { event ->
+            viewModelScope.launch {
                 when (event) {
                     EditOrDeleteEvent.Close -> {}
                     EditOrDeleteEvent.Delete -> deleteSelection(sel)
@@ -258,24 +252,24 @@ class MenuViewModel @Inject constructor(
     }
 
     private suspend fun editSelection(sel: SelectionView) {
-        EditSelectionViewModel(EditSelectionUIState(
+        val oldState = EditSelectionUIState(
             mutableStateOf(sel.name), R.string.edit_meal_name,
             R.string.hint_breakfast
         ).apply {
             this.selectedTime.value = sel.dateTime.toLocalTime()
-        }, viewModelScope, { vm ->
-            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-        }, {
-            mainViewModel.onEvent(MainEvent.CloseDialog)
         }
+        EditSelectionViewModel.launch(
+            oldState, mainViewModel
         ) { state ->
-            sCRUDRecipeInMenu.onEvent(
-                ActionWeekMenuDB.EditSelection(
-                    sel,
-                    state.text.value, state.selectedTime.value
+            viewModelScope.launch {
+                sCRUDRecipeInMenu.onEvent(
+                    ActionWeekMenuDB.EditSelection(
+                        sel,
+                        state.text.value, state.selectedTime.value
+                    )
                 )
-            )
-            updateWeek()
+                updateWeek()
+            }
         }
     }
 
@@ -395,12 +389,8 @@ class MenuViewModel @Inject constructor(
         viewModelScope.launch {
             mainViewModel.nav.navigate(SearchDestination)
             mainViewModel.searchViewModel.launchAndGet(selId, null) { recipe ->
-
-                val vm = ChangePortionsCountViewModel()
-                vm.mainViewModel = mainViewModel
-                onEvent(MainEvent.OpenDialog(vm))
                 val std = PreferenceUseCase().getDefaultPortionsCount(context)
-                vm.launchAndGet(std) { count ->
+                ChangePortionsCountViewModel.launch(mainViewModel, std) { count ->
                     val recipePosition = Position.PositionRecipeView(
                         0,
                         RecipeShortView(recipe.id, recipe.name, recipe.img),
@@ -463,7 +453,7 @@ class MenuViewModel @Inject constructor(
 
     private fun addPosition(selId: Long, context: Context) {
         viewModelScope.launch {
-            val vm = AddPositionViewModel(){ event ->
+            AddPositionViewModel.launch(mainViewModel) { event ->
                 when (event) {
                     AddPositionEvent.AddDraft -> addDraft(selId)
                     AddPositionEvent.AddIngredient -> addIngredientPosition(selId)
@@ -477,8 +467,6 @@ class MenuViewModel @Inject constructor(
                     AddPositionEvent.Close -> {}
                 }
             }
-            vm.mainViewModel = mainViewModel
-            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
         }
     }
 
@@ -539,7 +527,7 @@ class MenuViewModel @Inject constructor(
 
     private fun editOtherPositionMore(position: Position, context: Context) {
         viewModelScope.launch {
-            val vm = EditOtherPositionViewModel(
+            EditOtherPositionViewModel.launch(
                 position is Position.PositionIngredientView,
                 mainViewModel
             ) { event ->
@@ -577,7 +565,6 @@ class MenuViewModel @Inject constructor(
                     }
                 }
             }
-            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
         }
     }
 
@@ -650,10 +637,7 @@ class MenuViewModel @Inject constructor(
 
     private fun editPositionRecipe(position: Position.PositionRecipeView) {
         viewModelScope.launch {
-            val vm = EditRecipePositionViewModel()
-            vm.mainViewModel = mainViewModel
-            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-            vm.launchAndGet() { event ->
+            EditRecipePositionViewModel.launch(mainViewModel) { event ->
                 when (event) {
                     EditRecipePositionEvent.AddToCart -> onEvent(
                         MenuEvent.RecipeToShopList(
@@ -690,7 +674,7 @@ class MenuViewModel @Inject constructor(
 
     private fun addIngredientPosition(selId: Long) {
         viewModelScope.launch {
-            val vm = EditPositionIngredientViewModel(null, true) { updatedIngredient ->
+            EditPositionIngredientViewModel.launch(null, true, mainViewModel) { updatedIngredient ->
                 onEvent(
                     MenuEvent.ActionDBMenu(
                         ActionWeekMenuDB.AddIngredientPositionDB(
@@ -700,13 +684,16 @@ class MenuViewModel @Inject constructor(
                     )
                 )
             }
-            vm.mainViewModel = mainViewModel
         }
     }
 
     private fun editIngredientPosition(ingredientPos: Position.PositionIngredientView) {
         viewModelScope.launch {
-            val vm = EditPositionIngredientViewModel(ingredientPos, false) { updatedIngredient ->
+            EditPositionIngredientViewModel.launch(
+                ingredientPos,
+                false,
+                mainViewModel
+            ) { updatedIngredient ->
                 onEvent(
                     MenuEvent.ActionDBMenu(
                         ActionWeekMenuDB.EditIngredientPositionDB(
@@ -715,16 +702,16 @@ class MenuViewModel @Inject constructor(
                     )
                 )
             }
-            vm.mainViewModel = mainViewModel
+
         }
     }
 
     private fun changePortionsCount(recipe: Position.PositionRecipeView) {
         viewModelScope.launch {
-            val vm = ChangePortionsCountViewModel()
-            vm.mainViewModel = mainViewModel
-            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-            vm.launchAndGet(recipe.portionsCount) { portionsCount ->
+            ChangePortionsCountViewModel.launch(
+                mainViewModel,
+                recipe.portionsCount
+            ) { portionsCount ->
                 onEvent(
                     MenuEvent.ActionDBMenu(
                         ActionWeekMenuDB.ChangePortionsCountDB(
@@ -739,11 +726,8 @@ class MenuViewModel @Inject constructor(
 
     private fun editNote(note: Position.PositionNoteView, context: Context) {
         viewModelScope.launch {
-            val vm = EditOneStringViewModel()
-            vm.mainViewModel = mainViewModel
-            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-            vm.launchAndGet(
-                EditOneStringUIState(
+            EditOneStringViewModel.launch(
+                mainViewModel, EditOneStringUIState(
                     note.note,
                     R.string.edit_note,
                     R.string.enter_text_note
@@ -762,11 +746,8 @@ class MenuViewModel @Inject constructor(
 
     private fun addNote(selId: Long) {
         viewModelScope.launch {
-            val vm = EditOneStringViewModel()
-            vm.mainViewModel = mainViewModel
-            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-            vm.launchAndGet(
-                EditOneStringUIState(
+            EditOneStringViewModel.launch(
+                mainViewModel, EditOneStringUIState(
                     "",
                     R.string.add_note,
                     R.string.enter_text_note

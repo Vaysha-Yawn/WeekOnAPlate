@@ -92,7 +92,7 @@ import week.on.a.plate.dialogs.calendarMy.view.CalendarMy
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DialogsContainer(
-    data: DialogViewModel?,
+    data: DialogViewModel<*>?,
     onEvent: (event: Event) -> Unit
 ) {
     when (data) {
@@ -100,7 +100,7 @@ fun DialogsContainer(
             val datePickerState = rememberDatePickerState()
             val state = ChooseWeekUIState(datePickerState)
             data.state = state
-            BaseDialogContainer(data.state.show, { onEvent(ChooseWeekDialogEvent.Close) }) {
+            BaseDialogContainer(data.show, { onEvent(ChooseWeekDialogEvent.Close) }) {
                 Box(
                     Modifier
                         .background(MaterialTheme.colorScheme.background, RoundedCornerShape(20.dp))
@@ -115,7 +115,7 @@ fun DialogsContainer(
         }
 
         is EditRecipePositionViewModel -> {
-            BaseDialogContainer(data.state.show, { onEvent(EditRecipePositionEvent.Close) }) {
+            BaseDialogContainer(data.show, { onEvent(EditRecipePositionEvent.Close) }) {
                 EditRecipePositionDialogContent() { event: EditRecipePositionEvent ->
                     onEvent(event)
                 }
@@ -123,7 +123,7 @@ fun DialogsContainer(
         }
 
         is EditOtherPositionViewModel -> {
-            BaseDialogContainer(data.state.show, { onEvent(EditOtherPositionEvent.Close) }) {
+            BaseDialogContainer(data.show, { onEvent(EditOtherPositionEvent.Close) }) {
                 EditOtherPositionDialogContent(data.isForIngredient) { event: EditOtherPositionEvent ->
                     onEvent(event)
                 }
@@ -131,7 +131,7 @@ fun DialogsContainer(
         }
 
         is EditOrDeleteViewModel -> {
-            BaseDialogContainer(data.state.show, { onEvent(EditOrDeleteEvent.Close) }) {
+            BaseDialogContainer(data.show, { onEvent(EditOrDeleteEvent.Close) }) {
                 EditOrDeleteDialogContent { event: EditOrDeleteEvent ->
                     onEvent(event)
                 }
@@ -139,7 +139,7 @@ fun DialogsContainer(
         }
 
         is AddPositionViewModel -> {
-            BaseDialogContainer(data.state.show, { onEvent(AddPositionEvent.Close) }) {
+            BaseDialogContainer(data.show, { onEvent(AddPositionEvent.Close) }) {
                 AddPositionDialogContent() { event: AddPositionEvent ->
                     onEvent(event)
                 }
@@ -192,7 +192,7 @@ fun DialogsContainer(
             data.state = state
             DatePickerMy(
                 state = data.state.state,
-                showState = data.state.show,
+                showState = data.show,
                 onClose = { onEvent(DatePickerEvent.Close) }) {
                 onEvent(DatePickerEvent.Done)
             }
@@ -279,7 +279,7 @@ fun DialogsContainer(
             BottomDialogContainer(
                 sheetState,
                 { onEvent(SortMoreEvent.Close) }) {
-                SortMoreContent(data)
+                SortMoreContent(data::onEvent)
             }
             LaunchedEffect(true) {
                 sheetState.show()
@@ -291,7 +291,7 @@ fun DialogsContainer(
             BottomDialogContainer(
                 sheetState,
                 { onEvent(FiltersMoreEvent.Close) }) {
-                FilterMoreContent(data)
+                FilterMoreContent(data.state)
             }
             LaunchedEffect(true) {
                 sheetState.show()
@@ -299,7 +299,7 @@ fun DialogsContainer(
         }
 
         is CookStepMoreDialogViewModel -> {
-            BaseDialogContainer(data.state.show, { onEvent(CookStepMoreEvent.Close) }) {
+            BaseDialogContainer(data.show, { onEvent(CookStepMoreEvent.Close) }) {
                 CookStepMoreContent() { event: CookStepMoreEvent ->
                     onEvent(event)
                 }
@@ -311,7 +311,11 @@ fun DialogsContainer(
             BottomDialogContainer(
                 sheetState,
                 { data.onEvent(ChooseIngredientsForStepEvent.Close) }) {
-                ChooseIngredientsForStep(data)
+                val state = data.state
+                val event1 = { event: ChooseIngredientsForStepEvent ->
+                    data.onEvent(event)
+                }
+                ChooseIngredientsForStep(state, event1 )
             }
             LaunchedEffect(true) {
                 sheetState.show()
@@ -319,7 +323,7 @@ fun DialogsContainer(
         }
 
         is ExitApplyViewModel -> {
-            BaseDialogContainer(data.state.show, { data.onEvent(ExitApplyEvent.Close) }) {
+            BaseDialogContainer(data.show, { data.onEvent(ExitApplyEvent.Close) }) {
                 ExitApplyContent () { event: ExitApplyEvent ->
                     data.onEvent(event)
                 }

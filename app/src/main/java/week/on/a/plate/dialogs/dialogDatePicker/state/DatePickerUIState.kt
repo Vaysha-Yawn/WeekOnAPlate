@@ -7,8 +7,6 @@ import androidx.compose.runtime.mutableStateOf
 
 class DatePickerUIState @OptIn(ExperimentalMaterial3Api::class) constructor(
     val state: DatePickerState,
-){
-    val show: MutableState<Boolean> = mutableStateOf(true)
-}
+)
 
 

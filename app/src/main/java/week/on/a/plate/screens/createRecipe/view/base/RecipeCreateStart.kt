@@ -18,6 +18,7 @@ import week.on.a.plate.core.Event
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.data.dataView.example.recipeTom
 import week.on.a.plate.mainActivity.event.MainEvent
+import week.on.a.plate.screens.createRecipe.event.RecipeCreateEvent
 import week.on.a.plate.screens.createRecipe.logic.RecipeCreateViewModel
 import week.on.a.plate.screens.createRecipe.state.RecipeCreateUIState
 import week.on.a.plate.screens.createRecipe.view.recipe.RecipeEditPage
@@ -69,12 +70,12 @@ fun RecipeCreateStart(viewModel: RecipeCreateViewModel) {
 private fun RecipeCreateBackHandler(state: RecipeCreateUIState, onEvent: (Event) -> Unit) {
     BackHandler {
         if (state.activeTabIndex.intValue == 0) {
-            onEvent(MainEvent.OpenDialogExitApplyFromCreateRecipe)
+            onEvent(RecipeCreateEvent.OpenDialogExitApplyFromCreateRecipe)
         } else {
             if (state.webview.value?.canGoBack() == true) {
                 state.webview.value!!.goBack()
             } else {
-                onEvent(MainEvent.OpenDialogExitApplyFromCreateRecipe)
+                onEvent(RecipeCreateEvent.OpenDialogExitApplyFromCreateRecipe)
             }
         }
     }

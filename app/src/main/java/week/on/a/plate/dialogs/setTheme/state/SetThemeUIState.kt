@@ -6,7 +6,6 @@ import androidx.compose.runtime.mutableStateOf
 import week.on.a.plate.core.theme.palettes
 
 class SetThemeUIState{
-    val show: MutableState<Boolean> = mutableStateOf(true)
     val themes = palettes
     val selectedInd: MutableState<Int> = mutableIntStateOf(0)
 }

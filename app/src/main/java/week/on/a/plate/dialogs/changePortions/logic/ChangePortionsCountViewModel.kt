@@ -1,52 +1,44 @@
 package week.on.a.plate.dialogs.changePortions.logic
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import week.on.a.plate.dialogs.core.DialogViewModel
+import kotlinx.coroutines.CoroutineScope
 import week.on.a.plate.dialogs.changePortions.event.ChangePortionsCountEvent
 import week.on.a.plate.dialogs.changePortions.state.ChangePortionsCountUIState
-import week.on.a.plate.mainActivity.event.MainEvent
+import week.on.a.plate.dialogs.core.DialogViewModel
 import week.on.a.plate.mainActivity.logic.MainViewModel
 
 
-class ChangePortionsCountViewModel() : DialogViewModel() {
-
-    lateinit var mainViewModel: MainViewModel
-    val state = ChangePortionsCountUIState()
-    private lateinit var resultFlow: MutableStateFlow<Int?>
-
-    fun start(): Flow<Int?> {
-        val flow = MutableStateFlow<Int?>(null)
-        resultFlow = flow
-        return flow
-    }
-
-    fun done() {
-        close()
-        resultFlow.value = state.portionsCount.intValue
-    }
-
-    fun close() {
-        state.show.value = false
-        mainViewModel.onEvent(MainEvent.CloseDialog)
+class ChangePortionsCountViewModel(
+    viewModelScope: CoroutineScope,
+    openDialog: (DialogViewModel<*>) -> Unit,
+    closeDialog: () -> Unit,
+    startValued: Int,
+    useResult: (Int) -> Unit,
+) : DialogViewModel<Int>(
+    viewModelScope,
+    openDialog,
+    closeDialog,
+    useResult
+) {
+    val state = ChangePortionsCountUIState().apply {
+        portionsCount.intValue = startValued
     }
 
     fun onEvent(event: ChangePortionsCountEvent) {
         when (event) {
             ChangePortionsCountEvent.Close -> close()
-            ChangePortionsCountEvent.Done -> done()
+            ChangePortionsCountEvent.Done -> done(state.portionsCount.intValue)
         }
     }
 
-    suspend fun launchAndGet(startValued: Int, use: (Int) -> Unit) {
-        state.portionsCount.intValue = startValued
-
-        val flow = start()
-        flow.collect { value ->
-            if (value != null) {
-                use(value)
-            }
+    companion object {
+        fun launch(mainViewModel: MainViewModel, startValued: Int, useResult: (Int) -> Unit) {
+            ChangePortionsCountViewModel(
+                mainViewModel.getCoroutineScope(),
+                mainViewModel::openDialog,
+                mainViewModel::closeDialog,
+                startValued,
+                useResult
+            )
         }
     }
-
 }

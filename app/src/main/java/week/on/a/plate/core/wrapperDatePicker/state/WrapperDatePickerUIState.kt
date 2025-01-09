@@ -1,4 +1,4 @@
-package week.on.a.plate.screens.wrapperDatePicker.state
+package week.on.a.plate.core.wrapperDatePicker.state
 
 import androidx.compose.runtime.MutableState
 import java.time.LocalDate

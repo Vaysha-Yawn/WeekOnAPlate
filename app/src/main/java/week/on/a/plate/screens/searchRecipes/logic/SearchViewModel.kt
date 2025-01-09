@@ -69,8 +69,12 @@ class SearchViewModel @Inject constructor(
 
     private fun search() {
         searchAbstract { recipeView ->
-            (if (state.favoriteChecked.value){ recipeView.inFavorite } else true)
-                    && (if (state.allTime.intValue!=0) {recipeView.duration.toSecondOfDay() <= state.allTime.intValue*60} else true)
+            (if (state.favoriteChecked.value) {
+                recipeView.inFavorite
+            } else true)
+                    && (if (state.allTime.intValue != 0) {
+                recipeView.duration.toSecondOfDay() <= state.allTime.intValue * 60
+            } else true)
                     && recipeView.name.contains(state.searchText.value.trim(), true)
                     && recipeView.tags.containsAll(state.selectedTags.value)
                     && recipeView.ingredients.map { ingredientInRecipeView -> ingredientInRecipeView.ingredientView }
@@ -108,7 +112,7 @@ class SearchViewModel @Inject constructor(
                         listRandom.add(random)
                     }
                     listRandom
-                }else{
+                } else {
                     recipeViewList
                 }
             }.collect {
@@ -161,34 +165,57 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun filtersMore() {
-        val vm = FiltersMoreViewModel()
-        vm.mainViewModel = mainViewModel
-        mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-        viewModelScope.launch {
-            vm.launchAndGet(state.favoriteChecked.value, state.allTime.intValue) { stated->
-                state.allTime.intValue = stated.allTime.intValue
-                state.favoriteChecked.value = stated.favoriteIsChecked.value
-                search()
-            }
+        FiltersMoreViewModel.launch(
+            state.favoriteChecked.value,
+            state.allTime.intValue,
+            mainViewModel
+        ) { stated ->
+            state.allTime.intValue = stated.allTime.intValue
+            state.favoriteChecked.value = stated.favoriteIsChecked.value
+            search()
         }
     }
 
     private fun sortMore() {
-        val vm = SortMoreViewModel()
-        vm.mainViewModel = mainViewModel
-        mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-        viewModelScope.launch {
-            vm.launchAndGet() { event->
-                when(event){
-                    SortMoreEvent.AlphabetNormal -> onEvent(SearchScreenEvent.ChangeSort(ResultSortType.alphabet, ResultSortingDirection.down))
-                    SortMoreEvent.AlphabetRevers -> onEvent(SearchScreenEvent.ChangeSort(ResultSortType.alphabet, ResultSortingDirection.up))
+        SortMoreViewModel.launch(mainViewModel) { event ->
+                when (event) {
+                    SortMoreEvent.AlphabetNormal -> onEvent(
+                        SearchScreenEvent.ChangeSort(
+                            ResultSortType.alphabet,
+                            ResultSortingDirection.down
+                        )
+                    )
+
+                    SortMoreEvent.AlphabetRevers -> onEvent(
+                        SearchScreenEvent.ChangeSort(
+                            ResultSortType.alphabet,
+                            ResultSortingDirection.up
+                        )
+                    )
+
                     SortMoreEvent.Close -> {}
-                    SortMoreEvent.DateFromNewToOld -> onEvent(SearchScreenEvent.ChangeSort(ResultSortType.date, ResultSortingDirection.down))
-                    SortMoreEvent.DateFromOldToNew -> onEvent(SearchScreenEvent.ChangeSort(ResultSortType.date, ResultSortingDirection.up))
-                    SortMoreEvent.Random -> onEvent(SearchScreenEvent.ChangeSort(ResultSortType.randow, ResultSortingDirection.down))
+                    SortMoreEvent.DateFromNewToOld -> onEvent(
+                        SearchScreenEvent.ChangeSort(
+                            ResultSortType.date,
+                            ResultSortingDirection.down
+                        )
+                    )
+
+                    SortMoreEvent.DateFromOldToNew -> onEvent(
+                        SearchScreenEvent.ChangeSort(
+                            ResultSortType.date,
+                            ResultSortingDirection.up
+                        )
+                    )
+
+                    SortMoreEvent.Random -> onEvent(
+                        SearchScreenEvent.ChangeSort(
+                            ResultSortType.randow,
+                            ResultSortingDirection.down
+                        )
+                    )
                 }
             }
-        }
     }
 
     private fun changeSort(type: ResultSortType, direction: ResultSortingDirection) {
@@ -196,17 +223,20 @@ class SearchViewModel @Inject constructor(
         state.resultSearch.value = state.resultSearch.value.sorted()
     }
 
-    private fun List<RecipeView>.sorted():List<RecipeView>{
-        return when(state.resultSortType.value){
-            Pair(ResultSortType.date, ResultSortingDirection.up)->
+    private fun List<RecipeView>.sorted(): List<RecipeView> {
+        return when (state.resultSortType.value) {
+            Pair(ResultSortType.date, ResultSortingDirection.up) ->
                 this.sortedWith(compareBy { it.lastEdit })
 
-            Pair(ResultSortType.alphabet, ResultSortingDirection.down)-> this.sortedBy { it.name }
+            Pair(ResultSortType.alphabet, ResultSortingDirection.down) -> this.sortedBy { it.name }
 
-            Pair(ResultSortType.date, ResultSortingDirection.down)->
+            Pair(ResultSortType.date, ResultSortingDirection.down) ->
                 this.sortedByDescending { it.lastEdit }
 
-            Pair(ResultSortType.alphabet, ResultSortingDirection.up) -> sortedByDescending { it.name }
+            Pair(
+                ResultSortType.alphabet,
+                ResultSortingDirection.up
+            ) -> sortedByDescending { it.name }
 
             Pair(ResultSortType.randow, ResultSortingDirection.up) -> randomSort(this)
 
@@ -216,7 +246,7 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    private fun randomSort(list: List<RecipeView>):List<RecipeView>{
+    private fun randomSort(list: List<RecipeView>): List<RecipeView> {
         return if (list.isNotEmpty()) {
             val mutableRecipeViewList = list.toMutableList()
             val listRandom = mutableListOf<RecipeView>()
@@ -226,7 +256,7 @@ class SearchViewModel @Inject constructor(
                 listRandom.add(random)
             }
             listRandom
-        }else{
+        } else {
             list
         }
     }
@@ -274,7 +304,10 @@ class SearchViewModel @Inject constructor(
                                 it.timer.longValue, it.pinnedIngredientsInd.value
                             )
                         },
-                        link = recipe.source.value, false, LocalDateTime.now(), recipe.duration.value
+                        link = recipe.source.value,
+                        false,
+                        LocalDateTime.now(),
+                        recipe.duration.value
                     )
                     recipeRepository.create(newRecipe)
                 }
@@ -290,7 +323,6 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun addToMenu(recipeView: RecipeView, context: Context) {
-        //todo надо повторяющуюся логику, как сохранение рецепта вынести в одну функцию
         viewModelScope.launch {
             if (selId != null) {
                 resultFlow?.value = recipeView
@@ -301,11 +333,9 @@ class SearchViewModel @Inject constructor(
                 close()
                 mainViewModel.nav.navigate(SpecifySelectionDestination)
                 vmSpec.launchAndGet() { res ->
-                    val vm = ChangePortionsCountViewModel()
-                    vm.mainViewModel = mainViewModel
-                    onEvent(MainEvent.OpenDialog(vm))
+
                     val std = PreferenceUseCase().getDefaultPortionsCount(context)
-                    vm.launchAndGet(std) { count ->
+                     ChangePortionsCountViewModel.launch(mainViewModel, std) { count ->
                         viewModelScope.launch {
                             val recipePosition = Position.PositionRecipeView(
                                 0,

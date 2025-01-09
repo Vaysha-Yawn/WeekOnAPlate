@@ -4,7 +4,7 @@ import android.content.Context
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.core.Event
 import week.on.a.plate.data.dataView.week.SelectionView
-import week.on.a.plate.screens.wrapperDatePicker.event.WrapperDatePickerEvent
+import week.on.a.plate.core.wrapperDatePicker.event.WrapperDatePickerEvent
 import java.time.LocalDate
 
 sealed class MenuEvent : Event() {

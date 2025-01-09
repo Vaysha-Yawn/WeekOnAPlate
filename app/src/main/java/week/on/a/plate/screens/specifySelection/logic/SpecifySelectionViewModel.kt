@@ -24,7 +24,7 @@ import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screens.specifySelection.event.SpecifySelectionEvent
 import week.on.a.plate.screens.specifySelection.state.SpecifySelectionUIState
-import week.on.a.plate.screens.wrapperDatePicker.event.WrapperDatePickerEvent
+import week.on.a.plate.core.wrapperDatePicker.event.WrapperDatePickerEvent
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -96,15 +96,10 @@ class SpecifySelectionViewModel @Inject constructor(
 
     private fun addCustomSelection() {
         viewModelScope.launch {
-            val vm = EditSelectionViewModel(
-                EditSelectionUIState(
+            EditSelectionViewModel.launch(EditSelectionUIState(
                     title = R.string.add_meal,
                     placeholder = R.string.hint_breakfast
-                ), viewModelScope, {
-                    mainViewModel.onEvent(MainEvent.OpenDialog(it))
-                }, {
-                    mainViewModel.onEvent(MainEvent.CloseDialog)
-                }
+                ), mainViewModel
             ) { selState ->
                 state.allSelectionsIdDay.value =
                     state.allSelectionsIdDay.value.toMutableList().apply {
@@ -121,7 +116,6 @@ class SpecifySelectionViewModel @Inject constructor(
                 state.checkWeek.value = false
                 state.checkDayCategory.value = selState.text.value
             }
-            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
         }
     }
 

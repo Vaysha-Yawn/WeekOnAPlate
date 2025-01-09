@@ -1,59 +1,55 @@
 package week.on.a.plate.dialogs.dialogDatePicker.logic
 
+import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.CoroutineScope
+import week.on.a.plate.core.utils.dateToLocalDate
 import week.on.a.plate.dialogs.core.DialogViewModel
 import week.on.a.plate.dialogs.dialogDatePicker.event.DatePickerEvent
 import week.on.a.plate.dialogs.dialogDatePicker.state.DatePickerUIState
-import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
-import week.on.a.plate.core.utils.dateToLocalDate
 import java.time.LocalDate
+import java.util.Locale
 
 
-class DatePickerViewModel() : DialogViewModel() {
-
-    lateinit var mainViewModel: MainViewModel
-    lateinit var state: DatePickerUIState
-    private lateinit var resultFlow: MutableStateFlow<LocalDate?>
+class DatePickerViewModel(
+    locale: Locale,
+    scope: CoroutineScope,
+    openDialog: (DialogViewModel<*>) -> Unit,
+    closeDialog: () -> Unit,
+    use: (LocalDate?) -> Unit
+) : DialogViewModel<LocalDate?>(
+    scope,
+    openDialog,
+    closeDialog,
+    use
+) {
+    @OptIn(ExperimentalMaterial3Api::class)
+    var state: DatePickerUIState = DatePickerUIState(DatePickerState(locale))
 
     @OptIn(ExperimentalMaterial3Api::class)
     fun getLocalDate(state: DatePickerUIState): LocalDate? {
         return state.state.selectedDateMillis?.dateToLocalDate()
     }
 
-    fun start(): Flow<LocalDate?> {
-        val flow = MutableStateFlow<LocalDate?>(null)
-        resultFlow = flow
-        return flow
-    }
-
-    fun done() {
-        close()
-        val date = getLocalDate(state)
-        resultFlow.value = date
-    }
-
-    fun close() {
-        state.show.value = false
-        mainViewModel.onEvent(MainEvent.CloseDialog)
-    }
-
     fun onEvent(event: DatePickerEvent) {
         when (event) {
             DatePickerEvent.Close -> close()
-            DatePickerEvent.Done -> done()
+            DatePickerEvent.Done -> done(getLocalDate(state))
         }
     }
 
-    suspend fun launchAndGet(use: (LocalDate) -> Unit) {
-        val flow = start()
-        flow.collect { value ->
-            if (value != null) {
-                use(value)
-            }
+    companion object {
+        fun launch(
+            mainViewModel: MainViewModel, useResult: (LocalDate?) -> Unit
+        ) {
+            DatePickerViewModel(
+                mainViewModel.locale,
+                mainViewModel.getCoroutineScope(),
+                mainViewModel::openDialog,
+                mainViewModel::closeDialog,
+                useResult
+            )
         }
     }
-
 }

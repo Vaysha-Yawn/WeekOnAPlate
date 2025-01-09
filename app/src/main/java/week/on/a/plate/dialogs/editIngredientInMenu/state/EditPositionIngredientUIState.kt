@@ -13,7 +13,6 @@ class EditPositionIngredientUIState (
     val ingredientState: MutableState<IngredientView?> = mutableStateOf(positionIngredientView?.ingredient?.ingredientView)
     val description: MutableState<String> = mutableStateOf(positionIngredientView?.ingredient?.description?:"")
     val count: MutableIntState = mutableIntStateOf(positionIngredientView?.ingredient?.count?:0)
-    val show: MutableState<Boolean> = mutableStateOf(true)
 }
 
 

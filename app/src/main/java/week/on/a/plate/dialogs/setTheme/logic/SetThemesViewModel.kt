@@ -4,7 +4,10 @@ package week.on.a.plate.dialogs.setTheme.logic
 import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import week.on.a.plate.dialogs.addPositionChoose.event.AddPositionEvent
+import week.on.a.plate.dialogs.addPositionChoose.logic.AddPositionViewModel
 import week.on.a.plate.dialogs.core.DialogViewModel
 import week.on.a.plate.dialogs.setTheme.event.SetThemeEvent
 import week.on.a.plate.dialogs.setTheme.state.SetThemeUIState
@@ -14,11 +17,23 @@ import week.on.a.plate.mainActivity.view.MainActivity
 import week.on.a.plate.preference.PreferenceUseCase
 
 
-class SetThemesViewModel() : DialogViewModel() {
-
-    lateinit var mainViewModel: MainViewModel
+class SetThemesViewModel(
+    context: Context,
+    scope: CoroutineScope,
+    openDialog: (DialogViewModel<*>) -> Unit,
+    closeDialog: () -> Unit,
+) : DialogViewModel<Boolean>(
+    scope,
+    openDialog,
+    closeDialog,
+    {}
+) {
     val state = SetThemeUIState()
     private val prefs = PreferenceUseCase()
+
+    init{
+        state.selectedInd.value = prefs.getActiveThemeId(context)
+    }
 
     fun onEvent(event: SetThemeEvent) {
         when (event) {
@@ -27,19 +42,23 @@ class SetThemesViewModel() : DialogViewModel() {
         }
     }
 
-    fun launch(context: Context){
-        state.selectedInd.value = prefs.getActiveThemeId(context)
-    }
-
     fun select(themeId: Int, context: Context) {
-        mainViewModel.viewModelScope.launch {
+        viewModelScope.launch {
             prefs.saveActiveThemeId(context, themeId)
             prefs.restartActivity(context)
         }
     }
 
-    fun close() {
-        state.show.value = false
-        mainViewModel.onEvent(MainEvent.CloseDialog)
+    companion object {
+        fun launch(context: Context,
+            mainViewModel: MainViewModel
+        ) {
+            SetThemesViewModel(context,
+                mainViewModel.getCoroutineScope(),
+                mainViewModel::openDialog,
+                mainViewModel::closeDialog,
+            )
+        }
     }
+
 }

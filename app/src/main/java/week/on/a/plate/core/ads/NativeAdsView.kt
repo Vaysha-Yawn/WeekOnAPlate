@@ -1,11 +1,13 @@
-package week.on.a.plate.ads
+package week.on.a.plate.core.ads
 
 import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
@@ -22,9 +24,9 @@ import com.yandex.mobile.ads.nativeads.template.NativeBannerView
 fun NativeAdRow(id: String) {
     val context = LocalContext.current
     val nativeAds = remember { mutableStateListOf<NativeAd>() }
-
+    val nativeLoader = remember { mutableStateOf<NativeAdLoader?>(null) }
     LaunchedEffect(Unit) {
-        loadNativeAd(id, nativeAds, context)
+        loadNativeAd(id, nativeAds, context, nativeLoader)
     }
 
     if (nativeAds.isNotEmpty()) {
@@ -44,17 +46,26 @@ fun NativeAdItem(nativeAd: NativeAd) {
     )
 }
 
-private fun loadNativeAd(id: String, nativeAds: SnapshotStateList<NativeAd>, context: Context) {
-    val nativeAdLoader = NativeAdLoader(context).apply {
-        setNativeAdLoadListener(object : NativeAdLoadListener {
-            override fun onAdFailedToLoad(error: AdRequestError) {
-                Log.e("Ad", error.toString())
-            }
+private fun loadNativeAd(
+    id: String,
+    nativeAds: SnapshotStateList<NativeAd>,
+    context: Context,
+    nativeLoader: MutableState<NativeAdLoader?>
+) {
+    if (nativeLoader.value == null){
+        val nativeAdLoader = NativeAdLoader(context).apply {
+            setNativeAdLoadListener(object : NativeAdLoadListener {
+                override fun onAdFailedToLoad(error: AdRequestError) {
+                    Log.e("Ad", error.toString())
+                }
 
-            override fun onAdLoaded(nativeAd: NativeAd) {
-                nativeAds.add(nativeAd)
-            }
-        })
+                override fun onAdLoaded(nativeAd: NativeAd) {
+                    nativeAds.add(nativeAd)
+                }
+            })
+        }
+        nativeLoader.value = nativeAdLoader
     }
-    nativeAdLoader.loadAd(NativeAdRequestConfiguration.Builder(id).build())
+
+    nativeLoader.value?.loadAd(NativeAdRequestConfiguration.Builder(id).build())
 }

@@ -1,212 +1,102 @@
 package week.on.a.plate.screens.createRecipe.logic
 
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import week.on.a.plate.R
 import week.on.a.plate.core.Event
-import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
+import week.on.a.plate.data.dataView.recipe.RecipeTagView
 import week.on.a.plate.data.dataView.recipe.RecipeView
-import week.on.a.plate.data.dataView.week.Position
-import week.on.a.plate.dialogs.chooseHowImagePick.logic.ChooseHowImagePickViewModel
-import week.on.a.plate.dialogs.chooseIngredientsForStep.logic.ChooseIngredientsForStepViewModel
-import week.on.a.plate.dialogs.dialogTimePick.logic.TimePickViewModel
-import week.on.a.plate.dialogs.editIngredientInMenu.logic.EditPositionIngredientViewModel
+import week.on.a.plate.dialogs.exitApply.event.ExitApplyEvent
+import week.on.a.plate.dialogs.exitApply.logic.ExitApplyViewModel
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
-import week.on.a.plate.mainActivity.logic.imageFromGallery.getSavedPicture
 import week.on.a.plate.screens.createRecipe.event.RecipeCreateEvent
 import week.on.a.plate.screens.createRecipe.state.RecipeCreateUIState
 import week.on.a.plate.screens.createRecipe.state.RecipeStepState
 import week.on.a.plate.screens.filters.navigation.FilterDestination
 import week.on.a.plate.screens.filters.state.FilterEnum
 import week.on.a.plate.screens.filters.state.FilterMode
-import java.time.LocalTime
 import javax.inject.Inject
+
 
 @HiltViewModel
 class RecipeCreateViewModel @Inject constructor() : ViewModel() {
     lateinit var mainViewModel: MainViewModel
     var state = RecipeCreateUIState()
-    var isFirstTimeline: Boolean = true
-
     private lateinit var resultFlow: MutableStateFlow<RecipeCreateUIState?>
+
+    private lateinit var recipeCreateImageUseCase: RecipeCreateImageUseCase
+    private lateinit var recipeCreateTimeUseCase: RecipeCreateTimeUseCase
+    private lateinit var recipeCreateStepUseCase: RecipeCreateStepUseCase
+    private lateinit var recipeCreateIngredientUseCase: RecipeCreateIngredientUseCase
+
+    fun initWithMainVM(mainViewModel: MainViewModel) {
+        recipeCreateImageUseCase = RecipeCreateImageUseCase(mainViewModel, state)
+        recipeCreateTimeUseCase = RecipeCreateTimeUseCase(mainViewModel, state)
+        recipeCreateStepUseCase = RecipeCreateStepUseCase(mainViewModel, state)
+        recipeCreateIngredientUseCase = RecipeCreateIngredientUseCase(mainViewModel, state)
+    }
 
     fun onEvent(event: Event) {
         when (event) {
             is MainEvent -> mainViewModel.onEvent(event)
-            else -> onEvent(event)
+            is RecipeCreateEvent -> onEvent(event)
         }
     }
 
     fun onEvent(event: RecipeCreateEvent) {
         when (event) {
             RecipeCreateEvent.Close -> mainViewModel.nav.popBackStack()
-
             RecipeCreateEvent.Done -> done()
+            RecipeCreateEvent.EditTags -> editTags(state.tags.value)
+            RecipeCreateEvent.AddIngredient -> recipeCreateIngredientUseCase.addIngredient()
+            is RecipeCreateEvent.EditIngredient -> recipeCreateIngredientUseCase.editIngredient(
+                event
+            )
 
-            RecipeCreateEvent.EditTags -> {
-                viewModelScope.launch {
-                    mainViewModel.nav.navigate(FilterDestination)
-                    mainViewModel.filterViewModel.launchAndGet(
-                        FilterMode.Multiple, FilterEnum.Tag,
-                        Pair(state.tags.value, listOf()), false
-                    ) {
-                        if (it.tags != null) {
-                            state.tags.value = it.tags
-                        }
-                    }
-                }
-            }
+            is RecipeCreateEvent.DeleteStep -> recipeCreateStepUseCase.deleteStep(event)
+            is RecipeCreateEvent.ClearTimer -> recipeCreateTimeUseCase.clearTimer(event)
+            is RecipeCreateEvent.DeleteImage -> recipeCreateImageUseCase.deleteImage(event)
+            is RecipeCreateEvent.EditTimer -> recipeCreateTimeUseCase.editTimer(event)
+            RecipeCreateEvent.AddStep -> recipeCreateStepUseCase.addStep()
+            is RecipeCreateEvent.EditImage -> recipeCreateImageUseCase.editImage(event)
+            is RecipeCreateEvent.EditMainImage -> recipeCreateImageUseCase.editMainImage(event)
+            RecipeCreateEvent.AddManyIngredients -> recipeCreateIngredientUseCase.addManyIngredients()
+            is RecipeCreateEvent.DeleteIngredient -> recipeCreateIngredientUseCase.deleteIngredient(
+                event.ingredient
+            )
 
-            RecipeCreateEvent.AddIngredient -> {
-                viewModelScope.launch {
-                    val vm = EditPositionIngredientViewModel(null, true) { ingredient ->
-                        state.ingredients.value = state.ingredients.value.toMutableList().apply {
-                            this.add(ingredient.ingredient)
-                        }.toList()
-                    }
-                    vm.mainViewModel = mainViewModel
-                }
-            }
+            is RecipeCreateEvent.EditPinnedIngredients -> recipeCreateStepUseCase.editPinnedIngredients(
+                event.recipeStepState
+            )
 
-            is RecipeCreateEvent.EditIngredient -> {
-                viewModelScope.launch {
-                    val vm = EditPositionIngredientViewModel(
-                        Position.PositionIngredientView(
-                            0,
-                            event.ingredient,
-                            0
-                        ), false
-                    ) { ingredient ->
-                        state.ingredients.value = state.ingredients.value.toMutableList().apply {
-                            val index = this.indexOf(event.ingredient)
-                            this.remove(event.ingredient)
-                            this.add(index, ingredient.ingredient)
-                        }.toList()
-                    }
-                    vm.mainViewModel = mainViewModel
-                }
-            }
+            is RecipeCreateEvent.EditRecipeDuration -> recipeCreateTimeUseCase.editRecipeDuration()
+            RecipeCreateEvent.OpenDialogExitApplyFromCreateRecipe -> openDialogExitApplyFromCreateRecipe()
+        }
+    }
 
-            is RecipeCreateEvent.DeleteStep -> {
-                state.steps.value = state.steps.value.toMutableList().apply {
-                    this.remove(event.recipeStepState)
-                }.toList()
-            }
-
-            is RecipeCreateEvent.ClearTimer -> {
-                event.recipeStepState.timer.longValue = 0
-            }
-
-            is RecipeCreateEvent.DeleteImage -> {
-                event.recipeStepState.image.value = ""
-            }
-
-            is RecipeCreateEvent.EditTimer -> {
-                getTime(R.string.set_timer) { time ->
-                    event.recipeStepState.timer.longValue = time
-                }
-            }
-
-            RecipeCreateEvent.AddStep -> {
-                viewModelScope.launch {
-                    state.steps.value = state.steps.value.toMutableList().apply {
-                        this.add(RecipeStepState(0))
-                    }.toList()
-                }
-            }
-
-            is RecipeCreateEvent.EditImage -> getImage(event.recipeStepState.image.value) { nameImage ->
-                viewModelScope.launch {
-                    event.recipeStepState.image.value = nameImage
-                    if (!nameImage.startsWith("http")) {
-                        val picture = getSavedPicture(event.context, nameImage)
-                        event.recipeStepState.imageContainer.value = picture?.asImageBitmap()
-                    }
-                }
-            }
-
-            is RecipeCreateEvent.EditMainImage -> getImage(state.photoLink.value) { nameImage ->
-                viewModelScope.launch {
-                    state.photoLink.value = nameImage
-                    if (!nameImage.startsWith("http")) {
-                        val picture = getSavedPicture(event.context, nameImage)
-                        state.mainImageContainer.value = picture?.asImageBitmap()
-                    }
-                }
-            }
-
-            RecipeCreateEvent.AddManyIngredients -> addManyIngredients()
-            is RecipeCreateEvent.DeleteIngredient -> deleteIngredient(event.ingredient)
-            is RecipeCreateEvent.EditPinnedIngredients -> editPinnedIngredients(event.recipeStepState)
-            is RecipeCreateEvent.EditRecipeDuration -> {
-                getTime(R.string.recipe_duration) { time ->
-                    state.duration.value = LocalTime.ofSecondOfDay(time)
-                }
+    private fun openDialogExitApplyFromCreateRecipe() {
+        ExitApplyViewModel.launch(mainViewModel) { event ->
+            if (event == ExitApplyEvent.Exit) {
+                mainViewModel.nav.popBackStack()
             }
         }
     }
 
-    private fun getImage(oldValue: String?, use: (String) -> Unit) {
-        val vmChoose = ChooseHowImagePickViewModel()
-        vmChoose.mainViewModel = mainViewModel
-        mainViewModel.onEvent(MainEvent.OpenDialog(vmChoose))
-        viewModelScope.launch {
-            vmChoose.launchAndGet(oldValue, use)
-        }
-    }
-
-    private fun addManyIngredients() {
+    private fun editTags(tags: List<RecipeTagView>) {
         viewModelScope.launch {
             mainViewModel.nav.navigate(FilterDestination)
-            val ingredientsOld = state.ingredients.value.map { it.ingredientView }
             mainViewModel.filterViewModel.launchAndGet(
-                FilterMode.Multiple, FilterEnum.Ingredient,
-                Pair(listOf(), ingredientsOld), false
-            ) { filterRes ->
-                val ingredientsNew = filterRes.ingredients ?: return@launchAndGet
-                val listToAdd = ingredientsNew.toMutableList().apply {
-                    removeAll(ingredientsOld)
-                }.toList()
-                val listToDelete = ingredientsOld.toMutableList().apply {
-                    removeAll(ingredientsNew)
-                }.toList()
-
-                state.ingredients.value = state.ingredients.value.toMutableList().apply {
-                    listToAdd.forEach { ingredient ->
-                        add(IngredientInRecipeView(0, ingredient, "", 0))
-                    }
-                }.toList()
-
-                state.ingredients.value = state.ingredients.value.toMutableList().apply {
-                    listToDelete.forEach { ingredient ->
-                        val t =
-                            state.ingredients.value.find { it.ingredientView.ingredientId == ingredient.ingredientId }
-                        remove(t)
-                    }
-                }.toList()
+                FilterMode.Multiple, FilterEnum.Tag,
+                Pair(state.tags.value, listOf()), false
+            ) {
+                if (it.tags != null) {
+                    state.tags.value = tags
+                }
             }
-        }
-    }
-
-    private fun deleteIngredient(ingredient: IngredientInRecipeView) {
-        val ind = ingredient.ingredientView.ingredientId
-        state.steps.value.forEach {
-            if (it.pinnedIngredientsInd.value.contains(ind)) {
-                it.pinnedIngredientsInd.value =
-                    it.pinnedIngredientsInd.value.toMutableList().apply {
-                        remove(ind)
-                    }
-            }
-        }
-        state.ingredients.value = state.ingredients.value.toMutableList().apply {
-            this.remove(ingredient)
-
         }
     }
 
@@ -215,29 +105,6 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
         mainViewModel.menuViewModel.updateWeek()
         mainViewModel.cookPlannerViewModel.update()
         mainViewModel.nav.popBackStack()
-    }
-
-    private fun editPinnedIngredients(recipeStepState: RecipeStepState) {
-        viewModelScope.launch {
-            val vm = ChooseIngredientsForStepViewModel(
-                state.ingredients.value,
-                recipeStepState.pinnedIngredientsInd.value,
-                mainViewModel.viewModelScope,
-                { mainViewModel.onEvent(MainEvent.CloseDialog) }
-            ) { newList ->
-                recipeStepState.pinnedIngredientsInd.value = newList
-            }
-            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-        }
-    }
-
-    private fun getTime(title: Int, use: (Long) -> Unit) {
-        viewModelScope.launch {
-            val vm = TimePickViewModel(title, mainViewModel.viewModelScope, {
-                mainViewModel.onEvent(MainEvent.CloseDialog)
-            }, use)
-            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-        }
     }
 
     fun start(): Flow<RecipeCreateUIState?> {
@@ -251,8 +118,6 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
         use: (RecipeCreateUIState) -> Unit
     ) {
         if (oldRecipe != null) setStateByOldRecipe(oldRecipe) else state = RecipeCreateUIState()
-
-        isFirstTimeline = oldRecipe == null
 
         state.isForCreate.value = isForCreate
         val flow = start()

@@ -36,7 +36,7 @@ import week.on.a.plate.data.dataView.example.ingredientTomato
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.screens.menu.state.MenuUIState
-import week.on.a.plate.screens.wrapperDatePicker.event.WrapperDatePickerEvent
+import week.on.a.plate.core.wrapperDatePicker.event.WrapperDatePickerEvent
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

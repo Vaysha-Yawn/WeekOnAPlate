@@ -9,7 +9,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -37,6 +36,14 @@ fun EditSelectionContent(
     val onEvent = { event: EditSelectionEvent ->
         vm.onEvent(event)
     }
+    EditSelectionView(state, onEvent)
+}
+
+@Composable
+private fun EditSelectionView(
+    state: EditSelectionUIState,
+    onEvent: (EditSelectionEvent) -> Unit,
+) {
     val context = LocalContext.current
     val focusRequester = remember { FocusRequester() }
 
@@ -74,13 +81,11 @@ fun EditSelectionContent(
 @Composable
 fun PreviewEditSelectionContent() {
     WeekOnAPlateTheme {
-        EditSelectionContent(
-            EditSelectionViewModel(
-                EditSelectionUIState(
-                    title = R.string.specify_selection,
-                    placeholder = R.string.enter_text_note
-                ), rememberCoroutineScope(), {}, {}, {}
+        EditSelectionView(
+            EditSelectionUIState(
+                title = R.string.specify_selection,
+                placeholder = R.string.enter_text_note
             )
-        )
+        ) {}
     }
 }

@@ -19,10 +19,10 @@ import week.on.a.plate.data.repository.tables.filters.ingredientCategory.Ingredi
 import week.on.a.plate.data.repository.tables.filters.recipeTag.RecipeTagRepository
 import week.on.a.plate.data.repository.tables.filters.recipeTagCategory.RecipeTagCategoryRepository
 import week.on.a.plate.data.repository.tables.filters.recipeTagCategory.startCategoryName
-import week.on.a.plate.dialogs.editOrCreateIngredient.logic.AddIngredientViewModel
-import week.on.a.plate.dialogs.editOrCreateTag.logic.AddTagViewModel
 import week.on.a.plate.dialogs.editOneString.logic.EditOneStringViewModel
 import week.on.a.plate.dialogs.editOneString.state.EditOneStringUIState
+import week.on.a.plate.dialogs.editOrCreateIngredient.logic.AddIngredientViewModel
+import week.on.a.plate.dialogs.editOrCreateTag.logic.AddTagViewModel
 import week.on.a.plate.dialogs.editOrDelete.event.EditOrDeleteEvent
 import week.on.a.plate.dialogs.editOrDelete.logic.EditOrDeleteViewModel
 import week.on.a.plate.mainActivity.event.MainEvent
@@ -65,7 +65,7 @@ class FilterViewModel @Inject constructor(
 
     suspend fun launchAndGet(
         mode: FilterMode, enum: FilterEnum,
-        lastFilters: Pair<List<RecipeTagView>, List<IngredientView>>?, isForCategory:Boolean,
+        lastFilters: Pair<List<RecipeTagView>, List<IngredientView>>?, isForCategory: Boolean,
         use: suspend (FilterResult) -> Unit
     ) {
         state.selectedTags.value = lastFilters?.first ?: listOf()
@@ -74,14 +74,14 @@ class FilterViewModel @Inject constructor(
         state.filterEnum.value = enum
 
         this.isForCategory = isForCategory
-        if (isForCategory){
+        if (isForCategory) {
             resultFlowCategory = MutableStateFlow(null)
             resultFlowCategory!!.collect { value ->
                 if (value != null) {
                     use(value)
                 }
             }
-        }else{
+        } else {
             resultFlow = MutableStateFlow(null)
             resultFlow!!.collect { value ->
                 if (value != null) {
@@ -102,8 +102,8 @@ class FilterViewModel @Inject constructor(
 
             is FilterEvent.CreateIngredient -> toCreateIngredient(event.context)
             is FilterEvent.CreateTag -> toCreateTag(event.context)
-            is FilterEvent.CreateIngredientCategory -> toCreateIngredientCategory(event.context)
-            is FilterEvent.CreateTagCategory -> toCreateTagCategory(event.context)
+            is FilterEvent.CreateIngredientCategory -> toCreateIngredientCategory()
+            is FilterEvent.CreateTagCategory -> toCreateTagCategory()
 
             is FilterEvent.SelectIngredient -> selectIngredient(event.ingredient)
             is FilterEvent.SelectTag -> selectTag(event.tag)
@@ -119,7 +119,7 @@ class FilterViewModel @Inject constructor(
                 edit = { editTag(event.tag) })
 
             is FilterEvent.EditOrDeleteIngredientCategory -> {
-                if (event.ingredientCategory.name == event.context.getString(startCategoryName) ) return
+                if (event.ingredientCategory.name == event.context.getString(startCategoryName)) return
                 editOrDelete(
                     delete = { deleteIngredientCategory(event.ingredientCategory) },
                     edit = { editIngredientCategory(event.ingredientCategory) })
@@ -138,7 +138,7 @@ class FilterViewModel @Inject constructor(
         }
     }
 
-    private fun createFilterElement(context:Context) {
+    private fun createFilterElement(context: Context) {
         when (state.filterEnum.value) {
             FilterEnum.Ingredient -> onEvent(FilterEvent.CreateIngredient(context))
             FilterEnum.Tag -> onEvent(FilterEvent.CreateTag(context))
@@ -153,23 +153,18 @@ class FilterViewModel @Inject constructor(
     }
 
     private fun editOrDelete(delete: () -> Unit, edit: () -> Unit) {
-        val vm = EditOrDeleteViewModel()
-        vm.mainViewModel = mainViewModel
-        mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-        viewModelScope.launch {
-            vm.launchAndGet { event ->
-                when (event) {
-                    EditOrDeleteEvent.Close -> {}
-                    EditOrDeleteEvent.Delete -> delete()
-                    EditOrDeleteEvent.Edit -> edit()
-                }
+        EditOrDeleteViewModel.launch(mainViewModel) { event ->
+            when (event) {
+                EditOrDeleteEvent.Close -> {}
+                EditOrDeleteEvent.Delete -> delete()
+                EditOrDeleteEvent.Edit -> edit()
             }
         }
     }
 
     // DELETE
 
-    private fun deleteIngredient(ingredient: IngredientView, context:Context) {
+    private fun deleteIngredient(ingredient: IngredientView, context: Context) {
         viewModelScope.launch {
             val vmDel = mainViewModel.deleteApplyViewModel
             val mes = context.getString(R.string.delete_ingredient)
@@ -182,7 +177,7 @@ class FilterViewModel @Inject constructor(
         }
     }
 
-    private fun deleteTag(tag: RecipeTagView, context:Context) {
+    private fun deleteTag(tag: RecipeTagView, context: Context) {
         viewModelScope.launch {
             val vmDel = mainViewModel.deleteApplyViewModel
             val mes = context.getString(R.string.delete_tag)
@@ -210,46 +205,39 @@ class FilterViewModel @Inject constructor(
     /// EDIT
 
     private fun editIngredientCategory(oldIngredientCat: IngredientCategoryView) {
-        val vm = EditOneStringViewModel()
-        vm.mainViewModel = mainViewModel
-        mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-        viewModelScope.launch {
-            vm.launchAndGet(
-                EditOneStringUIState(
-                    oldIngredientCat.name,
-                    R.string.edit_category_name,
-                    R.string.enter_category_name,
-                )
-            ) { newName ->
+        EditOneStringViewModel.launch(
+            mainViewModel, EditOneStringUIState(
+                oldIngredientCat.name,
+                R.string.edit_category_name,
+                R.string.enter_category_name,
+            )
+        ) { newName ->
+            viewModelScope.launch {
                 ingredientCategoryRepository.updateName(newName, oldIngredientCat.id)
             }
         }
     }
 
     private fun editTagCategory(oldTagCat: TagCategoryView) {
-        val vm = EditOneStringViewModel()
-        vm.mainViewModel = mainViewModel
-        mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-        viewModelScope.launch {
-            vm.launchAndGet(
-                EditOneStringUIState(
-                    oldTagCat.name,
-                    R.string.edit_category_name,
-                    R.string.enter_category_name,
-                )
-            ) { newName ->
+        EditOneStringViewModel.launch(
+            mainViewModel, EditOneStringUIState(
+                oldTagCat.name,
+                R.string.edit_category_name,
+                R.string.enter_category_name,
+            )
+        ) { newName ->
+            viewModelScope.launch {
                 recipeTagCategoryRepository.updateName(newName, oldTagCat.id)
             }
         }
     }
 
     private fun editTag(tag: RecipeTagView) {
-        val vm = AddTagViewModel()
-        vm.mainViewModel = mainViewModel
-        mainViewModel.onEvent(MainEvent.OpenDialog(vm))
         val oldCategory = allTags.value.find { it.tags.contains(tag) }
-        viewModelScope.launch {
-            vm.launchAndGet(tag.tagName, oldCategory, oldCategory!!) { newNameAndCategory ->
+        AddTagViewModel.launch(
+            tag.tagName, oldCategory, oldCategory!!, mainViewModel
+        ) { newNameAndCategory ->
+            viewModelScope.launch {
                 editTagDB(tag, newNameAndCategory.first, newNameAndCategory.second)
             }
         }
@@ -264,18 +252,21 @@ class FilterViewModel @Inject constructor(
     }
 
     private fun editIngredient(context: Context, ingredient: IngredientView) {
-        val vm = AddIngredientViewModel()
-        vm.mainViewModel = mainViewModel
-        mainViewModel.onEvent(MainEvent.OpenDialog(vm))
         val oldCategory = allIngredients.value.find { it.ingredientViews.contains(ingredient) }!!
-        viewModelScope.launch {
-            vm.launchAndGet(context,
-                ingredient, oldCategory, oldCategory) { newIngredientAndCategory ->
+        AddIngredientViewModel.launch(
+            context,
+            ingredient,
+            oldCategory,
+            oldCategory,
+            mainViewModel
+        ) { newIngredientAndCategory ->
+            viewModelScope.launch {
                 editIngredientDB(
                     ingredient,
                     newIngredientAndCategory.first,
                     newIngredientAndCategory.second
                 )
+                mainViewModel.filterViewModel.onEvent(FilterEvent.SearchFilter())
             }
         }
     }
@@ -316,10 +307,10 @@ class FilterViewModel @Inject constructor(
                     return@launch
                 }
 
-                val vm = FilterVoiceApplyViewModel()
-                vm.mainViewModel = mainViewModel
-                mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-                vm.launchAndGet(listTags, listIngredientView) { stateApply ->
+                FilterVoiceApplyViewModel.launch(
+                    listTags, listIngredientView,
+                    mainViewModel
+                ) { stateApply ->
                     stateApply.selectedTags.value.forEach {
                         onEvent(FilterEvent.SelectTag(it))
                     }
@@ -353,14 +344,19 @@ class FilterViewModel @Inject constructor(
 
     /// CREATE
 
-    private fun toCreateTag(context:Context) {
+    private fun toCreateTag(context: Context) {
         viewModelScope.launch {
-            val vm = AddTagViewModel()
-            vm.mainViewModel = mainViewModel
-            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-            val defCategoryView = allTags.value.find { it.name == context.getString(R.string.no_category) }!!
-            vm.launchAndGet(state.searchText.value, null, defCategoryView) { tagData ->
-                insertNewTagInDB(tagData)
+            val defCategoryView =
+                allTags.value.find { it.name == context.getString(R.string.no_category) }!!
+            AddTagViewModel.launch(
+                state.searchText.value,
+                null,
+                defCategoryView,
+                mainViewModel
+            ) { tagData ->
+                viewModelScope.launch {
+                    insertNewTagInDB(tagData)
+                }
             }
         }
     }
@@ -371,20 +367,27 @@ class FilterViewModel @Inject constructor(
         if (newTag != null) onEvent(FilterEvent.SelectTag(newTag))
     }
 
-    private fun toCreateIngredient(context: Context,) {
+    private fun toCreateIngredient(context: Context) {
         viewModelScope.launch {
-            val vm = AddIngredientViewModel()
-            vm.mainViewModel = mainViewModel
-            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
             val oldIngredient = IngredientView(
                 0,
                 img = "",
                 name = state.searchText.value,
                 measure = ""
             )
-            val defCategoryView = allIngredients.value.find { it.name == context.getString(R.string.no_category) }!!
-            vm.launchAndGet(context, oldIngredient, null, defCategoryView) { ingredientData ->
-                insertNewIngredientInDB(ingredientData)
+            val defCategoryView =
+                allIngredients.value.find { it.name == context.getString(R.string.no_category) }!!
+            AddIngredientViewModel.launch(
+                context,
+                oldIngredient,
+                null,
+                defCategoryView,
+                mainViewModel
+            ) { ingredientData ->
+                viewModelScope.launch {
+                    insertNewIngredientInDB(ingredientData)
+                    mainViewModel.filterViewModel.onEvent(FilterEvent.SearchFilter())
+                }
             }
         }
     }
@@ -400,19 +403,18 @@ class FilterViewModel @Inject constructor(
         if (newIngredient != null) onEvent(FilterEvent.SelectIngredient(newIngredient))
     }
 
-    private fun toCreateTagCategory( context:Context) {
+    private fun toCreateTagCategory() {
         viewModelScope.launch {
-            val vm = EditOneStringViewModel()
-            vm.mainViewModel = mainViewModel
-            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-            vm.launchAndGet(
-                EditOneStringUIState(
+            EditOneStringViewModel.launch(
+                mainViewModel, EditOneStringUIState(
                     state.searchText.value,
                     R.string.add_category,
                     R.string.enter_category_name,
                 )
             ) { name ->
-                insertNewTagCategoryInDB(name)
+                viewModelScope.launch {
+                    insertNewTagCategoryInDB(name)
+                }
             }
         }
     }
@@ -423,19 +425,18 @@ class FilterViewModel @Inject constructor(
         if (tagCategoryView != null) onEvent(FilterEvent.SelectTagCategory(tagCategoryView))
     }
 
-    private fun toCreateIngredientCategory(context:Context) {
+    private fun toCreateIngredientCategory() {
         viewModelScope.launch {
-            val vm = EditOneStringViewModel()
-            vm.mainViewModel = mainViewModel
-            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-            vm.launchAndGet(
-                EditOneStringUIState(
+            EditOneStringViewModel.launch(
+                mainViewModel, EditOneStringUIState(
                     state.searchText.value,
                     R.string.add_category,
                     R.string.enter_category_name,
                 )
             ) { name ->
-                insertNewIngredientCategoryInDB(name)
+                viewModelScope.launch {
+                    insertNewIngredientCategoryInDB(name)
+                }
             }
         }
     }
@@ -454,13 +455,10 @@ class FilterViewModel @Inject constructor(
 
     private fun openSelectedFilters() {
         viewModelScope.launch {
-            val vm = SelectedFiltersViewModel()
-            vm.mainViewModel = mainViewModel
-            mainViewModel.onEvent(MainEvent.OpenDialog(vm))
-            vm.launchAndGet(
+            SelectedFiltersViewModel.launch(
                 state.activeFilterTabIndex.intValue,
                 state.selectedTags.value,
-                state.selectedIngredients.value
+                state.selectedIngredients.value, mainViewModel
             ) { stateSelected ->
                 state.selectedTags.value = stateSelected.first
                 state.selectedIngredients.value = stateSelected.second
@@ -570,7 +568,7 @@ class FilterViewModel @Inject constructor(
                 state.selectedTagsCategories.value,
                 state.selectedIngredientsCategories.value
             )
-        }else{
+        } else {
             resultFlow!!.value = FilterResult(
                 state.selectedTags.value,
                 state.selectedIngredients.value,

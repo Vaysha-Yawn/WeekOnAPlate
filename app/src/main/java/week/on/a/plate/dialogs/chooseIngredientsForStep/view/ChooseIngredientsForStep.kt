@@ -16,6 +16,9 @@ import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,11 +46,7 @@ import week.on.a.plate.screens.filters.view.clickNoRipple
 
 
 @Composable
-fun ChooseIngredientsForStep(viewModel: ChooseIngredientsForStepViewModel) {
-    val state = viewModel.state
-    val onEvent = { event: ChooseIngredientsForStepEvent ->
-        viewModel.onEvent(event)
-    }
+fun ChooseIngredientsForStep(state: ChooseIngredientsForStepUIState, onEvent: (ChooseIngredientsForStepEvent) -> Unit) {
     Column(
         modifier = Modifier
             .padding(20.dp)
@@ -145,7 +144,11 @@ private fun CheckBoxCustom(
 @Composable
 fun PreviewChooseIngredientsForStep() {
     WeekOnAPlateTheme {
-        val vm = ChooseIngredientsForStepViewModel(recipes[0].ingredients, listOf(0, 2), rememberCoroutineScope(), {}, {})
-        ChooseIngredientsForStep(vm)
+        val state = ChooseIngredientsForStepUIState(recipes[0].ingredients, remember {
+            mutableStateOf(
+                listOf(0, 2)
+            )
+        } )
+        ChooseIngredientsForStep(state){}
     }
 }

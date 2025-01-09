@@ -89,20 +89,14 @@ class SettingsViewModel @Inject constructor(val dao: CategorySelectionDAO) : Vie
 
     private fun setMenuSelections(context: Context) {
         viewModelScope.launch {
-            val vm = SetPermanentMealsViewModel(dao)
-            vm.mainViewModel = mainViewModel
-            onEvent(MainEvent.OpenDialog(vm))
-            vm.launch()
+            SetPermanentMealsViewModel.launch(dao, mainViewModel)
         }
     }
 
     private fun setStdPortionsCount(context: Context) {
         viewModelScope.launch {
             val current = pref.getDefaultPortionsCount(context)
-            val vm = ChangePortionsCountViewModel()
-            vm.mainViewModel = mainViewModel
-            onEvent(MainEvent.OpenDialog(vm))
-            vm.launchAndGet(current) { count ->
+            ChangePortionsCountViewModel.launch(mainViewModel, current) { count ->
                 pref.saveDefaultPortionsCount(context, count)
             }
         }
@@ -110,10 +104,7 @@ class SettingsViewModel @Inject constructor(val dao: CategorySelectionDAO) : Vie
 
     private fun theme(context: Context) {
         viewModelScope.launch {
-            val vm = SetThemesViewModel()
-            vm.mainViewModel = mainViewModel
-            onEvent(MainEvent.OpenDialog(vm))
-            vm.launch(context)
+            SetThemesViewModel.launch(context, mainViewModel)
         }
     }
 

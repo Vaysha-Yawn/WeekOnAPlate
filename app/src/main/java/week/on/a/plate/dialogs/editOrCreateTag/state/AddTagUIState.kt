@@ -8,7 +8,6 @@ class AddTagUIState (
 ){
     val category: MutableState<TagCategoryView?> = mutableStateOf(null)
     val text: MutableState<String> = mutableStateOf("")
-    val show: MutableState<Boolean> = mutableStateOf(true)
 }
 
 

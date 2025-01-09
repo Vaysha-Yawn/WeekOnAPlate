@@ -1,8 +1,6 @@
 package week.on.a.plate.dialogs.chooseWeekInMenu.logic
 
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.Event
 import week.on.a.plate.dialogs.calendarMy.event.CalendarMyEvent
@@ -20,38 +18,31 @@ import javax.inject.Inject
 
 class ChooseWeekViewModel @Inject constructor(
     private val calendarMyUseCase: CalendarMyUseCase,
-    val mainViewModel: MainViewModel
-) : DialogViewModel() {
+    private val mainViewModel: MainViewModel,
+    private val isForMenu: Boolean,
+    scope: CoroutineScope,
+    openDialog: (DialogViewModel<*>) -> Unit,
+    closeDialog: () -> Unit,
+    use: (LocalDate) -> Unit
+) : DialogViewModel<LocalDate>(
+    scope,
+    openDialog,
+    closeDialog,
+    use
+) {
 
     lateinit var state: ChooseWeekUIState
-    private lateinit var resultFlow: MutableStateFlow<LocalDate?>
     var stateCalendar: StateCalendarMy = StateCalendarMy.emptyState
-    private var isForMenu = true
 
     init {
-        val firstRow = calendarMyUseCase.getFirstRow(Locale.getDefault())
-        stateCalendar.firstRow.value = firstRow
-        val now = LocalDate.now()
-        mainViewModel.viewModelScope.launch {
+        scope.launch {
+            val firstRow = calendarMyUseCase.getFirstRow(Locale.getDefault())
+            stateCalendar.firstRow.value = firstRow
+            val now = LocalDate.now()
             val allMonthDay = calendarMyUseCase.getAllMonthDays(now.year, now.monthValue, isForMenu)
             stateCalendar.allMonthDayAndIsPlanned.value = allMonthDay
+            calendarMyUseCase.updateMonthValue(stateCalendar, isForMenu)
         }
-    }
-
-    fun start(): Flow<LocalDate?> {
-        val flow = MutableStateFlow<LocalDate?>(null)
-        resultFlow = flow
-        return flow
-    }
-
-    fun done() {
-        close()
-        resultFlow.value = stateCalendar.activeDate.value
-    }
-
-    fun close() {
-        state.show.value = false
-        mainViewModel.onEvent(MainEvent.CloseDialog)
     }
 
     fun onEvent(event: Event) {
@@ -67,19 +58,23 @@ class ChooseWeekViewModel @Inject constructor(
     fun onEvent(event: ChooseWeekDialogEvent) {
         when (event) {
             ChooseWeekDialogEvent.Close -> close()
-            ChooseWeekDialogEvent.Done -> done()
+            ChooseWeekDialogEvent.Done -> done(stateCalendar.activeDate.value)
         }
     }
 
-    suspend fun launchAndGet(isForMenud: Boolean, use: (LocalDate) -> Unit) {
-        isForMenu = isForMenud
-        calendarMyUseCase.updateMonthValue(stateCalendar, isForMenud)
-
-        val flow = start()
-        flow.collect { value ->
-            if (value != null) {
-                use(value)
-            }
+    companion object {
+        fun launch(
+            calendarMyUseCase: CalendarMyUseCase,
+            isForMenu: Boolean,
+            mainViewModel: MainViewModel, useResult: (LocalDate) -> Unit
+        ) {
+            ChooseWeekViewModel(
+                calendarMyUseCase, mainViewModel, isForMenu,
+                mainViewModel.getCoroutineScope(),
+                mainViewModel::openDialog,
+                mainViewModel::closeDialog,
+                useResult
+            )
         }
     }
 

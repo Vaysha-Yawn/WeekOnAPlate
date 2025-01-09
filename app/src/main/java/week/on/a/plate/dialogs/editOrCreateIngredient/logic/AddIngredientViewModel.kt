@@ -1,71 +1,77 @@
 package week.on.a.plate.dialogs.editOrCreateIngredient.logic
 
 import android.content.Context
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import week.on.a.plate.R
-import week.on.a.plate.dialogs.core.DialogViewModel
 import week.on.a.plate.data.dataView.example.Measure
 import week.on.a.plate.data.dataView.recipe.IngredientCategoryView
 import week.on.a.plate.data.dataView.recipe.IngredientView
 import week.on.a.plate.dialogs.chooseHowImagePick.logic.ChooseHowImagePickViewModel
+import week.on.a.plate.dialogs.core.DialogViewModel
 import week.on.a.plate.dialogs.editOrCreateIngredient.event.AddIngredientEvent
 import week.on.a.plate.dialogs.editOrCreateIngredient.state.AddIngredientUIState
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
-import week.on.a.plate.screens.filters.event.FilterEvent
 import week.on.a.plate.screens.filters.navigation.FilterDestination
 import week.on.a.plate.screens.filters.state.FilterEnum
 import week.on.a.plate.screens.filters.state.FilterMode
 
+class AddIngredientViewModel(
+    context: Context,
+    oldIngredient: IngredientView?,
+    oldCategory: IngredientCategoryView?,
+    defaultCategoryView: IngredientCategoryView,
+    viewModelScope: CoroutineScope,
+    openDialog: (DialogViewModel<*>) -> Unit,
+    closeDialog: () -> Unit,
+    val mainViewModel: MainViewModel,
+    useResult: (Pair<IngredientView, IngredientCategoryView>) -> Unit,
+) : DialogViewModel<Pair<IngredientView, IngredientCategoryView>>(
+    viewModelScope,
+    openDialog,
+    closeDialog,
+    useResult
+) {
 
-class AddIngredientViewModel() : DialogViewModel() {
-
-    lateinit var mainViewModel: MainViewModel
-    lateinit var state: AddIngredientUIState
-    private lateinit var resultFlow: MutableStateFlow<Pair<IngredientView, IngredientCategoryView>?>
-
-    fun start(): Flow<Pair<IngredientView, IngredientCategoryView>?> {
-        val flow = MutableStateFlow<Pair<IngredientView, IngredientCategoryView>?>(null)
-        resultFlow = flow
-        return flow
+    val state: AddIngredientUIState = AddIngredientUIState(
+        oldIngredient?.name ?: "",
+        oldIngredient?.measure == context.getString(R.string.ml),
+        oldCategory,
+        oldIngredient?.img ?: ""
+    ).apply {
+        category.value = defaultCategoryView
     }
 
-    fun done(context:Context) {
-        close()
-        val value = if (state.isLiquid.value) Measure.Milliliters.small else Measure.Grams.small
-        resultFlow.value = Pair(
-            IngredientView(0, state.photoUri.value.lowercase(), state.name.value, context.getString(value) ),
-            state.category.value!!
-        )
-    }
-
-    fun close() {
-        state.show.value = false
-        mainViewModel.onEvent(MainEvent.CloseDialog)
-    }
 
     fun onEvent(event: AddIngredientEvent) {
         when (event) {
             AddIngredientEvent.Close -> close()
-            is AddIngredientEvent.Done -> done(event.context)
+            is AddIngredientEvent.Done -> {
+                val value =
+                    if (state.isLiquid.value) Measure.Milliliters.small else Measure.Grams.small
+                val result = Pair(
+                    IngredientView(
+                        0,
+                        state.photoUri.value.lowercase(),
+                        state.name.value,
+                        event.context.getString(value)
+                    ),
+                    state.category.value!!
+                )
+                done(result)
+            }
+
             AddIngredientEvent.ChooseCategory -> toSearchCategory()
             AddIngredientEvent.PickImage -> pickImage()
         }
     }
 
     private fun pickImage() {
-        val vmChoose = ChooseHowImagePickViewModel()
-        vmChoose.mainViewModel = mainViewModel
         mainViewModel.onEvent(MainEvent.HideDialog)
-        mainViewModel.onEvent(MainEvent.OpenDialog(vmChoose))
-        mainViewModel.viewModelScope.launch {
-            vmChoose.launchAndGet(state.photoUri.value){
-                state.photoUri.value = it
-            }
+        ChooseHowImagePickViewModel.launch(mainViewModel, state.photoUri.value) {
+            state.photoUri.value = it
         }
     }
 
@@ -80,7 +86,7 @@ class AddIngredientViewModel() : DialogViewModel() {
             mainViewModel.onEvent(MainEvent.HideDialog)
             mainViewModel.nav.navigate(FilterDestination)
 
-            vm.launchAndGet(FilterMode.One, FilterEnum.CategoryIngredient,null, true) { filters ->
+            vm.launchAndGet(FilterMode.One, FilterEnum.CategoryIngredient, null, true) { filters ->
                 val res = filters.ingredientsCategories?.getOrNull(0)
                 if (res != null) state.category.value = res
                 mainViewModel.onEvent(MainEvent.ShowDialog)
@@ -90,29 +96,26 @@ class AddIngredientViewModel() : DialogViewModel() {
         }
     }
 
-    suspend fun launchAndGet(
-        context: Context,
-        oldIngredient: IngredientView?,
-        oldCategory: IngredientCategoryView?,
-        defaultCategoryView: IngredientCategoryView,
-        use: suspend (Pair<IngredientView, IngredientCategoryView>) -> Unit
-    ) {
-        state = AddIngredientUIState(
-            oldIngredient?.name ?: "",
-            oldIngredient?.measure == context.getString(R.string.ml),
-            oldCategory,
-            oldIngredient?.img ?: ""
-        )
-
-        state.category.value = defaultCategoryView
-
-        val flow = start()
-        flow.collect { value ->
-            if (value != null) {
-                use(value)
-                mainViewModel.filterViewModel.onEvent(FilterEvent.SearchFilter())
-            }
+    companion object {
+        fun launch(
+            context: Context,
+            oldIngredient: IngredientView?,
+            oldCategory: IngredientCategoryView?,
+            defaultCategoryView: IngredientCategoryView,
+            mainViewModel: MainViewModel,
+            useResult: (Pair<IngredientView, IngredientCategoryView>) -> Unit
+        ) {
+            AddIngredientViewModel(
+                context,
+                oldIngredient,
+                oldCategory,
+                defaultCategoryView,
+                mainViewModel.getCoroutineScope(),
+                mainViewModel::openDialog,
+                mainViewModel::closeDialog,
+                mainViewModel,
+                useResult
+            )
         }
     }
-
 }

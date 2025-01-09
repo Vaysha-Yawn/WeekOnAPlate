@@ -45,7 +45,7 @@ import week.on.a.plate.data.dataView.example.shortRecipe
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.screens.menu.event.MenuEvent
 import week.on.a.plate.screens.menu.event.NavFromMenuData
-import week.on.a.plate.screens.wrapperDatePicker.event.WrapperDatePickerEvent
+import week.on.a.plate.core.wrapperDatePicker.event.WrapperDatePickerEvent
 import week.on.a.plate.screens.menu.state.MenuUIState
 
 @OptIn(ExperimentalFoundationApi::class)
