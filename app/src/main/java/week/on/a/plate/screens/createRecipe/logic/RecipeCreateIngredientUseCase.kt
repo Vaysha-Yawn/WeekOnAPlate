@@ -54,7 +54,6 @@ class RecipeCreateIngredientUseCase(
         }
         state.ingredients.value = state.ingredients.value.toMutableList().apply {
             this.remove(ingredient)
-
         }
     }
 
@@ -66,16 +65,19 @@ class RecipeCreateIngredientUseCase(
                 FilterMode.Multiple, FilterEnum.Ingredient,
                 Pair(listOf(), ingredientsOld), false
             ) { filterRes ->
-                applyToStateAddManyIngredients(filterRes, ingredientsOld)
+                state.ingredients.value = applyToStateAddManyIngredients(filterRes, ingredientsOld, state.ingredients.value)
             }
         }
     }
 
     private fun applyToStateAddManyIngredients(
         filterRes: FilterResult,
-        ingredientsOld: List<IngredientView>
-    ) {
-        val ingredientsNew = filterRes.ingredients ?: return
+        ingredientsOld: List<IngredientView>,
+        list: List<IngredientInRecipeView>
+    ): List<IngredientInRecipeView> {
+
+        val ingredientsNew = filterRes.ingredients ?: return list
+
         val listToAdd = ingredientsNew.toMutableList().apply {
             removeAll(ingredientsOld)
         }.toList()
@@ -84,19 +86,18 @@ class RecipeCreateIngredientUseCase(
             removeAll(ingredientsNew)
         }.toList()
 
-        state.ingredients.value = state.ingredients.value.toMutableList().apply {
-            listToAdd.forEach { ingredient ->
-                add(IngredientInRecipeView(0, ingredient, "", 0))
-            }
-        }.toList()
+        val mutableList = list.toMutableList()
 
-        state.ingredients.value = state.ingredients.value.toMutableList().apply {
-            listToDelete.forEach { ingredient ->
-                val t =
-                    state.ingredients.value.find { it.ingredientView.ingredientId == ingredient.ingredientId }
-                remove(t)
-            }
-        }.toList()
+        listToAdd.forEach { ingredient ->
+            mutableList.add(IngredientInRecipeView(0, ingredient, "", 0))
+        }
+
+        listToDelete.forEach { ingredient ->
+            val t = list.find { it.ingredientView.ingredientId == ingredient.ingredientId }
+            mutableList.remove(t)
+        }
+
+        return mutableList.toList()
     }
 
 

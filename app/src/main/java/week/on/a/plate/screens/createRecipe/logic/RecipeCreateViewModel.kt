@@ -1,29 +1,26 @@
 package week.on.a.plate.screens.createRecipe.logic
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
 import week.on.a.plate.core.Event
-import week.on.a.plate.data.dataView.recipe.RecipeTagView
 import week.on.a.plate.data.dataView.recipe.RecipeView
 import week.on.a.plate.dialogs.exitApply.event.ExitApplyEvent
 import week.on.a.plate.dialogs.exitApply.logic.ExitApplyViewModel
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screens.createRecipe.event.RecipeCreateEvent
+import week.on.a.plate.screens.createRecipe.logic.useCase.EditTagsUseCase
 import week.on.a.plate.screens.createRecipe.state.RecipeCreateUIState
 import week.on.a.plate.screens.createRecipe.state.RecipeStepState
-import week.on.a.plate.screens.filters.navigation.FilterDestination
-import week.on.a.plate.screens.filters.state.FilterEnum
-import week.on.a.plate.screens.filters.state.FilterMode
 import javax.inject.Inject
 
 
 @HiltViewModel
-class RecipeCreateViewModel @Inject constructor() : ViewModel() {
+class RecipeCreateViewModel @Inject constructor(
+    private val editTagsUseCase: EditTagsUseCase
+) : ViewModel() {
     lateinit var mainViewModel: MainViewModel
     var state = RecipeCreateUIState()
     private lateinit var resultFlow: MutableStateFlow<RecipeCreateUIState?>
@@ -51,7 +48,7 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
         when (event) {
             RecipeCreateEvent.Close -> mainViewModel.nav.popBackStack()
             RecipeCreateEvent.Done -> done()
-            RecipeCreateEvent.EditTags -> editTags(state.tags.value)
+            RecipeCreateEvent.EditTags -> editTagsUseCase(mainViewModel, state.tags)
             RecipeCreateEvent.AddIngredient -> recipeCreateIngredientUseCase.addIngredient()
             is RecipeCreateEvent.EditIngredient -> recipeCreateIngredientUseCase.editIngredient(
                 event
@@ -86,20 +83,6 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    private fun editTags(tags: List<RecipeTagView>) {
-        viewModelScope.launch {
-            mainViewModel.nav.navigate(FilterDestination)
-            mainViewModel.filterViewModel.launchAndGet(
-                FilterMode.Multiple, FilterEnum.Tag,
-                Pair(state.tags.value, listOf()), false
-            ) {
-                if (it.tags != null) {
-                    state.tags.value = tags
-                }
-            }
-        }
-    }
-
     private fun done() {
         resultFlow.value = state
         mainViewModel.menuViewModel.updateWeek()
@@ -120,6 +103,7 @@ class RecipeCreateViewModel @Inject constructor() : ViewModel() {
         if (oldRecipe != null) setStateByOldRecipe(oldRecipe) else state = RecipeCreateUIState()
 
         state.isForCreate.value = isForCreate
+
         val flow = start()
         flow.collect { value ->
             if (value != null) {

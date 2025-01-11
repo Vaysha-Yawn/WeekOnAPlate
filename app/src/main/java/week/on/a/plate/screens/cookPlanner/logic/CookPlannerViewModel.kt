@@ -7,34 +7,36 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.Event
 import week.on.a.plate.data.dataView.week.getTitleWeek
-import week.on.a.plate.data.repository.tables.cookPlanner.CookPlannerStepRepository
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screens.cookPlanner.event.CookPlannerEvent
 import week.on.a.plate.screens.cookPlanner.state.CookPlannerUIState
 import week.on.a.plate.core.wrapperDatePicker.event.WrapperDatePickerEvent
 import week.on.a.plate.core.wrapperDatePicker.logic.WrapperDatePickerManager
+import week.on.a.plate.screens.cookPlanner.logic.stepMore.CookPlannerCardActions
+import week.on.a.plate.screens.cookPlanner.logic.stepMore.usecases.CheckStepUseCase
+import week.on.a.plate.screens.cookPlanner.logic.stepMore.usecases.UseCaseWrapperCookPlannerCardActions
 import javax.inject.Inject
 
 @HiltViewModel
 class CookPlannerViewModel @Inject constructor(
     private val wrapperDatePickerManager: WrapperDatePickerManager,
-    val repository: CookPlannerStepRepository
-) : ViewModel() {
+    private val checkStepUseCase: CheckStepUseCase,
+    private val cardActionsUseCases: UseCaseWrapperCookPlannerCardActions,
+    private val getWeekUseCase: GetWeekUseCase,
+    ) : ViewModel() {
+
     lateinit var mainViewModel: MainViewModel
     val state: CookPlannerUIState = CookPlannerUIState()
-    private lateinit var cookPlannerCardActionsUseCase: CookPlannerCardActionsUseCase
-    private lateinit var cookPlannerWrapperDatePickerUseCase: CookPlannerWrapperDatePickerUseCase
+    private lateinit var cookPlannerCardActions: CookPlannerCardActions
+    private lateinit var cookPlannerWrapperDatePickerManager: CookPlannerWrapperDatePickerManager
 
     fun initWithMainVM(mainViewModel: MainViewModel) {
-        cookPlannerCardActionsUseCase = CookPlannerCardActionsUseCase(
-            repository,
-            ::update,
-            mainViewModel
+        cookPlannerCardActions = CookPlannerCardActions(
+            mainViewModel, viewModelScope, cardActionsUseCases
         )
-        cookPlannerWrapperDatePickerUseCase = CookPlannerWrapperDatePickerUseCase(
+        cookPlannerWrapperDatePickerManager = CookPlannerWrapperDatePickerManager(
             wrapperDatePickerManager = wrapperDatePickerManager,
-            ::update,
             mainViewModel,
             state.wrapperDatePickerUIState
         )
@@ -50,7 +52,7 @@ class CookPlannerViewModel @Inject constructor(
 
     fun update() {
         state.week.value = mapOf()
-        val week = repository.getWeek(state.wrapperDatePickerUIState.activeDay.value)
+        val week = getWeekUseCase(state.wrapperDatePickerUIState.activeDay.value)
         week.entries.forEach { dateAndList ->
             viewModelScope.launch {
                 dateAndList.value.stateIn(viewModelScope).collect {
@@ -68,17 +70,18 @@ class CookPlannerViewModel @Inject constructor(
 
             is WrapperDatePickerEvent -> {
                 wrapperDatePickerManager.onEvent(event, state.wrapperDatePickerUIState)
-                cookPlannerWrapperDatePickerUseCase.onEvent(event)
+                cookPlannerWrapperDatePickerManager.onEvent(event)
             }
 
             is CookPlannerEvent -> onEvent(event)
         }
+        update()
     }
 
     fun onEvent(event: CookPlannerEvent) {
         when (event) {
-            is CookPlannerEvent.CheckStep -> cookPlannerCardActionsUseCase.checkStep(event)
-            is CookPlannerEvent.ShowStepMore -> cookPlannerCardActionsUseCase.showStepMore(event)
+            is CookPlannerEvent.CheckStep -> viewModelScope.launch { checkStepUseCase(event) }
+            is CookPlannerEvent.ShowStepMore -> cookPlannerCardActions.showStepMore(event)
             is CookPlannerEvent.NavToFullStep -> mainViewModel.recipeDetailsViewModel.launch(
                 event.groupView.recipeId,
                 event.groupView.portionsCount

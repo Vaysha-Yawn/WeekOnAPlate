@@ -43,6 +43,9 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import javax.inject.Inject
 
+...
+//todo use case
+
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val sCRUDRecipeInMenu: CRUDRecipeInMenu,

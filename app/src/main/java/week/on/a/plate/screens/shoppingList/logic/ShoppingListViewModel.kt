@@ -27,6 +27,9 @@ import week.on.a.plate.screens.shoppingList.event.ShoppingListEvent
 import week.on.a.plate.screens.shoppingList.state.ShoppingListUIState
 import javax.inject.Inject
 
+...
+//todo use case
+
 @HiltViewModel
 class ShoppingListViewModel @Inject constructor(
     private val shoppingItemRepository: ShoppingItemRepository,

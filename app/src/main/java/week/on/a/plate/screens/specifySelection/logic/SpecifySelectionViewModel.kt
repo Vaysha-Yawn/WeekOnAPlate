@@ -31,7 +31,8 @@ import java.time.LocalTime
 import java.util.Locale
 import javax.inject.Inject
 
-
+...
+//todo use case
 @HiltViewModel
 class SpecifySelectionViewModel @Inject constructor(
     private val weekMenuRepository: WeekMenuRepository,

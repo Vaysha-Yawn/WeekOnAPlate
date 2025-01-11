@@ -1,7 +1,6 @@
 package week.on.a.plate.screens.menu.logic
 
 import android.content.Context
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,7 +11,6 @@ import week.on.a.plate.core.navigation.SearchDestination
 import week.on.a.plate.core.navigation.ShoppingListDestination
 import week.on.a.plate.data.dataView.ShoppingItemView
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
-import week.on.a.plate.data.dataView.week.ForWeek
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.data.dataView.week.RecipeShortView
 import week.on.a.plate.data.dataView.week.SelectionView
@@ -25,14 +23,10 @@ import week.on.a.plate.dialogs.changePortions.logic.ChangePortionsCountViewModel
 import week.on.a.plate.dialogs.editIngredientInMenu.logic.EditPositionIngredientViewModel
 import week.on.a.plate.dialogs.editOneString.logic.EditOneStringViewModel
 import week.on.a.plate.dialogs.editOneString.state.EditOneStringUIState
-import week.on.a.plate.dialogs.editOrDelete.event.EditOrDeleteEvent
-import week.on.a.plate.dialogs.editOrDelete.logic.EditOrDeleteViewModel
 import week.on.a.plate.dialogs.editOtherPositionMore.event.EditOtherPositionEvent
 import week.on.a.plate.dialogs.editOtherPositionMore.logic.EditOtherPositionViewModel
 import week.on.a.plate.dialogs.editPositionRecipeMore.event.EditRecipePositionEvent
 import week.on.a.plate.dialogs.editPositionRecipeMore.logic.EditRecipePositionViewModel
-import week.on.a.plate.dialogs.editSelection.logic.EditSelectionViewModel
-import week.on.a.plate.dialogs.editSelection.state.EditSelectionUIState
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.preference.PreferenceUseCase
@@ -51,6 +45,7 @@ import week.on.a.plate.screens.specifySelection.logic.SpecifySelectionResult
 import week.on.a.plate.screens.specifySelection.navigation.SpecifySelectionDestination
 import week.on.a.plate.core.wrapperDatePicker.event.WrapperDatePickerEvent
 import week.on.a.plate.core.wrapperDatePicker.logic.WrapperDatePickerManager
+import week.on.a.plate.screens.menu.logic.useCase.SelectionUseCase
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.Locale
@@ -68,6 +63,7 @@ class MenuViewModel @Inject constructor(
     lateinit var mainViewModel: MainViewModel
     val menuUIState = MenuUIState.MenuUIStateExample
     private val activeDay = menuUIState.wrapperDatePickerUIState.activeDay
+    private lateinit var selectionUseCase : SelectionUseCase
 
     init {
         viewModelScope.launch {
@@ -75,6 +71,11 @@ class MenuViewModel @Inject constructor(
             menuUIState.wrapperDatePickerUIState.activeDayInd.value =
                 menuUIState.wrapperDatePickerUIState.activeDay.value.dayOfWeek.ordinal
         }
+    }
+
+    fun initWithMainVM(mainViewModel: MainViewModel){
+        selectionUseCase = SelectionUseCase(mainViewModel, viewModelScope, ::updateWeek, sCRUDRecipeInMenu, activeDay, ::addPosition )
+
     }
 
     fun updateWeek() {
@@ -195,112 +196,22 @@ class MenuViewModel @Inject constructor(
                 event.context
             )
 
-            is MenuEvent.EditOrDeleteSelection -> editOrDeleteSelection(event.sel)
-            is MenuEvent.CreateSelection -> createSelection(
+            is MenuEvent.EditOrDeleteSelection -> selectionUseCase.editOrDeleteSelection(event.sel)
+            is MenuEvent.CreateSelection -> selectionUseCase.createSelection(
                 event.date,
                 event.isForWeek
             )
 
-            is MenuEvent.CreateWeekSelIdAndCreatePosition -> createWeekSelIdAndCreatePosition(event.context)
+            is MenuEvent.CreateWeekSelIdAndCreatePosition -> selectionUseCase.createWeekSelIdAndCreatePosition(event.context)
         }
     }
 
-    private fun createWeekSelIdAndCreatePosition(context: Context) {
-        viewModelScope.launch {
-            val id = sCRUDRecipeInMenu.menuR.getSelIdOrCreate(
-                LocalDateTime.of(
-                    activeDay.value,
-                    ForWeek.stdTime
-                ),
-                true, context.getString(ForWeek.fullName), mainViewModel.locale,
-            )
-            addPosition(id, context)
-        }
-    }
-
-    private fun createSelection(date: LocalDate, isForWeek: Boolean,) {
-        EditSelectionViewModel.launch(EditSelectionUIState(
-            title = R.string.add_meal,
-            placeholder = R.string.hint_breakfast
-        ), mainViewModel
-        ) { state ->
-            viewModelScope.launch {
-                val newName = state.text.value
-                val time = state.selectedTime.value
-                sCRUDRecipeInMenu.onEvent(
-                    ActionWeekMenuDB.CreateSelection(
-                        date,
-                        newName, mainViewModel.locale, isForWeek, time
-                    )
-                )
-                updateWeek()
-            }
-        }
-    }
-
-    private fun editOrDeleteSelection(sel: SelectionView) {
-        if (sel.isForWeek || sel.id == 0L) return
-        EditOrDeleteViewModel.launch(mainViewModel) { event ->
-            viewModelScope.launch {
-                when (event) {
-                    EditOrDeleteEvent.Close -> {}
-                    EditOrDeleteEvent.Delete -> deleteSelection(sel)
-                    EditOrDeleteEvent.Edit -> editSelection(sel)
-                }
-            }
-        }
-    }
-
-    private suspend fun editSelection(sel: SelectionView) {
-        val oldState = EditSelectionUIState(
-            mutableStateOf(sel.name), R.string.edit_meal_name,
-            R.string.hint_breakfast
-        ).apply {
-            this.selectedTime.value = sel.dateTime.toLocalTime()
-        }
-        EditSelectionViewModel.launch(
-            oldState, mainViewModel
-        ) { state ->
-            viewModelScope.launch {
-                sCRUDRecipeInMenu.onEvent(
-                    ActionWeekMenuDB.EditSelection(
-                        sel,
-                        state.text.value, state.selectedTime.value
-                    )
-                )
-                updateWeek()
-            }
-        }
-    }
-
-
-    private suspend fun deleteSelection(sel: SelectionView) {
-        sCRUDRecipeInMenu.onEvent(
-            ActionWeekMenuDB.DeleteSelection(
-                sel
-            )
-        )
-        updateWeek()
-    }
 
     private fun navToFullRecipe(navData: NavFromMenuData.NavToFullRecipe) {
         mainViewModel.recipeDetailsViewModel.launch(
             navData.recId,
             navData.portionsCount
         )
-    }
-
-    private fun deleteSelected() {
-        selectedRecipeManager.getSelected(menuUIState).forEach {
-            onEvent(
-                MenuEvent.ActionDBMenu(
-                    ActionWeekMenuDB.Delete(
-                        it
-                    )
-                )
-            )
-        }
-        onEvent(MenuEvent.ActionWrapperDatePicker(WrapperDatePickerEvent.SwitchEditMode))
     }
 
     private fun createFirstNonPosedPosition(
@@ -335,6 +246,19 @@ class MenuViewModel @Inject constructor(
         }
     }
 
+    private fun deleteSelected() {
+        selectedRecipeManager.getSelected(menuUIState).forEach {
+            onEvent(
+                MenuEvent.ActionDBMenu(
+                    ActionWeekMenuDB.Delete(
+                        it
+                    )
+                )
+            )
+        }
+        onEvent(MenuEvent.ActionWrapperDatePicker(WrapperDatePickerEvent.SwitchEditMode))
+    }
+
     private fun selectedToShopList() {
         viewModelScope.launch {
             onEvent(MenuEvent.ActionWrapperDatePicker(WrapperDatePickerEvent.SwitchEditMode))
@@ -360,13 +284,7 @@ class MenuViewModel @Inject constructor(
                 draft.selectionId,
                 Pair(draft.tags, draft.ingredients)
             ) { recipe ->
-                onEvent(
-                    MenuEvent.ActionDBMenu(
-                        ActionWeekMenuDB.Delete(
-                            draft
-                        )
-                    )
-                )
+                onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.Delete(draft)))
                 val recipePosition = Position.PositionRecipeView(
                     0,
                     RecipeShortView(recipe.id, recipe.name, recipe.img),
@@ -437,11 +355,7 @@ class MenuViewModel @Inject constructor(
         }
     }
 
-    private fun getSelAndCreate(context: Context) {
-        specifyDate { res ->
-            addPosition(res.selId, context)
-        }
-    }
+
 
     private fun specifyDate(use: (SpecifySelectionResult) -> Unit) {
         viewModelScope.launch {
@@ -484,13 +398,7 @@ class MenuViewModel @Inject constructor(
                 if (filters.tags?.isEmpty() == true && filters.ingredients?.isEmpty() == true) return@launchAndGet
                 val draft =
                     Position.PositionDraftView(0, filters.tags!!, filters.ingredients!!, selId)
-                onEvent(
-                    MenuEvent.ActionDBMenu(
-                        ActionWeekMenuDB.AddDraft(
-                            draft
-                        )
-                    )
-                )
+                onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.AddDraft(draft)))
             }
         }
     }
@@ -504,22 +412,9 @@ class MenuViewModel @Inject constructor(
                 FilterEnum.IngredientAndTag, Pair(oldDraft.tags, oldDraft.ingredients), false
             ) { filters ->
                 if (filters.tags?.isEmpty() == true && filters.ingredients?.isEmpty() == true || filters.ingredients == null || filters.tags == null) {
-                    onEvent(
-                        MenuEvent.ActionDBMenu(
-                            ActionWeekMenuDB.Delete(
-                                oldDraft
-                            )
-                        )
-                    )
+                    onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.Delete(oldDraft)))
                 } else {
-                    onEvent(
-                        MenuEvent.ActionDBMenu(
-                            ActionWeekMenuDB.EditDraft(
-                                oldDraft,
-                                Pair(filters.tags, filters.ingredients)
-                            )
-                        )
-                    )
+                    onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.EditDraft(oldDraft, Pair(filters.tags, filters.ingredients))))
                 }
             }
         }
@@ -546,7 +441,7 @@ class MenuViewModel @Inject constructor(
                         when (position) {
                             is Position.PositionDraftView -> editDraft(position)
                             is Position.PositionIngredientView -> editIngredientPosition(position)
-                            is Position.PositionNoteView -> editNote(position, context)
+                            is Position.PositionNoteView -> editNote(position)
                             is Position.PositionRecipeView -> {}
                         }
                     }
@@ -560,7 +455,7 @@ class MenuViewModel @Inject constructor(
                                 position.ingredient.description,
                                 position.ingredient.count
                             )
-                            addToBd(ingredientNew)
+                            addIngredientInRecipeToBd(ingredientNew)
                         }
                     }
                 }
@@ -568,7 +463,7 @@ class MenuViewModel @Inject constructor(
         }
     }
 
-    private fun addToBd(ingredientInRecipe: IngredientInRecipeView) {
+    private fun addIngredientInRecipeToBd(ingredientInRecipe: IngredientInRecipeView) {
         viewModelScope.launch {
             val allList = shoppingItemRepository.getAll()
             val haveItem =
@@ -604,34 +499,26 @@ class MenuViewModel @Inject constructor(
         when (position) {
             is Position.PositionDraftView -> editDraft(position)
             is Position.PositionIngredientView -> editIngredientPosition(position)
-            is Position.PositionNoteView -> editNote(position, context)
+            is Position.PositionNoteView -> editNote(position)
             is Position.PositionRecipeView -> {}
+        }
+    }
+
+    private fun getSelAndCreate(context: Context) {
+        specifyDate { res ->
+            addPosition(res.selId, context)
         }
     }
 
     private fun getSelAndMove(position: Position) {
         specifyDate { res ->
-            onEvent(
-                MenuEvent.ActionDBMenu(
-                    ActionWeekMenuDB.MovePositionInMenuDB(
-                        res.selId,
-                        position
-                    )
-                )
-            )
+            onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.MovePositionInMenuDB(res.selId, position)))
         }
     }
 
     private fun getSelAndDouble(position: Position) {
         specifyDate { res ->
-            onEvent(
-                MenuEvent.ActionDBMenu(
-                    ActionWeekMenuDB.DoublePositionInMenuDB(
-                        res.selId,
-                        position
-                    )
-                )
-            )
+            onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.DoublePositionInMenuDB(res.selId, position)))
         }
     }
 
@@ -639,26 +526,11 @@ class MenuViewModel @Inject constructor(
         viewModelScope.launch {
             EditRecipePositionViewModel.launch(mainViewModel) { event ->
                 when (event) {
-                    EditRecipePositionEvent.AddToCart -> onEvent(
-                        MenuEvent.RecipeToShopList(
-                            position
-                        )
-                    )
-
+                    EditRecipePositionEvent.AddToCart -> onEvent(MenuEvent.RecipeToShopList(position))
                     EditRecipePositionEvent.ChangePotionsCount -> changePortionsCount(position)
-                    EditRecipePositionEvent.Delete -> onEvent(
-                        MenuEvent.ActionDBMenu(
-                            ActionWeekMenuDB.Delete(position)
-                        )
-                    )
-
+                    EditRecipePositionEvent.Delete -> onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.Delete(position)))
                     EditRecipePositionEvent.Double -> getSelAndDouble(position)
-                    EditRecipePositionEvent.FindReplace -> onEvent(
-                        MenuEvent.FindReplaceRecipe(
-                            position
-                        )
-                    )
-
+                    EditRecipePositionEvent.FindReplace -> onEvent(MenuEvent.FindReplaceRecipe(position))
                     EditRecipePositionEvent.Move -> getSelAndMove(position)
                     EditRecipePositionEvent.Close -> {}
                     EditRecipePositionEvent.CookPlan -> specifyPlanDetailsAndAddToPlan(position)
@@ -675,14 +547,7 @@ class MenuViewModel @Inject constructor(
     private fun addIngredientPosition(selId: Long) {
         viewModelScope.launch {
             EditPositionIngredientViewModel.launch(null, true, mainViewModel) { updatedIngredient ->
-                onEvent(
-                    MenuEvent.ActionDBMenu(
-                        ActionWeekMenuDB.AddIngredientPositionDB(
-                            updatedIngredient,
-                            selId
-                        )
-                    )
-                )
+                onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.AddIngredientPositionDB(updatedIngredient, selId)))
             }
         }
     }
@@ -694,15 +559,8 @@ class MenuViewModel @Inject constructor(
                 false,
                 mainViewModel
             ) { updatedIngredient ->
-                onEvent(
-                    MenuEvent.ActionDBMenu(
-                        ActionWeekMenuDB.EditIngredientPositionDB(
-                            updatedIngredient
-                        )
-                    )
-                )
+                onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.EditIngredientPositionDB(updatedIngredient)))
             }
-
         }
     }
 
@@ -712,19 +570,12 @@ class MenuViewModel @Inject constructor(
                 mainViewModel,
                 recipe.portionsCount
             ) { portionsCount ->
-                onEvent(
-                    MenuEvent.ActionDBMenu(
-                        ActionWeekMenuDB.ChangePortionsCountDB(
-                            recipe,
-                            portionsCount
-                        )
-                    )
-                )
+                onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.ChangePortionsCountDB(recipe, portionsCount)))
             }
         }
     }
 
-    private fun editNote(note: Position.PositionNoteView, context: Context) {
+    private fun editNote(note: Position.PositionNoteView,) {
         viewModelScope.launch {
             EditOneStringViewModel.launch(
                 mainViewModel, EditOneStringUIState(
@@ -733,13 +584,7 @@ class MenuViewModel @Inject constructor(
                     R.string.enter_text_note
                 )
             ) { updatedNote ->
-                onEvent(
-                    MenuEvent.ActionDBMenu(
-                        ActionWeekMenuDB.EditNoteDB(
-                            Position.PositionNoteView(note.id, updatedNote, note.selectionId)
-                        )
-                    )
-                )
+                onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.EditNoteDB(Position.PositionNoteView(note.id, updatedNote, note.selectionId))))
             }
         }
     }
@@ -753,14 +598,7 @@ class MenuViewModel @Inject constructor(
                     R.string.enter_text_note
                 )
             ) { updatedNote ->
-                onEvent(
-                    MenuEvent.ActionDBMenu(
-                        ActionWeekMenuDB.AddNoteDB(
-                            updatedNote,
-                            selId
-                        )
-                    )
-                )
+                onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.AddNoteDB(updatedNote, selId)))
             }
         }
     }

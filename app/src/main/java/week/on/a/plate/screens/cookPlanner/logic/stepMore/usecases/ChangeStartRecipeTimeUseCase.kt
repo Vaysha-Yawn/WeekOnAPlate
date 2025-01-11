@@ -1,0 +1,12 @@
+package week.on.a.plate.screens.cookPlanner.logic.stepMore.usecases
+
+import week.on.a.plate.data.dataView.CookPlannerGroupView
+import week.on.a.plate.data.repository.tables.cookPlanner.CookPlannerStepRepository
+import javax.inject.Inject
+
+class ChangeStartRecipeTimeUseCase @Inject constructor(
+    private val repository: CookPlannerStepRepository) {
+    suspend operator fun invoke(group: CookPlannerGroupView, time:Long) {
+        repository.changeStartRecipeTime(group.id, time)
+    }
+}

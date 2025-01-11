@@ -29,7 +29,6 @@ import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screens.deleteApply.event.DeleteApplyEvent
 import week.on.a.plate.screens.deleteApply.navigation.DeleteApplyDestination
-import week.on.a.plate.screens.filters.dialogs.filterVoiceApply.logic.FilterVoiceApplyViewModel
 import week.on.a.plate.screens.filters.dialogs.selectedFilters.logic.SelectedFiltersViewModel
 import week.on.a.plate.screens.filters.event.FilterEvent
 import week.on.a.plate.screens.filters.state.FilterEnum
@@ -44,6 +43,7 @@ class FilterViewModel @Inject constructor(
     private val recipeTagCategoryRepository: RecipeTagCategoryRepository,
     private val ingredientRepository: IngredientRepository,
     private val recipeTagRepository: RecipeTagRepository,
+    private val voiceSearch: VoiceSearchUseCase
 ) : ViewModel() {
 
     lateinit var mainViewModel: MainViewModel
@@ -97,7 +97,19 @@ class FilterViewModel @Inject constructor(
             FilterEvent.Done -> done()
             is FilterEvent.SearchFilter -> search(event.text)
             FilterEvent.SelectedFilters -> openSelectedFilters()
-            is FilterEvent.VoiceSearchFilters -> voiceSearch(event.context)
+            is FilterEvent.VoiceSearchFilters -> voiceSearch(
+                event.context,
+                mainViewModel,
+                ::onEvent,
+                state.searchText,
+                viewModelScope,
+                state.filterEnum.value,
+                ::searchTags,
+                ::searchIngredients,
+                ::searchTagsCategories,
+                ::searchIngredientCategories
+            )
+
             FilterEvent.ClearSearch -> clear()
 
             is FilterEvent.CreateIngredient -> toCreateIngredient(event.context)
@@ -282,172 +294,6 @@ class FilterViewModel @Inject constructor(
             ingredientNew.img,
             ingredientNew.name,
             ingredientNew.measure
-        )
-    }
-
-    /// VoiceSearch
-
-    private fun voiceSearch(context: Context) {
-        mainViewModel.onEvent(MainEvent.VoiceToText(context) { strings: ArrayList<String>? ->
-            if (strings == null) return@VoiceToText
-            viewModelScope.launch {
-                val searchedList = strings.getOrNull(0)?.split(" ") ?: return@launch
-
-                val listIngredientView = mutableListOf<IngredientView>()
-                val listTags = mutableListOf<RecipeTagView>()
-
-                searchedList.forEach {
-                    val res = getAllSearch(it)
-                    if (res.tags != null) listTags.addAll(res.tags)
-                    if (res.ingredients != null) listIngredientView.addAll(res.ingredients)
-                }
-
-                if (listIngredientView.isEmpty() && listTags.isEmpty()) {
-                    state.searchText.value = strings.joinToString()
-                    return@launch
-                }
-
-                FilterVoiceApplyViewModel.launch(
-                    listTags, listIngredientView,
-                    mainViewModel
-                ) { stateApply ->
-                    stateApply.selectedTags.value.forEach {
-                        onEvent(FilterEvent.SelectTag(it))
-                    }
-                    stateApply.selectedIngredients.value.forEach {
-                        onEvent(FilterEvent.SelectIngredient(it))
-                    }
-                }
-            }
-        })
-    }
-
-    private fun getAllSearch(name: String): FilterResult {
-
-        val tags =
-            if (state.filterEnum.value == FilterEnum.Tag || state.filterEnum.value == FilterEnum.IngredientAndTag) searchTags(
-                name
-            ) else null
-        val ingredients =
-            if (state.filterEnum.value == FilterEnum.Ingredient || state.filterEnum.value == FilterEnum.IngredientAndTag) searchIngredients(
-                name
-            ) else null
-        val tagsCategories =
-            if (state.filterEnum.value == FilterEnum.CategoryTag) searchTagsCategories(name) else null
-        val ingredientsCategories =
-            if (state.filterEnum.value == FilterEnum.CategoryIngredient) searchIngredientCategories(
-                name
-            ) else null
-
-        return FilterResult(tags, ingredients, tagsCategories, ingredientsCategories)
-    }
-
-    /// CREATE
-
-    private fun toCreateTag(context: Context) {
-        viewModelScope.launch {
-            val defCategoryView =
-                allTags.value.find { it.name == context.getString(R.string.no_category) }!!
-            AddTagViewModel.launch(
-                state.searchText.value,
-                null,
-                defCategoryView,
-                mainViewModel
-            ) { tagData ->
-                viewModelScope.launch {
-                    insertNewTagInDB(tagData)
-                }
-            }
-        }
-    }
-
-    private suspend fun insertNewTagInDB(tagData: Pair<String, TagCategoryView>) {
-        val newTagId = recipeTagRepository.insert(tagData.first, tagData.second.id)
-        val newTag = recipeTagRepository.getById(newTagId)
-        if (newTag != null) onEvent(FilterEvent.SelectTag(newTag))
-    }
-
-    private fun toCreateIngredient(context: Context) {
-        viewModelScope.launch {
-            val oldIngredient = IngredientView(
-                0,
-                img = "",
-                name = state.searchText.value,
-                measure = ""
-            )
-            val defCategoryView =
-                allIngredients.value.find { it.name == context.getString(R.string.no_category) }!!
-            AddIngredientViewModel.launch(
-                context,
-                oldIngredient,
-                null,
-                defCategoryView,
-                mainViewModel
-            ) { ingredientData ->
-                viewModelScope.launch {
-                    insertNewIngredientInDB(ingredientData)
-                    mainViewModel.filterViewModel.onEvent(FilterEvent.SearchFilter())
-                }
-            }
-        }
-    }
-
-    private suspend fun insertNewIngredientInDB(ingredientData: Pair<IngredientView, IngredientCategoryView>) {
-        val newIngredientId = ingredientRepository.insert(
-            categoryId = ingredientData.second.id,
-            img = ingredientData.first.img,
-            name = ingredientData.first.name,
-            measure = ingredientData.first.measure
-        )
-        val newIngredient = ingredientRepository.getById(newIngredientId)
-        if (newIngredient != null) onEvent(FilterEvent.SelectIngredient(newIngredient))
-    }
-
-    private fun toCreateTagCategory() {
-        viewModelScope.launch {
-            EditOneStringViewModel.launch(
-                mainViewModel, EditOneStringUIState(
-                    state.searchText.value,
-                    R.string.add_category,
-                    R.string.enter_category_name,
-                )
-            ) { name ->
-                viewModelScope.launch {
-                    insertNewTagCategoryInDB(name)
-                }
-            }
-        }
-    }
-
-    private suspend fun insertNewTagCategoryInDB(name: String) {
-        val id = recipeTagCategoryRepository.create(name)
-        val tagCategoryView = recipeTagCategoryRepository.getById(id)
-        if (tagCategoryView != null) onEvent(FilterEvent.SelectTagCategory(tagCategoryView))
-    }
-
-    private fun toCreateIngredientCategory() {
-        viewModelScope.launch {
-            EditOneStringViewModel.launch(
-                mainViewModel, EditOneStringUIState(
-                    state.searchText.value,
-                    R.string.add_category,
-                    R.string.enter_category_name,
-                )
-            ) { name ->
-                viewModelScope.launch {
-                    insertNewIngredientCategoryInDB(name)
-                }
-            }
-        }
-    }
-
-    private suspend fun insertNewIngredientCategoryInDB(name: String) {
-        val id = ingredientCategoryRepository.create(name)
-        val ingredientCategory = ingredientCategoryRepository.getById(id)
-        if (ingredientCategory != null) onEvent(
-            FilterEvent.SelectIngredientCategory(
-                ingredientCategory
-            )
         )
     }
 

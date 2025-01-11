@@ -27,6 +27,8 @@ import week.on.a.plate.screens.specifySelection.navigation.SpecifySelectionDesti
 import java.time.LocalDateTime
 import javax.inject.Inject
 
+...
+//todo use case
 @HiltViewModel
 class RecipeDetailsViewModel @Inject constructor(
     private val sCRUDRecipeInMenu: CRUDRecipeInMenu,

@@ -5,9 +5,8 @@ import week.on.a.plate.core.wrapperDatePicker.event.WrapperDatePickerEvent
 import week.on.a.plate.core.wrapperDatePicker.logic.WrapperDatePickerManager
 import week.on.a.plate.core.wrapperDatePicker.state.WrapperDatePickerUIState
 
-class CookPlannerWrapperDatePickerUseCase(
+class CookPlannerWrapperDatePickerManager(
     private val wrapperDatePickerManager: WrapperDatePickerManager,
-    private val update: () -> Unit,
     private val mainViewModel: MainViewModel,
     private val wrapperDatePickerUIState: WrapperDatePickerUIState
 ) {
@@ -21,7 +20,6 @@ class CookPlannerWrapperDatePickerUseCase(
                     wrapperDatePickerUIState.activeDay.value = date
                     wrapperDatePickerUIState.activeDayInd.value =
                         date.dayOfWeek.ordinal
-                    update()
                 }
             }
 
@@ -34,7 +32,6 @@ class CookPlannerWrapperDatePickerUseCase(
                     wrapperDatePickerUIState.activeDay.value = date
                     wrapperDatePickerUIState.activeDayInd.value =
                         date.dayOfWeek.ordinal
-                    update()
                 }
             }
 
