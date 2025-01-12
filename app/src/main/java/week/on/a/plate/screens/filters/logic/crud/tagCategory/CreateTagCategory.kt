@@ -1,4 +1,4 @@
-package week.on.a.plate.screens.filters.logic.crud
+package week.on.a.plate.screens.filters.logic.crud.tagCategory
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -10,11 +10,11 @@ import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screens.filters.event.FilterEvent
 import javax.inject.Inject
 
-class TagCategoryCreateUseCase @Inject constructor(
+class CreateTagCategory @Inject constructor(
     private val recipeTagCategoryRepository: RecipeTagCategoryRepository
 ) {
 
-    private fun toCreateTagCategory(onEvent:(FilterEvent)->Unit,  scope: CoroutineScope, searchText:String, mainViewModel: MainViewModel) {
+    operator fun invoke(onEvent:(FilterEvent)->Unit,  scope: CoroutineScope, searchText:String, mainViewModel: MainViewModel) {
         scope.launch {
             EditOneStringViewModel.launch(
                 mainViewModel, EditOneStringUIState(

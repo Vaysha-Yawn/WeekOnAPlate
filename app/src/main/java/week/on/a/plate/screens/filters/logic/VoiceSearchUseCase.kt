@@ -4,30 +4,23 @@ import android.content.Context
 import androidx.compose.runtime.MutableState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import week.on.a.plate.data.dataView.recipe.IngredientCategoryView
 import week.on.a.plate.data.dataView.recipe.IngredientView
 import week.on.a.plate.data.dataView.recipe.RecipeTagView
-import week.on.a.plate.data.dataView.recipe.TagCategoryView
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screens.filters.dialogs.filterVoiceApply.logic.FilterVoiceApplyViewModel
 import week.on.a.plate.screens.filters.event.FilterEvent
-import week.on.a.plate.screens.filters.state.FilterEnum
-import week.on.a.plate.screens.filters.state.FilterResult
+import week.on.a.plate.screens.filters.state.FilterUIState
 import javax.inject.Inject
 
-class VoiceSearchUseCase @Inject constructor() {
+class VoiceSearchUseCase @Inject constructor(private val searchUseCase: SearchUseCase) {
     operator fun invoke(
         context: Context,
         mainViewModel: MainViewModel,
         onEvent: (FilterEvent) -> Unit,
         searchText: MutableState<String>,
         scope: CoroutineScope,
-        currentFilterEnum: FilterEnum,
-        searchTags: (String) -> List<RecipeTagView>,
-        searchIngredients: (String) -> List<IngredientView>,
-        searchTagsCategories: (String) -> List<TagCategoryView>,
-        searchIngredientCategories: (String) -> List<IngredientCategoryView>,
+        state: FilterUIState
     ) {
         mainViewModel.onEvent(MainEvent.VoiceToText(context) { strings: ArrayList<String>? ->
             if (strings == null) return@VoiceToText
@@ -38,13 +31,11 @@ class VoiceSearchUseCase @Inject constructor() {
                 val listTags = mutableListOf<RecipeTagView>()
 
                 searchedList.forEach {
-                    val res = getAllSearch(
+                    val res = searchUseCase.getAllSearch(
                         it,
-                        currentFilterEnum,
-                        searchTags,
-                        searchIngredients,
-                        searchTagsCategories,
-                        searchIngredientCategories
+                        state.filterEnum.value,
+                        state.allTagsCategories.value,
+                        state.allIngredientsCategories.value
                     )
                     if (res.tags != null) listTags.addAll(res.tags)
                     if (res.ingredients != null) listIngredientView.addAll(res.ingredients)
@@ -68,31 +59,5 @@ class VoiceSearchUseCase @Inject constructor() {
                 }
             }
         })
-    }
-
-    private fun getAllSearch(
-        name: String,
-        currentFilterEnum: FilterEnum,
-        searchTags: (String) -> List<RecipeTagView>,
-        searchIngredients: (String) -> List<IngredientView>,
-        searchTagsCategories: (String) -> List<TagCategoryView>,
-        searchIngredientCategories: (String) -> List<IngredientCategoryView>,
-    ): FilterResult {
-        val tags =
-            if (currentFilterEnum == FilterEnum.Tag || currentFilterEnum == FilterEnum.IngredientAndTag) searchTags(
-                name
-            ) else null
-        val ingredients =
-            if (currentFilterEnum == FilterEnum.Ingredient || currentFilterEnum == FilterEnum.IngredientAndTag) searchIngredients(
-                name
-            ) else null
-        val tagsCategories =
-            if (currentFilterEnum == FilterEnum.CategoryTag) searchTagsCategories(name) else null
-        val ingredientsCategories =
-            if (currentFilterEnum == FilterEnum.CategoryIngredient) searchIngredientCategories(
-                name
-            ) else null
-
-        return FilterResult(tags, ingredients, tagsCategories, ingredientsCategories)
     }
 }

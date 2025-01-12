@@ -1,4 +1,4 @@
-package week.on.a.plate.screens.filters.logic.crud
+package week.on.a.plate.screens.filters.logic.crud.tag
 
 import android.content.Context
 import kotlinx.coroutines.CoroutineScope
@@ -11,10 +11,10 @@ import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screens.filters.event.FilterEvent
 import javax.inject.Inject
 
-class TagCreateUseCase @Inject constructor(
+class CreateTag @Inject constructor(
     private val recipeTagRepository: RecipeTagRepository
 ) {
-    private fun toCreateTag(
+    operator fun invoke(
         context: Context,
         onEvent: (FilterEvent) -> Unit,
         scope: CoroutineScope,

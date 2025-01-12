@@ -1,4 +1,4 @@
-package week.on.a.plate.screens.filters.logic.crud
+package week.on.a.plate.screens.filters.logic.crud.ingredientCategory
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -10,12 +10,12 @@ import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screens.filters.event.FilterEvent
 import javax.inject.Inject
 
-class IngredientCategoryCreateUseCase @Inject constructor(
+class CreateIngredientCategory @Inject constructor(
     private val ingredientCategoryRepository: IngredientCategoryRepository
 ) {
 
     //searchText = state.searchText.value
-    private fun openDialogToCreate(onEvent:(FilterEvent)->Unit, scope: CoroutineScope, searchText:String, mainViewModel:MainViewModel) {
+    operator fun invoke(onEvent:(FilterEvent)->Unit, scope: CoroutineScope, searchText:String, mainViewModel:MainViewModel) {
         scope.launch {
             EditOneStringViewModel.launch(
                 mainViewModel, EditOneStringUIState(

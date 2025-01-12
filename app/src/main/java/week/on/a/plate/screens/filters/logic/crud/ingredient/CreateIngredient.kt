@@ -1,4 +1,4 @@
-package week.on.a.plate.screens.filters.logic.crud
+package week.on.a.plate.screens.filters.logic.crud.ingredient
 
 import android.content.Context
 import kotlinx.coroutines.CoroutineScope
@@ -12,16 +12,17 @@ import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screens.filters.event.FilterEvent
 import javax.inject.Inject
 
-class IngredientCreateUseCase @Inject constructor(
+class CreateIngredient @Inject constructor(
     private val ingredientRepository: IngredientRepository
 ) {
-    private fun toCreateIngredient(
+    operator fun invoke(
         context: Context,
-        onEvent: (FilterEvent) -> Unit,
         scope: CoroutineScope,
-        searchText: String,
         mainViewModel: MainViewModel,
-        allIngredients : List<IngredientCategoryView>
+        searchText: String,
+
+        allIngredients : List<IngredientCategoryView>,
+        onEvent: (FilterEvent) -> Unit,
     ) {
         scope.launch {
             val oldIngredient = IngredientView(
