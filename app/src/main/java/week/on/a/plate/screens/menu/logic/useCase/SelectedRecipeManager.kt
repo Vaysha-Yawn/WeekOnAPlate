@@ -1,7 +1,10 @@
 package week.on.a.plate.screens.menu.logic.useCase
 
 import androidx.compose.runtime.mutableStateOf
+import week.on.a.plate.core.wrapperDatePicker.event.WrapperDatePickerEvent
 import week.on.a.plate.data.dataView.week.Position
+import week.on.a.plate.screens.menu.event.ActionWeekMenuDB
+import week.on.a.plate.screens.menu.event.MenuEvent
 import week.on.a.plate.screens.menu.event.SelectedEvent
 import week.on.a.plate.screens.menu.state.MenuUIState
 import javax.inject.Inject
@@ -42,4 +45,11 @@ class SelectedRecipeManager @Inject constructor() {
         }
     }
 
+
+    fun deleteSelected(menuUIState: MenuUIState, onEvent: (MenuEvent) -> Unit) {
+        getSelected(menuUIState).forEach {
+            onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.Delete(it)))
+        }
+        onEvent(MenuEvent.ActionWrapperDatePicker(WrapperDatePickerEvent.SwitchEditMode))
+    }
 }

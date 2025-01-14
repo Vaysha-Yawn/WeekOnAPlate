@@ -11,11 +11,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.core.uitools.ButtonRow
-import week.on.a.plate.dialogs.editPositionRecipeMore.event.EditRecipePositionEvent
+import week.on.a.plate.dialogs.editPositionRecipeMore.event.ActionMoreRecipePositionEvent
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 
 @Composable
-fun EditRecipePositionDialogContent(onEvent: (EditRecipePositionEvent) -> Unit) {
+fun EditRecipePositionDialogContent(onEvent: (ActionMoreRecipePositionEvent) -> Unit) {
     Column(modifier = Modifier
         .background(MaterialTheme.colorScheme.surface)
         .padding(20.dp)) {
@@ -23,49 +23,49 @@ fun EditRecipePositionDialogContent(onEvent: (EditRecipePositionEvent) -> Unit) 
             R.drawable.cook_cap,
             text= stringResource(R.string.plan_your_cooking),
         ) {
-            onEvent(EditRecipePositionEvent.CookPlan)
+            onEvent(ActionMoreRecipePositionEvent.CookPlan)
         }
 
         ButtonRow(
             R.drawable.add_shopping_cart,
             text= stringResource(R.string.add_shopping_cart),
         ) {
-            onEvent(EditRecipePositionEvent.AddToCart)
+            onEvent(ActionMoreRecipePositionEvent.AddToCart)
         }
 
         ButtonRow(
             R.drawable.add,
             text= stringResource(R.string.doubleR),
         ) {
-            onEvent(EditRecipePositionEvent.Double)
+            onEvent(ActionMoreRecipePositionEvent.Double)
         }
 
         ButtonRow(
             R.drawable.find_replace,
             text= stringResource(R.string.change_recipe),
         ) {
-            onEvent(EditRecipePositionEvent.FindReplace)
+            onEvent(ActionMoreRecipePositionEvent.FindReplace)
         }
 
         ButtonRow(
             R.drawable.numbers,
             text= stringResource(R.string.Change_number_of_servings)
         ) {
-            onEvent(EditRecipePositionEvent.ChangePotionsCount)
+            onEvent(ActionMoreRecipePositionEvent.ChangePotionsCount)
         }
 
         ButtonRow(
             R.drawable.back_key,
             text= stringResource(R.string.move),
         ) {
-            onEvent(EditRecipePositionEvent.Move)
+            onEvent(ActionMoreRecipePositionEvent.Move)
         }
 
         ButtonRow(
             R.drawable.delete,
             text= stringResource(R.string.delete),
         ) {
-            onEvent(EditRecipePositionEvent.Delete)
+            onEvent(ActionMoreRecipePositionEvent.Delete)
         }
     }
 }

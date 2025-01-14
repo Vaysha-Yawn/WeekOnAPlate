@@ -6,22 +6,27 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
-import week.on.a.plate.dialogs.editOtherPositionMore.event.EditOtherPositionEvent
+import week.on.a.plate.dialogs.editOtherPositionMore.event.OtherPositionMoreEvent
 import week.on.a.plate.core.uitools.ButtonRow
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
+import week.on.a.plate.dialogs.chooseHowImagePick.event.BaseContextProvider
 
 @Composable
-fun EditOtherPositionDialogContent( isForIngredient:Boolean, onEvent: (EditOtherPositionEvent) -> Unit) {
-    Column(modifier = Modifier.background(MaterialTheme.colorScheme.surface).padding(20.dp)) {
+fun EditOtherPositionDialogContent( isForIngredient:Boolean, onEvent: (OtherPositionMoreEvent) -> Unit) {
+    val contextProvider = BaseContextProvider(LocalContext.current)
+    Column(modifier = Modifier
+        .background(MaterialTheme.colorScheme.surface)
+        .padding(20.dp)) {
         ButtonRow(
             R.drawable.edit,
             text=stringResource(R.string.edit),
         ){
-            onEvent(EditOtherPositionEvent.Edit)
+            onEvent(OtherPositionMoreEvent.Edit)
 
         }
 
@@ -30,7 +35,7 @@ fun EditOtherPositionDialogContent( isForIngredient:Boolean, onEvent: (EditOther
                 R.drawable.add_shopping_cart,
                 text=stringResource(R.string.add_shopping_cart),
             ){
-                onEvent(EditOtherPositionEvent.AddToShopList)
+                onEvent(OtherPositionMoreEvent.AddToShopList(contextProvider))
             }
         }
 
@@ -38,21 +43,21 @@ fun EditOtherPositionDialogContent( isForIngredient:Boolean, onEvent: (EditOther
             R.drawable.back_key,
             text=stringResource(R.string.move),
         ){
-            onEvent(EditOtherPositionEvent.Move)
+            onEvent(OtherPositionMoreEvent.Move)
         }
 
         ButtonRow(
             R.drawable.add,
             text=stringResource(R.string.doubleR),
         ){
-            onEvent(EditOtherPositionEvent.Double)
+            onEvent(OtherPositionMoreEvent.Double)
         }
 
         ButtonRow(
             R.drawable.delete,
             text=stringResource(R.string.delete),
         ){
-            onEvent(EditOtherPositionEvent.Delete)
+            onEvent(OtherPositionMoreEvent.Delete)
         }
     }
 }

@@ -14,6 +14,7 @@ import week.on.a.plate.dialogs.editSelection.logic.EditSelectionViewModel
 import week.on.a.plate.dialogs.editSelection.state.EditSelectionUIState
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screens.menu.event.ActionWeekMenuDB
+import week.on.a.plate.screens.menu.event.MenuEvent
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -23,10 +24,9 @@ class SelectionUseCase(
     private val updateWeek: () -> Unit,
     private val sCRUDRecipeInMenu: CRUDRecipeInMenu,
     private val activeDay: MutableState<LocalDate>,
-    private val addPosition: (selId: Long, context: Context) -> Unit
+    private val addPosition: AddPositionUseCase,
 ) {
-
-    fun createWeekSelIdAndCreatePosition(context: Context) {
+    fun createWeekSelIdAndCreatePosition(context: Context, onEvent: (MenuEvent)->Unit) {
         viewModelScope.launch {
             val id = sCRUDRecipeInMenu.menuR.getSelIdOrCreate(
                 LocalDateTime.of(
@@ -35,7 +35,7 @@ class SelectionUseCase(
                 ),
                 true, context.getString(ForWeek.fullName), mainViewModel.locale,
             )
-            addPosition(id, context)
+            addPosition(id, context, mainViewModel, viewModelScope, onEvent, updateWeek, )
         }
     }
 

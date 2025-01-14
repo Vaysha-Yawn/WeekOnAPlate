@@ -37,13 +37,13 @@ import week.on.a.plate.dialogs.dialogDatePicker.view.DatePickerMy
 import week.on.a.plate.dialogs.editOneString.event.EditOneStringEvent
 import week.on.a.plate.dialogs.editOneString.logic.EditOneStringViewModel
 import week.on.a.plate.dialogs.editOneString.view.EditOneStringContent
-import week.on.a.plate.dialogs.editOtherPositionMore.event.EditOtherPositionEvent
+import week.on.a.plate.dialogs.editOtherPositionMore.event.OtherPositionMoreEvent
 import week.on.a.plate.dialogs.editOtherPositionMore.logic.EditOtherPositionViewModel
 import week.on.a.plate.dialogs.editOtherPositionMore.view.EditOtherPositionDialogContent
 import week.on.a.plate.dialogs.editIngredientInMenu.event.EditPositionIngredientEvent
 import week.on.a.plate.dialogs.editIngredientInMenu.logic.EditPositionIngredientViewModel
 import week.on.a.plate.dialogs.editIngredientInMenu.view.EditOrAddIngredientBottomDialogContent
-import week.on.a.plate.dialogs.editPositionRecipeMore.event.EditRecipePositionEvent
+import week.on.a.plate.dialogs.editPositionRecipeMore.event.ActionMoreRecipePositionEvent
 import week.on.a.plate.dialogs.editPositionRecipeMore.logic.EditRecipePositionViewModel
 import week.on.a.plate.dialogs.editPositionRecipeMore.view.EditRecipePositionDialogContent
 import week.on.a.plate.screens.filters.dialogs.selectedFilters.event.SelectedFiltersEvent
@@ -115,16 +115,16 @@ fun DialogsContainer(
         }
 
         is EditRecipePositionViewModel -> {
-            BaseDialogContainer(data.show, { onEvent(EditRecipePositionEvent.Close) }) {
-                EditRecipePositionDialogContent() { event: EditRecipePositionEvent ->
+            BaseDialogContainer(data.show, { onEvent(ActionMoreRecipePositionEvent.Close) }) {
+                EditRecipePositionDialogContent() { event: ActionMoreRecipePositionEvent ->
                     onEvent(event)
                 }
             }
         }
 
         is EditOtherPositionViewModel -> {
-            BaseDialogContainer(data.show, { onEvent(EditOtherPositionEvent.Close) }) {
-                EditOtherPositionDialogContent(data.isForIngredient) { event: EditOtherPositionEvent ->
+            BaseDialogContainer(data.show, { onEvent(OtherPositionMoreEvent.Close) }) {
+                EditOtherPositionDialogContent(data.isForIngredient) { event: OtherPositionMoreEvent ->
                     onEvent(event)
                 }
             }

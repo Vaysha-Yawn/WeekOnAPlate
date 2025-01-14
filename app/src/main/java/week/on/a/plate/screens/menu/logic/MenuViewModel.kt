@@ -1,69 +1,58 @@
 package week.on.a.plate.screens.menu.logic
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import week.on.a.plate.R
 import week.on.a.plate.core.Event
-import week.on.a.plate.core.navigation.SearchDestination
-import week.on.a.plate.core.navigation.ShoppingListDestination
-import week.on.a.plate.data.dataView.ShoppingItemView
-import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
+import week.on.a.plate.core.wrapperDatePicker.event.WrapperDatePickerEvent
 import week.on.a.plate.data.dataView.week.Position
-import week.on.a.plate.data.dataView.week.RecipeShortView
-import week.on.a.plate.data.dataView.week.SelectionView
 import week.on.a.plate.data.dataView.week.getTitleWeek
-import week.on.a.plate.data.repository.tables.recipe.recipe.RecipeRepository
-import week.on.a.plate.data.repository.tables.shoppingList.ShoppingItemRepository
-import week.on.a.plate.dialogs.addPositionChoose.event.AddPositionEvent
-import week.on.a.plate.dialogs.addPositionChoose.logic.AddPositionViewModel
-import week.on.a.plate.dialogs.changePortions.logic.ChangePortionsCountViewModel
-import week.on.a.plate.dialogs.editIngredientInMenu.logic.EditPositionIngredientViewModel
-import week.on.a.plate.dialogs.editOneString.logic.EditOneStringViewModel
-import week.on.a.plate.dialogs.editOneString.state.EditOneStringUIState
-import week.on.a.plate.dialogs.editOtherPositionMore.event.EditOtherPositionEvent
-import week.on.a.plate.dialogs.editOtherPositionMore.logic.EditOtherPositionViewModel
-import week.on.a.plate.dialogs.editPositionRecipeMore.event.EditRecipePositionEvent
-import week.on.a.plate.dialogs.editPositionRecipeMore.logic.EditRecipePositionViewModel
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
-import week.on.a.plate.preference.PreferenceUseCase
-import week.on.a.plate.screens.filters.navigation.FilterDestination
-import week.on.a.plate.screens.filters.state.FilterEnum
-import week.on.a.plate.screens.filters.state.FilterMode
-import week.on.a.plate.screens.inventory.navigation.InventoryDestination
-import week.on.a.plate.screens.menu.event.ActionWeekMenuDB
 import week.on.a.plate.screens.menu.event.MenuEvent
 import week.on.a.plate.screens.menu.event.NavFromMenuData
+import week.on.a.plate.screens.menu.logic.useCase.AddPositionUseCase
 import week.on.a.plate.screens.menu.logic.useCase.CRUDRecipeInMenu
+import week.on.a.plate.screens.menu.logic.useCase.CreateFirstNonPosedPositionUseCase
+import week.on.a.plate.screens.menu.logic.useCase.EditOtherPositionUseCase
+import week.on.a.plate.screens.menu.logic.useCase.FindRecipeAndReplaceUseCase
+import week.on.a.plate.screens.menu.logic.useCase.GetSelAndUseCase
+import week.on.a.plate.screens.menu.logic.useCase.MenuWrapperDatePickerManager
+import week.on.a.plate.screens.menu.logic.useCase.OtherPositionActionsMore
+import week.on.a.plate.screens.menu.logic.useCase.RecipePositionActionsMore
+import week.on.a.plate.screens.menu.logic.useCase.RecipeToShopListUseCase
+import week.on.a.plate.screens.menu.logic.useCase.SearchByDraftUseCase
 import week.on.a.plate.screens.menu.logic.useCase.SelectedRecipeManager
-import week.on.a.plate.screens.menu.state.MenuUIState
-import week.on.a.plate.screens.specifyRecipeToCookPlan.navigation.SpecifyForCookPlanDestination
-import week.on.a.plate.screens.specifySelection.logic.SpecifySelectionResult
-import week.on.a.plate.screens.specifySelection.navigation.SpecifySelectionDestination
-import week.on.a.plate.core.wrapperDatePicker.event.WrapperDatePickerEvent
-import week.on.a.plate.core.wrapperDatePicker.logic.WrapperDatePickerManager
+import week.on.a.plate.screens.menu.logic.useCase.SelectedToShopListUseCase
 import week.on.a.plate.screens.menu.logic.useCase.SelectionUseCase
-import java.time.LocalDate
-import java.time.LocalDateTime
+import week.on.a.plate.screens.menu.state.MenuUIState
+import week.on.a.plate.screens.specifySelection.navigation.SpecifySelectionDestination
 import java.util.Locale
 import javax.inject.Inject
+
 
 @HiltViewModel
 class MenuViewModel @Inject constructor(
     private val sCRUDRecipeInMenu: CRUDRecipeInMenu,
     private val selectedRecipeManager: SelectedRecipeManager,
-    private val recipeRepository: RecipeRepository,
-    private val wrapperDatePickerManager: WrapperDatePickerManager,
-    private val shoppingItemRepository: ShoppingItemRepository
+    private val menuWrapperDatePickerManager: MenuWrapperDatePickerManager,
+    private val getSelAndUse: GetSelAndUseCase,
+    private val recipePositionActionsMore: RecipePositionActionsMore,
+    private val otherPositionActionsMore: OtherPositionActionsMore,
+    private val editOtherPosition: EditOtherPositionUseCase,
+    private val addPosition: AddPositionUseCase,
+    private val selectedToShopList: SelectedToShopListUseCase,
+    private val recipeToShopList: RecipeToShopListUseCase,
+    private val findRecipeAndReplace: FindRecipeAndReplaceUseCase,
+    private val searchByDraft: SearchByDraftUseCase,
+    private val createFirstNonPosedPosition: CreateFirstNonPosedPositionUseCase,
 ) : ViewModel() {
 
     lateinit var mainViewModel: MainViewModel
     val menuUIState = MenuUIState.MenuUIStateExample
     private val activeDay = menuUIState.wrapperDatePickerUIState.activeDay
-    private lateinit var selectionUseCase : SelectionUseCase
+    private lateinit var selectionUseCase: SelectionUseCase
 
     init {
         viewModelScope.launch {
@@ -73,9 +62,15 @@ class MenuViewModel @Inject constructor(
         }
     }
 
-    fun initWithMainVM(mainViewModel: MainViewModel){
-        selectionUseCase = SelectionUseCase(mainViewModel, viewModelScope, ::updateWeek, sCRUDRecipeInMenu, activeDay, ::addPosition )
-
+    fun initWithMainVM(mainViewModel: MainViewModel) {
+        selectionUseCase = SelectionUseCase(
+            mainViewModel,
+            viewModelScope,
+            ::updateWeek,
+            sCRUDRecipeInMenu,
+            activeDay,
+            addPosition
+        )
     }
 
     fun updateWeek() {
@@ -112,9 +107,12 @@ class MenuViewModel @Inject constructor(
                         SpecifySelectionDestination
                     )
 
-                    is NavFromMenuData.NavToFullRecipe -> navToFullRecipe(
-                        event.navData
-                    )
+                    is NavFromMenuData.NavToFullRecipe -> {
+                        mainViewModel.recipeDetailsViewModel.launch(
+                            event.navData.recId,
+                            event.navData.portionsCount
+                        )
+                    }
                 }
             }
 
@@ -132,474 +130,108 @@ class MenuViewModel @Inject constructor(
                 menuUIState
             )
 
-            is MenuEvent.GetSelIdAndCreate -> getSelAndCreate(event.context)
+            is MenuEvent.GetSelIdAndCreate -> getSelAndUse.getSelAndCreate(
+                event.context,
+                mainViewModel,
+                ::onEvent
+            )
 
-            is MenuEvent.CreatePosition -> addPosition(event.selId, event.context)
+            is MenuEvent.CreatePosition -> viewModelScope.launch {
+                addPosition(
+                    event.selId,
+                    event.context,
+                    mainViewModel,
+                    viewModelScope,
+                    ::onEvent,
+                    ::updateWeek
+                )
+            }
+
             is MenuEvent.EditPositionMore -> {
-                when (event.position) {
-                    is Position.PositionRecipeView -> editPositionRecipe(event.position)
-                    else -> editOtherPositionMore(event.position, event.context)
-                }
-            }
-
-            is MenuEvent.EditOtherPosition -> {
-                when (event.position) {
-                    is Position.PositionRecipeView -> {}
-                    else -> editOtherPosition(event.position, event.context)
-                }
-            }
-
-            MenuEvent.DeleteSelected -> deleteSelected()
-            MenuEvent.SelectedToShopList -> selectedToShopList()
-            is MenuEvent.RecipeToShopList -> recipeToShopList(event.recipe)
-
-            is MenuEvent.ActionWrapperDatePicker -> {
-                when (event.event) {
-                    is WrapperDatePickerEvent.ChooseWeek ->
-                        wrapperDatePickerManager.chooseWeek(
+                viewModelScope.launch {
+                    when (event.position) {
+                        is Position.PositionRecipeView -> recipePositionActionsMore(
+                            event.position,
                             mainViewModel,
-                            menuUIState.wrapperDatePickerUIState, isForMenu = true
-                        ) {
-                            activeDay.value = it
-                            updateWeek()
-                        }
+                            ::onEvent
+                        )
 
-                    WrapperDatePickerEvent.SwitchEditMode -> wrapperDatePickerManager.onEvent(
-                        event.event,
-                        menuUIState.wrapperDatePickerUIState
-                    )
-
-                    WrapperDatePickerEvent.SwitchWeekOrDayView -> {
-                        selectedRecipeManager.clear(menuUIState)
-                        wrapperDatePickerManager.onEvent(
-                            event.event,
-                            menuUIState.wrapperDatePickerUIState
+                        else -> otherPositionActionsMore(
+                            event.position,
+                            mainViewModel,
+                            ::onEvent,
+                            mainViewModel::onEvent
                         )
                     }
-
-                    is WrapperDatePickerEvent.ChangeWeek -> wrapperDatePickerManager.changeWeek(
-                        event.event.date,
-                        menuUIState.wrapperDatePickerUIState
-                    ) {
-                        activeDay.value = it
-                        updateWeek()
-                    }
                 }
             }
 
-            is MenuEvent.FindReplaceRecipe -> findReplaceRecipe(event.recipe)
-            is MenuEvent.NavToAddRecipe -> navToAddRecipe(event.selId, event.context)
-            is MenuEvent.SearchByDraft -> searchByDraft(event.draft)
-            is MenuEvent.CreateFirstNonPosedPosition -> createFirstNonPosedPosition(
-                event.date,
-                event.selectionView,
-                event.context
+            is MenuEvent.EditOtherPosition -> viewModelScope.launch {
+                editOtherPosition(
+                    event.position,
+                    mainViewModel,
+                    ::onEvent
+                )
+            }
+
+            MenuEvent.DeleteSelected -> selectedRecipeManager.deleteSelected(menuUIState, ::onEvent)
+            MenuEvent.SelectedToShopList -> viewModelScope.launch {
+                selectedToShopList(
+                    menuUIState,
+                    ::onEvent,
+                    mainViewModel,
+                    selectedRecipeManager::getSelected
+                )
+            }
+
+            is MenuEvent.RecipeToShopList -> viewModelScope.launch {
+                recipeToShopList(
+                    event.recipe,
+                    mainViewModel
+                )
+            }
+
+            is MenuEvent.ActionWrapperDatePicker -> menuWrapperDatePickerManager.invoke(
+                event.event,
+                mainViewModel,
+                ::updateWeek,
+                menuUIState.wrapperDatePickerUIState,
+                activeDay,
+                selectedRecipeManager,
+                menuUIState
             )
+
+            is MenuEvent.FindReplaceRecipe -> viewModelScope.launch {
+                findRecipeAndReplace(
+                    event.recipe,
+                    mainViewModel,
+                    ::updateWeek,
+                    ::onEvent,
+                )
+            }
+
+            is MenuEvent.SearchByDraft -> viewModelScope.launch {
+                searchByDraft(
+                    event.draft, mainViewModel,
+                    ::updateWeek,
+                    ::onEvent,
+                )
+            }
+
+            is MenuEvent.CreateFirstNonPosedPosition -> viewModelScope.launch {
+                createFirstNonPosedPosition(
+                    event.date,
+                    event.selectionView,
+                    event.context, mainViewModel, ::onEvent
+                )
+            }
 
             is MenuEvent.EditOrDeleteSelection -> selectionUseCase.editOrDeleteSelection(event.sel)
-            is MenuEvent.CreateSelection -> selectionUseCase.createSelection(
-                event.date,
-                event.isForWeek
-            )
+            is MenuEvent.CreateSelection ->
+                selectionUseCase.createSelection(event.date, event.isForWeek)
 
-            is MenuEvent.CreateWeekSelIdAndCreatePosition -> selectionUseCase.createWeekSelIdAndCreatePosition(event.context)
-        }
-    }
-
-
-    private fun navToFullRecipe(navData: NavFromMenuData.NavToFullRecipe) {
-        mainViewModel.recipeDetailsViewModel.launch(
-            navData.recId,
-            navData.portionsCount
-        )
-    }
-
-    private fun createFirstNonPosedPosition(
-        date: LocalDate,
-        selectionView: SelectionView,
-        context: Context
-    ) {
-        viewModelScope.launch {
-            val time = selectionView.dateTime.toLocalTime()
-            val sel = sCRUDRecipeInMenu.menuR.getSelIdOrCreate(
-                LocalDateTime.of(date, time),
-                false,
-                selectionView.name,
-                mainViewModel.locale,
-            )
-            onEvent(MenuEvent.CreatePosition(sel, context))
-        }
-    }
-
-    private fun recipeToShopList(positionRecipeView: Position.PositionRecipeView) {
-        viewModelScope.launch {
-            val currentPortions = positionRecipeView.portionsCount
-            val recipe = recipeRepository.getRecipe(positionRecipeView.recipe.id)
-            val standardCount = recipe.standardPortionsCount
-            val ingredients = recipe.ingredients.map { ingredientInRecipeView ->
-                ingredientInRecipeView.count =
-                    ingredientInRecipeView.count / standardCount * currentPortions
-                ingredientInRecipeView
-            }
-            mainViewModel.inventoryViewModel.launchAndGet(ingredients)
-            mainViewModel.nav.navigate(InventoryDestination)
-        }
-    }
-
-    private fun deleteSelected() {
-        selectedRecipeManager.getSelected(menuUIState).forEach {
-            onEvent(
-                MenuEvent.ActionDBMenu(
-                    ActionWeekMenuDB.Delete(
-                        it
-                    )
-                )
-            )
-        }
-        onEvent(MenuEvent.ActionWrapperDatePicker(WrapperDatePickerEvent.SwitchEditMode))
-    }
-
-    private fun selectedToShopList() {
-        viewModelScope.launch {
-            onEvent(MenuEvent.ActionWrapperDatePicker(WrapperDatePickerEvent.SwitchEditMode))
-            val selected = selectedRecipeManager.getSelected(menuUIState)
-            val list = selected.flatMap { positionRecipeView ->
-                val currentPortions = positionRecipeView.portionsCount
-                val recipe = recipeRepository.getRecipe(positionRecipeView.recipe.id)
-                val standardCount = recipe.standardPortionsCount
-                recipe.ingredients.map { ingredientInRecipeView ->
-                    ingredientInRecipeView.count =
-                        ingredientInRecipeView.count / standardCount * currentPortions
-                    ingredientInRecipeView
-                }
-            }
-            mainViewModel.inventoryViewModel.launchAndGetMore(list)
-            mainViewModel.nav.navigate(InventoryDestination)
-        }
-    }
-
-    private fun searchByDraft(draft: Position.PositionDraftView) {
-        viewModelScope.launch {
-            mainViewModel.searchViewModel.launchAndGet(
-                draft.selectionId,
-                Pair(draft.tags, draft.ingredients)
-            ) { recipe ->
-                onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.Delete(draft)))
-                val recipePosition = Position.PositionRecipeView(
-                    0,
-                    RecipeShortView(recipe.id, recipe.name, recipe.img),
-                    2,
-                    draft.selectionId
-                )
-                sCRUDRecipeInMenu.onEvent(
-                    ActionWeekMenuDB.AddRecipePositionInMenuDB(
-                        draft.selectionId,
-                        recipePosition
-                    )
-                )
-                updateWeek()
-            }
-        }
-        mainViewModel.nav.navigate(SearchDestination)
-    }
-
-    private fun navToAddRecipe(selId: Long, context: Context) {
-        viewModelScope.launch {
-            mainViewModel.nav.navigate(SearchDestination)
-            mainViewModel.searchViewModel.launchAndGet(selId, null) { recipe ->
-                val std = PreferenceUseCase().getDefaultPortionsCount(context)
-                ChangePortionsCountViewModel.launch(mainViewModel, std) { count ->
-                    val recipePosition = Position.PositionRecipeView(
-                        0,
-                        RecipeShortView(recipe.id, recipe.name, recipe.img),
-                        count,
-                        selId
-                    )
-                    viewModelScope.launch {
-                        sCRUDRecipeInMenu.onEvent(
-                            ActionWeekMenuDB.AddRecipePositionInMenuDB(
-                                selId,
-                                recipePosition
-                            )
-                        )
-                        updateWeek()
-                    }
-                }
-            }
-        }
-    }
-
-    private fun findReplaceRecipe(positionRecipe: Position.PositionRecipeView) {
-        viewModelScope.launch {
-            mainViewModel.nav.navigate(SearchDestination)
-            mainViewModel.searchViewModel.launchAndGet(positionRecipe.selectionId, null) { recipe ->
-                val recipePosition = Position.PositionRecipeView(
-                    0,
-                    RecipeShortView(recipe.id, recipe.name, recipe.img),
-                    2,
-                    positionRecipe.selectionId
-                )
-                sCRUDRecipeInMenu.onEvent(
-                    ActionWeekMenuDB.AddRecipePositionInMenuDB(
-                        positionRecipe.selectionId,
-                        recipePosition
-                    )
-                )
-                sCRUDRecipeInMenu.onEvent(
-                    ActionWeekMenuDB.Delete(
-                        positionRecipe
-                    )
-                )
-                updateWeek()
-            }
-        }
-    }
-
-
-
-    private fun specifyDate(use: (SpecifySelectionResult) -> Unit) {
-        viewModelScope.launch {
-            val vm = mainViewModel.specifySelectionViewModel
-            onEvent(MenuEvent.NavigateFromMenu(NavFromMenuData.SpecifySelection))
-            vm.launchAndGet(use)
-        }
-    }
-
-    private fun addPosition(selId: Long, context: Context) {
-        viewModelScope.launch {
-            AddPositionViewModel.launch(mainViewModel) { event ->
-                when (event) {
-                    AddPositionEvent.AddDraft -> addDraft(selId)
-                    AddPositionEvent.AddIngredient -> addIngredientPosition(selId)
-                    AddPositionEvent.AddNote -> addNote(selId)
-                    AddPositionEvent.AddRecipe -> onEvent(
-                        MenuEvent.NavToAddRecipe(
-                            selId, context
-                        )
-                    )
-
-                    AddPositionEvent.Close -> {}
-                }
-            }
-        }
-    }
-
-
-    private fun addDraft(selId: Long) {
-        viewModelScope.launch {
-            val vm = mainViewModel.filterViewModel
-            vm.mainViewModel.nav.navigate(FilterDestination)
-            vm.launchAndGet(
-                FilterMode.Multiple,
-                FilterEnum.IngredientAndTag,
-                null,
-                false
-            ) { filters ->
-                if (filters.tags?.isEmpty() == true && filters.ingredients?.isEmpty() == true) return@launchAndGet
-                val draft =
-                    Position.PositionDraftView(0, filters.tags!!, filters.ingredients!!, selId)
-                onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.AddDraft(draft)))
-            }
-        }
-    }
-
-    private fun editDraft(oldDraft: Position.PositionDraftView) {
-        viewModelScope.launch {
-            val vm = mainViewModel.filterViewModel
-            vm.mainViewModel.nav.navigate(FilterDestination)
-            vm.launchAndGet(
-                FilterMode.Multiple,
-                FilterEnum.IngredientAndTag, Pair(oldDraft.tags, oldDraft.ingredients), false
-            ) { filters ->
-                if (filters.tags?.isEmpty() == true && filters.ingredients?.isEmpty() == true || filters.ingredients == null || filters.tags == null) {
-                    onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.Delete(oldDraft)))
-                } else {
-                    onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.EditDraft(oldDraft, Pair(filters.tags, filters.ingredients))))
-                }
-            }
-        }
-    }
-
-    private fun editOtherPositionMore(position: Position, context: Context) {
-        viewModelScope.launch {
-            EditOtherPositionViewModel.launch(
-                position is Position.PositionIngredientView,
-                mainViewModel
-            ) { event ->
-                when (event) {
-                    EditOtherPositionEvent.Close -> {}
-                    EditOtherPositionEvent.Delete -> onEvent(
-                        MenuEvent.ActionDBMenu(
-                            ActionWeekMenuDB.Delete(
-                                position
-                            )
-                        )
-                    )
-
-                    EditOtherPositionEvent.Double -> getSelAndDouble(position)
-                    EditOtherPositionEvent.Edit -> {
-                        when (position) {
-                            is Position.PositionDraftView -> editDraft(position)
-                            is Position.PositionIngredientView -> editIngredientPosition(position)
-                            is Position.PositionNoteView -> editNote(position)
-                            is Position.PositionRecipeView -> {}
-                        }
-                    }
-
-                    EditOtherPositionEvent.Move -> getSelAndMove(position)
-                    EditOtherPositionEvent.AddToShopList -> {
-                        if (position is Position.PositionIngredientView) {
-                            val ingredientNew = IngredientInRecipeView(
-                                0,
-                                position.ingredient.ingredientView,
-                                position.ingredient.description,
-                                position.ingredient.count
-                            )
-                            addIngredientInRecipeToBd(ingredientNew)
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private fun addIngredientInRecipeToBd(ingredientInRecipe: IngredientInRecipeView) {
-        viewModelScope.launch {
-            val allList = shoppingItemRepository.getAll()
-            val haveItem =
-                allList.find { it -> it.ingredientInRecipe.ingredientView.ingredientId == ingredientInRecipe.ingredientView.ingredientId }
-            if (haveItem == null) {
-                shoppingItemRepository.insert(ShoppingItemView(0, ingredientInRecipe, false))
-            } else {
-                if (haveItem.checked) {
-                    shoppingItemRepository.update(
-                        haveItem.id,
-                        haveItem.ingredientInRecipe.id,
-                        false,
-                        haveItem.ingredientInRecipe.ingredientView.ingredientId,
-                        haveItem.ingredientInRecipe.description,
-                        ingredientInRecipe.count.toDouble()
-                    )
-                } else {
-                    shoppingItemRepository.update(
-                        haveItem.id,
-                        haveItem.ingredientInRecipe.id,
-                        false,
-                        haveItem.ingredientInRecipe.ingredientView.ingredientId,
-                        haveItem.ingredientInRecipe.description,
-                        ingredientInRecipe.count.toDouble() + haveItem.ingredientInRecipe.count.toDouble()
-                    )
-                }
-            }
-            mainViewModel.nav.navigate(ShoppingListDestination)
-        }
-    }
-
-    private fun editOtherPosition(position: Position, context: Context) {
-        when (position) {
-            is Position.PositionDraftView -> editDraft(position)
-            is Position.PositionIngredientView -> editIngredientPosition(position)
-            is Position.PositionNoteView -> editNote(position)
-            is Position.PositionRecipeView -> {}
-        }
-    }
-
-    private fun getSelAndCreate(context: Context) {
-        specifyDate { res ->
-            addPosition(res.selId, context)
-        }
-    }
-
-    private fun getSelAndMove(position: Position) {
-        specifyDate { res ->
-            onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.MovePositionInMenuDB(res.selId, position)))
-        }
-    }
-
-    private fun getSelAndDouble(position: Position) {
-        specifyDate { res ->
-            onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.DoublePositionInMenuDB(res.selId, position)))
-        }
-    }
-
-    private fun editPositionRecipe(position: Position.PositionRecipeView) {
-        viewModelScope.launch {
-            EditRecipePositionViewModel.launch(mainViewModel) { event ->
-                when (event) {
-                    EditRecipePositionEvent.AddToCart -> onEvent(MenuEvent.RecipeToShopList(position))
-                    EditRecipePositionEvent.ChangePotionsCount -> changePortionsCount(position)
-                    EditRecipePositionEvent.Delete -> onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.Delete(position)))
-                    EditRecipePositionEvent.Double -> getSelAndDouble(position)
-                    EditRecipePositionEvent.FindReplace -> onEvent(MenuEvent.FindReplaceRecipe(position))
-                    EditRecipePositionEvent.Move -> getSelAndMove(position)
-                    EditRecipePositionEvent.Close -> {}
-                    EditRecipePositionEvent.CookPlan -> specifyPlanDetailsAndAddToPlan(position)
-                }
-            }
-        }
-    }
-
-    private fun specifyPlanDetailsAndAddToPlan(position: Position.PositionRecipeView) {
-        mainViewModel.specifyRecipeToCookPlanViewModel.launchAndGet(position)
-        mainViewModel.nav.navigate(SpecifyForCookPlanDestination)
-    }
-
-    private fun addIngredientPosition(selId: Long) {
-        viewModelScope.launch {
-            EditPositionIngredientViewModel.launch(null, true, mainViewModel) { updatedIngredient ->
-                onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.AddIngredientPositionDB(updatedIngredient, selId)))
-            }
-        }
-    }
-
-    private fun editIngredientPosition(ingredientPos: Position.PositionIngredientView) {
-        viewModelScope.launch {
-            EditPositionIngredientViewModel.launch(
-                ingredientPos,
-                false,
-                mainViewModel
-            ) { updatedIngredient ->
-                onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.EditIngredientPositionDB(updatedIngredient)))
-            }
-        }
-    }
-
-    private fun changePortionsCount(recipe: Position.PositionRecipeView) {
-        viewModelScope.launch {
-            ChangePortionsCountViewModel.launch(
-                mainViewModel,
-                recipe.portionsCount
-            ) { portionsCount ->
-                onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.ChangePortionsCountDB(recipe, portionsCount)))
-            }
-        }
-    }
-
-    private fun editNote(note: Position.PositionNoteView,) {
-        viewModelScope.launch {
-            EditOneStringViewModel.launch(
-                mainViewModel, EditOneStringUIState(
-                    note.note,
-                    R.string.edit_note,
-                    R.string.enter_text_note
-                )
-            ) { updatedNote ->
-                onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.EditNoteDB(Position.PositionNoteView(note.id, updatedNote, note.selectionId))))
-            }
-        }
-    }
-
-    private fun addNote(selId: Long) {
-        viewModelScope.launch {
-            EditOneStringViewModel.launch(
-                mainViewModel, EditOneStringUIState(
-                    "",
-                    R.string.add_note,
-                    R.string.enter_text_note
-                )
-            ) { updatedNote ->
-                onEvent(MenuEvent.ActionDBMenu(ActionWeekMenuDB.AddNoteDB(updatedNote, selId)))
-            }
+            is MenuEvent.CreateWeekSelIdAndCreatePosition ->
+                selectionUseCase.createWeekSelIdAndCreatePosition(event.context, ::onEvent)
         }
     }
 }

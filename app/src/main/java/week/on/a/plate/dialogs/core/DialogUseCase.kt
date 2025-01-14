@@ -17,11 +17,11 @@ import week.on.a.plate.dialogs.dialogDatePicker.event.DatePickerEvent
 import week.on.a.plate.dialogs.dialogDatePicker.logic.DatePickerViewModel
 import week.on.a.plate.dialogs.editOneString.event.EditOneStringEvent
 import week.on.a.plate.dialogs.editOneString.logic.EditOneStringViewModel
-import week.on.a.plate.dialogs.editOtherPositionMore.event.EditOtherPositionEvent
+import week.on.a.plate.dialogs.editOtherPositionMore.event.OtherPositionMoreEvent
 import week.on.a.plate.dialogs.editOtherPositionMore.logic.EditOtherPositionViewModel
 import week.on.a.plate.dialogs.editIngredientInMenu.event.EditPositionIngredientEvent
 import week.on.a.plate.dialogs.editIngredientInMenu.logic.EditPositionIngredientViewModel
-import week.on.a.plate.dialogs.editPositionRecipeMore.event.EditRecipePositionEvent
+import week.on.a.plate.dialogs.editPositionRecipeMore.event.ActionMoreRecipePositionEvent
 import week.on.a.plate.dialogs.editPositionRecipeMore.logic.EditRecipePositionViewModel
 import week.on.a.plate.screens.filters.dialogs.selectedFilters.event.SelectedFiltersEvent
 import week.on.a.plate.screens.filters.dialogs.selectedFilters.logic.SelectedFiltersViewModel
@@ -97,10 +97,10 @@ class DialogUseCase @Inject constructor() {
             is CalendarMyEvent -> if (activeDialog.value is ChooseWeekViewModel) {
                 (activeDialog.value as ChooseWeekViewModel).onEvent(event)
             }
-            is EditRecipePositionEvent -> if (activeDialog.value is EditRecipePositionViewModel) {
+            is ActionMoreRecipePositionEvent -> if (activeDialog.value is EditRecipePositionViewModel) {
                 (activeDialog.value as EditRecipePositionViewModel).onEvent(event)
             }
-            is EditOtherPositionEvent -> if (activeDialog.value is EditOtherPositionViewModel) {
+            is OtherPositionMoreEvent -> if (activeDialog.value is EditOtherPositionViewModel) {
                 (activeDialog.value as EditOtherPositionViewModel).onEvent(event)
             }
             is AddPositionEvent -> if (activeDialog.value is AddPositionViewModel) {

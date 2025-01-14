@@ -39,7 +39,9 @@ fun IngredientPosition(
             Modifier
                 .weight(3f)
                 .combinedClickable(
-                    onClick = {onEvent(week.on.a.plate.screens.menu.event.MenuEvent.EditOtherPosition(ingredient, context))},
+                    onClick = {onEvent(week.on.a.plate.screens.menu.event.MenuEvent.EditOtherPosition(
+                        ingredient
+                    ))},
                     onLongClick =
                     { onEvent(WrapperDatePickerEvent.SwitchEditMode) },
                 ).padding(vertical = 5.dp),

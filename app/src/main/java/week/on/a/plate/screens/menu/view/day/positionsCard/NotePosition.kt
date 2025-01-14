@@ -39,7 +39,9 @@ fun WeekNotePosition(
             .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(20.dp))
             .padding(20.dp)
             .combinedClickable(
-                onClick = { onEvent(week.on.a.plate.screens.menu.event.MenuEvent.EditOtherPosition(note, context)) },
+                onClick = { onEvent(week.on.a.plate.screens.menu.event.MenuEvent.EditOtherPosition(
+                    note
+                )) },
                 onLongClick = { onEvent(WrapperDatePickerEvent.SwitchEditMode) },
             ),
         horizontalAlignment = Alignment.Start,

@@ -3,7 +3,6 @@ package week.on.a.plate.screens.menu.view.day.positionsCard
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -42,7 +41,7 @@ fun WeekDraftPosition(
             .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(20.dp))
             .padding(20.dp)
             .combinedClickable(
-                onClick = {onEvent(MenuEvent.EditOtherPosition(draft, context)) },
+                onClick = {onEvent(MenuEvent.EditOtherPosition(draft)) },
                 onLongClick = { onEvent(WrapperDatePickerEvent.SwitchEditMode) },
             ),
         horizontalAlignment = Alignment.Start,

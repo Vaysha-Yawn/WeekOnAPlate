@@ -126,6 +126,7 @@ class MainViewModel @Inject constructor(
 
         cookPlannerViewModel.initWithMainVM(this)
         recipeCreateViewModel.initWithMainVM(this)
+        menuViewModel.initWithMainVM(this)
     }
 
     fun onEvent(event: Event) {

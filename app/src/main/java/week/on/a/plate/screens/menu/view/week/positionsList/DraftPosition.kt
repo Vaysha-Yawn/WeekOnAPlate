@@ -32,7 +32,7 @@ fun DraftPosition(
         Spacer(modifier = Modifier.width(20.dp))
         Row(Modifier
             .weight(3f)
-            .padding(vertical = 5.dp).clickNoRipple {  onEvent(MenuEvent.EditOtherPosition(draft, context)) },
+            .padding(vertical = 5.dp).clickNoRipple {  onEvent(MenuEvent.EditOtherPosition(draft)) },
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically) {
             TagListHidden(draft.tags, draft.ingredients)

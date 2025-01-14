@@ -36,7 +36,9 @@ fun NotePosition(
             Modifier
                 .weight(3f)
                 .combinedClickable(
-                    onClick = { onEvent(week.on.a.plate.screens.menu.event.MenuEvent.EditOtherPosition(note, context)) },
+                    onClick = { onEvent(week.on.a.plate.screens.menu.event.MenuEvent.EditOtherPosition(
+                        note
+                    )) },
                     onLongClick =
                     { onEvent(WrapperDatePickerEvent.SwitchEditMode) },
                 )

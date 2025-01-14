@@ -52,7 +52,7 @@ fun WeekIngredientPosition(
                 onClick = {
                     onEvent(
                         week.on.a.plate.screens.menu.event.MenuEvent.EditOtherPosition(
-                            ingredient, context
+                            ingredient
                         )
                     )
                 },
