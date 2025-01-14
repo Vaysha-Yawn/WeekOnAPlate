@@ -1,6 +1,5 @@
 package week.on.a.plate.screens.shoppingList.logic
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -8,31 +7,24 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import week.on.a.plate.R
 import week.on.a.plate.core.Event
-import week.on.a.plate.core.navigation.ShoppingListDestination
-import week.on.a.plate.data.dataView.ShoppingItemView
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
-import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.data.repository.tables.shoppingList.ShoppingItemRepository
-import week.on.a.plate.dialogs.editIngredientInMenu.logic.EditPositionIngredientViewModel
 import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
-import week.on.a.plate.screens.deleteApply.event.DeleteApplyEvent
-import week.on.a.plate.screens.deleteApply.navigation.DeleteApplyDestination
-import week.on.a.plate.screens.filters.navigation.FilterDestination
-import week.on.a.plate.screens.filters.state.FilterEnum
-import week.on.a.plate.screens.filters.state.FilterMode
 import week.on.a.plate.screens.shoppingList.event.ShoppingListEvent
 import week.on.a.plate.screens.shoppingList.state.ShoppingListUIState
 import javax.inject.Inject
 
-...
-//todo use case
 
 @HiltViewModel
 class ShoppingListViewModel @Inject constructor(
     private val shoppingItemRepository: ShoppingItemRepository,
+    private val addIngredient: AddIngredientUseCase,
+    private val deleteApply: DeleteApplyUseCase,
+    private val deleteChecked: DeleteCheckedUseCase,
+    private val updateCheck: UpdateCheckUseCase,
+    private val editIngredient: EditIngredientUseCase
 ) : ViewModel() {
 
     lateinit var mainViewModel: MainViewModel
@@ -55,166 +47,34 @@ class ShoppingListViewModel @Inject constructor(
     fun onEvent(event: Event) {
         when (event) {
             is MainEvent -> mainViewModel.onEvent(event)
-            else -> onEvent(event)
+            is ShoppingListEvent -> onEvent(event)
         }
     }
 
     fun onEvent(event: ShoppingListEvent) {
-        when (event) {
-            ShoppingListEvent.Add -> addIngredient()
-            is ShoppingListEvent.Check -> updateCheck(true, event.position)
-            ShoppingListEvent.DeleteChecked -> deleteChecked()
-            is ShoppingListEvent.Uncheck -> updateCheck(false, event.position)
-            is ShoppingListEvent.Edit -> editIngredient(event.ingredient)
-            is ShoppingListEvent.Share -> share(event.context)
-            is ShoppingListEvent.DeleteAll -> deleteAllApply(event.context)
-        }
-    }
-
-    private fun deleteAllApply(context: Context) {
         viewModelScope.launch {
-            val vmDel = mainViewModel.deleteApplyViewModel
-            val mes = context.getString(R.string.hint_cannot_undone)
-            mainViewModel.nav.navigate(DeleteApplyDestination)
-            vmDel.launchAndGet(
-                context,
-                title = context.getString(R.string.hint_clear_shopping_list),
-                message = mes
-            ) { event ->
-                if (event == DeleteApplyEvent.Apply) {
-                    shoppingItemRepository.deleteAll()
-
-                }
-            }
-        }
-    }
-
-    private fun share(context: Context) {
-        ShareShoppingListUseCase(context).shareShoppingList(state.listUnchecked.value)
-    }
-
-    private fun deleteChecked() {
-        viewModelScope.launch {
-            shoppingItemRepository.deleteAllChecked()
-        }
-    }
-
-    private fun updateCheck(checked: Boolean, ingredientInRecipe: IngredientInRecipeView) {
-        viewModelScope.launch {
-            val item = shoppingItemRepository.getAll().find { it ->
-                it.ingredientInRecipe.id ==
-                        ingredientInRecipe.id
-            } ?: return@launch
-            shoppingItemRepository.update(
-                id = item.id,
-                ingredientInRecipeId = item.ingredientInRecipe.id,
-                checked = checked,
-                ingredientId = item.ingredientInRecipe.ingredientView.ingredientId,
-                description = item.ingredientInRecipe.description,
-                count = item.ingredientInRecipe.count.toDouble()
-            )
-        }
-    }
-
-    private fun editIngredient(ingredient: IngredientInRecipeView) {
-        viewModelScope.launch {
-            EditPositionIngredientViewModel.launch(
-                Position.PositionIngredientView(
-                    0,
-                    ingredient,
-                    0
-                ),
-                false,
-                mainViewModel,
-            ) { updatedIngredient ->
-                viewModelScope.launch {
-                    val item = shoppingItemRepository.getAll().find { it ->
-                        it.ingredientInRecipe.id ==
-                                ingredient.id
-                    } ?: return@launch
-                    if (updatedIngredient.ingredient.ingredientView.ingredientId != ingredient.ingredientView.ingredientId) {
-                        checkInListToAdd(updatedIngredient.ingredient)
-                    } else {
-                        shoppingItemRepository.update(
-                            id = item.id,
-                            ingredientInRecipeId = ingredient.id,
-                            checked = false,
-                            ingredientId = updatedIngredient.ingredient.ingredientView.ingredientId,
-                            description = updatedIngredient.ingredient.description,
-                            count = updatedIngredient.ingredient.count.toDouble()
-                        )
-                    }
-                }
-            }
-        }
-    }
-
-    private suspend fun checkInListToAdd(ingredient: IngredientInRecipeView) {
-        val item = shoppingItemRepository.getAll().find { it ->
-            it.ingredientInRecipe.ingredientView.ingredientId ==
-                    ingredient.ingredientView.ingredientId
-        }
-        if (item == null) {
-            shoppingItemRepository.insert(
-                ShoppingItemView(
-                    0,
-                    ingredient,
-                    false
+            when (event) {
+                ShoppingListEvent.Add -> addIngredient(
+                    mainViewModel,
+                    viewModelScope,
+                    allItemsUnChecked.value
                 )
-            )
-        } else {
-            if (item.checked) {
-                shoppingItemRepository.update(
-                    id = item.id,
-                    ingredientInRecipeId = item.ingredientInRecipe.id,
-                    checked = false,
-                    ingredientId = ingredient.ingredientView.ingredientId,
-                    description = item.ingredientInRecipe.description,
-                    count = ingredient.count.toDouble()
-                )
-            } else {
-                shoppingItemRepository.update(
-                    id = item.id,
-                    ingredientInRecipeId = item.ingredientInRecipe.id,
-                    checked = false,
-                    ingredientId = ingredient.ingredientView.ingredientId,
-                    description = item.ingredientInRecipe.description,
-                    count = ingredient.count.toDouble() + item.ingredientInRecipe.count.toDouble()
-                )
-            }
-        }
-    }
 
-    private fun addIngredient() {
-        viewModelScope.launch {
-            val vm = mainViewModel.filterViewModel
-            viewModelScope.launch {
-                vm.launchAndGet(
-                    FilterMode.Multiple, FilterEnum.Ingredient, Pair(listOf(),
-                        allItemsUnChecked.value.map { it.ingredientView }), false
-                ) { res ->
-                    mainViewModel.onEvent(MainEvent.Navigate(ShoppingListDestination))
-                    if (res.ingredients == null) return@launchAndGet
-                    res.ingredients.forEach {
-                        checkInListToAdd(IngredientInRecipeView(0, it, "", 0))
-                    }
-                    val startList = allItemsUnChecked.value.map { it.ingredientView }
-                    val endList = res.ingredients
-                    val listToDelete = startList.toMutableList().apply {
-                        removeAll(endList)
-                    }.toList()
-                    viewModelScope.launch {
-                        listToDelete.forEach { ingredient ->
-                            val t = shoppingItemRepository.getAll().find { it ->
-                                it.ingredientInRecipe.ingredientView.ingredientId ==
-                                        ingredient.ingredientId
-                            }
-                            if (t != null) shoppingItemRepository.delete(t.id)
-                        }
-                    }
-                }
+                is ShoppingListEvent.Check -> updateCheck(true, event.position)
+                ShoppingListEvent.DeleteChecked -> deleteChecked()
+                is ShoppingListEvent.Uncheck -> updateCheck(false, event.position)
+                is ShoppingListEvent.Edit -> editIngredient(
+                    event.ingredient,
+                    mainViewModel,
+                    viewModelScope
+                )
+
+                is ShoppingListEvent.Share -> ShareShoppingListUseCase(event.context).shareShoppingList(
+                    state.listUnchecked.value
+                )
+
+                is ShoppingListEvent.DeleteAll -> deleteApply(event.context, mainViewModel)
             }
-            mainViewModel.onEvent(MainEvent.Navigate(FilterDestination))
         }
     }
 }
