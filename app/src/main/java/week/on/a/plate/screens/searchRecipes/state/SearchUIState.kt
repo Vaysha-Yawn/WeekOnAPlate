@@ -20,9 +20,10 @@ class SearchUIState {
     val favoriteChecked = mutableStateOf(false)
     val allTime = mutableIntStateOf(0)
     val prepTime = mutableIntStateOf(0)
+    var selId: Long? = null
 }
 
-enum class ResultSortType{ date, alphabet, randow }
+enum class ResultSortType{ date, alphabet, random }
 enum class ResultSortingDirection{ up, down }
 enum class SearchState{ none, searching, done }
 

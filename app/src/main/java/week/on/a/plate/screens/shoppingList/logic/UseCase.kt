@@ -1,4 +1,4 @@
-package week.on.a.plate.screens.recipeDetails.logic
+package week.on.a.plate.screens.shoppingList.logic
 
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import javax.inject.Inject
