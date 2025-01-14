@@ -76,8 +76,8 @@ class MenuViewModel @Inject constructor(
     fun updateWeek() {
         viewModelScope.launch {
             val week = sCRUDRecipeInMenu.menuR.getCurrentWeek(
-                menuUIState.nonPosedFullName,
-                menuUIState.forWeekFullName,
+                menuUIState.nonPosedFullName.value,
+                menuUIState.forWeekFullName.value,
                 activeDay.value,
                 Locale.getDefault()
             )

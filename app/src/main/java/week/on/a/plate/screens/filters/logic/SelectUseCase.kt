@@ -7,8 +7,9 @@ import week.on.a.plate.data.dataView.recipe.RecipeTagView
 import week.on.a.plate.data.dataView.recipe.TagCategoryView
 import week.on.a.plate.screens.filters.event.FilterEvent
 import week.on.a.plate.screens.filters.state.FilterMode
+import javax.inject.Inject
 
-class SelectUseCase {
+class SelectUseCase @Inject constructor(){
     fun selectTag(
         tag: RecipeTagView,
         selectedTags: MutableState<List<RecipeTagView>>,

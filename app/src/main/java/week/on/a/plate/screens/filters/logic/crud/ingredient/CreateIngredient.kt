@@ -3,7 +3,6 @@ package week.on.a.plate.screens.filters.logic.crud.ingredient
 import android.content.Context
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import week.on.a.plate.R
 import week.on.a.plate.data.dataView.recipe.IngredientCategoryView
 import week.on.a.plate.data.dataView.recipe.IngredientView
 import week.on.a.plate.data.repository.tables.filters.ingredient.IngredientRepository
@@ -32,7 +31,7 @@ class CreateIngredient @Inject constructor(
                 measure = ""
             )
             val defCategoryView =
-                allIngredients.find { it.name == context.getString(R.string.no_category) }!!
+                allIngredients.find { it.id == 1L }!!
             AddIngredientViewModel.launch(
                 context,
                 oldIngredient,

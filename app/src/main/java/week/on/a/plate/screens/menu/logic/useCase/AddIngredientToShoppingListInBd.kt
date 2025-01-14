@@ -6,8 +6,9 @@ import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.data.repository.tables.shoppingList.ShoppingItemRepository
 import week.on.a.plate.dialogs.chooseHowImagePick.event.BaseContextProvider
 import week.on.a.plate.mainActivity.event.MainEvent
+import javax.inject.Inject
 
-class AddIngredientToShoppingListInBd(private val shoppingItemRepository: ShoppingItemRepository) {
+class AddIngredientToShoppingListInBd @Inject constructor(private val shoppingItemRepository: ShoppingItemRepository) {
     suspend operator fun invoke(
         ingredientInRecipe: IngredientInRecipeView,
         contextProvider: BaseContextProvider, onEvent: (MainEvent) -> Unit

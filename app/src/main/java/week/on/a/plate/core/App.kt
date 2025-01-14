@@ -1,7 +1,6 @@
 package week.on.a.plate.core
 
 import android.app.Application
-import com.yandex.mobile.ads.common.MobileAds
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -42,8 +41,10 @@ class App : Application() {
             val b = tagCategoryRepository.isStartCategoryInstalled()
             if (!b) {
                 val startCategory = this@App.getString(startCategoryName)
+
                 tagCategoryRepository.create(startCategory)
                 ingredientCategoryRepository.create(startCategory)
+
                 val tags = getTags(this@App)
                 tags.forEach { category ->
                     val catId = tagCategoryRepository.create(category.name)
@@ -51,6 +52,11 @@ class App : Application() {
                         tagRepository.insert(tag.tagName, catId)
                     }
                 }
+
+                getStdCategoriesSelection().forEach {
+                    categorySelectionDAO.insert(CategorySelectionRoom(this@App.getString(it.fullName) , it.stdTime))
+                }
+
                 val ingredients = getStartIngredients(this@App)
                 ingredients.forEach { category ->
                     val catId = ingredientCategoryRepository.create(category.name)
@@ -62,10 +68,6 @@ class App : Application() {
                             ingredientView.measure,
                         )
                     }
-                }
-
-                getStdCategoriesSelection().forEach {
-                    categorySelectionDAO.insert(CategorySelectionRoom(this@App.getString(it.fullName) , it.stdTime))
                 }
             }
         }

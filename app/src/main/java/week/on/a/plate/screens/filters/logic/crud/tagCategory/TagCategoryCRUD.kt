@@ -1,6 +1,8 @@
 package week.on.a.plate.screens.filters.logic.crud.tagCategory
 
-class TagCategoryCRUD(
+import javax.inject.Inject
+
+class TagCategoryCRUD @Inject constructor(
     val createTagCategory: CreateTagCategory,
     val deleteTagCategory: DeleteTagCategory,
     val editTagCategory: EditTagCategory

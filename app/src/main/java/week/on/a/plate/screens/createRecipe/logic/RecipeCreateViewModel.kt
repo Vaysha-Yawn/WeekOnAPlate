@@ -12,6 +12,10 @@ import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screens.createRecipe.event.RecipeCreateEvent
 import week.on.a.plate.screens.createRecipe.logic.useCase.EditTagsUseCase
+import week.on.a.plate.screens.createRecipe.logic.useCase.RecipeCreateImageUseCase
+import week.on.a.plate.screens.createRecipe.logic.useCase.RecipeCreateIngredientUseCase
+import week.on.a.plate.screens.createRecipe.logic.useCase.RecipeCreateStepUseCase
+import week.on.a.plate.screens.createRecipe.logic.useCase.RecipeCreateTimeUseCase
 import week.on.a.plate.screens.createRecipe.state.RecipeCreateUIState
 import week.on.a.plate.screens.createRecipe.state.RecipeStepState
 import javax.inject.Inject

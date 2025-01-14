@@ -3,7 +3,6 @@ package week.on.a.plate.screens.filters.logic.crud.tag
 import android.content.Context
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import week.on.a.plate.R
 import week.on.a.plate.data.dataView.recipe.TagCategoryView
 import week.on.a.plate.data.repository.tables.filters.recipeTag.RecipeTagRepository
 import week.on.a.plate.dialogs.editOrCreateTag.logic.AddTagViewModel
@@ -24,7 +23,7 @@ class CreateTag @Inject constructor(
     ) {
         scope.launch {
             val defCategoryView =
-                allTags.find { it.name == context.getString(R.string.no_category) }!!
+                allTags.find { it.id == 1L }!!
             AddTagViewModel.launch(
                 searchText,
                 null,

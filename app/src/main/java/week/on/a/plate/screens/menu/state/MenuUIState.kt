@@ -15,8 +15,8 @@ data class MenuUIState(
     val week: MutableState<WeekView>,
     val wrapperDatePickerUIState: WrapperDatePickerUIState
 ) {
-    var forWeekFullName = ""
-    var nonPosedFullName = ""
+    val forWeekFullName = mutableStateOf<String>("")
+    val nonPosedFullName = mutableStateOf<String>("")
 
     companion object {
         val MenuUIStateExample = MenuUIState(

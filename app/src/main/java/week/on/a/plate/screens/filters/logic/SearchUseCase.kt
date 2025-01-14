@@ -7,8 +7,9 @@ import week.on.a.plate.data.dataView.recipe.TagCategoryView
 import week.on.a.plate.screens.filters.state.FilterEnum
 import week.on.a.plate.screens.filters.state.FilterResult
 import week.on.a.plate.screens.filters.state.FilterUIState
+import javax.inject.Inject
 
-class SearchUseCase {
+class SearchUseCase @Inject constructor(){
 
     suspend fun search(
         text: String,

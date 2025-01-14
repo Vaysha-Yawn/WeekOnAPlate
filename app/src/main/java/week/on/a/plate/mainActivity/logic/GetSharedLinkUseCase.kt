@@ -12,11 +12,14 @@ import week.on.a.plate.screens.createRecipe.navigation.RecipeCreateDestination
 import week.on.a.plate.screens.createRecipe.state.RecipeCreateUIState
 import java.time.LocalDateTime
 import javax.inject.Inject
+import javax.inject.Singleton
 
+
+@Singleton
 class GetSharedLinkUseCase
 @Inject constructor (private val recipeRepository: RecipeRepository) {
 
-    private var sharedLink = ""
+    var sharedLink = ""
     var isCheckedSharedAction = false
 
     fun setLink(text:String){

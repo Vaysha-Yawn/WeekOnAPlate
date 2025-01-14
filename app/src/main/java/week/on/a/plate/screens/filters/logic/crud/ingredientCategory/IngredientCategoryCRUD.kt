@@ -1,6 +1,8 @@
 package week.on.a.plate.screens.filters.logic.crud.ingredientCategory
 
-class IngredientCategoryCRUD(
+import javax.inject.Inject
+
+class IngredientCategoryCRUD @Inject constructor(
     val createIngredientCategory: CreateIngredientCategory,
     val deleteIngredientCategory: DeleteIngredientCategory,
     val editIngredientCategory: EditIngredientCategory

@@ -164,18 +164,18 @@ fun TimerStep(recipeStepState: RecipeStepState, onEvent: (RecipeCreateEvent) -> 
     }
 }
 
+
 @Preview(showBackground = true)
 @Composable
 fun PreviewStepRecipeEdit() {
     WeekOnAPlateTheme {
-        val vm = RecipeCreateViewModel()
-        vm.setStateByOldRecipe(recipeTom)
+        val state = RecipeCreateUIState()
         Column {
-            PinnedIngredientsForStep(vm.state.steps.value[0].pinnedIngredientsInd.value.map { id ->
-                vm.state.ingredients.value.find { it.ingredientView.ingredientId == id }!!
+            PinnedIngredientsForStep(state.steps.value[0].pinnedIngredientsInd.value.map { id ->
+                state.ingredients.value.find { it.ingredientView.ingredientId == id }!!
             })
-            StepRecipeEdit(0, vm.state.steps.value[0], vm.state) {}
-            StepRecipeEdit(1, vm.state.steps.value[1], vm.state) {}
+            StepRecipeEdit(0, state.steps.value[0], state) {}
+            StepRecipeEdit(1, state.steps.value[1], state) {}
         }
     }
 }

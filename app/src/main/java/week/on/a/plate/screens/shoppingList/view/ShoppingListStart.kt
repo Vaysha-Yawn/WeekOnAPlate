@@ -124,8 +124,10 @@ fun ShoppingListContent(state: ShoppingListUIState, onEvent: (ShoppingListEvent)
             }
             item {
                 Spacer(Modifier.height(12.dp))
-                NativeAdRow("R-M-13419544-6")
-                Spacer(Modifier.height(12.dp))
+                if (state.listChecked.value.isNotEmpty() || state.listUnchecked.value.isNotEmpty()){
+                    NativeAdRow("R-M-13419544-6")
+                    Spacer(Modifier.height(12.dp))
+                }
             }
             items(state.listChecked.value.size) { index ->
                 ShoppingListPosition(state.listChecked.value[index], true, {

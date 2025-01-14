@@ -24,7 +24,7 @@ fun BlockSelection(
     onEvent: (event: Event) -> Unit,
     ) {
     Column(Modifier.fillMaxWidth()) {
-        if (selection.dateTime.hour>0){
+        if (selection.dateTime.hour > 0){
             SubText(text = selection.dateTime.format(DateTimeFormatter.ofPattern("HH:mm")),
                 modifier = Modifier.padding(start = 30.dp))
             Spacer(Modifier.height(6.dp))

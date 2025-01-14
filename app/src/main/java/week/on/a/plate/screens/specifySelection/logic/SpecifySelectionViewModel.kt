@@ -31,13 +31,13 @@ import java.time.LocalTime
 import java.util.Locale
 import javax.inject.Inject
 
-...
-//todo use case
+
 @HiltViewModel
 class SpecifySelectionViewModel @Inject constructor(
     private val weekMenuRepository: WeekMenuRepository,
     private val calendarMyUseCase: CalendarMyUseCase,
     private val categorySelectionDAO: CategorySelectionDAO,
+    private val addCustomSelectionUseCase: AddCustomSelectionUseCase,
 ) : ViewModel() {
     lateinit var mainViewModel: MainViewModel
     val state: SpecifySelectionUIState = SpecifySelectionUIState()
@@ -75,48 +75,24 @@ class SpecifySelectionViewModel @Inject constructor(
         when (event) {
             SpecifySelectionEvent.Back -> close()
             is SpecifySelectionEvent.Done -> done(event.context)
-            is SpecifySelectionEvent.AddCustomSelection -> addCustomSelection()
+            is SpecifySelectionEvent.AddCustomSelection -> viewModelScope.launch {  addCustomSelectionUseCase(mainViewModel, state, viewModelScope) }
             is SpecifySelectionEvent.UpdatePreview -> updatePreview(event.date)
             is SpecifySelectionEvent.UpdateSelections -> updateSelections()
             is SpecifySelectionEvent.ApplyDate -> applyDate(event.date)
         }
     }
 
+
     private fun applyDate(date: LocalDate) {
         state.date.value = date
     }
+
 
     private fun updatePreview(date: LocalDate) {
         state.date.value = date
         viewModelScope.launch {
             val selections = weekMenuRepository.getSelectionsByDate(state.date.value!!)
             state.dayViewPreview.value = selections
-        }
-
-    }
-
-    private fun addCustomSelection() {
-        viewModelScope.launch {
-            EditSelectionViewModel.launch(EditSelectionUIState(
-                    title = R.string.add_meal,
-                    placeholder = R.string.hint_breakfast
-                ), mainViewModel
-            ) { selState ->
-                state.allSelectionsIdDay.value =
-                    state.allSelectionsIdDay.value.toMutableList().apply {
-                        add(selState.text.value)
-                    }
-                viewModelScope.launch {
-                    weekMenuRepository.getSelIdOrCreate(
-                        LocalDateTime.of(
-                            state.date.value,
-                            selState.selectedTime.value
-                        ), false, selState.text.value, mainViewModel.locale,
-                    )
-                }
-                state.checkWeek.value = false
-                state.checkDayCategory.value = selState.text.value
-            }
         }
     }
 
@@ -137,6 +113,7 @@ class SpecifySelectionViewModel @Inject constructor(
             state.allSelectionsIdDay.value = listSelName
         }
     }
+
 
     private fun getCategory(context: Context): String? {
         if (!state.checkWeek.value && state.checkDayCategory.value == null) return null

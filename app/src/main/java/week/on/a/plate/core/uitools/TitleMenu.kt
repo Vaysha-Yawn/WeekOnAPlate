@@ -9,12 +9,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import week.on.a.plate.R
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.theme.ColorSubTextGrey
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.buttons.PlusButtonTitle
+import week.on.a.plate.data.dataView.week.NonPosed
 import week.on.a.plate.data.dataView.week.SelectionView
 import week.on.a.plate.screens.menu.event.MenuEvent
 import java.time.LocalDateTime
@@ -28,7 +31,7 @@ fun TitleMenu(selection: SelectionView, modifier: Modifier, onEvent: (event: Eve
         verticalAlignment = Alignment.CenterVertically
     ) {
         TextTitle(
-            text = selection.name,
+            text = if (selection.name == "" && selection.dateTime.toLocalTime() == NonPosed.stdTime) stringResource(R.string.for_day) else selection.name,
             modifier = Modifier
                 .padding(end = 20.dp)
                 .combinedClickable(
@@ -58,7 +61,7 @@ fun TitleMenuS(selection: SelectionView, modifier: Modifier, onEvent: (event: Ev
         verticalAlignment = Alignment.CenterVertically
     ) {
         TextTitle(
-            text = selection.name,
+            text = if (selection.name == "" && selection.dateTime.toLocalTime() == NonPosed.stdTime) stringResource(R.string.for_day) else selection.name,
             modifier = Modifier
                 .padding(end = 20.dp)
                 .combinedClickable(

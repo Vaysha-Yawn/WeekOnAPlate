@@ -14,7 +14,6 @@ import week.on.a.plate.data.dataView.recipe.RecipeTagView
 import week.on.a.plate.data.dataView.recipe.TagCategoryView
 import week.on.a.plate.data.repository.tables.filters.ingredientCategory.IngredientCategoryRepository
 import week.on.a.plate.data.repository.tables.filters.recipeTagCategory.RecipeTagCategoryRepository
-import week.on.a.plate.data.repository.tables.filters.recipeTagCategory.startCategoryName
 import week.on.a.plate.dialogs.editOrDelete.event.EditOrDeleteEvent
 import week.on.a.plate.dialogs.editOrDelete.logic.EditOrDeleteViewModel
 import week.on.a.plate.mainActivity.event.MainEvent
@@ -205,7 +204,7 @@ class FilterViewModel @Inject constructor(
                     allTags.value) } })
 
             is FilterEvent.EditOrDeleteIngredientCategory -> {
-                if (event.ingredientCategory.name == event.context.getString(startCategoryName)) return
+                if (event.ingredientCategory.id == 1L) return
                 editOrDelete(
                     delete = {
                         viewModelScope.launch {
@@ -225,7 +224,7 @@ class FilterViewModel @Inject constructor(
             }
 
             is FilterEvent.EditOrDeleteTagCategory -> {
-                if (event.tagCategory.name == event.context.getString(startCategoryName)) return
+                if (event.tagCategory.id == 1L) return
                 editOrDelete(
                     delete = {
                         viewModelScope.launch {

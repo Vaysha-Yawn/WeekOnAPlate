@@ -28,7 +28,6 @@ import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.data.dataView.example.getTags
 import week.on.a.plate.data.dataView.recipe.RecipeTagView
 import week.on.a.plate.data.dataView.recipe.TagCategoryView
-import week.on.a.plate.data.repository.tables.filters.recipeTagCategory.startCategoryName
 import week.on.a.plate.screens.searchRecipes.event.SearchScreenEvent
 import week.on.a.plate.screens.searchRecipes.state.SearchUIState
 
@@ -52,7 +51,7 @@ fun SearchCategoriesScreen(stateUI: SearchUIState, onEvent: (SearchScreenEvent) 
             Spacer(modifier = Modifier.size(24.dp))
         }
         items(stateUI.allTagsCategories.value) {
-            if (it.name != stringResource(startCategoryName))
+            if (it.id != 1L)
                 CategorySelection(it, onEvent)
         }
         item {

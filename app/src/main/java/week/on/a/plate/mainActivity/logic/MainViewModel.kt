@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.Event
 import week.on.a.plate.data.dataView.week.ForWeek
@@ -116,11 +117,13 @@ class MainViewModel @Inject constructor(
         documentsWebViewModel.mainViewModel = this
 
 
+        //remove
         val nonPosedText = mainActivity.getString(NonPosed.fullName)
         val forWeek = mainActivity.getString(ForWeek.fullName)
         specifySelectionViewModel.state.nonPosedText = nonPosedText
-        menuViewModel.menuUIState.forWeekFullName = forWeek
-        menuViewModel.menuUIState.nonPosedFullName = nonPosedText
+        menuViewModel.menuUIState.forWeekFullName.value = forWeek
+        menuViewModel.menuUIState.nonPosedFullName.value = nonPosedText
+
         specifySelectionViewModel.updateSelections()
         menuViewModel.updateWeek()
 
@@ -163,6 +166,11 @@ class MainViewModel @Inject constructor(
     private fun useSharedLink() {
         if (!getSharedLinkUseCase.isCheckedSharedAction && ::nav.isInitialized) {
             getSharedLinkUseCase.useSharedLink(viewModelScope, nav, recipeCreateViewModel)
+        }else if (! ::nav.isInitialized){
+            viewModelScope.launch {
+                delay(500)
+                onEvent(MainEvent.UseSharedLink)
+            }
         }
     }
 

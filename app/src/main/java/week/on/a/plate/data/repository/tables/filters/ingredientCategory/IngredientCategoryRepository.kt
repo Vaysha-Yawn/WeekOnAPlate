@@ -5,7 +5,6 @@ import kotlinx.coroutines.flow.map
 import week.on.a.plate.data.dataView.recipe.IngredientCategoryView
 import week.on.a.plate.data.repository.tables.filters.ingredient.IngredientDAO
 import week.on.a.plate.data.repository.tables.filters.ingredient.IngredientMapper
-import week.on.a.plate.data.repository.tables.filters.recipeTagCategory.startCategoryName
 import javax.inject.Inject
 
 
@@ -48,7 +47,7 @@ class IngredientCategoryRepository @Inject constructor(
         dao.deleteById(id)
         val ingredientRooms = daoIngredient.getAllByCategoryId(id)
         ingredientRooms.forEach {
-            daoIngredient.update(it.apply { ingredientCategoryId = 1 })
+            daoIngredient.update(it.apply { ingredientCategoryId = 1L })
         }
     }
 

@@ -24,6 +24,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import week.on.a.plate.core.navigation.BottomScreens
 import week.on.a.plate.core.navigation.bottomScreens
 import week.on.a.plate.core.theme.ColorTransparent
+import week.on.a.plate.screens.searchRecipes.event.SearchScreenEvent
 import week.on.a.plate.screens.searchRecipes.logic.SearchViewModel
 
 
@@ -69,7 +70,8 @@ fun BottomBar(
                     onClick = {
                         navController.navigate(topLevelRoute.route) {
                             if (topLevelRoute == BottomScreens.SearchBottomNav){
-                                searchViewModel.clearSearch()
+                                //todo
+                                searchViewModel.onEvent(SearchScreenEvent.Clear)
                             }
                         }
                     },
