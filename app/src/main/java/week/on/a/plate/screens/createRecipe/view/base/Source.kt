@@ -29,7 +29,9 @@ fun SourceRecipeEdit(state: RecipeCreateUIState, onEvent: (RecipeCreateEvent) ->
     Column(Modifier.padding(horizontal =  24.dp)) {
         TextBody(text = stringResource(R.string.source_title))
         Spacer(modifier = Modifier.height(12.dp))
-        EditTextLine(text = state.source, placeholder = stringResource(R.string.enter_recipe_link))
+        EditTextLine(text = state.source, placeholder = stringResource(R.string.enter_recipe_link)){
+            state.webview.value?.loadUrl(state.source.value)
+        }
     }
 }
 

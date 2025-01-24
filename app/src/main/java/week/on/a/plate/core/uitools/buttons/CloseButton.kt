@@ -16,13 +16,13 @@ import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.core.theme.ColorStrokeGrey
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
-import week.on.a.plate.screens.filters.view.clickNoRipple
+import week.on.a.plate.core.uitools.clickNoRipple
 
 @Composable
 fun CloseButton(actionClose: () -> Unit) {
     Image(
         painter = painterResource(id = R.drawable.close),
-        contentDescription = "",
+        contentDescription = "Close",
         modifier = Modifier
             .padding(12.dp)
             .size(24.dp)
@@ -34,7 +34,7 @@ fun CloseButton(actionClose: () -> Unit) {
 fun CloseOutlined(actionClose: () -> Unit) {
     Image(
         painter = painterResource(id = R.drawable.close),
-        contentDescription = "",
+        contentDescription = "Close",
         modifier = Modifier
             .clickNoRipple (actionClose)
             .border(1.dp, ColorStrokeGrey, RoundedCornerShape(10.dp))

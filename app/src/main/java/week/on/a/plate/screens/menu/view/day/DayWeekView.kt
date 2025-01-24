@@ -19,7 +19,7 @@ import week.on.a.plate.data.dataView.week.DayView
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.PlusButtonTitle
-import week.on.a.plate.screens.filters.view.clickNoRipple
+import week.on.a.plate.core.uitools.clickNoRipple
 import week.on.a.plate.screens.menu.state.MenuUIState
 
 

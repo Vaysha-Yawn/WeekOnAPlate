@@ -32,6 +32,7 @@ import week.on.a.plate.screens.specifySelection.logic.SpecifySelectionViewModel
 import week.on.a.plate.screens.specifySelection.state.SpecifySelectionUIState
 import week.on.a.plate.dialogs.calendarMy.state.StateCalendarMy
 import week.on.a.plate.dialogs.calendarMy.view.CalendarMy
+import java.time.DayOfWeek
 import java.time.LocalDate
 
 @Composable
@@ -102,7 +103,7 @@ fun SpecifySelectionAltContent(state: SpecifySelectionUIState, stateCalendarMy: 
                 )
             )
         }
-        val firstRow = remember { mutableStateOf(listOf("Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс")) }
+        val firstRow = remember { mutableStateOf(DayOfWeek.entries.toList()) }
         SpecifySelectionAltContent(SpecifySelectionUIState(), StateCalendarMy(st, allDays, firstRow,)){}
     }
 }

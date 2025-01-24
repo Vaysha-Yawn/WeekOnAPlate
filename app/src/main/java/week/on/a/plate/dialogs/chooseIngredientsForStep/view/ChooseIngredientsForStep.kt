@@ -15,11 +15,8 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,10 +36,8 @@ import week.on.a.plate.core.utils.getIngredientCountAndMeasure1000
 import week.on.a.plate.data.dataView.example.recipes
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.dialogs.chooseIngredientsForStep.event.ChooseIngredientsForStepEvent
-import week.on.a.plate.dialogs.chooseIngredientsForStep.logic.ChooseIngredientsForStepViewModel
 import week.on.a.plate.dialogs.chooseIngredientsForStep.state.ChooseIngredientsForStepUIState
-import week.on.a.plate.mainActivity.logic.MainViewModel
-import week.on.a.plate.screens.filters.view.clickNoRipple
+import week.on.a.plate.core.uitools.clickNoRipple
 
 
 @Composable

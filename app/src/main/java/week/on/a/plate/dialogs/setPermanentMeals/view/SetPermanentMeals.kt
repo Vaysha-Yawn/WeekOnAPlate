@@ -15,7 +15,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,7 +28,7 @@ import week.on.a.plate.data.repository.tables.menu.category_selection.CategorySe
 import week.on.a.plate.dialogs.setPermanentMeals.event.SetPermanentMealsEvent
 import week.on.a.plate.dialogs.setPermanentMeals.state.SetPermanentMealsUIState
 import week.on.a.plate.screens.cookPlanner.view.normalizeTimeToText
-import week.on.a.plate.screens.filters.view.clickNoRipple
+import week.on.a.plate.core.uitools.clickNoRipple
 import java.time.LocalTime
 
 @Composable
@@ -66,13 +65,13 @@ fun CategoriesSelectionRow(sel: CategorySelectionRoom, onEvent: (SetPermanentMea
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceAround
     ) {
-        Icon(painterResource(R.drawable.edit), "", tint = MaterialTheme.colorScheme.onBackground, modifier = Modifier.clickNoRipple {
+        Icon(painterResource(R.drawable.edit), "Edit", tint = MaterialTheme.colorScheme.onBackground, modifier = Modifier.clickNoRipple {
             onEvent(SetPermanentMealsEvent.Edit(sel))
         })
         Spacer(modifier = Modifier.width(24.dp))
         TextBody("${sel.stdTime.hour}:${sel.stdTime.minute.normalizeTimeToText()} - ${sel.name}")
         Spacer(modifier = Modifier.width(24.dp))
-        Icon(painterResource(R.drawable.delete), "", tint = MaterialTheme.colorScheme.onBackground, modifier = Modifier.clickNoRipple {
+        Icon(painterResource(R.drawable.delete), "Delete", tint = MaterialTheme.colorScheme.onBackground, modifier = Modifier.clickNoRipple {
             onEvent(SetPermanentMealsEvent.Delete(sel))
         })
     }

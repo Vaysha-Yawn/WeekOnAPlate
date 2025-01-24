@@ -1,14 +1,10 @@
 package week.on.a.plate.screens.searchRecipes.view.main
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -21,17 +17,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.core.uitools.TextInApp
-import week.on.a.plate.core.theme.ColorStrokeGrey
 import week.on.a.plate.core.theme.Typography
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
-import week.on.a.plate.screens.filters.view.clickNoRipple
+import week.on.a.plate.core.uitools.clickNoRipple
 
 @Composable
 fun FilterButton(filterCount: Int, actionFilter: () -> Unit) {
     Box(contentAlignment = Alignment.TopEnd) {
         Icon(
             painter = painterResource(id = R.drawable.sort),
-            contentDescription = "",
+            contentDescription = "Sort",
             modifier = Modifier
                 .clickNoRipple(actionFilter)
                 .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(10.dp)).padding(6.dp),

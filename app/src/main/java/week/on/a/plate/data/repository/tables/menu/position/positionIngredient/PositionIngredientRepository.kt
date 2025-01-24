@@ -2,11 +2,18 @@ package week.on.a.plate.data.repository.tables.menu.position.positionIngredient
 
 
 import android.util.Log
+import androidx.compose.runtime.State
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.data.repository.tables.filters.ingredient.IngredientMapper
+import week.on.a.plate.data.repository.tables.filters.ingredient.IngredientRoom
+import week.on.a.plate.data.repository.tables.recipe.ingredientInRecipe.IngredientAndIngredientInRecipe
 import week.on.a.plate.data.repository.tables.recipe.ingredientInRecipe.IngredientInRecipeDAO
 import week.on.a.plate.data.repository.tables.recipe.ingredientInRecipe.IngredientInRecipeMapper
 import week.on.a.plate.data.repository.tables.recipe.ingredientInRecipe.IngredientInRecipeRoom
+import week.on.a.plate.data.repository.utils.flowToStateWithMap
 import javax.inject.Inject
 
 
@@ -20,19 +27,32 @@ class PositionIngredientRepository @Inject constructor(
 
     suspend fun getAllInSel(selectionId: Long): List<Position> {
         return positionIngredientDAO.getAllInSel(selectionId).map { position ->
-            val ingredient =
-                ingredientInRecipeDAO.getIngredientAndIngredientInRecipe(position.ingredientInRecipeId)
+            val ingredient = ingredientInRecipeDAO.getIngredientAndIngredientInRecipe(position.ingredientInRecipeId)
+            ingredientToPosition(ingredient, position)
+        }
+    }
 
-            val ingredientView =
-                with(ingredientMapper) { ingredient.ingredientRoom.roomToView() }
+    fun getAllInSelFlow(selectionId: Long, scope: CoroutineScope): Flow<List<State<Position>>> {
+        return positionIngredientDAO.getAllInSelFlow(selectionId).map{
+            it.map  { position ->
+                val ingredient = ingredientInRecipeDAO.getIngredientAndIngredientInRecipe(position.ingredientInRecipeId)
+                val firstValue = ingredientToPosition(ingredient, position)
 
-            val ingredientInMenuView = with(ingredientInRecipeMapper) {
-                ingredient.ingredientInRecipeRoom.roomToView(ingredientView)
+                val ingredientFlow = ingredientInRecipeDAO.getIngredientAndIngredientInRecipeFlow(position.ingredientInRecipeId)
+                ingredientFlow.flowToStateWithMap(firstValue, scope){
+                    ingredientToPosition(this, position)
+                }
             }
+        }
+    }
 
-            with(positionIngredientMapper) {
-                position.roomToView(ingredientInRecipe = ingredientInMenuView)
-            }
+    private fun ingredientToPosition(ingredient: IngredientAndIngredientInRecipe, position:PositionIngredientRoom):Position.PositionIngredientView{
+        val ingredientView = with(ingredientMapper) { ingredient.ingredientRoom.roomToView() }
+        val ingredientInMenuView = with(ingredientInRecipeMapper) {
+            ingredient.ingredientInRecipeRoom.roomToView(ingredientView)
+        }
+        return with(positionIngredientMapper) {
+            position.roomToView(ingredientInRecipe = ingredientInMenuView)
         }
     }
 

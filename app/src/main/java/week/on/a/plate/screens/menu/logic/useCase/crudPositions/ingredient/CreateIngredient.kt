@@ -7,7 +7,7 @@ import week.on.a.plate.screens.menu.event.MenuEvent
 import javax.inject.Inject
 
 class CreateIngredient @Inject constructor() {
-    //addIngredientPosition
+
     suspend operator fun invoke(
         selId: Long, mainViewModel: MainViewModel, onEvent: (MenuEvent) -> Unit
     ) {

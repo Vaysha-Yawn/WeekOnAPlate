@@ -96,7 +96,7 @@ private fun IngredientName(state: EditPositionIngredientUIState) {
             .padding(horizontal = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        TextTitle(state.ingredientState.value!!.name, Modifier.weight(1f))
+        TextTitle(state.ingredientState.value?.name?:"", Modifier.weight(1f))
     }
     Spacer(modifier = Modifier.height(12.dp))
     HorizontalDivider(Modifier, 1.dp, MaterialTheme.colorScheme.outline)

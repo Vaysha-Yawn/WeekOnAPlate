@@ -81,7 +81,7 @@ fun TutorialWrapper(
         ) {
             Icon(
                 painterResource(R.drawable.back),
-                "",
+                "Back",
                 tint = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier
                     .clickable {

@@ -1,5 +1,6 @@
 package week.on.a.plate.screens.createRecipe.view.web
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -15,6 +16,9 @@ import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,24 +32,34 @@ import week.on.a.plate.core.uitools.buttons.DoneButtonSmall
 import week.on.a.plate.core.uitools.buttons.TextButton
 import week.on.a.plate.core.uitools.webview.WebPage
 import week.on.a.plate.screens.createRecipe.state.RecipeCreateUIState
-import week.on.a.plate.screens.filters.view.clickNoRipple
-import java.util.Locale
+import week.on.a.plate.core.uitools.clickNoRipple
 
 @Composable
 fun WebPageCreateRecipe(state: RecipeCreateUIState, onEvent: (Event) -> Unit) {
     val context = LocalContext.current
-    val countryCode = remember{Locale.getDefault().language}
+    val yScrollState = remember { mutableIntStateOf(0) }
     if (state.source.value == "") {
         DoneButtonSmall(text = stringResource(R.string.search_be_name_recipe_in_internet), Modifier.padding(24.dp)) {
             state.source.value =
-                "https://www.google.$countryCode/search?q="+context.getString(R.string.recipe)+"+"+ (state.name.value.replace(" ", "+"))
+                getLinkByName(context, state.name.value, )
+            state.webview.value?.loadUrl(state.source.value)
         }
     } else {
+        LaunchedEffect(Unit) {
+            state.webview.value?.scrollY = yScrollState.intValue
+        }
         WebPage(url = state.source, state.webview, onEvent, true)
+        DisposableEffect(Unit) {
+            onDispose {
+                yScrollState.intValue = state.webview.value?.scrollY?:0
+            }
+        }
     }
 }
 
-
+fun getLinkByName(context: Context, name:String,):String{
+    return "https://www.google.com/search?q="+context.getString(R.string.recipe)+"+"+ (name.replace(" ", "+"))
+}
 
 @Composable
 fun RowWebActions(state: RecipeCreateUIState) {
@@ -75,8 +89,7 @@ fun RowWebActions(state: RecipeCreateUIState) {
         Spacer(Modifier.width(10.dp))
         val context = LocalContext.current
         TextButton(stringResource(R.string.search_again)) {
-            state.source.value =
-                "https://www.google.ru/search?q="+context.getString(R.string.recipe)+ {state.name.value.replace(" ", "+")}.toString()
+            state.source.value = getLinkByName(context, state.name.value)
             state.webview.value?.loadUrl(state.source.value)
         }
     }
@@ -86,7 +99,7 @@ fun RowWebActions(state: RecipeCreateUIState) {
 fun IconBtn(icon: ImageVector, click: () -> Unit) {
     Icon(
         icon,
-        contentDescription = "",
+        contentDescription = "Image",
         modifier = Modifier
             .padding(12.dp)
             .background(MaterialTheme.colorScheme.secondary, RoundedCornerShape(20.dp))

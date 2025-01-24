@@ -51,7 +51,7 @@ fun TopBarRecipeCreate(state: RecipeCreateUIState, onEvent: (RecipeCreateEvent) 
         Spacer(modifier = Modifier.width(12.dp))
         Image(
             painter = painterResource(id = R.drawable.check),
-            contentDescription = "",
+            contentDescription = "Done",
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.secondary, RoundedCornerShape(10.dp))
                 .clickable {

@@ -3,7 +3,6 @@ package week.on.a.plate.screens.searchRecipes.view.resultScreen
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,10 +25,9 @@ import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.core.uitools.ImageLoad
 import week.on.a.plate.core.uitools.TextBody
-import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.PlusButtonCard
 import week.on.a.plate.data.dataView.recipe.RecipeView
-import week.on.a.plate.screens.filters.view.clickNoRipple
+import week.on.a.plate.core.uitools.clickNoRipple
 import week.on.a.plate.screens.searchRecipes.event.SearchScreenEvent
 
 @Composable
@@ -98,7 +96,7 @@ fun CardRecipeResult(recipe: RecipeView, onEvent: (SearchScreenEvent) -> Unit, m
                                 R.drawable.bookmark_full
                             } else R.drawable.bookmark
                         ),
-                        contentDescription = "",
+                        contentDescription = "In favorite",
                         modifier = Modifier
                             .size(36.dp)
                             .clickNoRipple {

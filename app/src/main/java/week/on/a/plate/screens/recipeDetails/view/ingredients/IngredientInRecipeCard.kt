@@ -73,7 +73,7 @@ fun IngredientInRecipeCard(
             Spacer(modifier = Modifier.width(5.dp))
             Icon(
                 painterResource(R.drawable.delete),
-                "",
+                "Delete",
                 modifier = Modifier.clickable {
                     delete()
                 })

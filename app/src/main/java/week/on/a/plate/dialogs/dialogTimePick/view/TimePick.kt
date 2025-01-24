@@ -32,7 +32,7 @@ import week.on.a.plate.core.theme.ColorSubTextGrey
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.dialogs.dialogTimePick.event.TimePickEvent
 import week.on.a.plate.dialogs.dialogTimePick.state.TimePickUIState
-import week.on.a.plate.screens.filters.view.clickNoRipple
+import week.on.a.plate.core.uitools.clickNoRipple
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -133,7 +133,7 @@ private fun DisplayModeToggleButton(
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.keyboard),
-                contentDescription = "", tint = MaterialTheme.colorScheme.onBackground
+                contentDescription = "Input time", tint = MaterialTheme.colorScheme.onBackground
             )
         }
 
@@ -143,7 +143,7 @@ private fun DisplayModeToggleButton(
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.time),
-                contentDescription = "", tint = MaterialTheme.colorScheme.onBackground
+                contentDescription = "Pick time", tint = MaterialTheme.colorScheme.onBackground
             )
         }
     }

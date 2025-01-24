@@ -31,7 +31,7 @@ import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.dialogs.setTheme.event.SetThemeEvent
 import week.on.a.plate.dialogs.setTheme.state.SetThemeUIState
-import week.on.a.plate.screens.filters.view.clickNoRipple
+import week.on.a.plate.core.uitools.clickNoRipple
 
 
 @Composable

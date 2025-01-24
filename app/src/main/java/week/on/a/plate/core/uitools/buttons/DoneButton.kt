@@ -1,7 +1,6 @@
 package week.on.a.plate.core.uitools.buttons
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,13 +19,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import week.on.a.plate.core.theme.ColorButtonGreen
 import week.on.a.plate.core.theme.ColorTextBlack
 import week.on.a.plate.core.theme.Typography
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextInApp
-import week.on.a.plate.screens.filters.view.clickNoRipple
+import week.on.a.plate.core.uitools.clickNoRipple
 
 @Composable
 fun DoneButton(
@@ -93,7 +91,7 @@ fun CommonButton(
         } else {
             Icon(
                 painter = painterResource(id = image),
-                contentDescription = "",
+                contentDescription = "Image",
                 modifier = Modifier.size(36.dp),
                 tint = (if (isSystemInDarkTheme()) ColorTextBlack else MaterialTheme.colorScheme.onBackground)
             )
@@ -129,7 +127,7 @@ fun TextButton(
         } else {
             Icon(
                 painter = painterResource(id = image),
-                contentDescription = "",
+                contentDescription = "Image",
                 modifier = Modifier.size(36.dp),
                 tint = (if (isSystemInDarkTheme()) ColorTextBlack else MaterialTheme.colorScheme.onBackground)
             )

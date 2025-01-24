@@ -69,7 +69,7 @@ fun TopBar(
                     TextBody(text = title, modifier = Modifier.padding(end = 12.dp))
                     Image(
                         painter = painterResource(id = R.drawable.calendar),
-                        contentDescription = "",
+                        contentDescription = "Calendar choose week",
                         modifier = Modifier
                             .clickable {
                                 onEvent(WrapperDatePickerEvent.ChooseWeek)

@@ -13,13 +13,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
-import week.on.a.plate.screens.filters.view.clickNoRipple
+import week.on.a.plate.core.uitools.clickNoRipple
 
 @Composable
 fun MoreButton(actionEdit: () -> Unit) {
     Image(
         painter = painterResource(id = R.drawable.more),
-        contentDescription = "",
+        contentDescription = "More",
         modifier = Modifier
             .size(24.dp)
             .clickNoRipple(actionEdit),
@@ -30,7 +30,7 @@ fun MoreButton(actionEdit: () -> Unit) {
 fun MoreButtonWithBackg(actionEdit: () -> Unit) {
     Image(
         painter = painterResource(id = R.drawable.more),
-        contentDescription = "",
+        contentDescription = "More",
         modifier = Modifier
             .background(MaterialTheme.colorScheme.surfaceVariant, CircleShape)
             .size(36.dp)

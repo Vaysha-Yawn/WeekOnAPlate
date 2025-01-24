@@ -25,7 +25,7 @@ fun ImageLoad(url: String, modifier: Modifier) {
         AsyncImage(
             modifier = modifier.clip(RoundedCornerShape(20.dp)),
             model = url.lowercase(),
-            contentDescription = "",
+            contentDescription = "Image",
             placeholder = painterResource(
                 id = R.drawable.time
             ),
@@ -41,7 +41,7 @@ fun ImageLoad(url: String, modifier: Modifier) {
         if (imageContainer.value != null) {
             Image(
                 bitmap = imageContainer.value!!,
-                "",
+                "Image",
                 modifier = modifier.clip(RoundedCornerShape(20.dp))
             )
         }
@@ -54,7 +54,7 @@ fun ImageLoadEditable(url: String, imageContainer: MutableState<ImageBitmap?>, m
         AsyncImage(
             modifier = modifier.clip(RoundedCornerShape(20.dp)),
             model = url.lowercase(),
-            contentDescription = "",
+            contentDescription = "Image",
             placeholder = painterResource(
                 id = R.drawable.time
             ),
@@ -71,7 +71,7 @@ fun ImageLoadEditable(url: String, imageContainer: MutableState<ImageBitmap?>, m
         if (imageContainer.value != null) {
             Image(
                 bitmap = imageContainer.value!!,
-                "",
+                "Image",
                 modifier = modifier.clip(RoundedCornerShape(20.dp))
             )
         }

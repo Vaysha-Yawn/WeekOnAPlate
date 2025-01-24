@@ -29,6 +29,10 @@ interface IngredientInRecipeDAO {
     @Query("SELECT * FROM IngredientInRecipeRoom WHERE id=:id")
     suspend fun getIngredientAndIngredientInRecipe(id: Long): IngredientAndIngredientInRecipe
 
+    @Transaction
+    @Query("SELECT * FROM IngredientInRecipeRoom WHERE id=:id")
+    fun getIngredientAndIngredientInRecipeFlow(id: Long): Flow<IngredientAndIngredientInRecipe>
+
     @Query("SELECT * FROM IngredientRoom WHERE ingredientId = :ingredientId")
     suspend fun getCurrent(ingredientId: Long): IngredientRoom
 

@@ -59,7 +59,7 @@ fun TopPanelRecipeDetail(inFavorite: Boolean, onEvent: (RecipeDetailsEvent) -> U
 fun ImageButton(res: Int, modifier: Modifier = Modifier, action: () -> Unit) {
     Image(
         painter = painterResource(id = res),
-        contentDescription = "",
+        contentDescription = "Image",
         modifier = modifier
             .clickable {
                 action()

@@ -5,12 +5,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
+import week.on.a.plate.core.wrapperDatePicker.view.WrapperDatePicker
 import week.on.a.plate.data.dataView.example.WeekDataExample
 import week.on.a.plate.data.dataView.week.WeekView
 import week.on.a.plate.screens.menu.state.MenuUIState
 import week.on.a.plate.screens.menu.view.day.DayView
 import week.on.a.plate.screens.menu.view.week.WeekMenu
-import week.on.a.plate.core.wrapperDatePicker.view.WrapperDatePicker
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
@@ -39,8 +39,11 @@ fun MenuScreenSuccess(
         listDays,
         onEvent,
         {
+            val activeDayView =
+                week.days.find { it.date == uiState.wrapperDatePickerUIState.activeDay.value }
+                    ?: return@WrapperDatePicker
             DayView(
-                week.days[uiState.wrapperDatePickerUIState.activeDayInd.value],
+                activeDayView,
                 uiState,
                 onEvent
             )

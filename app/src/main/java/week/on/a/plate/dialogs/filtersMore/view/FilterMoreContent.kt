@@ -29,9 +29,8 @@ import week.on.a.plate.core.uitools.TagSmall
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.utils.timeToString
-import week.on.a.plate.dialogs.filtersMore.logic.FiltersMoreViewModel
 import week.on.a.plate.dialogs.filtersMore.state.FiltersMoreUIState
-import week.on.a.plate.screens.filters.view.clickNoRipple
+import week.on.a.plate.core.uitools.clickNoRipple
 
 @Composable
 fun FilterMoreContent(state: FiltersMoreUIState) {

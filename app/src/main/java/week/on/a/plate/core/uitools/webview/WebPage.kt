@@ -17,7 +17,6 @@ import week.on.a.plate.core.Event
 @Composable
 fun WebPage(url: MutableState<String>, webview: MutableState<WebView?>, onEvent: (Event) -> Unit, allowGo:Boolean) {
     val isDark = isSystemInDarkTheme()
-    val scrollState = rememberScrollState()
     AndroidView(
         { context ->
             if (webview.value == null) {
@@ -47,7 +46,7 @@ fun WebPage(url: MutableState<String>, webview: MutableState<WebView?>, onEvent:
         }, modifier = Modifier
             .fillMaxSize()
             .animateContentSize()
-            .verticalScroll(scrollState)
+
     )
 }
 

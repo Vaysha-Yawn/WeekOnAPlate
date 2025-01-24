@@ -49,7 +49,7 @@ fun WeekNotePosition(
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Image(
                 painter = painterResource(id = R.drawable.note),
-                contentDescription = "",
+                contentDescription = "Note",
                 modifier = Modifier
                     .size(24.dp),
             )

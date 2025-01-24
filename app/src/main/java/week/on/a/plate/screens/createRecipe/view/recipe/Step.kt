@@ -30,12 +30,10 @@ import week.on.a.plate.core.uitools.ImageLoadEditable
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextTitleItalic
 import week.on.a.plate.core.uitools.buttons.CommonButton
-import week.on.a.plate.data.dataView.example.recipeTom
 import week.on.a.plate.screens.createRecipe.event.RecipeCreateEvent
-import week.on.a.plate.screens.createRecipe.logic.RecipeCreateViewModel
 import week.on.a.plate.screens.createRecipe.state.RecipeCreateUIState
 import week.on.a.plate.screens.createRecipe.state.RecipeStepState
-import week.on.a.plate.screens.filters.view.clickNoRipple
+import week.on.a.plate.core.uitools.clickNoRipple
 
 
 @Composable
@@ -54,7 +52,7 @@ fun StepRecipeEdit(
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 painter = painterResource(id = R.drawable.delete),
-                contentDescription = "",
+                contentDescription = "Delete step",
                 modifier = Modifier
                     .size(24.dp)
                     .clickNoRipple {
@@ -80,7 +78,7 @@ fun StepRecipeEdit(
         Row {
             Icon(
                 painter = painterResource(id = R.drawable.close),
-                contentDescription = "",
+                contentDescription = "Remove step photo",
                 modifier = Modifier.clickable {
                     onEvent(RecipeCreateEvent.DeleteImage(recipeStepState))
                 })
@@ -101,7 +99,7 @@ fun StepRecipeEdit(
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 painter = painterResource(id = R.drawable.close),
-                contentDescription = "",
+                contentDescription = "Clear timer",
                 modifier = Modifier.clickable {
                     onEvent(RecipeCreateEvent.ClearTimer(recipeStepState))
                 })
@@ -138,7 +136,7 @@ fun ImageStepButton(recipeStepState: RecipeStepState, onEvent: (RecipeCreateEven
             .padding(horizontal = 12.dp, vertical = 5.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(painter = painterResource(id = R.drawable.photo), contentDescription = "")
+        Icon(painter = painterResource(id = R.drawable.photo), contentDescription = "Add photo for step")
         Spacer(modifier = Modifier.width(5.dp))
         TextBody(text = stringResource(R.string.photo))
     }
@@ -158,7 +156,7 @@ fun TimerStep(recipeStepState: RecipeStepState, onEvent: (RecipeCreateEvent) -> 
             .padding(horizontal = 12.dp, vertical = 5.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(painter = painterResource(id = R.drawable.timer), contentDescription = "")
+        Icon(painter = painterResource(id = R.drawable.timer), contentDescription = "Edit timer step")
         Spacer(modifier = Modifier.width(5.dp))
         TextBody(text = stringResource(R.string.timer))
     }

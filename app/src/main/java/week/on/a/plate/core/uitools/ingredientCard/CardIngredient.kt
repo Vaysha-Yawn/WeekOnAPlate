@@ -24,7 +24,7 @@ import week.on.a.plate.data.dataView.example.ingredientTomato
 import week.on.a.plate.data.dataView.recipe.IngredientView
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
-import week.on.a.plate.screens.filters.view.clickNoRipple
+import week.on.a.plate.core.uitools.clickNoRipple
 
 @Composable
 fun CardIngredient(

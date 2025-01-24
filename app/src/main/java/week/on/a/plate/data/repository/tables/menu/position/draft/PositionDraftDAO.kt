@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
+import kotlinx.coroutines.flow.Flow
 import week.on.a.plate.data.repository.tables.menu.position.draft.draftIngredientCrossRef.DraftAndIngredient
 import week.on.a.plate.data.repository.tables.menu.position.draft.draftIngredientCrossRef.DraftAndIngredientCrossRef
 import week.on.a.plate.data.repository.tables.menu.position.draft.draftTagCrossRef.DraftAndTag
@@ -21,6 +22,10 @@ interface PositionDraftDAO {
     @Query("SELECT * FROM PositionDraftRoom WHERE selectionId=:selectionId")
     suspend fun getAllInSel(selectionId:Long): List<PositionDraftRoom>
 
+
+    @Query("SELECT * FROM PositionDraftRoom WHERE selectionId=:selectionId")
+    fun getAllInSelFlow(selectionId:Long): Flow<List<PositionDraftRoom>>
+
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(positionDraft: PositionDraftRoom):Long
 
@@ -31,6 +36,13 @@ interface PositionDraftDAO {
     @Transaction
     @Query("SELECT * FROM PositionDraftRoom WHERE draftId =:draftId")
     suspend fun getDraftAndIngredientByDraftId(draftId:Long): DraftAndIngredient
+
+
+    @Query("SELECT * FROM DraftAndTagCrossRef WHERE draftId =:draftId")
+    fun getDraftAndTagByDraftIdFlow(draftId:Long): Flow<List<DraftAndTagCrossRef>>
+
+    @Query("SELECT * FROM DraftAndIngredientCrossRef WHERE draftId =:draftId")
+    fun getDraftAndIngredientByDraftIdFlow(draftId:Long): Flow<List<DraftAndIngredientCrossRef>>
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertDraftAndIngredientCrossRef(draftAndIngredientCrossRefs: DraftAndIngredientCrossRef)

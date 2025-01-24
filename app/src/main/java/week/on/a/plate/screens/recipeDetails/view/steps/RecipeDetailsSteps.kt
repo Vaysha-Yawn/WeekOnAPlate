@@ -33,7 +33,7 @@ import week.on.a.plate.core.uitools.TextInApp
 import week.on.a.plate.core.utils.timeToString
 import week.on.a.plate.data.dataView.example.recipeTom
 import week.on.a.plate.screens.createRecipe.view.recipe.PinnedIngredientsForStep
-import week.on.a.plate.screens.filters.view.clickNoRipple
+import week.on.a.plate.core.uitools.clickNoRipple
 import week.on.a.plate.screens.recipeDetails.event.RecipeDetailsEvent
 import week.on.a.plate.screens.recipeDetails.logic.setTimer
 import week.on.a.plate.screens.recipeDetails.state.RecipeDetailsState
@@ -121,7 +121,7 @@ fun TimerButton(timer: Int) {
     ) {
         Image(
             painter = painterResource(id = R.drawable.timer),
-            contentDescription = "",
+            contentDescription = "Timer",
             modifier = Modifier.size(24.dp)
         )
         Spacer(modifier = Modifier.width(12.dp))
@@ -133,7 +133,7 @@ fun TimerButton(timer: Int) {
         Spacer(modifier = Modifier.width(12.dp))
         Image(
             painter = painterResource(id = R.drawable.play),
-            contentDescription = "",
+            contentDescription = "Start timer",
             modifier = Modifier.size(24.dp)
         )
     }

@@ -339,7 +339,7 @@
     <string name="ingredient_bread">Pan</string>
     <string name="ingredient_water">Agua</string>
     <string name="ingredient_broth">Caldo</string>
-    <string name="for_day">На день</string>
-    <string name="tag_snack">Перекус</string>
-    <string name="add_to_shopping_list_succes">успешно добавлен в список покупок</string>
+    <string name="for_day">Por un día</string>
+    <string name="tag_snack">Bocadillo</string>
+    <string name="add_to_shopping_list_succes">añadido exitosamente a la lista de compras</string>
 </resources>

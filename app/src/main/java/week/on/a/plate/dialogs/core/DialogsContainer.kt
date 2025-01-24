@@ -108,7 +108,7 @@ fun DialogsContainer(
                         .padding(vertical = 36.dp)
                 ) {
                     CalendarMy(data.stateCalendar, { event -> data.onEvent(event) }) {
-                        onEvent(ChooseWeekDialogEvent.Done)
+                        onEvent(ChooseWeekDialogEvent.Done(it))
                     }
                 }
             }

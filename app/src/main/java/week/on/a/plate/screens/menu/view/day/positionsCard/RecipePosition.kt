@@ -38,7 +38,6 @@ import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.ImageLoad
 import week.on.a.plate.core.uitools.SubText
 import week.on.a.plate.core.uitools.TextBody
-import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.CheckButton
 import week.on.a.plate.core.uitools.buttons.MoreButtonWithBackg
 import week.on.a.plate.data.dataView.example.shortRecipe

@@ -33,7 +33,7 @@ import week.on.a.plate.data.dataView.CookPlannerStepView
 import week.on.a.plate.data.dataView.example.recipeExampleBase
 import week.on.a.plate.screens.cookPlanner.event.CookPlannerEvent
 import week.on.a.plate.screens.createRecipe.view.recipe.PinnedIngredientsForStep
-import week.on.a.plate.screens.filters.view.clickNoRipple
+import week.on.a.plate.core.uitools.clickNoRipple
 import week.on.a.plate.screens.recipeDetails.view.steps.TimerButton
 import java.time.LocalDateTime
 
@@ -104,7 +104,7 @@ fun CookGroup(group: CookPlannerGroupView, onEvent: (Event) -> Unit) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     painterResource(R.drawable.time),
-                    "",
+                    "Time",
                     tint = MaterialTheme.colorScheme.onBackground
                 )
                 Spacer(Modifier.width(12.dp))

@@ -2,7 +2,6 @@ package week.on.a.plate.core.uitools
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,7 +17,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
-import week.on.a.plate.core.theme.ColorButtonGreen
 import week.on.a.plate.core.theme.ColorSubTextGrey
 import week.on.a.plate.core.theme.Typography
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
@@ -27,7 +25,6 @@ import week.on.a.plate.core.theme.titleLargeNonItalic
 import week.on.a.plate.core.theme.titleMediumItalic
 import week.on.a.plate.data.dataView.recipe.IngredientView
 import week.on.a.plate.data.dataView.recipe.RecipeTagView
-import week.on.a.plate.screens.filters.view.clickNoRipple
 
 
 @Composable

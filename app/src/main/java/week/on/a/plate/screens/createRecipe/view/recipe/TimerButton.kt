@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.utils.timeToString
-import week.on.a.plate.screens.filters.view.clickNoRipple
+import week.on.a.plate.core.uitools.clickNoRipple
 
 @Composable
 fun TimerButton(time:Int, edit:()->Unit){
@@ -32,7 +32,7 @@ fun TimerButton(time:Int, edit:()->Unit){
             .padding(horizontal = 12.dp, vertical = 5.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(painter = painterResource(id = R.drawable.timer), contentDescription = "")
+        Icon(painter = painterResource(id = R.drawable.timer), contentDescription = "Timer")
         Spacer(modifier = Modifier.width(5.dp))
         TextBody(text = time.timeToString(LocalContext.current))
     }

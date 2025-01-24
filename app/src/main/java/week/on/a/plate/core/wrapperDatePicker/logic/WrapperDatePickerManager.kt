@@ -5,7 +5,6 @@ import kotlinx.coroutines.launch
 import week.on.a.plate.data.repository.tables.cookPlanner.CookPlannerStepRepository
 import week.on.a.plate.data.repository.tables.menu.selection.WeekMenuRepository
 import week.on.a.plate.dialogs.chooseWeekInMenu.logic.ChooseWeekViewModel
-import week.on.a.plate.mainActivity.event.MainEvent
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.dialogs.calendarMy.logic.CalendarMyUseCase
 import week.on.a.plate.core.wrapperDatePicker.event.WrapperDatePickerEvent
@@ -51,7 +50,7 @@ class WrapperDatePickerManager @Inject constructor(
     }
 
     fun changeWeek(date: LocalDate, wrapperDatePickerUIState: WrapperDatePickerUIState, use:(date: LocalDate)->Unit) {
-        wrapperDatePickerUIState.activeDayInd.value = date.dayOfWeek.ordinal
+        wrapperDatePickerUIState.activeDay.value = date
         use(date)
     }
 }

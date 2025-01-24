@@ -1,7 +1,6 @@
 package week.on.a.plate.screens.shoppingList.view
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,14 +35,12 @@ import week.on.a.plate.core.theme.ColorSubTextGrey
 import week.on.a.plate.core.theme.Typography
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.TextBody
-import week.on.a.plate.core.uitools.TextDisplayItalic
 import week.on.a.plate.core.uitools.TextSmall
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.TextTitleLarge
-import week.on.a.plate.core.uitools.TextTitleLargeItalic
 import week.on.a.plate.core.utils.getIngredientCountAndMeasure1000
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
-import week.on.a.plate.screens.filters.view.clickNoRipple
+import week.on.a.plate.core.uitools.clickNoRipple
 import week.on.a.plate.screens.shoppingList.event.ShoppingListEvent
 import week.on.a.plate.screens.shoppingList.logic.ShoppingListViewModel
 import week.on.a.plate.screens.shoppingList.state.ShoppingListUIState
@@ -78,15 +75,19 @@ fun ShoppingListContent(state: ShoppingListUIState, onEvent: (ShoppingListEvent)
                 modifier = Modifier.weight(1f)
             )
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(painterResource(R.drawable.delete), "", modifier = Modifier
+                Icon(painterResource(R.drawable.delete), "Delete", modifier = Modifier
+                    .size(48.dp)
                     .clickNoRipple {
                         onEvent(ShoppingListEvent.DeleteAll(context))
                     }
-                    .size(30.dp))
+                    )
                 Spacer(Modifier.width(12.dp))
-                Icon(painterResource(R.drawable.share), "", modifier = Modifier.clickNoRipple {
+                Icon(painterResource(R.drawable.share), "Share", modifier = Modifier
+                    .size(38.dp)
+                    .clickNoRipple {
                     onEvent(ShoppingListEvent.Share(context))
-                })
+                }
+                )
             }
         }
         HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.outline)
@@ -113,7 +114,7 @@ fun ShoppingListContent(state: ShoppingListUIState, onEvent: (ShoppingListEvent)
                         TextBody(text = stringResource(R.string.bought))
                         Icon(
                             painter = painterResource(id = R.drawable.delete),
-                            contentDescription = "", modifier = Modifier
+                            contentDescription = "Delete", modifier = Modifier
                                 .clickNoRipple {
                                     onEvent(ShoppingListEvent.DeleteChecked)
                                 }
@@ -143,7 +144,7 @@ fun ShoppingListContent(state: ShoppingListUIState, onEvent: (ShoppingListEvent)
                 Spacer(Modifier.height(12.dp))
                 TextBody(stringResource(R.string.hint_add_to_shopping_list))
                 Spacer(Modifier.height(24.dp))
-                NativeAdRow("R-M-13419544-6")
+                //NativeAdRow("R-M-13419544-6")
             }
         }
     }

@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.core.uitools.buttons.MoreButton
 import week.on.a.plate.data.dataView.week.Position
-import week.on.a.plate.screens.filters.view.clickNoRipple
+import week.on.a.plate.core.uitools.clickNoRipple
 import week.on.a.plate.screens.menu.event.MenuEvent
 import week.on.a.plate.screens.searchRecipes.view.resultScreen.TagListHidden
 
@@ -39,7 +39,7 @@ fun DraftPosition(
         }
         Image(
             painter = painterResource(id = R.drawable.search),
-            contentDescription = "",
+            contentDescription = "Search recipes by draft",
             modifier = Modifier
                 .size(24.dp)
                 .clickNoRipple { onEvent(MenuEvent.SearchByDraft(draft)) },

@@ -36,7 +36,7 @@ fun SearchCategoriesScreen(stateUI: SearchUIState, onEvent: (SearchScreenEvent) 
     LazyColumn(
         Modifier
             .fillMaxSize()
-            .padding(horizontal = 12.dp)
+            .padding(horizontal = 12.dp).background(MaterialTheme.colorScheme.surface)
     ) {
         item {
             TextTitle(text = stringResource(R.string.special), Modifier.padding(start = 12.dp))
@@ -80,9 +80,9 @@ fun CardAbstractCategoryRecipe(name: String, click: () -> Unit) {
                 click()
             }
             .padding(end = 24.dp)
-            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(10.dp))
+            .background(MaterialTheme.colorScheme.background, RoundedCornerShape(10.dp))
             .padding(20.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background)
     ) {
         TagSmall(name, MaterialTheme.colorScheme.primary)
     }
@@ -119,9 +119,9 @@ fun CardTag(recipeTagView: RecipeTagView, onEvent: (SearchScreenEvent) -> Unit) 
             }
             .padding(end = 24.dp)
             .padding(bottom = 12.dp)
-            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(10.dp))
+            .background(MaterialTheme.colorScheme.background, RoundedCornerShape(10.dp))
             .padding(20.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background)
     ) {
         TagSmall(recipeTagView)
     }

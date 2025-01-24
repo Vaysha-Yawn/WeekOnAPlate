@@ -21,8 +21,8 @@ android {
         applicationId = "week.on.a.plate"
         minSdk = 28
         targetSdk = 34
-        versionCode = 4
-        versionName = "1.3"
+        versionCode = 2
+        versionName = "1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -72,9 +72,7 @@ android {
 
 
 dependencies {
-    implementation ("com.yandex.android:mobileads:7.8.1")
-
-    implementation ("com.yandex.android:mobileads:7.8.0")
+    implementation ("com.yandex.android:mobileads:7.9.0")
 
     implementation("io.coil-kt:coil-compose:2.7.0")
 

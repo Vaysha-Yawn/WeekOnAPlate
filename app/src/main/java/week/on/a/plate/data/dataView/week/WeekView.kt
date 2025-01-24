@@ -15,10 +15,10 @@ fun getTitleWeek(start:LocalDate, end:LocalDate): String {
     val formatterMonth = DateTimeFormatter.ofPattern("MM")
     val formatterDay = DateTimeFormatter.ofPattern("d")
 
-    val month = start.format(formatterMonth).capitalize(Locale("ru"))
+    val month = start.format(formatterMonth).capitalize(Locale.getDefault())
     val startDay = start.format(formatterDay)
     val endDay = end.format(formatterDay)
-    val endMonth = end.format(formatterMonth).capitalize(Locale("ru"))
+    val endMonth = end.format(formatterMonth).capitalize(Locale.getDefault())
 
     return "$startDay.$month - $endDay.$endMonth"
 }

@@ -58,7 +58,7 @@ class ChooseWeekViewModel @Inject constructor(
     fun onEvent(event: ChooseWeekDialogEvent) {
         when (event) {
             ChooseWeekDialogEvent.Close -> close()
-            ChooseWeekDialogEvent.Done -> done(stateCalendar.activeDate.value)
+            is ChooseWeekDialogEvent.Done -> done(event.date)
         }
     }
 

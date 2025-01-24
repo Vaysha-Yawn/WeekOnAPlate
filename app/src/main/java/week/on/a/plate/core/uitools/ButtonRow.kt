@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import week.on.a.plate.screens.filters.view.clickNoRipple
 
 @Composable
 fun ButtonRow(imgRec: Int, imgSecRec: Int? = null, text: String, event: () -> Unit) {

@@ -2,11 +2,9 @@ package week.on.a.plate.core.uitools.buttons
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -22,12 +20,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
-import week.on.a.plate.core.uitools.TextDisplayItalic
 import week.on.a.plate.core.uitools.TextInApp
 import week.on.a.plate.core.theme.ColorButtonNegativeGrey
 import week.on.a.plate.core.theme.Typography
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
-import week.on.a.plate.screens.filters.view.clickNoRipple
+import week.on.a.plate.core.uitools.clickNoRipple
 
 @Composable
 fun ButtonsCounter(
@@ -44,7 +41,7 @@ fun ButtonsCounter(
     ) {
         Image(
             painter = painterResource(id = R.drawable.remove),
-            contentDescription = "",
+            contentDescription = "Minus portions",
             modifier = Modifier
                 .background(ColorButtonNegativeGrey, CircleShape)
                 .padding(12.dp)
@@ -58,7 +55,7 @@ fun ButtonsCounter(
         )
         Image(
             painter = painterResource(id = R.drawable.plus),
-            contentDescription = "",
+            contentDescription = "Plus portions",
             modifier = Modifier
                 .background(ColorButtonNegativeGrey, CircleShape)
                 .padding(12.dp)
@@ -82,7 +79,7 @@ fun ButtonsCounterSmall(
     ) {
         Image(
             painter = painterResource(id = R.drawable.remove),
-            contentDescription = "",
+            contentDescription = "Minus portions",
             modifier = Modifier
                 .background(ColorButtonNegativeGrey, CircleShape)
                 .padding(6.dp)
@@ -96,7 +93,7 @@ fun ButtonsCounterSmall(
         )
         Image(
             painter = painterResource(id = R.drawable.plus),
-            contentDescription = "",
+            contentDescription = "Plus portions",
             modifier = Modifier
                 .background(ColorButtonNegativeGrey, CircleShape)
                 .padding(6.dp)

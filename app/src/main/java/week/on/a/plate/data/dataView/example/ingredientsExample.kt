@@ -14,11 +14,6 @@ enum class Measure(val small: Int, val big: Int) {
 fun getStartIngredients(context: Context): List<IngredientCategoryView> {
     return listOf(
         IngredientCategoryView(
-            0,
-            context.getString(startCategoryName),
-            listOf()
-        ),
-        IngredientCategoryView(
             0, context.getString(R.string.ingredient_category_meat_and_poultry),
             listOf(
                 IngredientView(1, "",

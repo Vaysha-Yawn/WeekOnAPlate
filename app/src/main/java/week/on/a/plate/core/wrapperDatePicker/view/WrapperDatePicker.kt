@@ -30,11 +30,11 @@ fun WrapperDatePicker(
     Column(
         Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(MaterialTheme.colorScheme.surface)
             .padding(top = 10.dp)
     ) {
         val weekTitle = uiState.titleTopBar.value
-        val curDay = week[uiState.activeDayInd.value].first.dateToString()
+        val curDay = uiState.activeDay.value.dateToString()
         TopBar(weekTitle, curDay, editing, uiState,
             actionDeleteSelected = { onEvent(MenuEvent.DeleteSelected) },
             actionSelectedToShopList = { onEvent(MenuEvent.SelectedToShopList) }, onEvent
@@ -47,12 +47,11 @@ fun WrapperDatePicker(
                 Pair(date, isPlanned)
             }
             BlockCalendar(daysForCalendar, uiState, changeDay = { ind ->
-                uiState.activeDayInd.value = ind
                 uiState.activeDay.value = week[ind].first
             }, chooseLastWeek = {
                 onEvent(
                     WrapperDatePickerEvent.ChangeWeek(
-                        week[uiState.activeDayInd.value].first.minusWeeks(
+                        uiState.activeDay.value.minusWeeks(
                             1
                         )
                     )
@@ -60,7 +59,7 @@ fun WrapperDatePicker(
             }, chooseNextWeek = {
                 onEvent(
                     WrapperDatePickerEvent.ChangeWeek(
-                        week[uiState.activeDayInd.value].first.plusWeeks(
+                        uiState.activeDay.value.plusWeeks(
                             1
                         )
                     )

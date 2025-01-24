@@ -125,7 +125,6 @@ class MainViewModel @Inject constructor(
         menuViewModel.menuUIState.nonPosedFullName.value = nonPosedText
 
         specifySelectionViewModel.updateSelections()
-        menuViewModel.updateWeek()
 
         cookPlannerViewModel.initWithMainVM(this)
         recipeCreateViewModel.initWithMainVM(this)

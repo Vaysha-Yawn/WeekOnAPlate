@@ -20,6 +20,7 @@ import week.on.a.plate.core.uitools.buttons.PlusButtonTitle
 import week.on.a.plate.data.dataView.week.NonPosed
 import week.on.a.plate.data.dataView.week.SelectionView
 import week.on.a.plate.screens.menu.event.MenuEvent
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -31,7 +32,7 @@ fun TitleMenu(selection: SelectionView, modifier: Modifier, onEvent: (event: Eve
         verticalAlignment = Alignment.CenterVertically
     ) {
         TextTitle(
-            text = if (selection.name == "" && selection.dateTime.toLocalTime() == NonPosed.stdTime) stringResource(R.string.for_day) else selection.name,
+            text =  if (selection.name.trim() == "" && selection.dateTime.toLocalTime() == NonPosed.stdTime) stringResource(R.string.for_day) else selection.name,
             modifier = Modifier
                 .padding(end = 20.dp)
                 .combinedClickable(
@@ -41,7 +42,6 @@ fun TitleMenu(selection: SelectionView, modifier: Modifier, onEvent: (event: Eve
                     }
                 ),
         )
-        val context = LocalContext.current
         PlusButtonTitle() {
             if (selection.id == 0L) {
                 onEvent(MenuEvent.CreateFirstNonPosedPosition(selection.dateTime.toLocalDate(), selection, context))
@@ -61,18 +61,17 @@ fun TitleMenuS(selection: SelectionView, modifier: Modifier, onEvent: (event: Ev
         verticalAlignment = Alignment.CenterVertically
     ) {
         TextTitle(
-            text = if (selection.name == "" && selection.dateTime.toLocalTime() == NonPosed.stdTime) stringResource(R.string.for_day) else selection.name,
+            text = if (selection.name.trim() == "" && selection.dateTime.toLocalTime() == NonPosed.stdTime) stringResource(R.string.for_day) else selection.name,
             modifier = Modifier
                 .padding(end = 20.dp)
                 .combinedClickable(
                     onClick = {},
                     onLongClick = {
-                        onEvent(week.on.a.plate.screens.menu.event.MenuEvent.EditOrDeleteSelection(selection, context))
+                        onEvent(MenuEvent.EditOrDeleteSelection(selection, context))
                     }
                 ),
             color = ColorSubTextGrey
         )
-        val context = LocalContext.current
         PlusButtonTitle() {
             if (selection.id == 0L) {
                 onEvent(MenuEvent.CreateFirstNonPosedPosition(selection.dateTime.toLocalDate(), selection, context, ))
@@ -96,7 +95,7 @@ fun TitleMenuSmall(name: String, actionAdd: () -> Unit) {
 fun PreviewTitleMenu() {
     WeekOnAPlateTheme {
         Column {
-            TitleMenu(SelectionView(0L, "Понедельник", LocalDateTime.now(), 0,
+            TitleMenu(SelectionView(0L, "", NonPosed.stdTime.atDate(LocalDate.now()), 0,
                 false,mutableListOf()), Modifier) {}
             TitleMenuSmall("Понедельник") {}
         }

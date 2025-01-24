@@ -16,13 +16,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
-import week.on.a.plate.screens.filters.view.clickNoRipple
+import week.on.a.plate.core.uitools.clickNoRipple
 
 @Composable
 fun ActionPlusButton(modifier:Modifier = Modifier, actionAdd: () -> Unit) {
     Image(
         painter = painterResource(id = R.drawable.add),
-        contentDescription = "",
+        contentDescription = "Plus",
         modifier = modifier
             .background(MaterialTheme.colorScheme.secondary, CircleShape)
             .padding(6.dp)
@@ -35,7 +35,7 @@ fun ActionPlusButton(modifier:Modifier = Modifier, actionAdd: () -> Unit) {
 fun PlusButtonCard(actionAdd: () -> Unit) {
     Image(
         painter = painterResource(id = R.drawable.add),
-        contentDescription = "",
+        contentDescription = "Plus",
         modifier = Modifier
             .background(MaterialTheme.colorScheme.secondary, RoundedCornerShape(5.dp))
             .size(36.dp)
@@ -47,7 +47,7 @@ fun PlusButtonCard(actionAdd: () -> Unit) {
 fun PlusButtonTitle(actionAdd: () -> Unit) {
     Image(
         painter = painterResource(id = R.drawable.add),
-        contentDescription = "",
+        contentDescription = "Plus",
         modifier = Modifier
             .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(5.dp))
             .padding(2.dp)

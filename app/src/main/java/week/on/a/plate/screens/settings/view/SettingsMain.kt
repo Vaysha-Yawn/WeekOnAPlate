@@ -29,7 +29,7 @@ import week.on.a.plate.core.Event
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextTitleLarge
-import week.on.a.plate.screens.filters.view.clickNoRipple
+import week.on.a.plate.core.uitools.clickNoRipple
 import week.on.a.plate.screens.settings.event.SettingsEvent
 import week.on.a.plate.screens.settings.logic.SettingsViewModel
 import week.on.a.plate.screens.settings.state.SettingsUIState
@@ -62,7 +62,7 @@ fun SettingsContent(state: SettingsUIState, onEvent: (Event) -> Unit) {
             //SettingItem("Экспортировать рецепты", null, SettingsEvent.Export(context)),
             //SettingItem("Включить большие шрифты", null, SettingsEvent.BigType(context)),
             //SettingItem("Аккаунт", null, SettingsEvent.Profile(context)),
-            SettingItem(context.getString(R.string.rate_app), null, SettingsEvent.RateApp(context)),
+            //SettingItem(context.getString(R.string.rate_app), null, SettingsEvent.RateApp(context)),
             //SettingItem("Премиум", null, SettingsEvent.Premium(context)),
             SettingItem(
                 context.getString(R.string.pp),

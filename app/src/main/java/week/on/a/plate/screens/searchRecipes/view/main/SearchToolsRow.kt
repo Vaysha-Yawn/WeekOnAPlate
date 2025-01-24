@@ -40,7 +40,7 @@ fun SearchResultEditRow(state: SearchUIState, onEvent: (SearchScreenEvent) -> Un
             ) {
                 Icon(
                     painterResource(R.drawable.grid),
-                    "",
+                    "Card view",
                     modifier = Modifier
                         .clickable {
                             state.modeResultViewIsList.value = false

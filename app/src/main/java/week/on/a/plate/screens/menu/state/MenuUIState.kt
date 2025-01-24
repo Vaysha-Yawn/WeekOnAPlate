@@ -1,7 +1,7 @@
 package week.on.a.plate.screens.menu.state
 
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import week.on.a.plate.data.dataView.example.WeekDataExample
 import week.on.a.plate.data.dataView.week.Position
@@ -23,9 +23,9 @@ data class MenuUIState(
             mutableMapOf(),
             mutableStateOf(false),
             mutableStateOf(WeekDataExample),
-            WrapperDatePickerUIState(mutableStateOf(LocalDate.now()),
+            WrapperDatePickerUIState(
+                mutableStateOf(LocalDate.now()),
                 mutableStateOf(true),
-                mutableIntStateOf(0),
                 mutableStateOf("Август 26-1"),
                 mutableStateOf(false),)
         )

@@ -49,7 +49,7 @@ fun NotePosition(
             Spacer(modifier = Modifier.width(20.dp))
             Image(
                 painter = painterResource(id = R.drawable.note),
-                contentDescription = "",
+                contentDescription = "Note",
                 modifier = Modifier
                     .size(24.dp),
             )

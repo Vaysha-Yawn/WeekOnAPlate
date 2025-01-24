@@ -340,5 +340,5 @@
     <string name="ingredient_broth">Бульйон</string>
     <string name="for_day">На день</string>
     <string name="tag_snack">Перекус</string>
-    <string name="add_to_shopping_list_succes">успешно добавлен в список покупок</string>
+    <string name="add_to_shopping_list_succes">успішно доданий до списку покупок</string>
 </resources>

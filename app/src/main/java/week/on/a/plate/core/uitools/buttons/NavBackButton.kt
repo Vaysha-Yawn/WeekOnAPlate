@@ -16,13 +16,13 @@ import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.core.theme.ColorStrokeGrey
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
-import week.on.a.plate.screens.filters.view.clickNoRipple
+import week.on.a.plate.core.uitools.clickNoRipple
 
 @Composable
 fun BackButton(actionBack: () -> Unit) {
     Image(
         painter = painterResource(id = R.drawable.back),
-        contentDescription = "",
+        contentDescription = "Back",
         modifier = Modifier
             .padding(12.dp)
             .size(24.dp)
@@ -34,7 +34,7 @@ fun BackButton(actionBack: () -> Unit) {
 fun BackButtonOutlined(actionBack: () -> Unit) {
     Image(
         painter = painterResource(id = R.drawable.back),
-        contentDescription = "",
+        contentDescription = "Back",
         modifier = Modifier
             .clickNoRipple(actionBack)
             .border(1.dp, ColorStrokeGrey, RoundedCornerShape(10.dp))

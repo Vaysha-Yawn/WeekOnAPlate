@@ -1,12 +1,13 @@
 package week.on.a.plate.screens.menu.logic.useCase
 
-import androidx.compose.runtime.MutableState
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import week.on.a.plate.core.wrapperDatePicker.event.WrapperDatePickerEvent
 import week.on.a.plate.core.wrapperDatePicker.logic.WrapperDatePickerManager
 import week.on.a.plate.core.wrapperDatePicker.state.WrapperDatePickerUIState
 import week.on.a.plate.mainActivity.logic.MainViewModel
 import week.on.a.plate.screens.menu.state.MenuUIState
-import java.time.LocalDate
 import javax.inject.Inject
 
 class MenuWrapperDatePickerManager @Inject constructor(private val wrapperDatePickerManager: WrapperDatePickerManager) {
@@ -15,10 +16,10 @@ class MenuWrapperDatePickerManager @Inject constructor(private val wrapperDatePi
         mainViewModel: MainViewModel,
         updateWeek: () -> Unit,
         wrapperDatePickerUIState: WrapperDatePickerUIState,
-        activeDay: MutableState<LocalDate>,
         selectedRecipeManager:SelectedRecipeManager,
         menuUIState: MenuUIState
     ) {
+        val activeDay = wrapperDatePickerUIState.activeDay
         when (event) {
             is WrapperDatePickerEvent.ChooseWeek ->
                 wrapperDatePickerManager.chooseWeek(

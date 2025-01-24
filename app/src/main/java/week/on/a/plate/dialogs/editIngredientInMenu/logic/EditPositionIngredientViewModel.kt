@@ -66,6 +66,7 @@ class EditPositionIngredientViewModel(
                     mainViewModel.onEvent(MainEvent.ShowDialog)
                     val new = it.ingredients?.getOrNull(0)
                     if (new != null) state.ingredientState.value = new
+                    else onEvent(EditPositionIngredientEvent.Close)
                 }
             }
         }

@@ -35,7 +35,7 @@ fun BlockSelection(
         for ((index, i) in selection.positions.withIndex()){
             if (index%2 == 0){
                 Row {
-                    WeekCardPosition(i, Modifier.fillMaxWidth(0.5f).padding(10.dp),  menuUIState= menuUIState, onEvent)
+                    WeekCardPosition(i, Modifier.fillMaxWidth(0.5f).padding(10.dp),  menuUIState = menuUIState, onEvent)
                     if (selection.positions.size>index+1){
                         WeekCardPosition(selection.positions[index+1], Modifier.fillMaxWidth().padding(10.dp), menuUIState= menuUIState, onEvent)
                     }

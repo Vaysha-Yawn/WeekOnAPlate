@@ -3,6 +3,8 @@ package week.on.a.plate.screens.menu.logic
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.wrapperDatePicker.event.WrapperDatePickerEvent
@@ -54,14 +56,6 @@ class MenuViewModel @Inject constructor(
     private val activeDay = menuUIState.wrapperDatePickerUIState.activeDay
     private lateinit var selectionUseCase: SelectionUseCase
 
-    init {
-        viewModelScope.launch {
-            updateWeek()
-            menuUIState.wrapperDatePickerUIState.activeDayInd.value =
-                menuUIState.wrapperDatePickerUIState.activeDay.value.dayOfWeek.ordinal
-        }
-    }
-
     fun initWithMainVM(mainViewModel: MainViewModel) {
         selectionUseCase = SelectionUseCase(
             mainViewModel,
@@ -71,10 +65,14 @@ class MenuViewModel @Inject constructor(
             activeDay,
             addPosition
         )
+
+        viewModelScope.launch {
+            updateWeek()
+        }
     }
 
     fun updateWeek() {
-        viewModelScope.launch {
+       viewModelScope.launch {
             val week = sCRUDRecipeInMenu.menuR.getCurrentWeek(
                 menuUIState.nonPosedFullName.value,
                 menuUIState.forWeekFullName.value,
@@ -84,8 +82,10 @@ class MenuViewModel @Inject constructor(
             week.days.forEach { day ->
                 day.selections = day.selections.sortedBy { it.dateTime }
             }
-            menuUIState.wrapperDatePickerUIState.titleTopBar.value =
-                getTitleWeek(week.days[0].date, week.days[6].date)
+           if (week.days.isNotEmpty()){
+               menuUIState.wrapperDatePickerUIState.titleTopBar.value =
+                   getTitleWeek(week.days[0].date, week.days[6].date)
+           }
             menuUIState.week.value = week
         }
     }
@@ -196,7 +196,6 @@ class MenuViewModel @Inject constructor(
                 mainViewModel,
                 ::updateWeek,
                 menuUIState.wrapperDatePickerUIState,
-                activeDay,
                 selectedRecipeManager,
                 menuUIState
             )

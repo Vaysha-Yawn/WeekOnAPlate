@@ -23,6 +23,7 @@ import week.on.a.plate.R
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.ImageLoad
 import week.on.a.plate.core.uitools.TextBody
+import week.on.a.plate.core.uitools.clickNoRipple
 import week.on.a.plate.screens.createRecipe.event.RecipeCreateEvent
 import week.on.a.plate.screens.createRecipe.state.RecipeCreateUIState
 
@@ -32,7 +33,7 @@ fun PhotoRecipeEdit(state: RecipeCreateUIState, onEvent: (RecipeCreateEvent) -> 
     if (state.photoLink.value == "") {
         Row(
             Modifier
-                .clickable {
+                .clickNoRipple {
                     onEvent(RecipeCreateEvent.EditMainImage(context))
                 }
                 .background(MaterialTheme.colorScheme.background, RoundedCornerShape(20.dp))
@@ -40,7 +41,7 @@ fun PhotoRecipeEdit(state: RecipeCreateUIState, onEvent: (RecipeCreateEvent) -> 
                 .padding(horizontal = 12.dp, vertical = 5.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(painter = painterResource(id = R.drawable.photo), contentDescription = "")
+            Icon(painter = painterResource(id = R.drawable.photo), contentDescription = "Add photo")
             Spacer(modifier = Modifier.width(5.dp))
             TextBody(text = stringResource(R.string.add_photo))
         }
@@ -50,15 +51,15 @@ fun PhotoRecipeEdit(state: RecipeCreateUIState, onEvent: (RecipeCreateEvent) -> 
         Row {
             Icon(
                 painter = painterResource(id = R.drawable.close),
-                contentDescription = "",
-                modifier = Modifier.clickable {
+                contentDescription = "Remove photo",
+                modifier = Modifier.clickNoRipple {
                     state.photoLink.value = ""
                 })
             Spacer(modifier = Modifier.width(12.dp))
 
             ImageLoad(url = state.photoLink.value, modifier = Modifier
                 .height(160.dp)
-                .clickable {
+                .clickNoRipple {
                     onEvent(RecipeCreateEvent.EditMainImage(context))
                 })
         }

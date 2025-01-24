@@ -1,6 +1,11 @@
 package week.on.a.plate.data.repository.tables.menu.position.note
 
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import week.on.a.plate.data.dataView.week.Position
 import javax.inject.Inject
 
@@ -10,16 +15,25 @@ class PositionNoteRepository @Inject constructor(
 ) {
 
     suspend fun getAllInSel(selectionId: Long): List<Position.PositionNoteView> {
-        val positionNoteRoom = positionNoteDAO.getAllInSel(selectionId)
-        val list = mutableListOf<Position.PositionNoteView>()
-        positionNoteRoom.forEach { noteRoom ->
-            with(PositionNoteMapper()) {
-                val noteView =
-                    noteRoom.roomToView()
-                list.add(noteView)
+        return positionNoteDAO.getAllInSel(selectionId).map { noteRoom ->
+            noteRoom.noteRoomToView()
+        }
+    }
+
+    fun getAllInSelFlow(
+        selectionId: Long
+    ): Flow<List<State<Position>>> {
+        return positionNoteDAO.getAllInSelFlow(selectionId).map {
+            it.map { noteRoom ->
+                mutableStateOf(noteRoom.noteRoomToView())
             }
         }
-        return list
+    }
+
+    private fun PositionNoteRoom.noteRoomToView(): Position.PositionNoteView {
+        return with(PositionNoteMapper()) {
+            roomToView()
+        }
     }
 
     suspend fun insert(note: Position.PositionNoteView, selectionId: Long): Long {

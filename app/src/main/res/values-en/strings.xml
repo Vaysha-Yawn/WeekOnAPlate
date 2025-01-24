@@ -71,8 +71,8 @@
     <string name="tag_name">Tag Name</string>
     <string name="enter_tag_name_here">Enter Tag Name Here</string>
     <string name="plan_your_cooking">Plan Cooking</string>
-    <string name="choose_meal_times">Choose meal times</string>
-    <string name="meal_time_tip">* Meal times are used to sort the menu</string>
+    <string name="choose_meal_times">Choose meal time</string>
+    <string name="meal_time_tip">* Meal time are used to sort the menu</string>
     <string name="ask_exit">Are you sure you want to exit?</string>
     <string name="exit_tip">Changes will not be saved when you exit.</string>
     <string name="stay">Stay</string>
@@ -336,7 +336,7 @@
     <string name="ingredient_bread">Bread</string>
     <string name="ingredient_water">Water</string>
     <string name="ingredient_broth">Broth</string>
-    <string name="for_day">На день</string>
-    <string name="tag_snack">Перекус</string>
-    <string name="add_to_shopping_list_succes">успешно добавлен в список покупок</string>
+    <string name="for_day">For a day</string>
+    <string name="tag_snack">Snack</string>
+    <string name="add_to_shopping_list_succes">successfully added to shopping list</string>
 </resources>

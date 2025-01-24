@@ -40,9 +40,6 @@ class CookPlannerViewModel @Inject constructor(
             mainViewModel,
             state.wrapperDatePickerUIState
         )
-    }
-
-    init {
         val activeDate = state.wrapperDatePickerUIState.activeDay.value
         val startWeek = activeDate.minusDays(activeDate.dayOfWeek.ordinal.toLong())
         val endWeek = activeDate.plusDays(6 - activeDate.dayOfWeek.ordinal.toLong())
@@ -52,7 +49,7 @@ class CookPlannerViewModel @Inject constructor(
 
     fun update() {
         state.week.value = mapOf()
-        val week = getWeekUseCase(state.wrapperDatePickerUIState.activeDay.value)
+        val week = getWeekUseCase(state.wrapperDatePickerUIState.activeDay.value, mainViewModel.locale)
         week.entries.forEach { dateAndList ->
             viewModelScope.launch {
                 dateAndList.value.stateIn(viewModelScope).collect {

@@ -24,6 +24,7 @@ fun SearchResultScreen(
     state: SearchUIState,
     onEvent: (SearchScreenEvent) -> Unit
 ) {
+    if (result.isEmpty()) return
     LazyColumn() {
         itemsIndexed(result) { index, recipe ->
             if (state.modeResultViewIsList.value) {
@@ -62,7 +63,7 @@ fun SearchResultScreen(
 @Composable
 fun PreviewSearchResult() {
     WeekOnAPlateTheme {
-        Column {
+        Column(Modifier.fillMaxWidth()) {
             SearchResultScreen(
                 listOf(recipeTom, recipeTom, recipeTom, recipeTom),
                 SearchUIState()

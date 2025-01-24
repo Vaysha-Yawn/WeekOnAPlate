@@ -5,12 +5,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import week.on.a.plate.data.repository.tables.cookPlanner.CookPlannerStepRepository
 import week.on.a.plate.data.repository.tables.menu.selection.WeekMenuRepository
+import week.on.a.plate.data.repository.tables.menu.selection.getDaysOfWeek
 import week.on.a.plate.dialogs.calendarMy.event.CalendarMyEvent
 import week.on.a.plate.dialogs.calendarMy.state.StateCalendarMy
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.TextStyle
+import java.time.temporal.WeekFields
 import javax.inject.Inject
 
 class CalendarMyUseCase @Inject constructor(
@@ -33,8 +35,8 @@ class CalendarMyUseCase @Inject constructor(
         }
     }
 
-    fun getFirstRow(locale: java.util.Locale): List<String> {
-        return DayOfWeek.entries.map { it.getDisplayName(TextStyle.SHORT, locale) }
+    fun getFirstRow(locale: java.util.Locale): List<DayOfWeek> {
+        return getDaysOfWeek(LocalDate.now(), locale).map { it.dayOfWeek }
     }
 
     suspend fun updateMonthValue(state: StateCalendarMy, isForMenu:Boolean) {

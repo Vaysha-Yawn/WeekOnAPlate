@@ -9,11 +9,6 @@ import week.on.a.plate.data.repository.tables.filters.recipeTagCategory.startCat
 fun getTags(context:Context): List<TagCategoryView> {
     return listOf(
         TagCategoryView(
-            0,
-            context.getString(startCategoryName),
-            listOf()
-        ),
-        TagCategoryView(
             1,
             context.getString(R.string.tag_category_by_meal),
             listOf(

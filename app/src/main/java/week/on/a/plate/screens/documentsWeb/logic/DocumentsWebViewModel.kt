@@ -31,6 +31,7 @@ class DocumentsWebViewModel @Inject constructor() : ViewModel() {
     fun launch(isForPP:Boolean){
         if (isForPP) {
             state.url.value = "https://doc-hosting.flycricket.io/week-on-a-plate-privacy-policy/e45d7ef4-b7c6-4644-af13-9fe7a30ce8d6/privacy"
+            //state.url.value = "https://docs.google.com/document/d/1tC-KGOy9NMy2xWv8P4ka3qGmvtSrC-LlmYbCTd4bjmY/edit?usp=sharing"
         }else{
             state.url.value = "https://doc-hosting.flycricket.io/week-on-a-plate-terms-of-use/56f5b45b-7a67-43d8-a06c-6822c10a1d34/terms"
         }

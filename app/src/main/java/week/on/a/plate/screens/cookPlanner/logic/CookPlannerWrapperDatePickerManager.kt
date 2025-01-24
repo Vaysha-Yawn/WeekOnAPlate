@@ -18,8 +18,6 @@ class CookPlannerWrapperDatePickerManager(
                     wrapperDatePickerUIState
                 ) { date ->
                     wrapperDatePickerUIState.activeDay.value = date
-                    wrapperDatePickerUIState.activeDayInd.value =
-                        date.dayOfWeek.ordinal
                 }
             }
 
@@ -30,8 +28,6 @@ class CookPlannerWrapperDatePickerManager(
                     false
                 ) { date ->
                     wrapperDatePickerUIState.activeDay.value = date
-                    wrapperDatePickerUIState.activeDayInd.value =
-                        date.dayOfWeek.ordinal
                 }
             }
 

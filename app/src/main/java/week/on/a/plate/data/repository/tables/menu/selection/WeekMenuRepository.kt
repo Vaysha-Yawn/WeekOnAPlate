@@ -1,6 +1,14 @@
 package week.on.a.plate.data.repository.tables.menu.selection
 
-import android.content.Context
+import androidx.compose.runtime.State
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import week.on.a.plate.data.dataView.week.DayView
 import week.on.a.plate.data.dataView.week.ForWeek
 import week.on.a.plate.data.dataView.week.NonPosed
@@ -31,7 +39,7 @@ class WeekMenuRepository @Inject constructor(
     private val positionRecipeRepository: PositionRecipeRepository,
     private val selectionDAO: SelectionDAO,
     private val categorySelectionDAO: CategorySelectionDAO,
-    ) {
+) {
 
     private val selectionMapper = SelectionMapper()
 
@@ -48,53 +56,30 @@ class WeekMenuRepository @Inject constructor(
             val sel = selectionDAO.findSelectionForWeek(week)
             sel?.id ?: selectionDAO.insert(SelectionRoom(category, dateTime, week, isForWeek))
         } else {
-            val sel = selectionDAO.findSelectionForDayByName(dateTime.toLocalDate().toString(), category)
+            val sel =
+                selectionDAO.findSelectionForDayByName(dateTime.toLocalDate().toString(), category)
             sel?.id ?: selectionDAO.insert(SelectionRoom(category, dateTime, week, isForWeek))
         }
     }
 
-    private fun getDaysOfWeek(oneDate: LocalDate, locale: Locale): MutableList<LocalDate> {
-        val firstDayOfWeek = WeekFields.of(locale).firstDayOfWeek
-        val lastDayOfWeek = firstDayOfWeek.minus(1)
-
-        val startOfWeek = oneDate.with(TemporalAdjusters.previousOrSame(firstDayOfWeek))
-        val endOfWeek = oneDate.with(TemporalAdjusters.nextOrSame(lastDayOfWeek))
-
-        val daysOfWeek = mutableListOf<LocalDate>()
-        var currentDay = startOfWeek
-        while (!currentDay.isAfter(endOfWeek)) {
-            daysOfWeek.add(currentDay)
-            currentDay = currentDay.plusDays(1)
-        }
-        return daysOfWeek
-    }
-
-    suspend fun getCurrentWeek(nonPosedFullName: String, forWeekFullName:String, date: LocalDate, locale: Locale): WeekView {
+    private fun getWeekOfYear(locale: Locale, date: LocalDate): Int {
         val calendar = Calendar.getInstance(locale)
         calendar.set(date.year, date.monthValue, date.dayOfMonth)
-        val weekOfYear = calendar.get(Calendar.WEEK_OF_YEAR)
+        return calendar.get(Calendar.WEEK_OF_YEAR)
+    }
 
+    suspend fun getCurrentWeek(
+        nonPosedFullName: String,
+        forWeekFullName: String,
+        date: LocalDate,
+        locale: Locale
+    ): WeekView {
+        val weekOfYear = getWeekOfYear(locale, date)
         val dayDates = getDaysOfWeek(date, locale)
         val dayViews = dayDates.map { dateDay ->
             val listSelections = getSelectionsByDate(dateDay)
-            var listSuggest = categorySelectionDAO.getAll().toMutableList()
-            listSuggest.add(CategorySelectionRoom(nonPosedFullName, NonPosed.stdTime))
-            listSuggest =  listSuggest.sortedBy { it.stdTime }.toMutableList()
-            for (i in listSuggest) {
-                if (listSelections.find { it.name == i.name } == null) {
-                    listSelections.add(
-                        SelectionView(
-                            0,
-                            i.name,
-                            LocalDateTime.of(dateDay, i.stdTime),
-                            weekOfYear,
-                            false,
-                            mutableListOf(),
-                        )
-                    )
-                }
-            }
-            DayView(dateDay, listSelections)
+            addSuggest (nonPosedFullName, listSelections, dateDay, weekOfYear)
+            DayView (dateDay, listSelections)
         }
 
         val roomSel = selectionDAO.findSelectionForWeek(weekOfYear)
@@ -116,10 +101,122 @@ class WeekMenuRepository @Inject constructor(
         return week
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    fun getCurrentWeekFlow(
+        nonPosedFullName: String,
+        forWeekFullName: String,
+        date: LocalDate,
+        locale: Locale,
+        scope:CoroutineScope
+    ): Flow<WeekView> {
+        val weekOfYear = getWeekOfYear(locale, date)
+        val dayDates = getDaysOfWeek(date, locale)
+        val dayViews = dayDates.map { dateDay ->
+            val listSelections = getSelectionsByDateFlow(dateDay, scope)
+            listSelections.onEach {
+                addSuggest (nonPosedFullName, it.toMutableList(), dateDay, weekOfYear)
+            }
+            val flowDayView = listSelections.map {
+                DayView (dateDay, it)
+            }
+            flowDayView
+        }
+        val flowDayViews = combine(dayViews){
+            it.toList()
+        }
+
+        val weekSel = selectionDAO.findSelectionForWeekFlow(weekOfYear).flatMapLatest {roomSel->
+            if (roomSel != null) {
+                mapSelectionFlow(roomSel, scope)
+            } else {
+                flow{
+                    SelectionView(
+                        0,
+                        forWeekFullName,
+                        LocalDateTime.of(date, ForWeek.stdTime),
+                        weekOfYear,
+                        true,
+                        mutableListOf(),
+                    )
+                }
+            }
+        }
+
+        return combine(weekSel, flowDayViews){weekSeld, dayViewsd->
+            WeekView(weekOfYear, weekSeld, dayViewsd)
+        }
+    }
+
+    private suspend fun addSuggest(
+        nonPosedFullName: String,
+        listSelections: MutableList<SelectionView>,
+        dateDay: LocalDate,
+        weekOfYear: Int
+    ) {
+        var listSuggest = categorySelectionDAO.getAll().toMutableList()
+        listSuggest.add(CategorySelectionRoom(nonPosedFullName, NonPosed.stdTime))
+        listSuggest = listSuggest.sortedBy { it.stdTime }.toMutableList()
+        for (i in listSuggest) {
+            if (listSelections.find { it.name == i.name } == null) {
+                listSelections.add(
+                    SelectionView(
+                        0,
+                        i.name,
+                        LocalDateTime.of(dateDay, i.stdTime),
+                        weekOfYear,
+                        false,
+                        mutableListOf(),
+                    )
+                )
+            }
+        }
+    }
+
     suspend fun getSelectionsByDate(date: LocalDate): MutableList<SelectionView> {
         return selectionDAO.findSelectionsForDay(date.toString()).map { sel ->
             mapSelection(sel)
         }.toMutableList()
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    fun getSelectionsByDateFlow(date: LocalDate, scope: CoroutineScope): Flow<List<SelectionView>> {
+        return selectionDAO.findSelectionsForDayFlow(date.toString())
+            .flatMapLatest { selectionRoomList ->
+                combine(selectionRoomList.map { sel ->
+                    mapSelectionFlow(sel, scope)
+                }) { selectionViews ->
+                    selectionViews.toList().sortedBy { it.dateTime }
+                }
+            }
+    }
+
+    private fun mapSelectionFlow(
+        selectionRoom: SelectionRoom,
+        scope: CoroutineScope
+    ): Flow<SelectionView> {
+        val selId = selectionRoom.id
+
+        val listPositionRecipe = positionRecipeRepository.getAllInSelFlow(selId, scope)
+        val listPositionIngredient = positionIngredientRepository.getAllInSelFlow(selId, scope)
+        val listPositionNote = noteRepository.getAllInSelFlow(selId)
+        val listPositionDraft = draftRepository.getAllInSelFlow(selId, scope)
+
+        val flowSelections = combine(
+            listPositionRecipe, listPositionIngredient, listPositionNote, listPositionDraft
+        ) { a, b, c, d ->
+            val list = mutableListOf<State<Position>>()
+            list.addAll(a)
+            list.addAll(b)
+            list.addAll(c)
+            list.addAll(d)
+            list.toList()
+
+            with(selectionMapper) {
+                selectionRoom.roomToViewState(list)
+            }
+        }
+
+        return flowSelections
     }
 
     private suspend fun mapSelection(selectionRoom: SelectionRoom): SelectionView {
@@ -176,12 +273,28 @@ class WeekMenuRepository @Inject constructor(
         newName: String,
         locale: Locale,
         isForWeek: Boolean,
-        time:LocalTime
+        time: LocalTime
     ) {
         val calendar = Calendar.getInstance(locale)
         calendar.set(date.year, date.monthValue, date.dayOfMonth)
         val weekOfYear = calendar.get(Calendar.WEEK_OF_YEAR)
-        val sel = SelectionRoom(newName, LocalDateTime.of(date, time) , weekOfYear, isForWeek)
+        val sel = SelectionRoom(newName, LocalDateTime.of(date, time), weekOfYear, isForWeek)
         selectionDAO.insert(sel)
     }
+}
+
+fun getDaysOfWeek(oneDate: LocalDate, locale: Locale): MutableList<LocalDate> {
+    val firstDayOfWeek = WeekFields.of(locale).firstDayOfWeek
+    val lastDayOfWeek = firstDayOfWeek.minus(1)
+
+    val startOfWeek = oneDate.with(TemporalAdjusters.previousOrSame(firstDayOfWeek))
+    val endOfWeek = oneDate.with(TemporalAdjusters.nextOrSame(lastDayOfWeek))
+
+    val daysOfWeek = mutableListOf<LocalDate>()
+    var currentDay = startOfWeek
+    while (!currentDay.isAfter(endOfWeek)) {
+        daysOfWeek.add(currentDay)
+        currentDay = currentDay.plusDays(1)
+    }
+    return daysOfWeek
 }

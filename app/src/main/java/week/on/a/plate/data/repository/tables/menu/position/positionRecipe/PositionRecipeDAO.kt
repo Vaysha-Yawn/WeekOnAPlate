@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
+import kotlinx.coroutines.flow.Flow
 import week.on.a.plate.data.repository.tables.recipe.recipe.RecipeRoom
 
 
@@ -19,8 +20,11 @@ interface PositionRecipeDAO {
     @Query("SELECT * FROM RecipeRoom WHERE recipeId=:recipeId")
     suspend fun getRecipeInMenuAndRecipe(recipeId:Long): RecipeInMenuAndRecipe
 
-    @Query("SELECT * FROM positionreciperoom WHERE selectionId=:selectionId")
+    @Query ("SELECT * FROM positionreciperoom WHERE selectionId=:selectionId")
     suspend fun getAllInSel(selectionId:Long): List<PositionRecipeRoom>
+
+    @Query ("SELECT * FROM positionreciperoom WHERE selectionId=:selectionId")
+    fun getAllInSelFlow(selectionId:Long): Flow<List<PositionRecipeRoom>>
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(recipeRoom: RecipeRoom):Long

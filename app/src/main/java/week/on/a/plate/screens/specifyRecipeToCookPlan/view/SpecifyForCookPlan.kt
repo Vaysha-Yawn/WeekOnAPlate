@@ -36,6 +36,7 @@ import week.on.a.plate.dialogs.calendarMy.view.CalendarMy
 import week.on.a.plate.screens.specifyRecipeToCookPlan.event.SpecifyRecipeToCookPlanEvent
 import week.on.a.plate.screens.specifyRecipeToCookPlan.logic.SpecifyRecipeToCookPlanViewModel
 import week.on.a.plate.screens.specifyRecipeToCookPlan.state.SpecifyRecipeToCookPlanUIState
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -137,7 +138,7 @@ fun PreviewSpecifySelectionAlt() {
                 )
             )
         }
-        val firstRow = remember { mutableStateOf(listOf("Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс")) }
+        val firstRow = remember { mutableStateOf(DayOfWeek.entries.toList()) }
         SpecifyForCookPlan(
             SpecifyRecipeToCookPlanUIState(),
             StateCalendarMy(st, allDays, firstRow)

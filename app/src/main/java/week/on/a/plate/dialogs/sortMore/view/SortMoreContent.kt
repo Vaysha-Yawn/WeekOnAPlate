@@ -23,8 +23,7 @@ import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.dialogs.sortMore.event.SortMoreEvent
-import week.on.a.plate.dialogs.sortMore.logic.SortMoreViewModel
-import week.on.a.plate.screens.filters.view.clickNoRipple
+import week.on.a.plate.core.uitools.clickNoRipple
 
 @Composable
 fun SortMoreContent( onEvent:(SortMoreEvent) -> Unit){

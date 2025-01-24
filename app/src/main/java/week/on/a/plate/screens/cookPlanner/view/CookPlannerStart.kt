@@ -61,7 +61,7 @@ fun CookPlannerContent(state: CookPlannerUIState, onEvent: (Event) -> Unit) {
                         TextTitle(
                             "${
                                 day.key.dayOfWeek.getDisplayName(
-                                    TextStyle.SHORT,
+                                    TextStyle.FULL_STANDALONE,
                                     Locale.getDefault()
                                 )
                                     .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
@@ -111,7 +111,7 @@ fun EmptyTip() {
         Spacer(Modifier.height(24.dp))
         TextBody(stringResource(R.string.cook_planner_empty_tip))
         Spacer(Modifier.height(24.dp))
-        NativeAdRow("R-M-13419544-6")
+        //NativeAdRow("R-M-13419544-6")
     }
 }
 

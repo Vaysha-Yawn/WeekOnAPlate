@@ -339,7 +339,7 @@
     <string name="ingredient_bread">面包</string>
     <string name="ingredient_water">水</string>
     <string name="ingredient_broth">肉汤</string>
-    <string name="for_day">На день</string>
-    <string name="tag_snack">Перекус</string>
-    <string name="add_to_shopping_list_succes">успешно добавлен в список покупок</string>
+    <string name="for_day">一天</string>
+    <string name="tag_snack">小吃</string>
+    <string name="add_to_shopping_list_succes">已成功添加到购物清单</string>
 </resources>

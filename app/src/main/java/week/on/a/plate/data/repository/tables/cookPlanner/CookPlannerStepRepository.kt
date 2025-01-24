@@ -6,12 +6,14 @@ import kotlinx.coroutines.flow.map
 import week.on.a.plate.data.dataView.CookPlannerGroupView
 import week.on.a.plate.data.dataView.CookPlannerStepView
 import week.on.a.plate.data.dataView.recipe.RecipeView
+import week.on.a.plate.data.repository.tables.menu.selection.getDaysOfWeek
 import week.on.a.plate.data.repository.tables.recipe.recipe.RecipeRepository
 import week.on.a.plate.data.repository.tables.recipe.recipeStep.StepRepository
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -24,11 +26,10 @@ class CookPlannerStepRepository @Inject constructor(
 ) {
     private val cookPlannerStepMapper = CookPlannerStepMapper()
 
-    fun getWeek(activeDate: LocalDate): MutableMap<LocalDate, Flow<List<CookPlannerGroupView>>> {
+    fun getWeek(activeDate: LocalDate, locale: Locale): MutableMap<LocalDate, Flow<List<CookPlannerGroupView>>> {
         val week = mutableMapOf<LocalDate, Flow<List<CookPlannerGroupView>>>()
-        for (dayInWeek in DayOfWeek.entries) {
-            val date =
-                activeDate.plusDays(dayInWeek.ordinal.toLong() - activeDate.dayOfWeek.ordinal.toLong())
+        val dates = getDaysOfWeek(activeDate, locale)
+        for (date in dates) {
             val list = getAllByDate(date)
             week[date] = list
         }

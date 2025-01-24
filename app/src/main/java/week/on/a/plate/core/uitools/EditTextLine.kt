@@ -30,7 +30,7 @@ fun EditTextLine(
     placeholder: String,
     modifier : Modifier = Modifier,
     isError:MutableState<Boolean> = mutableStateOf(false) ,
-    isRequired:Boolean = false
+    isRequired:Boolean = false, onTextEdit:()->Unit = {}
 ) {
     AnimateErrorBox(isError){
         OutlinedTextField(
@@ -42,6 +42,7 @@ fun EditTextLine(
                 if (isRequired && newValue==""){
                     isError.value = true
                 }
+                onTextEdit()
             },
             modifier = modifier.fillMaxWidth(),
             textStyle = Typography.bodyMedium,

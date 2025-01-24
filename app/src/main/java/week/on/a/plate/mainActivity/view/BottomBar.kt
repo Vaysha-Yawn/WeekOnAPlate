@@ -56,7 +56,7 @@ fun BottomBar(
                     icon = {
                         Icon(
                             painterResource(id = topLevelRoute.icon),
-                            contentDescription = "",
+                            contentDescription = topLevelRoute.route::class.qualifiedName,
                             modifier = Modifier
                                 .background(
                                     if (isSelected) MaterialTheme.colorScheme.primary else ColorTransparent,
@@ -70,7 +70,6 @@ fun BottomBar(
                     onClick = {
                         navController.navigate(topLevelRoute.route) {
                             if (topLevelRoute == BottomScreens.SearchBottomNav){
-                                //todo
                                 searchViewModel.onEvent(SearchScreenEvent.Clear)
                             }
                         }

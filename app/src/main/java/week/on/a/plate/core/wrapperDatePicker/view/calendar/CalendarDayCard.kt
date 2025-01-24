@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -32,7 +33,7 @@ fun CalendarDayCard(
     change: (i: Int) -> Unit
 ) {
     Column(
-        Modifier
+        Modifier.defaultMinSize(minWidth = 48.dp)
             .padding(end = 3.dp)
             .border(
                 1.dp, if (active) {
@@ -42,7 +43,7 @@ fun CalendarDayCard(
                 }, RoundedCornerShape(10.dp)
             )
             .clickable(onClick = {change(currentInd)})
-            .padding( vertical = 5.dp), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally
+            .padding( 5.dp, ), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally
     ) {
         TextInApp(
             text = dayInWeek,
@@ -80,7 +81,7 @@ fun PreviewCalendarDayCard() {
     WeekOnAPlateTheme {
         Row {
             CalendarDayCard(
-                week.days[0].date,
+                LocalDate.of(2025, 1, 20),
                 "пн",
                 itToday = false,
                 itPlanned = true,
@@ -88,7 +89,7 @@ fun PreviewCalendarDayCard() {
                 0,
             ) {}
             CalendarDayCard(
-                week.days[1].date,
+                LocalDate.of(2025, 1, 21),
                 "вт",
                 itToday = true,
                 itPlanned = true,
@@ -97,7 +98,7 @@ fun PreviewCalendarDayCard() {
 
                 ) {}
             CalendarDayCard(
-                week.days[2].date,
+                LocalDate.of(2025, 1, 22),
                 "ср",
                 itToday = false,
                 itPlanned = false,
@@ -106,7 +107,7 @@ fun PreviewCalendarDayCard() {
 
                 ) {}
             CalendarDayCard(
-                week.days[3].date,
+                LocalDate.of(2025, 1, 23),
                 "чт",
                 itToday = false,
                 itPlanned = true,

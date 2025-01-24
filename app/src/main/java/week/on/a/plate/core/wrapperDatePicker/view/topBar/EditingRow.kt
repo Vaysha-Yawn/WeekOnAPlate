@@ -27,7 +27,7 @@ fun EditingRow(
         .padding(vertical = 6.dp), verticalAlignment = Alignment.CenterVertically) {
             Image(
                 painter = painterResource(id = R.drawable.delete),
-                contentDescription = "",
+                contentDescription = "Delete",
                 modifier = Modifier
                     .padding(horizontal = 12.dp)
                     .size(24.dp)
@@ -35,7 +35,7 @@ fun EditingRow(
             )
             Image(
                 painter = painterResource(id = R.drawable.add_shopping_cart),
-                contentDescription = "",
+                contentDescription = "Add to shopping cart",
                 modifier = Modifier
                     .padding(horizontal = 12.dp)
                     .size(24.dp)

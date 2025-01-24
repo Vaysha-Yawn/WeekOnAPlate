@@ -2,9 +2,11 @@ package week.on.a.plate.screens.searchRecipes.view.main
 
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
@@ -27,7 +29,7 @@ fun SearchStart(
     }
 
     state.allTagsCategories = viewModel.allTagCategories.collectAsState()
-    Column {
+    Column(Modifier.background(MaterialTheme.colorScheme.surface)) {
         SearchResultEditRow(state, onEvent)
         Spacer(modifier = Modifier.size(6.dp))
         TopSearchPanel(state, onEvent)

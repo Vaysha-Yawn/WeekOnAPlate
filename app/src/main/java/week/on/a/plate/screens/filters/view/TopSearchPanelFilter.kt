@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.SearchLine
+import week.on.a.plate.core.uitools.clickNoRipple
 import week.on.a.plate.screens.filters.event.FilterEvent
 import week.on.a.plate.screens.filters.state.FilterMode
 import week.on.a.plate.screens.filters.state.FilterUIState
@@ -43,19 +44,19 @@ fun TopSearchPanelFilter(stateUI: FilterUIState, onEvent: (FilterEvent) -> Unit)
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Icon(painterResource(R.drawable.back), "", modifier = Modifier
+            Icon(painterResource(R.drawable.back), "Back", modifier = Modifier
                 .clickNoRipple { onEvent(FilterEvent.Done) }
                 .padding(6.dp)
             )
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (stateUI.filterMode.value == FilterMode.Multiple) {
-                    Icon(painterResource(R.drawable.close), "", modifier = Modifier
+                    Icon(painterResource(R.drawable.close), "Close", modifier = Modifier
                         .clickable { onEvent(FilterEvent.Back) }
                         .padding(6.dp)
                     )
                     Spacer(Modifier.width(24.dp))
                     Box(contentAlignment = Alignment.TopEnd) {
-                        Icon(painterResource(R.drawable.select_all), "", modifier = Modifier
+                        Icon(painterResource(R.drawable.select_all), "Open selected filters", modifier = Modifier
                             .clickable { onEvent(FilterEvent.SelectedFilters) }
                             .padding(6.dp)
                         )
@@ -69,7 +70,7 @@ fun TopSearchPanelFilter(stateUI: FilterUIState, onEvent: (FilterEvent) -> Unit)
 
         Row(
             Modifier
-                .background(MaterialTheme.colorScheme.background)
+                .background(MaterialTheme.colorScheme.surface)
                 .padding(vertical = 24.dp, horizontal = 12.dp)
                 .fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
         ) {
