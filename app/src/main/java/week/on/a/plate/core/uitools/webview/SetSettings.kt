@@ -5,9 +5,9 @@ import android.os.StrictMode
 import android.webkit.CookieManager
 import android.webkit.WebSettings
 import android.webkit.WebView
-import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.webkit.WebSettingsCompat
 
-fun WebView.setSettings(){
+fun WebView.setSettings(isDark: Boolean) {
     val builder = StrictMode.VmPolicy.Builder()
     StrictMode.setVmPolicy(builder.build())
     settings.javaScriptEnabled = true
@@ -33,4 +33,11 @@ fun WebView.setSettings(){
     cookieManager.setAcceptThirdPartyCookies(this, true)
     val userAgent = System.getProperty("http.agent")
     settings.userAgentString = userAgent!! + context.packageName
+
+    if (Build.VERSION.SDK_INT>=29){
+        settings.forceDark = if(isDark) WebSettingsCompat.FORCE_DARK_OFF else WebSettingsCompat.FORCE_DARK_ON
+    }
+    if (Build.VERSION.SDK_INT>=33){
+        settings.setAlgorithmicDarkeningAllowed(true)
+    }
 }

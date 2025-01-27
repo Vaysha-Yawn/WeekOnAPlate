@@ -97,8 +97,8 @@ fun PreviewRecipePosition() {
                     0, "Заврак", LocalDateTime.now(), 0, true, mutableListOf(
                         posRecipe, posIngredient, posDraft, posNote,
                     )
-                ), menuUIState
-            ) {}
+                ), menuUIState, {}, false
+            )
         }
     }
 }

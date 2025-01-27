@@ -33,6 +33,7 @@ import week.on.a.plate.core.uitools.buttons.TextButton
 import week.on.a.plate.core.uitools.webview.WebPage
 import week.on.a.plate.screens.createRecipe.state.RecipeCreateUIState
 import week.on.a.plate.core.uitools.clickNoRipple
+import week.on.a.plate.core.uitools.webview.WhenGoFromWebView
 
 @Composable
 fun WebPageCreateRecipe(state: RecipeCreateUIState, onEvent: (Event) -> Unit) {
@@ -48,7 +49,7 @@ fun WebPageCreateRecipe(state: RecipeCreateUIState, onEvent: (Event) -> Unit) {
         LaunchedEffect(Unit) {
             state.webview.value?.scrollY = yScrollState.intValue
         }
-        WebPage(url = state.source, state.webview, onEvent, true)
+        WebPage(url = state.source, state.webview, onEvent, WhenGoFromWebView.InsideView)
         DisposableEffect(Unit) {
             onDispose {
                 yScrollState.intValue = state.webview.value?.scrollY?:0

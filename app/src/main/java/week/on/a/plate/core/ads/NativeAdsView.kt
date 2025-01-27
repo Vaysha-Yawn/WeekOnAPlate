@@ -1,5 +1,6 @@
 package week.on.a.plate.core.ads
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -19,7 +20,9 @@ fun NativeAdRow(id: String) {
     val nativeAds = remember { mutableStateListOf<NativeAd>() }
     val nativeLoader = remember { mutableStateOf<NativeAdLoader?>(null) }
     LaunchedEffect(Unit) {
-        loadNativeAd(id, nativeAds, context, nativeLoader)
+        if (nativeLoader.value == null){
+            loadNativeAd(id, nativeAds, context, nativeLoader)
+        }
     }
 
     if (nativeAds.isNotEmpty()) {
@@ -34,7 +37,7 @@ fun NativeAdItem(nativeAd: NativeAd) {
     adView.setAd(nativeAd)
     AndroidView(
         factory = { adView },
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().animateContentSize(),
         update = { adView.setAd(nativeAd) }
     )
 }

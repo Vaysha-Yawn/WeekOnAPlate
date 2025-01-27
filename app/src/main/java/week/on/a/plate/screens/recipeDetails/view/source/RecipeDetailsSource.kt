@@ -15,6 +15,7 @@ import week.on.a.plate.core.Event
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.webview.WebPage
+import week.on.a.plate.core.uitools.webview.WhenGoFromWebView
 import week.on.a.plate.data.dataView.example.recipeTom
 import week.on.a.plate.screens.recipeDetails.state.RecipeDetailsState
 
@@ -23,7 +24,7 @@ fun RecipeDetailsSource(state: RecipeDetailsState, onEventMain: (Event) -> Unit)
     val url = remember {
         mutableStateOf(state.recipe.link)
     }
-    WebPage(url, state.webview, onEventMain, false)
+    WebPage(url, state.webview, onEventMain, WhenGoFromWebView.NoGo)
     val mess = if (state.recipe.link.startsWith("http")) {
         stringResource(R.string.page_is_loading)
     } else {

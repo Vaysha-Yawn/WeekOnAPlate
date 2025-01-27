@@ -14,7 +14,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
-import week.on.a.plate.core.ads.NativeAdRow
 import week.on.a.plate.data.dataView.week.DayView
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.uitools.TextTitle
@@ -29,11 +28,8 @@ fun DayView(day: DayView, menuUIState: MenuUIState, onEvent: (event: Event) -> U
     LazyColumn(Modifier.fillMaxWidth()) {
         items(day.selections.size) { index ->
             BlockSelection(
-                selection = day.selections[index], menuUIState = menuUIState, onEvent
+                selection = day.selections[index], menuUIState = menuUIState, onEvent, index==0
             )
-            if(index==0){
-                NativeAdRow("R-M-13419544-5")
-            }
             Spacer(modifier = Modifier.size(12.dp))
         }
         item {

@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.data.dataView.week.SelectionView
 import week.on.a.plate.core.Event
+import week.on.a.plate.core.ads.NativeAdRow
 import week.on.a.plate.core.uitools.SubText
 import week.on.a.plate.screens.menu.state.MenuUIState
 import week.on.a.plate.core.uitools.TitleMenu
@@ -22,7 +23,9 @@ fun BlockSelection(
     selection: SelectionView,
     menuUIState: MenuUIState,
     onEvent: (event: Event) -> Unit,
+    withAdd: Boolean,
     ) {
+    var withAdds = withAdd
     Column(Modifier.fillMaxWidth()) {
         if (selection.dateTime.hour > 0){
             SubText(text = selection.dateTime.format(DateTimeFormatter.ofPattern("HH:mm")),
@@ -41,6 +44,10 @@ fun BlockSelection(
                     }
                 }
             }
+        }
+        if(withAdds && selection.positions.size>=2){
+            withAdds = false
+            NativeAdRow("R-M-13419544-5")
         }
         Spacer(Modifier.height(10.dp))
     }

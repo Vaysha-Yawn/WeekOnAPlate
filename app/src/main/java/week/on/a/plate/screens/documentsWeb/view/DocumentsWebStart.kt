@@ -20,6 +20,7 @@ import week.on.a.plate.core.uitools.webview.WebPage
 import week.on.a.plate.screens.documentsWeb.event.DocumentsWebEvent
 import week.on.a.plate.screens.documentsWeb.logic.DocumentsWebViewModel
 import week.on.a.plate.core.uitools.clickNoRipple
+import week.on.a.plate.core.uitools.webview.WhenGoFromWebView
 import week.on.a.plate.screens.documentsWeb.state.DocumentsWebUIState
 
 @Composable
@@ -47,7 +48,12 @@ private fun DocumentWebContent(
                     .clickNoRipple { onEvent(DocumentsWebEvent.Back) }
             )
         }
-        WebPage(state.url, state.webView, onEvent, true)
+        WebPage(state.url,
+            if (state.isForPP.value){
+                state.webViewPP
+            }else{
+                state.webViewTerms
+            }, onEvent, WhenGoFromWebView.DefaultBrowser)
     }
 }
 

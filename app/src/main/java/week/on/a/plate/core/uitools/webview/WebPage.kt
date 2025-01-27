@@ -1,41 +1,35 @@
 package week.on.a.plate.core.uitools.webview
 
-import android.os.Build
 import android.webkit.WebView
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.webkit.WebSettingsCompat
 import week.on.a.plate.core.Event
 
 @Composable
-fun WebPage(url: MutableState<String>, webview: MutableState<WebView?>, onEvent: (Event) -> Unit, allowGo:Boolean) {
+fun WebPage(
+    url: MutableState<String>,
+    webview: MutableState<WebView?>,
+    onEvent: (Event) -> Unit,
+    allowGo: WhenGoFromWebView
+) {
     val isDark = isSystemInDarkTheme()
     AndroidView(
         { context ->
             if (webview.value == null) {
                 webview.value = WebView(context)
                 val view = webview.value
-
-                view!!.webViewClient = MyWebViewClient(url, allowGo)
-                view.webChromeClient = MyWebChromeClient(webview)
-                view.setSettings()
-                if (Build.VERSION.SDK_INT>=29){
-                    view.settings.forceDark = if(isDark) WebSettingsCompat.FORCE_DARK_OFF else WebSettingsCompat.FORCE_DARK_ON
-                }
-                if (Build.VERSION.SDK_INT>=33){
-                    view.settings.setAlgorithmicDarkeningAllowed(true)
-                }
+                view!!.webChromeClient = MyWebChromeClient(webview)
+                view.setSettings(isDark)
 
                 view.setOnLongClickListener {
                     view.detectTouch(onEvent)
                 }
+                view.webViewClient = MyWebViewClient(url.value, url, allowGo)
                 view.loadUrl(url.value)
             } else {
                 if (webview.value!!.url != url.value) {
@@ -45,7 +39,9 @@ fun WebPage(url: MutableState<String>, webview: MutableState<WebView?>, onEvent:
             return@AndroidView webview.value!!
         }, modifier = Modifier
             .fillMaxSize()
-            .animateContentSize()
+            .animateContentSize(), update = {
+            webview.value?.loadUrl(url.value)
+        }
 
     )
 }
