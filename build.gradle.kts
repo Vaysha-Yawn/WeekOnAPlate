@@ -1,3 +1,5 @@
+import java.io.FileInputStream
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application) apply false

@@ -59,7 +59,7 @@ fun EditOrAddIngredientBottomDialogContent(
 private fun Count(state: EditPositionIngredientUIState) {
     TextBody(
         text = stringResource(R.string.count) + if (state.ingredientState.value != null) {
-            ", " + state.ingredientState.value!!.measure
+            (", " + state.ingredientState.value?.measure) ?: ""
         } else "",
         modifier = Modifier.padding(horizontal = 36.dp)
     )

@@ -38,16 +38,20 @@ class EditPositionIngredientViewModel(
         when (event) {
             EditPositionIngredientEvent.Close -> close()
             EditPositionIngredientEvent.Done -> {
-                val newIngredientPosition = Position.PositionIngredientView(
-                    state.positionIngredientView?.id ?: 0,
-                    IngredientInRecipeView(
+                if (state.ingredientState.value!=null){
+                    val newIngredientPosition = Position.PositionIngredientView(
                         state.positionIngredientView?.id ?: 0,
-                        state.ingredientState.value!!,
-                        state.description.value,
-                        state.count.intValue
-                    ), state.positionIngredientView?.selectionId ?: 0
-                )
-                done(newIngredientPosition)
+                        IngredientInRecipeView(
+                            state.positionIngredientView?.id ?: 0,
+                            state.ingredientState.value!!,
+                            state.description.value,
+                            state.count.intValue
+                        ), state.positionIngredientView?.selectionId ?: 0
+                    )
+                    done(newIngredientPosition)
+                }else{
+                    onEvent(EditPositionIngredientEvent.Close)
+                }
             }
 
             EditPositionIngredientEvent.ChooseIngredient -> chooseIngredient()

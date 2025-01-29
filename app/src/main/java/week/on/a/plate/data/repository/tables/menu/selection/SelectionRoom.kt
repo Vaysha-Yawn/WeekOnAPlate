@@ -1,12 +1,10 @@
 package week.on.a.plate.data.repository.tables.menu.selection
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import java.time.LocalDate
+import week.on.a.plate.data.repository.utils.LocalDateTimeTypeConverter
 import java.time.LocalDateTime
-import java.time.LocalTime
 
 @Entity
 data class SelectionRoom(

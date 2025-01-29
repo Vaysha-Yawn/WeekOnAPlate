@@ -31,7 +31,6 @@ fun DocumentsWebStart(
         viewModel.onEvent(event)
     }
     val state = viewModel.state
-
     DocumentWebContent( state, onEvent,)
 }
 
@@ -48,12 +47,11 @@ private fun DocumentWebContent(
                     .clickNoRipple { onEvent(DocumentsWebEvent.Back) }
             )
         }
-        WebPage(state.url,
-            if (state.isForPP.value){
-                state.webViewPP
-            }else{
-                state.webViewTerms
-            }, onEvent, WhenGoFromWebView.DefaultBrowser)
+        if (state.isForPP.value){
+            WebPage(state.url, state.webViewPP, onEvent, WhenGoFromWebView.DefaultBrowser)
+        }else{
+            WebPage(state.url, state.webViewTerms, onEvent, WhenGoFromWebView.DefaultBrowser)
+        }
     }
 }
 

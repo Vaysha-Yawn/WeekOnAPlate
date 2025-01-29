@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import week.on.a.plate.BuildConfig
 import week.on.a.plate.data.dataView.week.SelectionView
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.ads.NativeAdRow
@@ -47,7 +48,7 @@ fun BlockSelection(
         }
         if(withAdds && selection.positions.size>=2){
             withAdds = false
-            NativeAdRow("R-M-13419544-5")
+            NativeAdRow(BuildConfig.menuDayAdsId)
         }
         Spacer(Modifier.height(10.dp))
     }

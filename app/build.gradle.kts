@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -14,7 +17,7 @@ room {
 }
 
 android {
-    android.defaultConfig.ndk.debugSymbolLevel = "FULL"
+
     namespace = "week.on.a.plate"
     compileSdk = 34
 
@@ -22,19 +25,22 @@ android {
         applicationId = "week.on.a.plate"
         minSdk = 28
         targetSdk = 34
-        versionCode = 3
-        versionName = "1.2"
+        versionCode = 6
+        versionName = "1.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
+        buildConfigField("String", "cookPlannerAdsIdWeek", "\"${cookPlannerAdsIdWeek}\"")
+        buildConfigField("String", "cookPlannerAdsIdDay", "\"${cookPlannerAdsIdDay}\"")
+        buildConfigField("String", "shoppingAdsId", "\"${shoppingAdsId}\"")
+        buildConfigField("String", "menuWeekAdsId", "\"${menuWeekAdsId}\"")
+        buildConfigField("String", "menuDayAdsId", "\"${menuDayAdsId}\"")
     }
 
     buildTypes {
         debug {
-            isMinifyEnabled = true
-            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -58,6 +64,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -69,8 +76,6 @@ android {
     }
 
 }
-
-
 
 dependencies {
     implementation ("com.yandex.android:mobileads:7.9.0")
@@ -111,3 +116,15 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }
+
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()){
+    localProperties.load(FileInputStream(localPropertiesFile))
+}
+val cookPlannerAdsIdWeek = localProperties.getProperty("cookPlannerAdsIdWeek")?:""
+val cookPlannerAdsIdDay = localProperties.getProperty("cookPlannerAdsIdDay")?:""
+val shoppingAdsId = localProperties.getProperty("shoppingAdsId")?:""
+val menuWeekAdsId = localProperties.getProperty("menuWeekAdsId")?:""
+val menuDayAdsId = localProperties.getProperty("menuDayAdsId")?:""

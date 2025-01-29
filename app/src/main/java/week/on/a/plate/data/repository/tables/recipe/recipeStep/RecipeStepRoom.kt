@@ -3,10 +3,7 @@ package week.on.a.plate.data.repository.tables.recipe.recipeStep
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import week.on.a.plate.data.repository.tables.menu.selection.ListIntConverter
-import week.on.a.plate.data.repository.tables.menu.selection.LocalDateTimeTypeConverter
-import week.on.a.plate.data.repository.tables.menu.selection.LocalTimeTypeConverter
-import java.time.LocalTime
+import week.on.a.plate.data.repository.utils.ListIntConverter
 
 @Entity
 data class RecipeStepRoom(

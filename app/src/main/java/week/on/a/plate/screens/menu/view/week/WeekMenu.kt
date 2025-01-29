@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import week.on.a.plate.BuildConfig
 import week.on.a.plate.R
 import week.on.a.plate.core.ads.NativeAdRow
 import week.on.a.plate.core.Event
@@ -72,7 +73,7 @@ fun WeekMenu(
                 }
             }
             Spacer(modifier = Modifier.size(12.dp))
-            NativeAdRow("R-M-13419544-4")
+            NativeAdRow(BuildConfig.menuWeekAdsId)
             Spacer(modifier = Modifier.size(12.dp))
         }
         items(week.days.size) { dayId ->

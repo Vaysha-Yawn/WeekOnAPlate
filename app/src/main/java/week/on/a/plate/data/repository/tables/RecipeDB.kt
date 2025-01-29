@@ -2,7 +2,6 @@ package week.on.a.plate.data.repository.tables
 
 
 import android.content.Context
-import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -33,10 +32,10 @@ import week.on.a.plate.data.repository.tables.menu.position.positionIngredient.P
 import week.on.a.plate.data.repository.tables.menu.position.positionIngredient.PositionIngredientRoom
 import week.on.a.plate.data.repository.tables.menu.position.positionRecipe.PositionRecipeDAO
 import week.on.a.plate.data.repository.tables.menu.position.positionRecipe.PositionRecipeRoom
-import week.on.a.plate.data.repository.tables.menu.selection.DateTypeConverter
-import week.on.a.plate.data.repository.tables.menu.selection.ListIntConverter
-import week.on.a.plate.data.repository.tables.menu.selection.LocalDateTimeTypeConverter
-import week.on.a.plate.data.repository.tables.menu.selection.LocalTimeTypeConverter
+import week.on.a.plate.data.repository.utils.DateTypeConverter
+import week.on.a.plate.data.repository.utils.ListIntConverter
+import week.on.a.plate.data.repository.utils.LocalDateTimeTypeConverter
+import week.on.a.plate.data.repository.utils.LocalTimeTypeConverter
 import week.on.a.plate.data.repository.tables.menu.selection.SelectionDAO
 import week.on.a.plate.data.repository.tables.menu.selection.SelectionRoom
 import week.on.a.plate.data.repository.tables.recipe.ingredientInRecipe.IngredientInRecipeDAO

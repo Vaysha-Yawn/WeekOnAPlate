@@ -3,7 +3,7 @@ package week.on.a.plate.data.repository.tables.cookPlanner
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import week.on.a.plate.data.repository.tables.menu.selection.LocalDateTimeTypeConverter
+import week.on.a.plate.data.repository.utils.LocalDateTimeTypeConverter
 import java.time.LocalDateTime
 
 
