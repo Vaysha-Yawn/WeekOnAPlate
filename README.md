@@ -1,6 +1,7 @@
-
-![icon_white](https://github.com/user-attachments/assets/257ea139-d506-45aa-8a03-536ea3f04656)
-
+<p align = "center">
+<img src = "images/icon.png" width = "100">
+  </p>
+  
 <b>Неделя на тарелке</b> - ваш незаменимый помощник для регулярного приготовления еды: книга рецептов, составление меню и список покупок.
 
 Основные функции:
@@ -39,21 +40,35 @@
 - Полная гибкость и кастомизация: меню, теги, ингредиенты, приёмы пищи – всё можно подстроить подстраивается под ваши привычки (чтобы изменить или удалить ингредиент, тэг или категорию нажмите на три точки справа от него, чтобы добавить нажмите на зелёную кнопку плюс на экране фильтров)
 - Интеграция таймеров и фотографий на каждом этапе готовки для максимального удобства
 
+  
+<p align = "center">
 Скриншоты:
+</p>
+<p align = "center">
+  <img src = "images/menu.jpg" width = "200">
+<img src = "images/menu_week.jpg" width = "200">
+<img src = "images/cook_planner.jpg" width = "200">
 
-![Screenshot_2025-01-16-20-24-41-891_week_on_a_plate](https://github.com/user-attachments/assets/5fdeda87-6c63-4d46-9c7d-4f4ce610341e)
-![Screenshot_2025-01-16-20-24-36-785_week_on_a_plate](https://github.com/user-attachments/assets/1660130b-549f-4e97-ab91-f76a26b6b4e6)
-![Screenshot_2025-01-16-20-24-59-236_week_on_a_plate](https://github.com/user-attachments/assets/ab374f01-687b-4351-aa2d-15d7dfe68dc8)
-![Screenshot_2025-01-16-20-25-12-790_week_on_a_plate](https://github.com/user-attachments/assets/2650081c-e0e3-426b-aaea-4aa9c8f2a585)
-![Screenshot_2025-01-16-20-25-27-763_week_on_a_plate](https://github.com/user-attachments/assets/9689da12-a0c9-4f46-943b-af7c74629b44)
-![Screenshot_2025-01-16-20-25-33-835_week_on_a_plate](https://github.com/user-attachments/assets/10dadae7-685b-43c1-acaa-ebc504fce0ac)
-![Screenshot_2025-01-16-20-26-05-001_week_on_a_plate](https://github.com/user-attachments/assets/217b9e45-ae41-44eb-8692-64646760ceb3)
+</p>
+<p align = "center">
+  <img src = "images/recipe_details.jpg" width = "200">
+<img src = "images/recipe_details_ingredients.jpg" width = "200">
+<img src = "images/shopping_list.jpg" width = "200">
+<img src = "images/set_permanent_meals.jpg" width = "200">
+</p>
 
-
-Технологии:
-- Kotlin
-- Jetpack Compose
-- Room
-- Coroutines + Flow
-- Navigation Compose
-- Hilt
+<table align = "center">
+<tr>
+  <td>
+    <p align = "center"> Технологии: </p> 
+    <ul>
+    <li>Kotlin</li>
+    <li>Jetpack Compose</li>
+    <li>Room</li>
+    <li>Coroutines + Flow</li>
+    <li>Navigation Compose</li>
+    <li>Hilt</li>
+    </ul>
+  </td>
+  </tr>
+</table>
