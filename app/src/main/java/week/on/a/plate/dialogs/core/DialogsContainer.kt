@@ -13,80 +13,80 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import week.on.a.plate.dialogs.editOrCreateIngredient.event.AddIngredientEvent
-import week.on.a.plate.dialogs.editOrCreateIngredient.logic.AddIngredientViewModel
-import week.on.a.plate.dialogs.editOrCreateIngredient.view.AddIngredient
-import week.on.a.plate.dialogs.editOrCreateTag.event.AddTagEvent
-import week.on.a.plate.dialogs.editOrCreateTag.logic.AddTagViewModel
-import week.on.a.plate.dialogs.editOrCreateTag.view.AddTag
-import week.on.a.plate.screens.filters.dialogs.filterVoiceApply.event.FilterVoiceApplyEvent
-import week.on.a.plate.screens.filters.dialogs.filterVoiceApply.logic.FilterVoiceApplyViewModel
-import week.on.a.plate.screens.filters.dialogs.filterVoiceApply.view.DialogVoiceApplyTags
-import week.on.a.plate.dialogs.addPositionChoose.event.AddPositionEvent
-import week.on.a.plate.dialogs.addPositionChoose.logic.AddPositionViewModel
-import week.on.a.plate.dialogs.addPositionChoose.view.AddPositionDialogContent
-import week.on.a.plate.dialogs.changePortions.event.ChangePortionsCountEvent
-import week.on.a.plate.dialogs.changePortions.logic.ChangePortionsCountViewModel
-import week.on.a.plate.dialogs.chooseWeekInMenu.event.ChooseWeekDialogEvent
-import week.on.a.plate.dialogs.chooseWeekInMenu.logic.ChooseWeekViewModel
-import week.on.a.plate.dialogs.chooseWeekInMenu.state.ChooseWeekUIState
-import week.on.a.plate.dialogs.dialogDatePicker.event.DatePickerEvent
-import week.on.a.plate.dialogs.dialogDatePicker.logic.DatePickerViewModel
-import week.on.a.plate.dialogs.dialogDatePicker.state.DatePickerUIState
-import week.on.a.plate.dialogs.dialogDatePicker.view.DatePickerMy
-import week.on.a.plate.dialogs.editOneString.event.EditOneStringEvent
-import week.on.a.plate.dialogs.editOneString.logic.EditOneStringViewModel
-import week.on.a.plate.dialogs.editOneString.view.EditOneStringContent
-import week.on.a.plate.dialogs.editOtherPositionMore.event.OtherPositionMoreEvent
-import week.on.a.plate.dialogs.editOtherPositionMore.logic.EditOtherPositionViewModel
-import week.on.a.plate.dialogs.editOtherPositionMore.view.EditOtherPositionDialogContent
-import week.on.a.plate.dialogs.editIngredientInMenu.event.EditPositionIngredientEvent
-import week.on.a.plate.dialogs.editIngredientInMenu.logic.EditPositionIngredientViewModel
-import week.on.a.plate.dialogs.editIngredientInMenu.view.EditOrAddIngredientBottomDialogContent
-import week.on.a.plate.dialogs.editPositionRecipeMore.event.ActionMoreRecipePositionEvent
-import week.on.a.plate.dialogs.editPositionRecipeMore.logic.EditRecipePositionViewModel
-import week.on.a.plate.dialogs.editPositionRecipeMore.view.EditRecipePositionDialogContent
-import week.on.a.plate.screens.filters.dialogs.selectedFilters.event.SelectedFiltersEvent
-import week.on.a.plate.screens.filters.dialogs.selectedFilters.logic.SelectedFiltersViewModel
-import week.on.a.plate.screens.filters.dialogs.selectedFilters.view.DialogSelectedTags
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.uitools.dialogs.BaseDialogContainer
 import week.on.a.plate.core.uitools.dialogs.BottomDialogContainer
+import week.on.a.plate.dialogs.addPositionChoose.event.AddPositionEvent
+import week.on.a.plate.dialogs.addPositionChoose.logic.AddPositionViewModel
+import week.on.a.plate.dialogs.addPositionChoose.view.AddPositionDialogContent
+import week.on.a.plate.dialogs.calendarMy.view.CalendarMy
+import week.on.a.plate.dialogs.changePortions.event.ChangePortionsCountEvent
+import week.on.a.plate.dialogs.changePortions.logic.ChangePortionsCountViewModel
 import week.on.a.plate.dialogs.changePortions.view.ChangePortionsPanel
-import week.on.a.plate.dialogs.chooseHowImagePick.event.ChooseHowImagePickEvent
-import week.on.a.plate.dialogs.chooseHowImagePick.logic.ChooseHowImagePickViewModel
-import week.on.a.plate.dialogs.chooseHowImagePick.view.ChooseHowImagePickContent
 import week.on.a.plate.dialogs.chooseIngredientsForStep.event.ChooseIngredientsForStepEvent
 import week.on.a.plate.dialogs.chooseIngredientsForStep.logic.ChooseIngredientsForStepViewModel
 import week.on.a.plate.dialogs.chooseIngredientsForStep.view.ChooseIngredientsForStep
 import week.on.a.plate.dialogs.cookStepMore.event.CookStepMoreEvent
 import week.on.a.plate.dialogs.cookStepMore.logic.CookStepMoreDialogViewModel
 import week.on.a.plate.dialogs.cookStepMore.view.CookStepMoreContent
+import week.on.a.plate.dialogs.datePick.event.DatePickerEvent
+import week.on.a.plate.dialogs.datePick.logic.DatePickerViewModel
+import week.on.a.plate.dialogs.datePick.state.DatePickerUIState
+import week.on.a.plate.dialogs.datePick.view.DatePickerMy
+import week.on.a.plate.dialogs.editIngredientInMenu.event.EditPositionIngredientEvent
+import week.on.a.plate.dialogs.editIngredientInMenu.logic.EditPositionIngredientViewModel
+import week.on.a.plate.dialogs.editIngredientInMenu.view.EditOrAddIngredientBottomDialogContent
+import week.on.a.plate.dialogs.editOneString.event.EditOneStringEvent
+import week.on.a.plate.dialogs.editOneString.logic.EditOneStringViewModel
+import week.on.a.plate.dialogs.editOneString.view.EditOneStringContent
 import week.on.a.plate.dialogs.editOrDelete.event.EditOrDeleteEvent
 import week.on.a.plate.dialogs.editOrDelete.logic.EditOrDeleteViewModel
 import week.on.a.plate.dialogs.editOrDelete.view.EditOrDeleteDialogContent
-import week.on.a.plate.dialogs.editSelection.event.EditSelectionEvent
-import week.on.a.plate.dialogs.editSelection.logic.EditSelectionViewModel
-import week.on.a.plate.dialogs.editSelection.view.EditSelectionContent
-import week.on.a.plate.dialogs.dialogTimePick.event.TimePickEvent
-import week.on.a.plate.dialogs.dialogTimePick.logic.TimePickViewModel
-import week.on.a.plate.dialogs.dialogTimePick.view.TimePickDialog
-import week.on.a.plate.dialogs.exitApply.event.ExitApplyEvent
-import week.on.a.plate.dialogs.exitApply.logic.ExitApplyViewModel
-import week.on.a.plate.dialogs.exitApply.view.ExitApplyContent
-import week.on.a.plate.dialogs.filtersMore.event.FiltersMoreEvent
-import week.on.a.plate.dialogs.filtersMore.logic.FiltersMoreViewModel
-import week.on.a.plate.dialogs.filtersMore.view.FilterMoreContent
-import week.on.a.plate.dialogs.setPermanentMeals.event.SetPermanentMealsEvent
-import week.on.a.plate.dialogs.setPermanentMeals.logic.SetPermanentMealsViewModel
-import week.on.a.plate.dialogs.setPermanentMeals.view.SetPermanentMealsStart
-import week.on.a.plate.dialogs.setTheme.event.SetThemeEvent
-import week.on.a.plate.dialogs.setTheme.logic.SetThemesViewModel
-import week.on.a.plate.dialogs.setTheme.view.SetThemeStart
-import week.on.a.plate.dialogs.sortMore.event.SortMoreEvent
-import week.on.a.plate.dialogs.sortMore.logic.SortMoreViewModel
-import week.on.a.plate.dialogs.sortMore.view.SortMoreContent
-import week.on.a.plate.dialogs.calendarMy.view.CalendarMy
+import week.on.a.plate.dialogs.forCreateRecipeScreen.chooseHowImagePick.event.ChooseHowImagePickEvent
+import week.on.a.plate.dialogs.forCreateRecipeScreen.chooseHowImagePick.logic.ChooseHowImagePickViewModel
+import week.on.a.plate.dialogs.forCreateRecipeScreen.chooseHowImagePick.view.ChooseHowImagePickContent
+import week.on.a.plate.dialogs.forCreateRecipeScreen.exitApply.event.ExitApplyEvent
+import week.on.a.plate.dialogs.forCreateRecipeScreen.exitApply.logic.ExitApplyViewModel
+import week.on.a.plate.dialogs.forCreateRecipeScreen.exitApply.view.ExitApplyContent
+import week.on.a.plate.dialogs.forMenuScreen.chooseWeekInMenu.event.ChooseWeekDialogEvent
+import week.on.a.plate.dialogs.forMenuScreen.chooseWeekInMenu.logic.ChooseWeekViewModel
+import week.on.a.plate.dialogs.forMenuScreen.chooseWeekInMenu.state.ChooseWeekUIState
+import week.on.a.plate.dialogs.forMenuScreen.editOtherPositionMore.event.OtherPositionMoreEvent
+import week.on.a.plate.dialogs.forMenuScreen.editOtherPositionMore.logic.EditOtherPositionViewModel
+import week.on.a.plate.dialogs.forMenuScreen.editOtherPositionMore.view.EditOtherPositionDialogContent
+import week.on.a.plate.dialogs.forMenuScreen.editPositionRecipeMore.event.ActionMoreRecipePositionEvent
+import week.on.a.plate.dialogs.forMenuScreen.editPositionRecipeMore.logic.EditRecipePositionViewModel
+import week.on.a.plate.dialogs.forMenuScreen.editPositionRecipeMore.view.EditRecipePositionDialogContent
+import week.on.a.plate.dialogs.forMenuScreen.editSelection.event.EditSelectionEvent
+import week.on.a.plate.dialogs.forMenuScreen.editSelection.logic.EditSelectionViewModel
+import week.on.a.plate.dialogs.forMenuScreen.editSelection.view.EditSelectionContent
+import week.on.a.plate.dialogs.forSearchScreen.filtersMore.event.FiltersMoreEvent
+import week.on.a.plate.dialogs.forSearchScreen.filtersMore.logic.FiltersMoreViewModel
+import week.on.a.plate.dialogs.forSearchScreen.filtersMore.view.FilterMoreContent
+import week.on.a.plate.dialogs.forSearchScreen.sortMore.event.SortMoreEvent
+import week.on.a.plate.dialogs.forSearchScreen.sortMore.logic.SortMoreDialogViewModel
+import week.on.a.plate.dialogs.forSearchScreen.sortMore.view.SortMoreContent
+import week.on.a.plate.dialogs.forSettingsScreen.setPermanentMeals.event.SetPermanentMealsEvent
+import week.on.a.plate.dialogs.forSettingsScreen.setPermanentMeals.logic.SetPermanentMealsViewModel
+import week.on.a.plate.dialogs.forSettingsScreen.setPermanentMeals.view.SetPermanentMealsStart
+import week.on.a.plate.dialogs.forSettingsScreen.setTheme.event.SetThemeEvent
+import week.on.a.plate.dialogs.forSettingsScreen.setTheme.logic.SetThemesViewModel
+import week.on.a.plate.dialogs.forSettingsScreen.setTheme.view.SetThemeStart
+import week.on.a.plate.dialogs.timePick.event.TimePickEvent
+import week.on.a.plate.dialogs.timePick.logic.TimePickViewModel
+import week.on.a.plate.dialogs.timePick.view.TimePickDialog
+import week.on.a.plate.screens.additional.filters.dialogs.editOrCreateIngredient.event.AddIngredientEvent
+import week.on.a.plate.screens.additional.filters.dialogs.editOrCreateIngredient.logic.AddIngredientViewModel
+import week.on.a.plate.screens.additional.filters.dialogs.editOrCreateIngredient.view.AddIngredient
+import week.on.a.plate.screens.additional.filters.dialogs.editOrCreateTag.event.AddTagEvent
+import week.on.a.plate.screens.additional.filters.dialogs.editOrCreateTag.logic.AddTagViewModel
+import week.on.a.plate.screens.additional.filters.dialogs.editOrCreateTag.view.AddTag
+import week.on.a.plate.screens.additional.filters.dialogs.filterVoiceApply.event.FilterVoiceApplyEvent
+import week.on.a.plate.screens.additional.filters.dialogs.filterVoiceApply.logic.FilterVoiceApplyViewModel
+import week.on.a.plate.screens.additional.filters.dialogs.filterVoiceApply.view.DialogVoiceApplyTags
+import week.on.a.plate.screens.additional.filters.dialogs.selectedFilters.event.SelectedFiltersEvent
+import week.on.a.plate.screens.additional.filters.dialogs.selectedFilters.logic.SelectedFiltersViewModel
+import week.on.a.plate.screens.additional.filters.dialogs.selectedFilters.view.DialogSelectedTags
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -155,7 +155,7 @@ fun DialogsContainer(
                     onEvent(EditOneStringEvent.Done)
                 }
             }
-            LaunchedEffect(true) {
+            LaunchedEffect(Unit) {
                 sheetState.show()
             }
         }
@@ -167,7 +167,7 @@ fun DialogsContainer(
                 { onEvent(ChangePortionsCountEvent.Close) }) {
                 ChangePortionsPanel(data.state.portionsCount) { onEvent(ChangePortionsCountEvent.Done) }
             }
-            LaunchedEffect(true) {
+            LaunchedEffect(Unit) {
                 sheetState.show()
             }
         }
@@ -181,7 +181,7 @@ fun DialogsContainer(
                     data.state
                 ) { event: EditPositionIngredientEvent -> onEvent(event) }
             }
-            LaunchedEffect(true) {
+            LaunchedEffect(Unit) {
                 sheetState.show()
             }
         }
@@ -207,7 +207,7 @@ fun DialogsContainer(
                     state = data.state
                 ) { addTagEvent: AddTagEvent -> onEvent(addTagEvent) }
             }
-            LaunchedEffect(true) {
+            LaunchedEffect(Unit) {
                 sheetState.show()
             }
         }
@@ -221,7 +221,7 @@ fun DialogsContainer(
                     state = data.state
                 ) { addIngredientEvent: AddIngredientEvent -> onEvent(addIngredientEvent) }
             }
-            LaunchedEffect(true) {
+            LaunchedEffect(Unit) {
                 sheetState.show()
             }
         }
@@ -235,7 +235,7 @@ fun DialogsContainer(
                     data.state
                 ) { event: SelectedFiltersEvent -> onEvent(event) }
             }
-            LaunchedEffect(true) {
+            LaunchedEffect(Unit) {
                 sheetState.show()
             }
         }
@@ -249,7 +249,7 @@ fun DialogsContainer(
                     data.state
                 ) { event: FilterVoiceApplyEvent -> onEvent(event) }
             }
-            LaunchedEffect(true) {
+            LaunchedEffect(Unit) {
                 sheetState.show()
             }
         }
@@ -269,19 +269,19 @@ fun DialogsContainer(
                     data
                 )
             }
-            LaunchedEffect(true) {
+            LaunchedEffect(Unit) {
                 sheetState.show()
             }
         }
 
-        is SortMoreViewModel -> {
+        is SortMoreDialogViewModel -> {
             val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
             BottomDialogContainer(
                 sheetState,
                 { onEvent(SortMoreEvent.Close) }) {
                 SortMoreContent(data::onEvent)
             }
-            LaunchedEffect(true) {
+            LaunchedEffect(Unit) {
                 sheetState.show()
             }
         }
@@ -293,7 +293,7 @@ fun DialogsContainer(
                 { onEvent(FiltersMoreEvent.Close) }) {
                 FilterMoreContent(data.state)
             }
-            LaunchedEffect(true) {
+            LaunchedEffect(Unit) {
                 sheetState.show()
             }
         }
@@ -317,7 +317,7 @@ fun DialogsContainer(
                 }
                 ChooseIngredientsForStep(state, event1 )
             }
-            LaunchedEffect(true) {
+            LaunchedEffect(Unit) {
                 sheetState.show()
             }
         }
@@ -339,7 +339,7 @@ fun DialogsContainer(
                     data.onEvent(event)
                 }
             }
-            LaunchedEffect(true) {
+            LaunchedEffect(Unit) {
                 sheetState.show()
             }
         }
@@ -353,7 +353,7 @@ fun DialogsContainer(
                     data.state
                 ) { event: SetThemeEvent -> onEvent(event) }
             }
-            LaunchedEffect(true) {
+            LaunchedEffect(Unit) {
                 sheetState.show()
             }
         }
@@ -367,7 +367,7 @@ fun DialogsContainer(
                     data.state
                 ) { event: SetPermanentMealsEvent -> onEvent(event) }
             }
-            LaunchedEffect(true) {
+            LaunchedEffect(Unit) {
                 sheetState.show()
             }
         }

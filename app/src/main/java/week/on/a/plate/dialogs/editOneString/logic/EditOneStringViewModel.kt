@@ -1,10 +1,10 @@
 package week.on.a.plate.dialogs.editOneString.logic
 
 import kotlinx.coroutines.CoroutineScope
+import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.dialogs.core.DialogViewModel
 import week.on.a.plate.dialogs.editOneString.event.EditOneStringEvent
 import week.on.a.plate.dialogs.editOneString.state.EditOneStringUIState
-import week.on.a.plate.mainActivity.logic.MainViewModel
 
 
 class EditOneStringViewModel(

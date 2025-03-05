@@ -5,8 +5,8 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.webkit.WebView
 import week.on.a.plate.R
+import week.on.a.plate.app.mainActivity.event.MainEvent
 import week.on.a.plate.core.Event
-import week.on.a.plate.mainActivity.event.MainEvent
 
 fun copyLinkToClipboard(context: Context, url: String?, onEvent:(Event)->Unit) {
     if (url != null) {

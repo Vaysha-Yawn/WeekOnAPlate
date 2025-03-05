@@ -2,16 +2,16 @@ package week.on.a.plate.dialogs.editIngredientInMenu.logic
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import week.on.a.plate.app.mainActivity.event.MainEvent
+import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.dialogs.core.DialogViewModel
 import week.on.a.plate.dialogs.editIngredientInMenu.event.EditPositionIngredientEvent
 import week.on.a.plate.dialogs.editIngredientInMenu.state.EditPositionIngredientUIState
-import week.on.a.plate.mainActivity.event.MainEvent
-import week.on.a.plate.mainActivity.logic.MainViewModel
-import week.on.a.plate.screens.filters.navigation.FilterDestination
-import week.on.a.plate.screens.filters.state.FilterEnum
-import week.on.a.plate.screens.filters.state.FilterMode
+import week.on.a.plate.screens.additional.filters.navigation.FilterDestination
+import week.on.a.plate.screens.additional.filters.state.FilterEnum
+import week.on.a.plate.screens.additional.filters.state.FilterMode
 
 
 class EditPositionIngredientViewModel(

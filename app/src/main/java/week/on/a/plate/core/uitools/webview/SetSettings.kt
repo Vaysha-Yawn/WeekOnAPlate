@@ -35,9 +35,9 @@ fun WebView.setSettings(isDark: Boolean) {
     settings.userAgentString = userAgent!! + context.packageName
 
     if (Build.VERSION.SDK_INT>=29){
-        settings.forceDark = if(isDark) WebSettingsCompat.FORCE_DARK_OFF else WebSettingsCompat.FORCE_DARK_ON
+        settings.forceDark = if (isDark) WebSettings.FORCE_DARK_OFF else WebSettings.FORCE_DARK_ON
     }
     if (Build.VERSION.SDK_INT>=33){
-        settings.setAlgorithmicDarkeningAllowed(true)
+        settings.isAlgorithmicDarkeningAllowed = true
     }
 }

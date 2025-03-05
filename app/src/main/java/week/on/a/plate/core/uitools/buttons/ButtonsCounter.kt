@@ -20,10 +20,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
-import week.on.a.plate.core.uitools.TextInApp
 import week.on.a.plate.core.theme.ColorButtonNegativeGrey
 import week.on.a.plate.core.theme.Typography
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
+import week.on.a.plate.core.uitools.TextInApp
 import week.on.a.plate.core.uitools.clickNoRipple
 
 @Composable
@@ -113,6 +113,5 @@ fun PreviewButtonsCounter() {
         Column {
             ButtonsCounter(state, {}, {})
         }
-
     }
 }

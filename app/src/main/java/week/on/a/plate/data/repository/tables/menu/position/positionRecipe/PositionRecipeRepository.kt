@@ -1,18 +1,20 @@
 package week.on.a.plate.data.repository.tables.menu.position.positionRecipe
 
 
-import androidx.compose.runtime.State
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.async
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.onEmpty
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.data.dataView.week.RecipeShortView
 import week.on.a.plate.data.repository.tables.recipe.recipe.RecipeDAO
 import week.on.a.plate.data.repository.tables.recipe.recipe.RecipeRoom
-import week.on.a.plate.data.repository.utils.flowToStateWithMap
+import week.on.a.plate.data.repository.utils.combineSafeIfFlowIsEmpty
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class PositionRecipeRepository @Inject constructor(
     private val positionRecipeDAO: PositionRecipeDAO,
     private val recipeDao: RecipeDAO,
@@ -26,19 +28,22 @@ class PositionRecipeRepository @Inject constructor(
         }
     }
 
-    fun getAllInSelFlow(selectionId: Long, scope:CoroutineScope): Flow<List<State<Position>>> {
-        return positionRecipeDAO.getAllInSelFlow(selectionId).map{
-            it.map { recipeInMenu ->
-                val firstValue = scope.async {
-                    val recipeRoom = recipeDao.getRecipeById(recipeInMenu.recipeId)
+    @OptIn(ExperimentalCoroutinesApi::class)
+    fun getAllInSelFlow(selectionId: Long): Flow<List<Position>> {
+        val flowPositions =
+            positionRecipeDAO.getAllInSelFlow(selectionId).onEmpty { emit(listOf()) }
+        val result = flowPositions.flatMapLatest {
+            val listFlow = it.map { recipeInMenu ->
+                val flowRecipe =
+                    recipeDao.getRecipeByIdFlow(recipeInMenu.recipeId).onEmpty { emit(null) }
+                flowRecipe.mapNotNull { recipeRoom ->
+                    if (recipeRoom == null) return@mapNotNull null
                     recipeToRecipePos(recipeInMenu, recipeRoom)
                 }
-
-                recipeDao.getRecipeByIdFlow(recipeInMenu.recipeId).flowToStateWithMap(firstValue.await(), scope){
-                    recipeToRecipePos(recipeInMenu, this)
-                }
             }
+            listFlow.combineSafeIfFlowIsEmpty()
         }
+        return result
     }
 
     private fun recipeToRecipePos(recipeInMenu: PositionRecipeRoom, recipeRoom: RecipeRoom): Position.PositionRecipeView{

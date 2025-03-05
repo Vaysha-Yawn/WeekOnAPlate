@@ -9,7 +9,7 @@
     <uses-feature android:name="android.hardware.microphone" android:required="false"/>
 
     <application
-        android:name=".core.App"
+        android:name=".app.App"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -23,7 +23,7 @@
         android:hardwareAccelerated="true"
         tools:targetApi="33">
         <activity
-            android:name=".mainActivity.view.MainActivity"
+            android:name=".app.mainActivity.view.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.WeekOnAPlate"
             android:screenOrientation="portrait"

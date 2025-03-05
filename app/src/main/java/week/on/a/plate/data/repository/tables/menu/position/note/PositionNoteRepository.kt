@@ -1,15 +1,14 @@
 package week.on.a.plate.data.repository.tables.menu.position.note
 
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import week.on.a.plate.data.dataView.week.Position
 import javax.inject.Inject
+import javax.inject.Singleton
 
-
+@Singleton
 class PositionNoteRepository @Inject constructor(
     private val positionNoteDAO: PositionNoteDAO
 ) {
@@ -22,10 +21,10 @@ class PositionNoteRepository @Inject constructor(
 
     fun getAllInSelFlow(
         selectionId: Long
-    ): Flow<List<State<Position>>> {
-        return positionNoteDAO.getAllInSelFlow(selectionId).map {
+    ): Flow<List<Position>> {
+        return positionNoteDAO.getAllInSelFlow(selectionId).onStart { emit(listOf()) }.map {
             it.map { noteRoom ->
-                mutableStateOf(noteRoom.noteRoomToView())
+                noteRoom.noteRoomToView()
             }
         }
     }

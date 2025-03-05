@@ -16,7 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import week.on.a.plate.R
-import week.on.a.plate.mainActivity.logic.imageFromGallery.getSavedPicture
+import week.on.a.plate.app.mainActivity.logic.imageFromGallery.getSavedPicture
 
 @Composable
 fun ImageLoad(url: String, modifier: Modifier) {

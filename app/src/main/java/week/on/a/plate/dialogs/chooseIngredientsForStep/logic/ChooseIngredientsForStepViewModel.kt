@@ -2,11 +2,11 @@ package week.on.a.plate.dialogs.chooseIngredientsForStep.logic
 
 import androidx.compose.runtime.mutableStateOf
 import kotlinx.coroutines.CoroutineScope
+import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.dialogs.chooseIngredientsForStep.event.ChooseIngredientsForStepEvent
 import week.on.a.plate.dialogs.chooseIngredientsForStep.state.ChooseIngredientsForStepUIState
 import week.on.a.plate.dialogs.core.DialogViewModel
-import week.on.a.plate.mainActivity.logic.MainViewModel
 
 
 class ChooseIngredientsForStepViewModel(

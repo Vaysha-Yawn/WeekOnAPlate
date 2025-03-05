@@ -3,8 +3,6 @@ package week.on.a.plate.core.theme
 import androidx.compose.material3.ColorScheme
 import androidx.compose.ui.graphics.Color
 
-
-
 class ColorPaletteGroup(
     val name: Int,
     val light:ColorPalette,

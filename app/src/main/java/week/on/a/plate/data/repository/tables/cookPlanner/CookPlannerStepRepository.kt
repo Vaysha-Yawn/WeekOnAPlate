@@ -1,15 +1,20 @@
 package week.on.a.plate.data.repository.tables.cookPlanner
 
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEmpty
 import week.on.a.plate.data.dataView.CookPlannerGroupView
 import week.on.a.plate.data.dataView.CookPlannerStepView
 import week.on.a.plate.data.dataView.recipe.RecipeView
 import week.on.a.plate.data.repository.tables.menu.selection.getDaysOfWeek
 import week.on.a.plate.data.repository.tables.recipe.recipe.RecipeRepository
 import week.on.a.plate.data.repository.tables.recipe.recipeStep.StepRepository
-import java.time.DayOfWeek
+import week.on.a.plate.data.repository.utils.combineSafeIfFlowIsEmpty
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -26,7 +31,10 @@ class CookPlannerStepRepository @Inject constructor(
 ) {
     private val cookPlannerStepMapper = CookPlannerStepMapper()
 
-    fun getWeek(activeDate: LocalDate, locale: Locale): MutableMap<LocalDate, Flow<List<CookPlannerGroupView>>> {
+    fun getWeek(
+        activeDate: LocalDate,
+        locale: Locale
+    ): MutableMap<LocalDate, Flow<List<CookPlannerGroupView>>> {
         val week = mutableMapOf<LocalDate, Flow<List<CookPlannerGroupView>>>()
         val dates = getDaysOfWeek(activeDate, locale)
         for (date in dates) {
@@ -36,33 +44,40 @@ class CookPlannerStepRepository @Inject constructor(
         return week
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     private fun getAllByDate(date: LocalDate): Flow<List<CookPlannerGroupView>> {
-        return groupRepository.getAllFlowByDateStart(date.toString()).map { listGroup ->
-            listGroup.map { group ->
-                val stepsGroup = stepRepo.getByGroupId(group.id)
-                val recipe = recipeRepo.getRecipe(group.recipeId)
-                val steps = stepsGroup.map { stepRoom ->
-                    val stepRecipe = stepRecipeRepo.getStep(stepRoom.originalStepId)!!
-                    with(cookPlannerStepMapper) {
-                        stepRoom.roomToView(
-                            stepRecipe,
-                            recipe.ingredients,
-                            group.portionsCount,
-                            recipe.standardPortionsCount
-                        )
-                    }
-                }.sortedBy { it.id }
+        return groupRepository.getAllFlowByDateStart(date.toString()).flatMapLatest { listGroup ->
+            val listFlow = listGroup.map { group ->
+                val stepsGroupFlow =
+                    stepRepo.getByGroupIdFlow(group.id).onEmpty { emit(emptyList()) }
+                val recipeFlow = recipeRepo.getRecipeFlow(group.recipeId).filterNotNull()
+                val combinedFlow = combine(stepsGroupFlow, recipeFlow) { stepsGroup, recipe ->
+                    val steps = stepsGroup.map { stepRoom ->
+                        val stepRecipe = stepRecipeRepo.getStep(stepRoom.originalStepId)!!
+                        with(cookPlannerStepMapper) {
+                            stepRoom.roomToView(
+                                stepRecipe,
+                                recipe.ingredients,
+                                group.portionsCount,
+                                recipe.standardPortionsCount
+                            )
+                        }
+                    }.sortedBy { it.id }
 
-                CookPlannerGroupView(
-                    group.id,
-                    group.recipeId,
-                    group.start,
-                    group.start.plusSeconds(recipe.duration.toSecondOfDay().toLong()),
-                    recipe.name,
-                    group.portionsCount,
-                    steps
-                )
-            }.sortedBy { it.start }
+                    CookPlannerGroupView(
+                        group.id,
+                        group.recipeId,
+                        group.start,
+                        group.start.plusSeconds(recipe.duration.toSecondOfDay().toLong()),
+                        recipe.name,
+                        group.portionsCount,
+                        steps
+                    )
+                }
+                combinedFlow
+            }
+            val resultFlow = listFlow.combineSafeIfFlowIsEmpty()
+            resultFlow.map { groups -> groups.sortedBy { groupView -> groupView.start } }
         }
     }
 
@@ -94,7 +109,11 @@ class CookPlannerStepRepository @Inject constructor(
             }.sortedBy { it.start }
         }
 
-    suspend fun insertGroupByStart(recipe: RecipeView, start: LocalDateTime, portionsCount: Int?) {
+    suspend fun insertGroupByStart(
+        recipe: RecipeView,
+        start: LocalDateTime,
+        portionsCount: Int?
+    ) {
         val groupId = groupRepository.insert(
             CookPlannerGroupRoom(
                 recipe.id,

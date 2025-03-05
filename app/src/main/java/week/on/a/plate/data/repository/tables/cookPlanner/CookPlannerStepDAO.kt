@@ -32,4 +32,7 @@ interface CookPlannerStepDAO {
 
     @Query("SELECT * FROM CookPlannerStepRoom  WHERE plannerGroupId = :plannerGroupId")
     suspend fun getByGroupId(plannerGroupId: Long) : List<CookPlannerStepRoom>
+
+    @Query("SELECT * FROM CookPlannerStepRoom  WHERE plannerGroupId = :plannerGroupId")
+    fun getByGroupIdFlow(plannerGroupId: Long): Flow<List<CookPlannerStepRoom>>
 }

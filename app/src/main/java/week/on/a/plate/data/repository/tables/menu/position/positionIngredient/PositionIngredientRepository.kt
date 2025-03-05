@@ -1,22 +1,22 @@
 package week.on.a.plate.data.repository.tables.menu.position.positionIngredient
 
 
-import android.util.Log
-import androidx.compose.runtime.State
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.onEmpty
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.data.repository.tables.filters.ingredient.IngredientMapper
-import week.on.a.plate.data.repository.tables.filters.ingredient.IngredientRoom
 import week.on.a.plate.data.repository.tables.recipe.ingredientInRecipe.IngredientAndIngredientInRecipe
 import week.on.a.plate.data.repository.tables.recipe.ingredientInRecipe.IngredientInRecipeDAO
 import week.on.a.plate.data.repository.tables.recipe.ingredientInRecipe.IngredientInRecipeMapper
 import week.on.a.plate.data.repository.tables.recipe.ingredientInRecipe.IngredientInRecipeRoom
-import week.on.a.plate.data.repository.utils.flowToStateWithMap
+import week.on.a.plate.data.repository.utils.combineSafeIfFlowIsEmpty
 import javax.inject.Inject
+import javax.inject.Singleton
 
-
+@Singleton
 class PositionIngredientRepository @Inject constructor(
     private val positionIngredientDAO: PositionIngredientDAO,
     private val ingredientInRecipeDAO: IngredientInRecipeDAO,
@@ -27,26 +27,35 @@ class PositionIngredientRepository @Inject constructor(
 
     suspend fun getAllInSel(selectionId: Long): List<Position> {
         return positionIngredientDAO.getAllInSel(selectionId).map { position ->
-            val ingredient = ingredientInRecipeDAO.getIngredientAndIngredientInRecipe(position.ingredientInRecipeId)
+            val ingredient =
+                ingredientInRecipeDAO.getIngredientAndIngredientInRecipe(position.ingredientInRecipeId)
             ingredientToPosition(ingredient, position)
         }
     }
 
-    fun getAllInSelFlow(selectionId: Long, scope: CoroutineScope): Flow<List<State<Position>>> {
-        return positionIngredientDAO.getAllInSelFlow(selectionId).map{
-            it.map  { position ->
-                val ingredient = ingredientInRecipeDAO.getIngredientAndIngredientInRecipe(position.ingredientInRecipeId)
-                val firstValue = ingredientToPosition(ingredient, position)
-
-                val ingredientFlow = ingredientInRecipeDAO.getIngredientAndIngredientInRecipeFlow(position.ingredientInRecipeId)
-                ingredientFlow.flowToStateWithMap(firstValue, scope){
-                    ingredientToPosition(this, position)
+    @OptIn(ExperimentalCoroutinesApi::class)
+    fun getAllInSelFlow(selectionId: Long): Flow<List<Position>> {
+        val flowPositions =
+            positionIngredientDAO.getAllInSelFlow(selectionId).onEmpty { emit(listOf()) }
+        val result = flowPositions.flatMapLatest { listPositions ->
+            val listFlow = listPositions.map { position ->
+                val flowIngredientCrossRef =
+                    ingredientInRecipeDAO.getIngredientAndIngredientInRecipeFlow(position.ingredientInRecipeId)
+                        .onEmpty { emit(null) }
+                flowIngredientCrossRef.mapNotNull { ingredientAndIngredientInRecipe ->
+                    if (ingredientAndIngredientInRecipe == null) return@mapNotNull null
+                    ingredientToPosition(ingredientAndIngredientInRecipe, position)
                 }
             }
+            listFlow.combineSafeIfFlowIsEmpty()
         }
+        return result
     }
 
-    private fun ingredientToPosition(ingredient: IngredientAndIngredientInRecipe, position:PositionIngredientRoom):Position.PositionIngredientView{
+    private fun ingredientToPosition(
+        ingredient: IngredientAndIngredientInRecipe,
+        position: PositionIngredientRoom
+    ): Position.PositionIngredientView {
         val ingredientView = with(ingredientMapper) { ingredient.ingredientRoom.roomToView() }
         val ingredientInMenuView = with(ingredientInRecipeMapper) {
             ingredient.ingredientInRecipeRoom.roomToView(ingredientView)

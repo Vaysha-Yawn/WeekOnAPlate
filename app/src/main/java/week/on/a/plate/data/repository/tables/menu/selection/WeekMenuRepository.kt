@@ -1,14 +1,13 @@
 package week.on.a.plate.data.repository.tables.menu.selection
 
-import androidx.compose.runtime.State
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onEmpty
+import kotlinx.coroutines.flow.onStart
 import week.on.a.plate.data.dataView.week.DayView
 import week.on.a.plate.data.dataView.week.ForWeek
 import week.on.a.plate.data.dataView.week.NonPosed
@@ -21,6 +20,7 @@ import week.on.a.plate.data.repository.tables.menu.position.draft.PositionDraftR
 import week.on.a.plate.data.repository.tables.menu.position.note.PositionNoteRepository
 import week.on.a.plate.data.repository.tables.menu.position.positionIngredient.PositionIngredientRepository
 import week.on.a.plate.data.repository.tables.menu.position.positionRecipe.PositionRecipeRepository
+import week.on.a.plate.data.repository.utils.combineSafeIfFlowIsEmpty
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -77,9 +77,9 @@ class WeekMenuRepository @Inject constructor(
         val weekOfYear = getWeekOfYear(locale, date)
         val dayDates = getDaysOfWeek(date, locale)
         val dayViews = dayDates.map { dateDay ->
-            val listSelections = getSelectionsByDate(dateDay)
-            addSuggest (nonPosedFullName, listSelections, dateDay, weekOfYear)
-            DayView (dateDay, listSelections)
+            var listSelections = getSelectionsByDate(dateDay)
+            listSelections = addSuggest(nonPosedFullName, listSelections, dateDay, weekOfYear)
+            DayView(dateDay, listSelections)
         }
 
         val roomSel = selectionDAO.findSelectionForWeek(weekOfYear)
@@ -101,35 +101,46 @@ class WeekMenuRepository @Inject constructor(
         return week
     }
 
+
     @OptIn(ExperimentalCoroutinesApi::class)
     fun getCurrentWeekFlow(
         nonPosedFullName: String,
         forWeekFullName: String,
         date: LocalDate,
         locale: Locale,
-        scope:CoroutineScope
     ): Flow<WeekView> {
         val weekOfYear = getWeekOfYear(locale, date)
         val dayDates = getDaysOfWeek(date, locale)
         val dayViews = dayDates.map { dateDay ->
-            val listSelections = getSelectionsByDateFlow(dateDay, scope)
-            listSelections.onEach {
-                addSuggest (nonPosedFullName, it.toMutableList(), dateDay, weekOfYear)
+            val listSelections = getSelectionsByDateFlow(dateDay)
+            val editedListSelections = listSelections.flatMapLatest {
+                addSuggestFlow(nonPosedFullName, it.toMutableList(), dateDay, weekOfYear)
             }
-            val flowDayView = listSelections.map {
-                DayView (dateDay, it)
+            val flowDayView = editedListSelections.map {
+                DayView(dateDay, it)
             }
             flowDayView
         }
-        val flowDayViews = combine(dayViews){
-            it.toList()
-        }
+        val flowDayViews = dayViews.combineSafeIfFlowIsEmpty()
 
-        val weekSel = selectionDAO.findSelectionForWeekFlow(weekOfYear).flatMapLatest {roomSel->
+        val weekSel = prepareWeekSelFlow(weekOfYear, forWeekFullName, date)
+
+        return combine(weekSel, flowDayViews) { weekSeld, dayViewsd ->
+            WeekView(weekOfYear, weekSeld, dayViewsd)
+        }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun prepareWeekSelFlow(
+        weekOfYear: Int,
+        forWeekFullName: String,
+        date: LocalDate
+    ) = selectionDAO.findSelectionForWeekFlow(weekOfYear).onStart { emit(null) }
+        .flatMapLatest { roomSel ->
             if (roomSel != null) {
-                mapSelectionFlow(roomSel, scope)
+                mapSelectionFlow(roomSel)
             } else {
-                flow{
+                flowOf(
                     SelectionView(
                         0,
                         forWeekFullName,
@@ -138,27 +149,23 @@ class WeekMenuRepository @Inject constructor(
                         true,
                         mutableListOf(),
                     )
-                }
+                )
             }
         }
 
-        return combine(weekSel, flowDayViews){weekSeld, dayViewsd->
-            WeekView(weekOfYear, weekSeld, dayViewsd)
-        }
-    }
-
     private suspend fun addSuggest(
         nonPosedFullName: String,
-        listSelections: MutableList<SelectionView>,
+        listSelections: List<SelectionView>,
         dateDay: LocalDate,
         weekOfYear: Int
-    ) {
+    ): List<SelectionView> {
+        val result = listSelections.toMutableList()
         var listSuggest = categorySelectionDAO.getAll().toMutableList()
         listSuggest.add(CategorySelectionRoom(nonPosedFullName, NonPosed.stdTime))
-        listSuggest = listSuggest.sortedBy { it.stdTime }.toMutableList()
+        listSuggest = listSuggest.toMutableList()
         for (i in listSuggest) {
             if (listSelections.find { it.name == i.name } == null) {
-                listSelections.add(
+                result.add(
                     SelectionView(
                         0,
                         i.name,
@@ -170,41 +177,74 @@ class WeekMenuRepository @Inject constructor(
                 )
             }
         }
+        return result.toList().sortedBy { it.dateTime }
     }
 
-    suspend fun getSelectionsByDate(date: LocalDate): MutableList<SelectionView> {
+    private fun addSuggestFlow(
+        nonPosedFullName: String,
+        listSelections: List<SelectionView>,
+        dateDay: LocalDate,
+        weekOfYear: Int
+    ): Flow<List<SelectionView>> {
+        var flowSuggest = categorySelectionDAO.getAllFlow()
+        flowSuggest = flowSuggest.map {
+            it.toMutableList().apply {
+                add(CategorySelectionRoom(nonPosedFullName, NonPosed.stdTime))
+            }
+        }
+        val flowListSelections = flowSuggest.map { listSuggest ->
+            val result = listSelections.toMutableList()
+            for (i in listSuggest) {
+                if (listSelections.find { it.name == i.name } == null) {
+                    result.add(
+                        SelectionView(
+                            0,
+                            i.name,
+                            LocalDateTime.of(dateDay, i.stdTime),
+                            weekOfYear,
+                            false,
+                            mutableListOf(),
+                        )
+                    )
+                }
+            }
+            result.toList().sortedBy { it.dateTime }
+        }
+        return flowListSelections
+    }
+
+    suspend fun getSelectionsByDate(date: LocalDate): List<SelectionView> {
         return selectionDAO.findSelectionsForDay(date.toString()).map { sel ->
             mapSelection(sel)
-        }.toMutableList()
+        }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    fun getSelectionsByDateFlow(date: LocalDate, scope: CoroutineScope): Flow<List<SelectionView>> {
-        return selectionDAO.findSelectionsForDayFlow(date.toString())
+    fun getSelectionsByDateFlow(date: LocalDate): Flow<List<SelectionView>> {
+        return selectionDAO.findSelectionsForDayFlow(date.toString()).onEmpty { emit(emptyList()) }
             .flatMapLatest { selectionRoomList ->
-                combine(selectionRoomList.map { sel ->
-                    mapSelectionFlow(sel, scope)
-                }) { selectionViews ->
-                    selectionViews.toList().sortedBy { it.dateTime }
+                val listFlow = selectionRoomList.map { sel ->
+                    mapSelectionFlow(sel)
                 }
+                val flow = listFlow.combineSafeIfFlowIsEmpty()
+                flow
             }
     }
 
     private fun mapSelectionFlow(
         selectionRoom: SelectionRoom,
-        scope: CoroutineScope
     ): Flow<SelectionView> {
         val selId = selectionRoom.id
 
-        val listPositionRecipe = positionRecipeRepository.getAllInSelFlow(selId, scope)
-        val listPositionIngredient = positionIngredientRepository.getAllInSelFlow(selId, scope)
+        val listPositionRecipe = positionRecipeRepository.getAllInSelFlow(selId)
+        val listPositionIngredient = positionIngredientRepository.getAllInSelFlow(selId)
         val listPositionNote = noteRepository.getAllInSelFlow(selId)
-        val listPositionDraft = draftRepository.getAllInSelFlow(selId, scope)
+        val listPositionDraft = draftRepository.getAllInSelFlow(selId)
 
         val flowSelections = combine(
             listPositionRecipe, listPositionIngredient, listPositionNote, listPositionDraft
         ) { a, b, c, d ->
-            val list = mutableListOf<State<Position>>()
+            val list = mutableListOf<Position>()
             list.addAll(a)
             list.addAll(b)
             list.addAll(c)
@@ -212,11 +252,15 @@ class WeekMenuRepository @Inject constructor(
             list.toList()
 
             with(selectionMapper) {
-                selectionRoom.roomToViewState(list)
+                selectionRoom.roomToView(list)
             }
         }
 
-        return flowSelections
+        val empty = with(selectionMapper) {
+            selectionRoom.roomToView(mutableListOf<Position>())
+        }
+
+        return flowSelections.onEmpty { emit(empty) }
     }
 
     private suspend fun mapSelection(selectionRoom: SelectionRoom): SelectionView {

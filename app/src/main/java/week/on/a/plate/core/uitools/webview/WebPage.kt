@@ -13,17 +13,17 @@ import week.on.a.plate.core.Event
 @Composable
 fun WebPage(
     url: MutableState<String>,
-    webview: MutableState<WebView?>,
+    webView: MutableState<WebView?>,
     onEvent: (Event) -> Unit,
     allowGo: WhenGoFromWebView
 ) {
     val isDark = isSystemInDarkTheme()
     AndroidView(
         { context ->
-            if (webview.value == null) {
-                webview.value = WebView(context)
-                val view = webview.value
-                view!!.webChromeClient = MyWebChromeClient(webview)
+            if (webView.value == null) {
+                webView.value = WebView(context)
+                val view = webView.value
+                view!!.webChromeClient = MyWebChromeClient(webView)
                 view.setSettings(isDark)
 
                 view.setOnLongClickListener {
@@ -32,17 +32,16 @@ fun WebPage(
                 view.webViewClient = MyWebViewClient(url.value, url, allowGo)
                 view.loadUrl(url.value)
             } else {
-                if (webview.value!!.url != url.value) {
-                    webview.value!!.loadUrl(url.value)
+                if (webView.value!!.url != url.value) {
+                    webView.value!!.loadUrl(url.value)
                 }
             }
-            return@AndroidView webview.value!!
+            return@AndroidView webView.value!!
         }, modifier = Modifier
             .fillMaxSize()
             .animateContentSize(), update = {
-            webview.value?.loadUrl(url.value)
+            webView.value?.loadUrl(url.value)
         }
 
     )
 }
-

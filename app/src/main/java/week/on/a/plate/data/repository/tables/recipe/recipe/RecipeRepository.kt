@@ -1,7 +1,9 @@
 package week.on.a.plate.data.repository.tables.recipe.recipe
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEmpty
 import kotlinx.coroutines.flow.zip
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.data.dataView.recipe.RecipeStepView
@@ -53,14 +55,15 @@ class RecipeRepository @Inject constructor(
         }
     }
 
-    fun getRecipeFlow(id: Long): Flow<RecipeView> {
-        val recipeF = dao.getRecipeByIdFlow(id)
-        val stepsF = stepRepository.getStepsFlow(id)
-        val ingredientsF = ingredientInRecipeRepository.getIngredientsFlow(id)
-        val tagsF = tagCrossRefRepository.getTagsFlow(id)
-        return zip(recipeF, stepsF, ingredientsF, tagsF) { recipe, steps, ingredients, tags ->
+    fun getRecipeFlow(id: Long): Flow<RecipeView?> {
+        val recipeF = dao.getRecipeByIdFlow(id).onEmpty { emit(null) }
+        val stepsF = stepRepository.getStepsFlow(id).onEmpty { emit(emptyList()) }
+        val ingredientsF =
+            ingredientInRecipeRepository.getIngredientsFlow(id).onEmpty { emit(emptyList()) }
+        val tagsF = tagCrossRefRepository.getTagsFlow(id).onEmpty { emit(emptyList()) }
+        return combine(recipeF, stepsF, ingredientsF, tagsF) { recipe, steps, ingredients, tags ->
             with(recipeMapper) {
-                recipe.roomToView(
+                recipe?.roomToView(
                     tags = tags,
                     ingredients = ingredients,
                     steps = steps

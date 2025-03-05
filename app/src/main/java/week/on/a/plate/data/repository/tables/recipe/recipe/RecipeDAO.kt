@@ -21,7 +21,7 @@ interface RecipeDAO {
     suspend fun getRecipeById(recipeId: Long): RecipeRoom
 
     @Query("SELECT * FROM recipeRoom WHERE recipeId=:recipeId")
-    fun getRecipeByIdFlow(recipeId: Long): Flow<RecipeRoom>
+    fun getRecipeByIdFlow(recipeId: Long): Flow<RecipeRoom?>
 
     @Query("SELECT * FROM recipeRoom WHERE inFavorite=:favorite")
     suspend fun getRecipeFavorites(favorite: Boolean): List<RecipeRoom>

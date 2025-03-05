@@ -1,0 +1,224 @@
+package week.on.a.plate.screens.base.menu.logic
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import week.on.a.plate.app.mainActivity.event.MainEvent
+import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.core.Event
+import week.on.a.plate.data.dataView.week.Position
+import week.on.a.plate.data.dataView.week.getTitleWeek
+import week.on.a.plate.screens.additional.specifySelection.navigation.SpecifySelectionDestination
+import week.on.a.plate.screens.base.menu.event.MenuEvent
+import week.on.a.plate.screens.base.menu.event.MenuNavEvent
+import week.on.a.plate.screens.base.menu.logic.usecase.CreateFirstNonPosedPositionUseCase
+import week.on.a.plate.screens.base.menu.logic.usecase.OtherPositionActionsMore
+import week.on.a.plate.screens.base.menu.logic.usecase.SearchByDraftUseCase
+import week.on.a.plate.screens.base.menu.logic.usecase.SelectedRecipeManager
+import week.on.a.plate.screens.base.menu.logic.usecase.SelectionUseCase
+import week.on.a.plate.screens.base.menu.logic.usecase.navigateLogic.EditOtherPositionUseCase
+import week.on.a.plate.screens.base.menu.logic.usecase.navigateLogic.FindRecipeAndReplaceUseCase
+import week.on.a.plate.screens.base.menu.logic.usecase.navigateLogic.GetSelAndUseCase
+import week.on.a.plate.screens.base.menu.logic.usecase.navigateLogic.OpenDialogAddPosition
+import week.on.a.plate.screens.base.menu.logic.usecase.navigateLogic.crudPositions.recipe.RecipePositionActionsMore
+import week.on.a.plate.screens.base.menu.logic.usecase.shopList.RecipeToShopListUseCase
+import week.on.a.plate.screens.base.menu.logic.usecase.shopList.SelectedToShopListUseCase
+import week.on.a.plate.screens.base.menu.state.MenuUIState
+import week.on.a.plate.screens.base.wrapperDatePicker.event.WrapperDatePickerEvent
+import java.util.Locale
+import javax.inject.Inject
+
+
+@HiltViewModel
+class MenuViewModel @Inject constructor(
+    private val selectedRecipeManager: SelectedRecipeManager,
+    private val menuWrapperDatePickerManager: MenuWrapperDatePickerManager,
+    private val getSelAndUse: GetSelAndUseCase,
+    private val recipePositionActionsMore: RecipePositionActionsMore,
+    private val otherPositionActionsMore: OtherPositionActionsMore,
+    private val editOtherPosition: EditOtherPositionUseCase,
+    private val addPosition: OpenDialogAddPosition,
+    private val selectedToShopList: SelectedToShopListUseCase,
+    private val recipeToShopList: RecipeToShopListUseCase,
+    private val findRecipeAndReplace: FindRecipeAndReplaceUseCase,
+    private val searchByDraft: SearchByDraftUseCase,
+    private val createFirstNonPosedPosition: CreateFirstNonPosedPositionUseCase,
+) : ViewModel() {
+
+    lateinit var mainViewModel: MainViewModel
+    val menuUIState = MenuUIState.MenuUIStateExample
+    private val activeDay = menuUIState.wrapperDatePickerUIState.activeDay
+    private lateinit var selectionUseCase: SelectionUseCase
+
+    fun initWithMainVM(mainViewModel: MainViewModel) {
+        selectionUseCase = SelectionUseCase(
+            mainViewModel,
+            viewModelScope,
+            activeDay,
+            addPosition
+        )
+
+        viewModelScope.launch {
+            updateWeek()
+        }
+    }
+
+    private fun updateWeek() {
+        viewModelScope.launch {
+            //todo add use case for getCurrentWeekFlow
+            val flow = sCRUDRecipeInMenu.menuR.getCurrentWeekFlow(
+                menuUIState.nonPosedFullName.value,
+                menuUIState.forWeekFullName.value,
+                activeDay.value,
+                Locale.getDefault()
+            )
+            flow.collect { week ->
+                if (week.days.isNotEmpty()) {
+                    menuUIState.wrapperDatePickerUIState.titleTopBar.value =
+                        getTitleWeek(week.days[0].date, week.days[6].date)
+                }
+                menuUIState.week.value = week
+            }
+        }
+    }
+
+    fun onEvent(event: Event) {
+        when (event) {
+            is MenuEvent -> onEvent(event)
+            is MainEvent -> mainViewModel.onEvent(event)
+            is WrapperDatePickerEvent -> onEvent(MenuEvent.ActionWrapperDatePicker(event))
+        }
+    }
+
+    fun onEvent(event: MenuEvent) {
+
+        when (event) {
+            is MenuEvent.NavigateFromMenu -> {
+                selectedRecipeManager.clear(menuUIState)
+                when (event.navData) {
+                    is MenuNavEvent.SpecifySelection -> mainViewModel.nav.navigate(
+                        SpecifySelectionDestination
+                    )
+
+                    is MenuNavEvent.NavToFullRecipe -> {
+                        mainViewModel.recipeDetailsViewModel.launch(
+                            event.navData.recId,
+                            event.navData.portionsCount
+                        )
+                    }
+                }
+            }
+
+            is MenuEvent.ActionDBMenu -> {
+                viewModelScope.launch(Dispatchers.IO) {
+                    sCRUDRecipeInMenu.onEvent(
+                        event.actionWeekMenuDB
+                    )
+                }
+            }
+
+            is MenuEvent.ActionSelect -> selectedRecipeManager.onEvent(
+                event.selectedEvent,
+                menuUIState
+            )
+
+            is MenuEvent.GetSelIdAndCreate -> getSelAndUse.getSelAndCreate(
+                event.context,
+                mainViewModel,
+                ::onEvent
+            )
+
+            is MenuEvent.CreatePosition -> viewModelScope.launch(Dispatchers.IO) {
+                addPosition(
+                    event.selId,
+                    event.context,
+                    mainViewModel
+                )
+            }
+
+            is MenuEvent.EditPositionMore -> {
+                viewModelScope.launch {
+                    if (event.position is Position.PositionRecipeView) {
+                        recipePositionActionsMore(
+                            event.position,
+                            mainViewModel,
+                            ::onEvent
+                        )
+                    } else otherPositionActionsMore(
+                        event.position,
+                        mainViewModel,
+                        ::onEvent,
+                        mainViewModel::onEvent
+                    )
+                }
+            }
+
+            is MenuEvent.EditOtherPosition -> viewModelScope.launch {
+                editOtherPosition(
+                    event.position,
+                    mainViewModel
+                )
+            }
+
+            MenuEvent.DeleteSelected ->
+                viewModelScope.launch {
+                    selectedRecipeManager.deleteSelected(menuUIState, ::onEvent)
+                }
+
+            MenuEvent.SelectedToShopList -> viewModelScope.launch {
+                selectedToShopList(
+                    menuUIState,
+                    ::onEvent,
+                    mainViewModel,
+                    selectedRecipeManager::getSelected
+                )
+            }
+
+            is MenuEvent.RecipeToShopList -> viewModelScope.launch {
+                recipeToShopList(
+                    event.recipe,
+                    mainViewModel
+                )
+            }
+
+            is MenuEvent.ActionWrapperDatePicker -> menuWrapperDatePickerManager.invoke(
+                event.event,
+                mainViewModel,
+                ::updateWeek,
+                menuUIState.wrapperDatePickerUIState,
+                selectedRecipeManager,
+                menuUIState
+            )
+
+            is MenuEvent.FindReplaceRecipe -> viewModelScope.launch {
+                findRecipeAndReplace(
+                    event.recipe,
+                    mainViewModel,
+                )
+            }
+
+            is MenuEvent.SearchByDraft -> viewModelScope.launch {
+                searchByDraft(
+                    event.draft, mainViewModel
+                )
+            }
+
+            is MenuEvent.CreateFirstNonPosedPosition -> viewModelScope.launch {
+                createFirstNonPosedPosition(
+                    event.date,
+                    event.selectionView,
+                    event.context, mainViewModel, ::onEvent
+                )
+            }
+
+            is MenuEvent.EditOrDeleteSelection -> selectionUseCase.editOrDeleteSelection(event.sel)
+            is MenuEvent.CreateSelection ->
+                selectionUseCase.createSelection(event.date, event.isForWeek)
+
+            is MenuEvent.CreateWeekSelIdAndCreatePosition ->
+                selectionUseCase.createWeekSelIdAndCreatePosition(event.context)
+        }
+    }
+}

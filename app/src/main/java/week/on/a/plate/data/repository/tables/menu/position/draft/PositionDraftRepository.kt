@@ -1,12 +1,12 @@
 package week.on.a.plate.data.repository.tables.menu.position.draft
 
 
-import androidx.compose.runtime.State
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEmpty
 import week.on.a.plate.data.dataView.recipe.IngredientView
 import week.on.a.plate.data.dataView.recipe.RecipeTagView
 import week.on.a.plate.data.dataView.week.Position
@@ -14,11 +14,12 @@ import week.on.a.plate.data.repository.tables.filters.ingredient.IngredientDAO
 import week.on.a.plate.data.repository.tables.filters.ingredient.IngredientMapper
 import week.on.a.plate.data.repository.tables.filters.recipeTag.RecipeTagDAO
 import week.on.a.plate.data.repository.tables.filters.recipeTag.RecipeTagMapper
-import week.on.a.plate.data.repository.utils.flowToState
+import week.on.a.plate.data.repository.utils.combineSafeIfFlowIsEmpty
 import week.on.a.plate.data.repository.utils.updateListOfEntity
 import javax.inject.Inject
+import javax.inject.Singleton
 
-
+@Singleton
 class PositionDraftRepository @Inject constructor(
     private val positionDraftDAO: PositionDraftDAO,
     private val ingredientDAO: IngredientDAO,
@@ -55,45 +56,51 @@ class PositionDraftRepository @Inject constructor(
 
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    fun getAllInSelFlow(selectionId: Long, scope: CoroutineScope): Flow<List<State<Position>>> {
-        return positionDraftDAO.getAllInSelFlow(selectionId).flatMapLatest { draftList ->
-            combine(
-                draftList.map { draft ->
-                    combine(
-                        positionDraftDAO.getDraftAndIngredientByDraftIdFlow(draft.draftId),
-                        positionDraftDAO.getDraftAndTagByDraftIdFlow(draft.draftId)
-                    ) { listIngredientsId, listTagsId ->
-                        val tags = combine(listTagsId.map {
-                            recipeTagDAO.findByIDFlow(it.recipeTagId)
-                        }) {
-                            it.map {
-                                with(tagMapper) { it?.roomToView() }
-                            }.toList().filterNotNull()
-                        }
-                        val ingredients = combine(listIngredientsId.map {
-                            ingredientDAO.findByIDFlow(it.ingredientId)
-                        }) {
-                            it.map {
-                                with(ingredientMapper) { it?.roomToView() }
-                            }.toList().filterNotNull()
-                        }
-                        val flowPos = combine(tags, ingredients) { t, i ->
-                            with(mapper) {
-                                draft.roomToView(
-                                    tags = t,
-                                    ingredients = i
-                                )
-                            }
-                        }
-                        flowPos.flowToState(
-                            Position.PositionDraftView(0, listOf(), listOf(), 0),
-                            scope
-                        )
-                    }
-                }) {
-                it.toList()
+    fun getAllInSelFlow(selectionId: Long): Flow<List<Position>> {
+        return positionDraftDAO.getAllInSelFlow(selectionId)
+            .flatMapLatest { draftList ->
+                val listFlow = draftList.map { draft -> getPositionStateFlow(draft) }
+                listFlow.combineSafeIfFlowIsEmpty()
+            }
+    }
+
+    private fun getPositionStateFlow(draft: PositionDraftRoom): Flow<Position> {
+        val ingredientsFlow = getIngredientsFlow(draft.draftId)
+        val tagsFlow = getTagsFlow(draft.draftId)
+
+        return combine(tagsFlow, ingredientsFlow) { tags, ingredients ->
+            with(mapper) {
+                draft.roomToView(tags = tags, ingredients = ingredients)
             }
         }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    fun getIngredientsFlow(draftId: Long): Flow<List<IngredientView>> {
+        return positionDraftDAO.getDraftAndIngredientByDraftIdFlow(draftId)
+            .onEmpty { emit(emptyList()) }
+            .flatMapLatest { list ->
+                val listFlowIngredients = list.map {
+                    ingredientDAO.findByIDFlow(it.ingredientId).onEmpty { emit(null) }
+                }
+                val flowIngredients = listFlowIngredients.combineSafeIfFlowIsEmpty()
+                flowIngredients.map { ingredients ->
+                    ingredients.mapNotNull { with(ingredientMapper) { it?.roomToView() } }
+                }
+            }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    fun getTagsFlow(draftId: Long): Flow<List<RecipeTagView>> {
+        return positionDraftDAO.getDraftAndTagByDraftIdFlow(draftId).onEmpty { emit(emptyList()) }
+            .flatMapLatest { list ->
+                val listFlowTags =
+                    list.map { recipeTagDAO.findByIDFlow(it.recipeTagId).onEmpty { emit(null) } }
+                val flowTags = listFlowTags.combineSafeIfFlowIsEmpty()
+                flowTags.map { tags ->
+                    tags.mapNotNull { with(tagMapper) { it?.roomToView() } }
+                }
+            }
     }
 
     suspend fun insert(position: Position.PositionDraftView, selectionId: Long) {
@@ -123,11 +130,11 @@ class PositionDraftRepository @Inject constructor(
 
     suspend fun update(
         oldDraft: Position.PositionDraftView,
-        filters: Pair<List<RecipeTagView>, List<IngredientView>>
+        tags: List<RecipeTagView>, ingredients: List<IngredientView>
     ) {
         updateListOfEntity(
             oldList = oldDraft.tags,
-            newList = filters.first,
+            newList = tags,
             findSameInList = { tagView, list ->
                 list.find { tag -> tag.id == tagView.id }
             },
@@ -145,7 +152,7 @@ class PositionDraftRepository @Inject constructor(
 
         updateListOfEntity(
             oldList = oldDraft.ingredients,
-            newList = filters.second,
+            newList = ingredients,
             findSameInList = { ingredient, list ->
                 list.find { ingredientView -> ingredientView.ingredientId == ingredient.ingredientId }
             },
@@ -170,3 +177,4 @@ class PositionDraftRepository @Inject constructor(
         )
     }
 }
+

@@ -1,54 +1,54 @@
 package week.on.a.plate.dialogs.core
 
 import androidx.compose.runtime.mutableStateOf
-import week.on.a.plate.dialogs.editOrCreateIngredient.event.AddIngredientEvent
-import week.on.a.plate.dialogs.editOrCreateIngredient.logic.AddIngredientViewModel
-import week.on.a.plate.dialogs.editOrCreateTag.event.AddTagEvent
-import week.on.a.plate.dialogs.editOrCreateTag.logic.AddTagViewModel
-import week.on.a.plate.screens.filters.dialogs.filterVoiceApply.event.FilterVoiceApplyEvent
-import week.on.a.plate.screens.filters.dialogs.filterVoiceApply.logic.FilterVoiceApplyViewModel
+import week.on.a.plate.core.Event
 import week.on.a.plate.dialogs.addPositionChoose.event.AddPositionEvent
 import week.on.a.plate.dialogs.addPositionChoose.logic.AddPositionViewModel
+import week.on.a.plate.dialogs.calendarMy.event.CalendarMyEvent
 import week.on.a.plate.dialogs.changePortions.event.ChangePortionsCountEvent
 import week.on.a.plate.dialogs.changePortions.logic.ChangePortionsCountViewModel
-import week.on.a.plate.dialogs.chooseWeekInMenu.event.ChooseWeekDialogEvent
-import week.on.a.plate.dialogs.chooseWeekInMenu.logic.ChooseWeekViewModel
-import week.on.a.plate.dialogs.dialogDatePicker.event.DatePickerEvent
-import week.on.a.plate.dialogs.dialogDatePicker.logic.DatePickerViewModel
-import week.on.a.plate.dialogs.editOneString.event.EditOneStringEvent
-import week.on.a.plate.dialogs.editOneString.logic.EditOneStringViewModel
-import week.on.a.plate.dialogs.editOtherPositionMore.event.OtherPositionMoreEvent
-import week.on.a.plate.dialogs.editOtherPositionMore.logic.EditOtherPositionViewModel
-import week.on.a.plate.dialogs.editIngredientInMenu.event.EditPositionIngredientEvent
-import week.on.a.plate.dialogs.editIngredientInMenu.logic.EditPositionIngredientViewModel
-import week.on.a.plate.dialogs.editPositionRecipeMore.event.ActionMoreRecipePositionEvent
-import week.on.a.plate.dialogs.editPositionRecipeMore.logic.EditRecipePositionViewModel
-import week.on.a.plate.screens.filters.dialogs.selectedFilters.event.SelectedFiltersEvent
-import week.on.a.plate.screens.filters.dialogs.selectedFilters.logic.SelectedFiltersViewModel
-import week.on.a.plate.core.Event
-import week.on.a.plate.dialogs.chooseHowImagePick.event.ChooseHowImagePickEvent
-import week.on.a.plate.dialogs.chooseHowImagePick.logic.ChooseHowImagePickViewModel
 import week.on.a.plate.dialogs.chooseIngredientsForStep.event.ChooseIngredientsForStepEvent
 import week.on.a.plate.dialogs.chooseIngredientsForStep.logic.ChooseIngredientsForStepViewModel
 import week.on.a.plate.dialogs.cookStepMore.event.CookStepMoreEvent
 import week.on.a.plate.dialogs.cookStepMore.logic.CookStepMoreDialogViewModel
+import week.on.a.plate.dialogs.datePick.event.DatePickerEvent
+import week.on.a.plate.dialogs.datePick.logic.DatePickerViewModel
+import week.on.a.plate.dialogs.editIngredientInMenu.event.EditPositionIngredientEvent
+import week.on.a.plate.dialogs.editIngredientInMenu.logic.EditPositionIngredientViewModel
+import week.on.a.plate.dialogs.editOneString.event.EditOneStringEvent
+import week.on.a.plate.dialogs.editOneString.logic.EditOneStringViewModel
 import week.on.a.plate.dialogs.editOrDelete.event.EditOrDeleteEvent
 import week.on.a.plate.dialogs.editOrDelete.logic.EditOrDeleteViewModel
-import week.on.a.plate.dialogs.editSelection.event.EditSelectionEvent
-import week.on.a.plate.dialogs.editSelection.logic.EditSelectionViewModel
-import week.on.a.plate.dialogs.dialogTimePick.event.TimePickEvent
-import week.on.a.plate.dialogs.dialogTimePick.logic.TimePickViewModel
-import week.on.a.plate.dialogs.exitApply.event.ExitApplyEvent
-import week.on.a.plate.dialogs.exitApply.logic.ExitApplyViewModel
-import week.on.a.plate.dialogs.filtersMore.event.FiltersMoreEvent
-import week.on.a.plate.dialogs.filtersMore.logic.FiltersMoreViewModel
-import week.on.a.plate.dialogs.setPermanentMeals.event.SetPermanentMealsEvent
-import week.on.a.plate.dialogs.setPermanentMeals.logic.SetPermanentMealsViewModel
-import week.on.a.plate.dialogs.setTheme.event.SetThemeEvent
-import week.on.a.plate.dialogs.setTheme.logic.SetThemesViewModel
-import week.on.a.plate.dialogs.sortMore.event.SortMoreEvent
-import week.on.a.plate.dialogs.sortMore.logic.SortMoreViewModel
-import week.on.a.plate.dialogs.calendarMy.event.CalendarMyEvent
+import week.on.a.plate.dialogs.forCreateRecipeScreen.chooseHowImagePick.event.ChooseHowImagePickEvent
+import week.on.a.plate.dialogs.forCreateRecipeScreen.chooseHowImagePick.logic.ChooseHowImagePickViewModel
+import week.on.a.plate.dialogs.forCreateRecipeScreen.exitApply.event.ExitApplyEvent
+import week.on.a.plate.dialogs.forCreateRecipeScreen.exitApply.logic.ExitApplyViewModel
+import week.on.a.plate.dialogs.forMenuScreen.chooseWeekInMenu.event.ChooseWeekDialogEvent
+import week.on.a.plate.dialogs.forMenuScreen.chooseWeekInMenu.logic.ChooseWeekViewModel
+import week.on.a.plate.dialogs.forMenuScreen.editOtherPositionMore.event.OtherPositionMoreEvent
+import week.on.a.plate.dialogs.forMenuScreen.editOtherPositionMore.logic.EditOtherPositionViewModel
+import week.on.a.plate.dialogs.forMenuScreen.editPositionRecipeMore.event.ActionMoreRecipePositionEvent
+import week.on.a.plate.dialogs.forMenuScreen.editPositionRecipeMore.logic.EditRecipePositionViewModel
+import week.on.a.plate.dialogs.forMenuScreen.editSelection.event.EditSelectionEvent
+import week.on.a.plate.dialogs.forMenuScreen.editSelection.logic.EditSelectionViewModel
+import week.on.a.plate.dialogs.forSearchScreen.filtersMore.event.FiltersMoreEvent
+import week.on.a.plate.dialogs.forSearchScreen.filtersMore.logic.FiltersMoreViewModel
+import week.on.a.plate.dialogs.forSearchScreen.sortMore.event.SortMoreEvent
+import week.on.a.plate.dialogs.forSearchScreen.sortMore.logic.SortMoreDialogViewModel
+import week.on.a.plate.dialogs.forSettingsScreen.setPermanentMeals.event.SetPermanentMealsEvent
+import week.on.a.plate.dialogs.forSettingsScreen.setPermanentMeals.logic.SetPermanentMealsViewModel
+import week.on.a.plate.dialogs.forSettingsScreen.setTheme.event.SetThemeEvent
+import week.on.a.plate.dialogs.forSettingsScreen.setTheme.logic.SetThemesViewModel
+import week.on.a.plate.dialogs.timePick.event.TimePickEvent
+import week.on.a.plate.dialogs.timePick.logic.TimePickViewModel
+import week.on.a.plate.screens.additional.filters.dialogs.editOrCreateIngredient.event.AddIngredientEvent
+import week.on.a.plate.screens.additional.filters.dialogs.editOrCreateIngredient.logic.AddIngredientViewModel
+import week.on.a.plate.screens.additional.filters.dialogs.editOrCreateTag.event.AddTagEvent
+import week.on.a.plate.screens.additional.filters.dialogs.editOrCreateTag.logic.AddTagViewModel
+import week.on.a.plate.screens.additional.filters.dialogs.filterVoiceApply.event.FilterVoiceApplyEvent
+import week.on.a.plate.screens.additional.filters.dialogs.filterVoiceApply.logic.FilterVoiceApplyViewModel
+import week.on.a.plate.screens.additional.filters.dialogs.selectedFilters.event.SelectedFiltersEvent
+import week.on.a.plate.screens.additional.filters.dialogs.selectedFilters.logic.SelectedFiltersViewModel
 import java.util.Stack
 import javax.inject.Inject
 
@@ -139,8 +139,8 @@ class DialogUseCase @Inject constructor() {
             is EditSelectionEvent -> if (activeDialog.value is EditSelectionViewModel) {
                 (activeDialog.value as EditSelectionViewModel).onEvent(event)
             }
-            is SortMoreEvent -> if (activeDialog.value is SortMoreViewModel) {
-                (activeDialog.value as SortMoreViewModel).onEvent(event)
+            is SortMoreEvent -> if (activeDialog.value is SortMoreDialogViewModel) {
+                (activeDialog.value as SortMoreDialogViewModel).onEvent(event)
             }
             is FiltersMoreEvent -> if (activeDialog.value is FiltersMoreViewModel) {
                 (activeDialog.value as FiltersMoreViewModel).onEvent(event)
