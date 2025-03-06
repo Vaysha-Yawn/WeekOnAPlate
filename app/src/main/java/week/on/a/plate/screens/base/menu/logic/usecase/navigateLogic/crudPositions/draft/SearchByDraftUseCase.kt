@@ -1,4 +1,4 @@
-package week.on.a.plate.screens.base.menu.logic.usecase
+package week.on.a.plate.screens.base.menu.logic.usecase.navigateLogic.crudPositions.draft
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope

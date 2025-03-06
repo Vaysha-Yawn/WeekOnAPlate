@@ -21,7 +21,6 @@ import week.on.a.plate.data.dataView.week.NonPosed
 import week.on.a.plate.data.dataView.week.SelectionView
 import week.on.a.plate.screens.base.menu.event.MenuEvent
 import java.time.LocalDate
-import java.time.LocalDateTime
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -44,7 +43,12 @@ fun TitleMenu(selection: SelectionView, modifier: Modifier, onEvent: (event: Eve
         )
         PlusButtonTitle() {
             if (selection.id == 0L) {
-                onEvent(MenuEvent.CreateFirstNonPosedPosition(selection.dateTime.toLocalDate(), selection, context))
+                onEvent(
+                    MenuEvent.CreateFirstNonPosedPosition(
+                        selection.dateTime.toLocalDate(),
+                        context
+                    )
+                )
             } else {
                 onEvent(MenuEvent.CreatePosition(selection.id, context))
             }
@@ -74,7 +78,12 @@ fun TitleMenuS(selection: SelectionView, modifier: Modifier, onEvent: (event: Ev
         )
         PlusButtonTitle() {
             if (selection.id == 0L) {
-                onEvent(MenuEvent.CreateFirstNonPosedPosition(selection.dateTime.toLocalDate(), selection, context, ))
+                onEvent(
+                    MenuEvent.CreateFirstNonPosedPosition(
+                        selection.dateTime.toLocalDate(),
+                        context,
+                    )
+                )
             } else {
                 onEvent(MenuEvent.CreatePosition(selection.id, context))
             }

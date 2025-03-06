@@ -9,14 +9,24 @@ import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.dialogs.forMenuScreen.editOtherPositionMore.event.OtherPositionMoreEvent
 import week.on.a.plate.dialogs.forMenuScreen.editOtherPositionMore.logic.EditOtherPositionViewModel
 import week.on.a.plate.screens.base.menu.event.MenuEvent
-import week.on.a.plate.screens.base.menu.logic.usecase.navigateLogic.GetSelAndUseCase
+import week.on.a.plate.screens.base.menu.logic.usecase.dbusecase.DeleteDraftInDBUseCase
+import week.on.a.plate.screens.base.menu.logic.usecase.dbusecase.DeleteIngredientPositionInDBUseCase
+import week.on.a.plate.screens.base.menu.logic.usecase.dbusecase.DeleteNoteInDBUseCase
+import week.on.a.plate.screens.base.menu.logic.usecase.dbusecase.DeleteRecipePosInDBUseCase
+import week.on.a.plate.screens.base.menu.logic.usecase.navigateLogic.GetSelAndDoubleUseCase
+import week.on.a.plate.screens.base.menu.logic.usecase.navigateLogic.GetSelAndMoveUseCase
 import javax.inject.Inject
 
-//todo slice
+//todo slice, а точнее добавить в OtherPositionActionsMore View model все use case с действиями и в onEvent вызывать use case
 class OtherPositionActionsMore @Inject constructor(
     private val addIngredientToShoppingListInBd: AddIngredientToShoppingListInBd,
-    private val getSelAndUseCase: GetSelAndUseCase,
+    private val getSelAndDouble: GetSelAndDoubleUseCase,
+    private val getSelAndMove: GetSelAndMoveUseCase,
 
+    private val deleteDraft: DeleteDraftInDBUseCase,
+    private val deleteIngredient: DeleteIngredientPositionInDBUseCase,
+    private val deleteNote: DeleteNoteInDBUseCase,
+    private val deleteRecipe: DeleteRecipePosInDBUseCase,
     ) {
     suspend operator fun invoke(
         position: Position,
@@ -30,25 +40,25 @@ class OtherPositionActionsMore @Inject constructor(
         ) { event ->
             when (event) {
                 OtherPositionMoreEvent.Close -> {}
-                OtherPositionMoreEvent.Delete -> onEventMenu(
-                    MenuEvent.ActionDBMenu(
-                        ActionWeekMenuDB.Delete(
-                            position
-                        )
-                    )
-                )
+                OtherPositionMoreEvent.Delete ->
+                    launch {
+                        when (position) {
+                            is Position.PositionDraftView -> deleteDraft(position)
+                            is Position.PositionIngredientView -> deleteIngredient(position)
+                            is Position.PositionNoteView -> deleteNote(position)
+                            is Position.PositionRecipeView -> deleteRecipe(position)
+                        }
+                    }
 
-                OtherPositionMoreEvent.Double -> getSelAndUseCase.getSelAndDouble(
+                OtherPositionMoreEvent.Double -> getSelAndDouble(
                     position,
-                    mainViewModel,
-                    onEventMenu
+                    mainViewModel
                 )
 
                 OtherPositionMoreEvent.Edit -> onEventMenu(MenuEvent.EditOtherPosition(position))
-                OtherPositionMoreEvent.Move -> getSelAndUseCase.getSelAndMove(
+                OtherPositionMoreEvent.Move -> getSelAndMove(
                     position,
-                    mainViewModel,
-                    onEventMenu
+                    mainViewModel
                 )
 
                 is OtherPositionMoreEvent.AddToShopList -> {

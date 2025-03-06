@@ -12,13 +12,12 @@ import week.on.a.plate.data.dataView.week.RecipeShortView
 import week.on.a.plate.data.preference.PreferenceUseCase
 import week.on.a.plate.dialogs.changePortions.logic.ChangePortionsCountViewModel
 import week.on.a.plate.screens.additional.specifySelection.navigation.SpecifySelectionDestination
-import week.on.a.plate.screens.base.menu.event.ActionWeekMenuDB
-import week.on.a.plate.screens.base.menu.logic.usecase.dbusecase.CRUDRecipeInMenu
+import week.on.a.plate.screens.base.menu.logic.usecase.dbusecase.AddRecipePosToDBUseCase
 import week.on.a.plate.screens.base.searchRecipes.state.SearchUIState
 import javax.inject.Inject
 
 class AddToMenuUseCase @Inject constructor(
-    private val sCRUDRecipeInMenu: CRUDRecipeInMenu
+    private val addRecipePosToDB: AddRecipePosToDBUseCase
 ) {
     suspend operator fun invoke(
         recipeView: RecipeView,
@@ -48,12 +47,7 @@ class AddToMenuUseCase @Inject constructor(
                             count,
                             res.selId
                         )
-                        sCRUDRecipeInMenu.onEvent(
-                            ActionWeekMenuDB.AddRecipePositionInMenuDB(
-                                res.selId,
-                                recipePosition
-                            )
-                        )
+                        addRecipePosToDB(recipePosition, res.selId)
                         mainViewModel.nav.navigate(MenuDestination)
                     }
                 }

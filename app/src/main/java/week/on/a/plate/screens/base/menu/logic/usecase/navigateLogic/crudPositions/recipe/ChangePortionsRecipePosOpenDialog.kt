@@ -1,4 +1,4 @@
-package week.on.a.plate.screens.base.menu.logic.usecase.navigateLogic
+package week.on.a.plate.screens.base.menu.logic.usecase.navigateLogic.crudPositions.recipe
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
@@ -9,7 +9,7 @@ import week.on.a.plate.dialogs.changePortions.logic.ChangePortionsCountViewModel
 import week.on.a.plate.screens.base.menu.logic.usecase.dbusecase.ChangePortionsRecipePosInDBUseCase
 import javax.inject.Inject
 
-class ChangePortionsCountUseCase @Inject constructor(
+class ChangePortionsRecipePosOpenDialog @Inject constructor(
     private val changePortionsCount: ChangePortionsRecipePosInDBUseCase
 ) {
     suspend operator fun invoke(

@@ -7,12 +7,11 @@ import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.data.dataView.week.RecipeShortView
 import week.on.a.plate.screens.additional.recipeDetails.state.RecipeDetailsState
 import week.on.a.plate.screens.additional.specifySelection.navigation.SpecifySelectionDestination
-import week.on.a.plate.screens.base.menu.event.ActionWeekMenuDB
-import week.on.a.plate.screens.base.menu.logic.usecase.dbusecase.CRUDRecipeInMenu
+import week.on.a.plate.screens.base.menu.logic.usecase.dbusecase.AddRecipePosToDBUseCase
 import javax.inject.Inject
 
 class AddToMenuUseCase @Inject constructor(
-    private val sCRUDRecipeInMenu: CRUDRecipeInMenu,
+    private val addRecipePosToDB: AddRecipePosToDBUseCase,
 ) {
     suspend operator fun invoke(
         mainViewModel: MainViewModel,
@@ -23,20 +22,18 @@ class AddToMenuUseCase @Inject constructor(
         mainViewModel.nav.navigate(SpecifySelectionDestination)
         vm.launchAndGet() { res ->
             viewModelScope.launch {
-                sCRUDRecipeInMenu.onEvent(
-                    ActionWeekMenuDB.AddRecipePositionInMenuDB(
-                        res.selId,
-                        Position.PositionRecipeView(
-                            0,
-                            RecipeShortView(
-                                state.recipe.id,
-                                state.recipe.name,
-                                state.recipe.img
-                            ),
-                            res.portions,
-                            res.selId
-                        )
-                    )
+                val recipe = Position.PositionRecipeView(
+                    0,
+                    RecipeShortView(
+                        state.recipe.id,
+                        state.recipe.name,
+                        state.recipe.img
+                    ),
+                    res.portions,
+                    res.selId
+                )
+                addRecipePosToDB(
+                    recipe, res.selId,
                 )
             }
         }

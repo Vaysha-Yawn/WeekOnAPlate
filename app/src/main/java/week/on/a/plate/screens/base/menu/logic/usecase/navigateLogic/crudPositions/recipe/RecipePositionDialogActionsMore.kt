@@ -9,16 +9,16 @@ import week.on.a.plate.dialogs.forMenuScreen.editPositionRecipeMore.event.Action
 import week.on.a.plate.dialogs.forMenuScreen.editPositionRecipeMore.logic.EditRecipePositionViewModel
 import week.on.a.plate.screens.base.menu.event.MenuEvent
 import week.on.a.plate.screens.base.menu.logic.usecase.dbusecase.DeleteRecipePosInDBUseCase
-import week.on.a.plate.screens.base.menu.logic.usecase.navigateLogic.AddRecipeToCookPlanUseCase
-import week.on.a.plate.screens.base.menu.logic.usecase.navigateLogic.ChangePortionsCountUseCase
-import week.on.a.plate.screens.base.menu.logic.usecase.navigateLogic.GetSelAndUseCase
+import week.on.a.plate.screens.base.menu.logic.usecase.navigateLogic.GetSelAndDoubleUseCase
+import week.on.a.plate.screens.base.menu.logic.usecase.navigateLogic.GetSelAndMoveUseCase
 import javax.inject.Inject
 
-//todo slice
-class RecipePositionActionsMore @Inject constructor(
-    private val getSelAndUseCase: GetSelAndUseCase,
-    private val changePortionsCountUseCase: ChangePortionsCountUseCase,
-    private val addRecipeToCookPlanUseCase: AddRecipeToCookPlanUseCase,
+
+class RecipePositionDialogActionsMore @Inject constructor(
+    private val getSelAndMove: GetSelAndMoveUseCase,
+    private val getSelAndDouble: GetSelAndDoubleUseCase,
+    private val changePortionsRecipePosOpenDialog: ChangePortionsRecipePosOpenDialog,
+    private val navToAddRecipeToCookPlan: NavToAddRecipeToCookPlan,
     private val deleteRecipe: DeleteRecipePosInDBUseCase
 ) {
     suspend operator fun invoke(
@@ -35,7 +35,7 @@ class RecipePositionActionsMore @Inject constructor(
                         )
                     )
 
-                    ActionMoreRecipePositionEvent.ChangePotionsCount -> changePortionsCountUseCase(
+                    ActionMoreRecipePositionEvent.ChangePotionsCount -> changePortionsRecipePosOpenDialog(
                         position,
                         mainViewModel
                     )
@@ -45,28 +45,27 @@ class RecipePositionActionsMore @Inject constructor(
                             deleteRecipe(position)
                         }
 
-                    ActionMoreRecipePositionEvent.Double -> getSelAndUseCase.getSelAndDouble(
+                    ActionMoreRecipePositionEvent.Double -> getSelAndDouble(
                         position,
-                        mainViewModel,
-                        onEvent
+                        mainViewModel
                     )
 
-                    ActionMoreRecipePositionEvent.FindReplace -> onEvent(
+                    is ActionMoreRecipePositionEvent.FindReplace -> onEvent(
                         MenuEvent.FindReplaceRecipe(
-                            position
+                            position, event.context
                         )
                     )
 
-                    ActionMoreRecipePositionEvent.Move -> getSelAndUseCase.getSelAndMove(
+                    ActionMoreRecipePositionEvent.Move -> getSelAndMove(
                         position,
-                        mainViewModel,
-                        onEvent
+                        mainViewModel
+                    )
+
+                    ActionMoreRecipePositionEvent.CookPlan -> navToAddRecipeToCookPlan(
+                        position, mainViewModel
                     )
 
                     ActionMoreRecipePositionEvent.Close -> {}
-                    ActionMoreRecipePositionEvent.CookPlan -> addRecipeToCookPlanUseCase(
-                        position, mainViewModel
-                    )
                 }
             }
         }

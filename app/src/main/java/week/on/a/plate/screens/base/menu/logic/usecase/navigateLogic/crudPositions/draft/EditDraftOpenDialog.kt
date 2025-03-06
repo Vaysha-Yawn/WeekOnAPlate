@@ -12,7 +12,7 @@ import week.on.a.plate.screens.base.menu.logic.usecase.dbusecase.DeleteDraftInDB
 import week.on.a.plate.screens.base.menu.logic.usecase.dbusecase.UpdateDraftInDBUseCase
 import javax.inject.Inject
 
-class EditDraft @Inject constructor(
+class EditDraftOpenDialog @Inject constructor(
     private val deleteDraft: DeleteDraftInDBUseCase,
     private val editDraft: UpdateDraftInDBUseCase,
 ) {

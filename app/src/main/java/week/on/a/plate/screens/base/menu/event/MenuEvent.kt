@@ -9,14 +9,12 @@ import java.time.LocalDate
 
 sealed class MenuEvent : Event() {
     class NavigateFromMenu(val navData: MenuNavEvent) : MenuEvent()
-    class ActionDBMenu(val actionWeekMenuDB: ActionWeekMenuDB) : MenuEvent()
     class ActionSelect(val selectedEvent: SelectedEvent) : MenuEvent()
     class ActionWrapperDatePicker(val event: WrapperDatePickerEvent) : MenuEvent()
     class GetSelIdAndCreate(val context: Context) : MenuEvent()
     class CreatePosition(val selId: Long, val context: Context) : MenuEvent()
     class CreateFirstNonPosedPosition(
         val date: LocalDate,
-        val selectionView: SelectionView,
         val context: Context
     ) : MenuEvent()
 
@@ -25,7 +23,8 @@ sealed class MenuEvent : Event() {
     class CreateWeekSelIdAndCreatePosition(val context: Context) : MenuEvent()
     class RecipeToShopList(val recipe: Position.PositionRecipeView) : MenuEvent()
     class SearchByDraft(val draft: Position.PositionDraftView) : MenuEvent()
-    class FindReplaceRecipe(val recipe: Position.PositionRecipeView) : MenuEvent()
+    class FindReplaceRecipe(val recipe: Position.PositionRecipeView, val context: Context) :
+        MenuEvent()
     class EditOrDeleteSelection(val sel: SelectionView, val context: Context) : MenuEvent()
     class CreateSelection(val date: LocalDate, val isForWeek: Boolean, val context: Context) :
         MenuEvent()

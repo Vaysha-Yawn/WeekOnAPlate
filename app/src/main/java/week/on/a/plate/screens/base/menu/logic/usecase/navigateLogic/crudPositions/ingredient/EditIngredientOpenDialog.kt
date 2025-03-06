@@ -8,7 +8,7 @@ import week.on.a.plate.dialogs.editIngredientInMenu.logic.EditPositionIngredient
 import week.on.a.plate.screens.base.menu.logic.usecase.dbusecase.UpdateIngredientPositionInDBUseCase
 import javax.inject.Inject
 
-class EditIngredient @Inject constructor(
+class EditIngredientOpenDialog @Inject constructor(
     private val updateIngredient: UpdateIngredientPositionInDBUseCase
 ) {
     suspend operator fun invoke(

@@ -5,33 +5,26 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import week.on.a.plate.R
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
-import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.dialogs.editOneString.logic.EditOneStringViewModel
 import week.on.a.plate.dialogs.editOneString.state.EditOneStringUIState
-import week.on.a.plate.screens.base.menu.logic.usecase.dbusecase.EditNoteInDBUseCase
+import week.on.a.plate.screens.base.menu.logic.usecase.dbusecase.AddNoteToDBUseCase
 import javax.inject.Inject
 
-class EditNote @Inject constructor(
-    private val editNote: EditNoteInDBUseCase
+class CreateNoteOpenDialog @Inject constructor(
+    private val addNote: AddNoteToDBUseCase
 ) {
     suspend operator fun invoke(
-        note: Position.PositionNoteView, mainViewModel: MainViewModel,
+        selId: Long, mainViewModel: MainViewModel
     ) = coroutineScope {
         EditOneStringViewModel.launch(
             mainViewModel, EditOneStringUIState(
-                note.note,
-                R.string.edit_note,
+                "",
+                R.string.add_note,
                 R.string.enter_text_note
             )
-        ) { updatedNote ->
+        ) { newNote ->
             launch(Dispatchers.IO) {
-                editNote(
-                    Position.PositionNoteView(
-                        note.id,
-                        updatedNote,
-                        note.selectionId
-                    )
-                )
+                addNote(newNote, selId)
             }
         }
     }

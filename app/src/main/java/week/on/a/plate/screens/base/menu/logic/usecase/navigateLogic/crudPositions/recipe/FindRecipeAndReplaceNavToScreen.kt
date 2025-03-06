@@ -1,5 +1,6 @@
-package week.on.a.plate.screens.base.menu.logic.usecase.navigateLogic
+package week.on.a.plate.screens.base.menu.logic.usecase.navigateLogic.crudPositions.recipe
 
+import android.content.Context
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -11,22 +12,23 @@ import week.on.a.plate.screens.base.menu.logic.usecase.dbusecase.AddRecipePosToD
 import week.on.a.plate.screens.base.menu.logic.usecase.dbusecase.DeleteRecipePosInDBUseCase
 import javax.inject.Inject
 
-class FindRecipeAndReplaceUseCase @Inject constructor(
+class FindRecipeAndReplaceNavToScreen @Inject constructor(
     private val deleteRecipe: DeleteRecipePosInDBUseCase,
     private val addRecipe: AddRecipePosToDBUseCase,
+    private val choosePortionsCount: ChoosePortionsCountOpenDialog
 ) {
     suspend operator fun invoke(
         oldRecipe: Position.PositionRecipeView,
-        mainViewModel: MainViewModel,
+        mainViewModel: MainViewModel, context: Context,
     ) = coroutineScope {
         mainViewModel.nav.navigate(SearchDestination)
         val selId = oldRecipe.selectionId
         mainViewModel.searchViewModel.launchAndGet(selId, null) { recipe ->
-            launch(Dispatchers.IO) {
+            choosePortionsCount(context, mainViewModel) { count ->
                 val newRecipeToAdd = Position.PositionRecipeView(
                     0,
                     RecipeShortView(recipe.id, recipe.name, recipe.img),
-                    2,
+                    count,
                     selId
                 )
                 addRecipe(newRecipeToAdd, selId)

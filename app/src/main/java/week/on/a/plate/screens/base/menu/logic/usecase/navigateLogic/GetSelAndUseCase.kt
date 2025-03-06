@@ -7,8 +7,7 @@ import kotlinx.coroutines.launch
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.screens.additional.specifySelection.logic.SpecifySelectionResult
-import week.on.a.plate.screens.base.menu.event.MenuEvent
-import week.on.a.plate.screens.base.menu.event.MenuNavEvent
+import week.on.a.plate.screens.additional.specifySelection.navigation.SpecifySelectionDestination
 import week.on.a.plate.screens.base.menu.logic.usecase.dbusecase.DraftDoublePositionInMenuDB
 import week.on.a.plate.screens.base.menu.logic.usecase.dbusecase.DraftMovePositionInMenuDB
 import week.on.a.plate.screens.base.menu.logic.usecase.dbusecase.IngredientDoublePositionInMenuDB
@@ -19,36 +18,53 @@ import week.on.a.plate.screens.base.menu.logic.usecase.dbusecase.RecipeDoublePos
 import week.on.a.plate.screens.base.menu.logic.usecase.dbusecase.RecipeMovePositionInMenuDB
 import javax.inject.Inject
 
-class GetSelAndUseCase @Inject constructor(
+
+class SpecifyDateNavToScreen @Inject constructor() {
+    operator fun invoke(
+        mainViewModel: MainViewModel,
+        use: (SpecifySelectionResult) -> Unit
+    ) {
+        mainViewModel.viewModelScope.launch {
+            //todo selectedRecipeManager.clear(menuUIState)
+            //todo specifySelection - временный экран
+            mainViewModel.nav.navigate(SpecifySelectionDestination)
+            mainViewModel.specifySelectionViewModel.launchAndGet(use)
+        }
+    }
+}
+
+class GetSelAndCreateUseCase @Inject constructor(
+    private val specifyDate: SpecifyDateNavToScreen,
+    private val addPosition: AddPositionOpenDialog,
+) {
+    operator fun invoke(
+        context: Context,
+        mainViewModel: MainViewModel,
+    ) {
+        specifyDate(mainViewModel) { res ->
+            mainViewModel.viewModelScope.launch {
+                addPosition(
+                    res.selId,
+                    context,
+                    mainViewModel
+                )
+            }
+        }
+    }
+}
+
+class GetSelAndMoveUseCase @Inject constructor(
+    private val specifyDate: SpecifyDateNavToScreen,
     private val draftMove: DraftMovePositionInMenuDB,
     private val recipeMove: RecipeMovePositionInMenuDB,
     private val ingredientMove: IngredientMovePositionInMenuDB,
     private val noteMove: NoteMovePositionInMenuDB,
-
-    private val ingredientDouble: IngredientDoublePositionInMenuDB,
-    private val recipeDouble: RecipeDoublePositionInMenuDB,
-    private val draftDouble: DraftDoublePositionInMenuDB,
-    private val noteDouble: NoteDoublePositionInMenuDB,
 ) {
-    private fun specifyDate(
+    operator fun invoke(
+        position: Position,
         mainViewModel: MainViewModel,
-        onEvent: (MenuEvent) -> Unit,
-        use: (SpecifySelectionResult) -> Unit
     ) {
-        mainViewModel.viewModelScope.launch {
-            onEvent(MenuEvent.NavigateFromMenu(MenuNavEvent.SpecifySelection))
-            mainViewModel.specifySelectionViewModel.launchAndGet(use)
-        }
-    }
-
-    fun getSelAndCreate(context: Context, mainViewModel: MainViewModel, onEvent:(MenuEvent)->Unit,) {
-        specifyDate(mainViewModel, onEvent) { res ->
-            onEvent(MenuEvent.CreatePosition(res.selId, context))
-        }
-    }
-
-    fun getSelAndMove(position: Position, mainViewModel: MainViewModel, onEvent:(MenuEvent)->Unit,) {
-        specifyDate(mainViewModel, onEvent) { res ->
+        specifyDate(mainViewModel) { res ->
             mainViewModel.viewModelScope.launch(Dispatchers.IO) {
                 when (position) {
                     is Position.PositionDraftView -> draftMove(position, res.selId)
@@ -59,9 +75,22 @@ class GetSelAndUseCase @Inject constructor(
             }
         }
     }
+}
 
-    fun getSelAndDouble(position: Position, mainViewModel: MainViewModel, onEvent:(MenuEvent)->Unit,) {
-        specifyDate(mainViewModel, onEvent) { res ->
+class GetSelAndDoubleUseCase @Inject constructor(
+    private val specifyDate: SpecifyDateNavToScreen,
+
+    private val ingredientDouble: IngredientDoublePositionInMenuDB,
+    private val recipeDouble: RecipeDoublePositionInMenuDB,
+    private val draftDouble: DraftDoublePositionInMenuDB,
+    private val noteDouble: NoteDoublePositionInMenuDB,
+) {
+
+    operator fun invoke(
+        position: Position,
+        mainViewModel: MainViewModel,
+    ) {
+        specifyDate(mainViewModel) { res ->
             mainViewModel.viewModelScope.launch(Dispatchers.IO) {
                 when (position) {
                     is Position.PositionDraftView -> draftDouble(position, res.selId)

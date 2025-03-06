@@ -10,21 +10,22 @@ import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.core.Event
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.data.dataView.week.getTitleWeek
-import week.on.a.plate.screens.additional.specifySelection.navigation.SpecifySelectionDestination
 import week.on.a.plate.screens.base.menu.event.MenuEvent
 import week.on.a.plate.screens.base.menu.event.MenuNavEvent
-import week.on.a.plate.screens.base.menu.logic.usecase.CreateFirstNonPosedPositionUseCase
 import week.on.a.plate.screens.base.menu.logic.usecase.OtherPositionActionsMore
-import week.on.a.plate.screens.base.menu.logic.usecase.SearchByDraftUseCase
 import week.on.a.plate.screens.base.menu.logic.usecase.SelectedRecipeManager
-import week.on.a.plate.screens.base.menu.logic.usecase.SelectionUseCase
+import week.on.a.plate.screens.base.menu.logic.usecase.dbusecase.GetWeekFlowUseCase
+import week.on.a.plate.screens.base.menu.logic.usecase.navigateLogic.AddPositionOpenDialog
+import week.on.a.plate.screens.base.menu.logic.usecase.navigateLogic.CreateSelectionOpenDialog
+import week.on.a.plate.screens.base.menu.logic.usecase.navigateLogic.CreateWeekSelIdAndCreatePosOpenDialog
+import week.on.a.plate.screens.base.menu.logic.usecase.navigateLogic.EditOrDeleteSelectionOpenDialog
 import week.on.a.plate.screens.base.menu.logic.usecase.navigateLogic.EditOtherPositionUseCase
-import week.on.a.plate.screens.base.menu.logic.usecase.navigateLogic.FindRecipeAndReplaceUseCase
-import week.on.a.plate.screens.base.menu.logic.usecase.navigateLogic.GetSelAndUseCase
-import week.on.a.plate.screens.base.menu.logic.usecase.navigateLogic.OpenDialogAddPosition
-import week.on.a.plate.screens.base.menu.logic.usecase.navigateLogic.crudPositions.recipe.RecipePositionActionsMore
-import week.on.a.plate.screens.base.menu.logic.usecase.shopList.RecipeToShopListUseCase
-import week.on.a.plate.screens.base.menu.logic.usecase.shopList.SelectedToShopListUseCase
+import week.on.a.plate.screens.base.menu.logic.usecase.navigateLogic.GetSelAndCreateUseCase
+import week.on.a.plate.screens.base.menu.logic.usecase.navigateLogic.crudPositions.draft.SearchByDraftUseCase
+import week.on.a.plate.screens.base.menu.logic.usecase.navigateLogic.crudPositions.recipe.FindRecipeAndReplaceNavToScreen
+import week.on.a.plate.screens.base.menu.logic.usecase.navigateLogic.crudPositions.recipe.RecipePositionDialogActionsMore
+import week.on.a.plate.screens.base.menu.logic.usecase.navigateLogic.shopList.RecipeToShopListWithInventoryUseCase
+import week.on.a.plate.screens.base.menu.logic.usecase.navigateLogic.shopList.SelectedToShopListUseCase
 import week.on.a.plate.screens.base.menu.state.MenuUIState
 import week.on.a.plate.screens.base.wrapperDatePicker.event.WrapperDatePickerEvent
 import java.util.Locale
@@ -35,40 +36,35 @@ import javax.inject.Inject
 class MenuViewModel @Inject constructor(
     private val selectedRecipeManager: SelectedRecipeManager,
     private val menuWrapperDatePickerManager: MenuWrapperDatePickerManager,
-    private val getSelAndUse: GetSelAndUseCase,
-    private val recipePositionActionsMore: RecipePositionActionsMore,
+    private val getSelAndCreate: GetSelAndCreateUseCase,
+    private val recipePositionDialogActionsMore: RecipePositionDialogActionsMore,
     private val otherPositionActionsMore: OtherPositionActionsMore,
     private val editOtherPosition: EditOtherPositionUseCase,
-    private val addPosition: OpenDialogAddPosition,
+    private val addPosition: AddPositionOpenDialog,
     private val selectedToShopList: SelectedToShopListUseCase,
-    private val recipeToShopList: RecipeToShopListUseCase,
-    private val findRecipeAndReplace: FindRecipeAndReplaceUseCase,
+    private val recipeToShopList: RecipeToShopListWithInventoryUseCase,
+    private val findRecipeAndReplace: FindRecipeAndReplaceNavToScreen,
     private val searchByDraft: SearchByDraftUseCase,
-    private val createFirstNonPosedPosition: CreateFirstNonPosedPositionUseCase,
+    private val createFirstNonPosedPosition: CreateWeekSelIdAndCreatePosOpenDialog,
+    private val getCurrentWeekFlow: GetWeekFlowUseCase,
+
+    private val createSelection: CreateSelectionOpenDialog,
+    private val editOrDeleteSelection: EditOrDeleteSelectionOpenDialog,
+    private val createWeekSelIdAndCreatePos: CreateWeekSelIdAndCreatePosOpenDialog,
 ) : ViewModel() {
 
     lateinit var mainViewModel: MainViewModel
     val menuUIState = MenuUIState.MenuUIStateExample
     private val activeDay = menuUIState.wrapperDatePickerUIState.activeDay
-    private lateinit var selectionUseCase: SelectionUseCase
 
-    fun initWithMainVM(mainViewModel: MainViewModel) {
-        selectionUseCase = SelectionUseCase(
-            mainViewModel,
-            viewModelScope,
-            activeDay,
-            addPosition
-        )
-
-        viewModelScope.launch {
-            updateWeek()
-        }
+    fun initWithMainVM(mainVM: MainViewModel) {
+        mainViewModel = mainVM
+        updateWeek()
     }
 
     private fun updateWeek() {
         viewModelScope.launch {
-            //todo add use case for getCurrentWeekFlow
-            val flow = sCRUDRecipeInMenu.menuR.getCurrentWeekFlow(
+            val flow = getCurrentWeekFlow(
                 menuUIState.nonPosedFullName.value,
                 menuUIState.forWeekFullName.value,
                 activeDay.value,
@@ -98,9 +94,6 @@ class MenuViewModel @Inject constructor(
             is MenuEvent.NavigateFromMenu -> {
                 selectedRecipeManager.clear(menuUIState)
                 when (event.navData) {
-                    is MenuNavEvent.SpecifySelection -> mainViewModel.nav.navigate(
-                        SpecifySelectionDestination
-                    )
 
                     is MenuNavEvent.NavToFullRecipe -> {
                         mainViewModel.recipeDetailsViewModel.launch(
@@ -111,23 +104,14 @@ class MenuViewModel @Inject constructor(
                 }
             }
 
-            is MenuEvent.ActionDBMenu -> {
-                viewModelScope.launch(Dispatchers.IO) {
-                    sCRUDRecipeInMenu.onEvent(
-                        event.actionWeekMenuDB
-                    )
-                }
-            }
-
             is MenuEvent.ActionSelect -> selectedRecipeManager.onEvent(
                 event.selectedEvent,
                 menuUIState
             )
 
-            is MenuEvent.GetSelIdAndCreate -> getSelAndUse.getSelAndCreate(
+            is MenuEvent.GetSelIdAndCreate -> getSelAndCreate(
                 event.context,
-                mainViewModel,
-                ::onEvent
+                mainViewModel
             )
 
             is MenuEvent.CreatePosition -> viewModelScope.launch(Dispatchers.IO) {
@@ -141,7 +125,7 @@ class MenuViewModel @Inject constructor(
             is MenuEvent.EditPositionMore -> {
                 viewModelScope.launch {
                     if (event.position is Position.PositionRecipeView) {
-                        recipePositionActionsMore(
+                        recipePositionDialogActionsMore(
                             event.position,
                             mainViewModel,
                             ::onEvent
@@ -195,7 +179,7 @@ class MenuViewModel @Inject constructor(
             is MenuEvent.FindReplaceRecipe -> viewModelScope.launch {
                 findRecipeAndReplace(
                     event.recipe,
-                    mainViewModel,
+                    mainViewModel, event.context
                 )
             }
 
@@ -207,18 +191,26 @@ class MenuViewModel @Inject constructor(
 
             is MenuEvent.CreateFirstNonPosedPosition -> viewModelScope.launch {
                 createFirstNonPosedPosition(
-                    event.date,
-                    event.selectionView,
-                    event.context, mainViewModel, ::onEvent
+                    event.context,
+                    activeDay,
+                    mainViewModel,
                 )
             }
 
-            is MenuEvent.EditOrDeleteSelection -> selectionUseCase.editOrDeleteSelection(event.sel)
+            is MenuEvent.EditOrDeleteSelection ->
+                viewModelScope.launch(Dispatchers.IO) {
+                    editOrDeleteSelection(event.sel, mainViewModel)
+                }
+
             is MenuEvent.CreateSelection ->
-                selectionUseCase.createSelection(event.date, event.isForWeek)
+                viewModelScope.launch(Dispatchers.IO) {
+                    createSelection(event.date, event.isForWeek, mainViewModel)
+                }
 
             is MenuEvent.CreateWeekSelIdAndCreatePosition ->
-                selectionUseCase.createWeekSelIdAndCreatePosition(event.context)
+                viewModelScope.launch(Dispatchers.IO) {
+                    createWeekSelIdAndCreatePos(event.context, activeDay, mainViewModel)
+                }
         }
     }
 }

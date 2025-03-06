@@ -12,7 +12,7 @@ import week.on.a.plate.screens.additional.filters.state.FilterMode
 import week.on.a.plate.screens.base.menu.logic.usecase.dbusecase.AddDraftToDBUseCase
 import javax.inject.Inject
 
-class NavToScreenCreateDraft @Inject constructor(
+class CreateDraftNavToScreen @Inject constructor(
     private val addDraft: AddDraftToDBUseCase
 ) {
     suspend operator fun invoke(

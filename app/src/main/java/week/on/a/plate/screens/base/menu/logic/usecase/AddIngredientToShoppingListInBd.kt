@@ -16,12 +16,14 @@ class AddIngredientToShoppingListInBd @Inject constructor(
         ingredientInRecipe: IngredientInRecipeView,
         contextProvider: BaseContextProvider, onEvent: (MainEvent) -> Unit
     ) {
-        val allList = shoppingItemRepository.getAll()
+        val allList = shoppingItemRepository.getAll()//1
         val haveItem =
             allList.find { it -> it.ingredientInRecipe.ingredientView.ingredientId == ingredientInRecipe.ingredientView.ingredientId }
         if (haveItem == null) {
-            shoppingItemRepository.insert(ShoppingItemView(0, ingredientInRecipe, false))
+            //ингредиента ещё нет в списке
+            shoppingItemRepository.insert(ShoppingItemView(0, ingredientInRecipe, false))//2
         } else {
+            // ингредиент есть в списке
             if (haveItem.checked) {
                 shoppingItemRepository.update(
                     haveItem.id,
@@ -30,7 +32,7 @@ class AddIngredientToShoppingListInBd @Inject constructor(
                     haveItem.ingredientInRecipe.ingredientView.ingredientId,
                     haveItem.ingredientInRecipe.description,
                     ingredientInRecipe.count.toDouble()
-                )
+                )//3
             } else {
                 shoppingItemRepository.update(
                     haveItem.id,
@@ -39,7 +41,7 @@ class AddIngredientToShoppingListInBd @Inject constructor(
                     haveItem.ingredientInRecipe.ingredientView.ingredientId,
                     haveItem.ingredientInRecipe.description,
                     ingredientInRecipe.count.toDouble() + haveItem.ingredientInRecipe.count.toDouble()
-                )
+                )//4
             }
         }
         onEvent(
