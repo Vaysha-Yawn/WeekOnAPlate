@@ -10,7 +10,7 @@ import week.on.a.plate.core.Event
 import week.on.a.plate.core.navigation.ShoppingListDestination
 import week.on.a.plate.data.dataView.ShoppingItemView
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
-import week.on.a.plate.data.repository.tables.shoppingList.ShoppingItemRepository
+import week.on.a.plate.data.repository.room.shoppingList.ShoppingItemRepository
 import week.on.a.plate.screens.additional.inventory.event.InventoryEvent
 import week.on.a.plate.screens.additional.inventory.state.InventoryPositionData
 import week.on.a.plate.screens.additional.inventory.state.InventoryUIState

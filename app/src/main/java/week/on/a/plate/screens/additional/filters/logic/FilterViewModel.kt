@@ -14,8 +14,8 @@ import week.on.a.plate.data.dataView.recipe.IngredientCategoryView
 import week.on.a.plate.data.dataView.recipe.IngredientView
 import week.on.a.plate.data.dataView.recipe.RecipeTagView
 import week.on.a.plate.data.dataView.recipe.TagCategoryView
-import week.on.a.plate.data.repository.tables.filters.ingredientCategory.IngredientCategoryRepository
-import week.on.a.plate.data.repository.tables.filters.recipeTagCategory.RecipeTagCategoryRepository
+import week.on.a.plate.data.repository.room.filters.ingredientCategory.IngredientCategoryRepository
+import week.on.a.plate.data.repository.room.filters.recipeTagCategory.RecipeTagCategoryRepository
 import week.on.a.plate.dialogs.editOrDelete.event.EditOrDeleteEvent
 import week.on.a.plate.dialogs.editOrDelete.logic.EditOrDeleteViewModel
 import week.on.a.plate.screens.additional.filters.dialogs.selectedFilters.logic.SelectedFiltersViewModel

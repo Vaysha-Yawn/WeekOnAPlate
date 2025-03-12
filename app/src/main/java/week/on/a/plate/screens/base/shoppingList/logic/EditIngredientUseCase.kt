@@ -5,7 +5,7 @@ import kotlinx.coroutines.launch
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.data.dataView.week.Position
-import week.on.a.plate.data.repository.tables.shoppingList.ShoppingItemRepository
+import week.on.a.plate.data.repository.room.shoppingList.ShoppingItemRepository
 import week.on.a.plate.dialogs.editIngredientInMenu.logic.EditPositionIngredientViewModel
 import javax.inject.Inject
 

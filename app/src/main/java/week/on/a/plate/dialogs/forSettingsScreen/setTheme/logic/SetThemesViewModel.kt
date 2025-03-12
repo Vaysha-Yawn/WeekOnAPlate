@@ -2,19 +2,13 @@ package week.on.a.plate.dialogs.forSettingsScreen.setTheme.logic
 
 
 import android.content.Context
-import android.content.Intent
-import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import week.on.a.plate.dialogs.addPositionChoose.event.AddPositionEvent
-import week.on.a.plate.dialogs.addPositionChoose.logic.AddPositionViewModel
-import week.on.a.plate.dialogs.core.DialogViewModel
+import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.core.dialogCore.DialogViewModel
+import week.on.a.plate.data.preference.PreferenceUseCase
 import week.on.a.plate.dialogs.forSettingsScreen.setTheme.event.SetThemeEvent
 import week.on.a.plate.dialogs.forSettingsScreen.setTheme.state.SetThemeUIState
-import week.on.a.plate.app.mainActivity.event.MainEvent
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
-import week.on.a.plate.app.mainActivity.view.MainActivity
-import week.on.a.plate.data.preference.PreferenceUseCase
 
 
 class SetThemesViewModel(

@@ -3,16 +3,14 @@ package week.on.a.plate.dialogs.calendarMy.logic
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import week.on.a.plate.data.repository.tables.cookPlanner.CookPlannerStepRepository
-import week.on.a.plate.data.repository.tables.menu.selection.WeekMenuRepository
-import week.on.a.plate.data.repository.tables.menu.selection.getDaysOfWeek
+import week.on.a.plate.data.repository.room.cookPlanner.CookPlannerStepRepository
+import week.on.a.plate.data.repository.room.menu.selection.WeekMenuRepository
+import week.on.a.plate.data.repository.room.menu.selection.getDaysOfWeek
 import week.on.a.plate.dialogs.calendarMy.event.CalendarMyEvent
 import week.on.a.plate.dialogs.calendarMy.state.StateCalendarMy
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
-import java.time.format.TextStyle
-import java.time.temporal.WeekFields
 import javax.inject.Inject
 
 class CalendarMyUseCase @Inject constructor(

@@ -5,9 +5,9 @@ import week.on.a.plate.core.Event
 import week.on.a.plate.data.dataView.recipe.IngredientView
 import week.on.a.plate.data.dataView.recipe.RecipeTagView
 
-sealed class FilterVoiceApplyEvent: Event() {
-    class RemoveSelectedTag(val recipeTagView: RecipeTagView) : FilterVoiceApplyEvent()
-    class RemoveSelectedIngredient(val ingredientView: IngredientView) : FilterVoiceApplyEvent()
-    data object Close: FilterVoiceApplyEvent()
-    data object Done: FilterVoiceApplyEvent()
+sealed interface FilterVoiceApplyEvent : Event {
+    class RemoveSelectedTag(val recipeTagView: RecipeTagView) : FilterVoiceApplyEvent
+    class RemoveSelectedIngredient(val ingredientView: IngredientView) : FilterVoiceApplyEvent
+    object Close : FilterVoiceApplyEvent
+    object Done : FilterVoiceApplyEvent
 }

@@ -4,8 +4,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import week.on.a.plate.app.mainActivity.event.MainEvent
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.core.dialogCore.DialogViewModel
 import week.on.a.plate.data.dataView.recipe.TagCategoryView
-import week.on.a.plate.dialogs.core.DialogViewModel
 import week.on.a.plate.screens.additional.filters.dialogs.editOrCreateTag.event.AddTagEvent
 import week.on.a.plate.screens.additional.filters.dialogs.editOrCreateTag.state.AddTagUIState
 import week.on.a.plate.screens.additional.filters.navigation.FilterDestination

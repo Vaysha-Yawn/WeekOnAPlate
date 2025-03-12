@@ -1,6 +1,6 @@
 package week.on.a.plate.screens.base.shoppingList.logic
 
-import week.on.a.plate.data.repository.tables.shoppingList.ShoppingItemRepository
+import week.on.a.plate.data.repository.room.shoppingList.ShoppingItemRepository
 import javax.inject.Inject
 
 class DeleteCheckedUseCase @Inject constructor(

@@ -4,10 +4,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import week.on.a.plate.R
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
-import week.on.a.plate.data.repository.tables.menu.selection.WeekMenuRepository
-import week.on.a.plate.dialogs.forMenuScreen.editSelection.logic.EditSelectionViewModel
-import week.on.a.plate.dialogs.forMenuScreen.editSelection.state.EditSelectionUIState
+import week.on.a.plate.data.repository.room.menu.selection.WeekMenuRepository
 import week.on.a.plate.screens.additional.specifySelection.state.SpecifySelectionUIState
+import week.on.a.plate.screens.base.menu.dialogs.editSelectionDialog.logic.EditSelectionViewModel
+import week.on.a.plate.screens.base.menu.dialogs.editSelectionDialog.state.EditSelectionUIState
 import java.time.LocalDateTime
 import javax.inject.Inject
 

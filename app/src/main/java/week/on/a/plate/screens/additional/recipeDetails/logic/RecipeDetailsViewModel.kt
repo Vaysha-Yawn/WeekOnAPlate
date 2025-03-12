@@ -5,9 +5,9 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import week.on.a.plate.data.repository.tables.cookPlanner.mapPinnedIngredients
-import week.on.a.plate.data.repository.tables.recipe.recipe.RecipeRepository
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.data.repository.room.cookPlanner.mapPinnedIngredients
+import week.on.a.plate.data.repository.room.recipe.recipe.RecipeRepository
 import week.on.a.plate.screens.additional.recipeDetails.event.RecipeDetailsEvent
 import week.on.a.plate.screens.additional.recipeDetails.navigation.RecipeDetailsDestination
 import week.on.a.plate.screens.additional.recipeDetails.state.RecipeDetailsState

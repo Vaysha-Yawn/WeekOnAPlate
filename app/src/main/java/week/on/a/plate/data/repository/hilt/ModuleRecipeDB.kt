@@ -5,8 +5,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import week.on.a.plate.data.repository.tables.RecipeDB
-import week.on.a.plate.data.repository.tables.shoppingList.ShoppingItemDAO
+import week.on.a.plate.data.repository.room.RecipeDB
 import javax.inject.Singleton
 
 

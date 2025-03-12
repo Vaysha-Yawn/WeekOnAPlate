@@ -1,7 +1,7 @@
 package week.on.a.plate.screens.base.searchRecipes.logic
 
 import week.on.a.plate.data.dataView.recipe.RecipeView
-import week.on.a.plate.data.repository.tables.recipe.recipe.RecipeRepository
+import week.on.a.plate.data.repository.room.recipe.recipe.RecipeRepository
 import javax.inject.Inject
 
 class FlipFavoriteUseCase @Inject constructor(

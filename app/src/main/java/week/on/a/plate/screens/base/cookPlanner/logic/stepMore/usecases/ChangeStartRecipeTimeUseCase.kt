@@ -1,7 +1,7 @@
 package week.on.a.plate.screens.base.cookPlanner.logic.stepMore.usecases
 
 import week.on.a.plate.data.dataView.CookPlannerGroupView
-import week.on.a.plate.data.repository.tables.cookPlanner.CookPlannerStepRepository
+import week.on.a.plate.data.repository.room.cookPlanner.CookPlannerStepRepository
 import javax.inject.Inject
 
 class ChangeStartRecipeTimeUseCase @Inject constructor(

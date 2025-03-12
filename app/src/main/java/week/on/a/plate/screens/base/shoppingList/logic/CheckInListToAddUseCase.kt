@@ -2,7 +2,7 @@ package week.on.a.plate.screens.base.shoppingList.logic
 
 import week.on.a.plate.data.dataView.ShoppingItemView
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
-import week.on.a.plate.data.repository.tables.shoppingList.ShoppingItemRepository
+import week.on.a.plate.data.repository.room.shoppingList.ShoppingItemRepository
 import javax.inject.Inject
 
 class CheckInListToAddUseCase @Inject constructor(

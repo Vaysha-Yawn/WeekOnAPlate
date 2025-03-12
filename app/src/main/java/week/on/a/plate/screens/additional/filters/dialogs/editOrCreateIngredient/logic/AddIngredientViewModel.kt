@@ -7,10 +7,10 @@ import kotlinx.coroutines.launch
 import week.on.a.plate.R
 import week.on.a.plate.app.mainActivity.event.MainEvent
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.core.dialogCore.DialogViewModel
 import week.on.a.plate.data.dataView.example.Measure
 import week.on.a.plate.data.dataView.recipe.IngredientCategoryView
 import week.on.a.plate.data.dataView.recipe.IngredientView
-import week.on.a.plate.dialogs.core.DialogViewModel
 import week.on.a.plate.dialogs.forCreateRecipeScreen.chooseHowImagePick.logic.ChooseHowImagePickViewModel
 import week.on.a.plate.screens.additional.filters.dialogs.editOrCreateIngredient.event.AddIngredientEvent
 import week.on.a.plate.screens.additional.filters.dialogs.editOrCreateIngredient.state.AddIngredientUIState

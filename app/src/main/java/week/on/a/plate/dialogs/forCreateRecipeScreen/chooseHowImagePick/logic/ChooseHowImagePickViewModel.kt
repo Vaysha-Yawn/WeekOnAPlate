@@ -6,7 +6,7 @@ import kotlinx.coroutines.launch
 import week.on.a.plate.R
 import week.on.a.plate.app.mainActivity.event.MainEvent
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
-import week.on.a.plate.dialogs.core.DialogViewModel
+import week.on.a.plate.core.dialogCore.DialogViewModel
 import week.on.a.plate.dialogs.editOneString.logic.EditOneStringViewModel
 import week.on.a.plate.dialogs.editOneString.state.EditOneStringUIState
 import week.on.a.plate.dialogs.forCreateRecipeScreen.chooseHowImagePick.event.ChooseHowImagePickEvent

@@ -6,7 +6,7 @@ import kotlinx.coroutines.launch
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.data.dataView.recipe.IngredientCategoryView
 import week.on.a.plate.data.dataView.recipe.IngredientView
-import week.on.a.plate.data.repository.tables.filters.ingredient.IngredientRepository
+import week.on.a.plate.data.repository.room.filters.ingredient.IngredientRepository
 import week.on.a.plate.screens.additional.filters.dialogs.editOrCreateIngredient.logic.AddIngredientViewModel
 import week.on.a.plate.screens.additional.filters.event.FilterEvent
 import javax.inject.Inject

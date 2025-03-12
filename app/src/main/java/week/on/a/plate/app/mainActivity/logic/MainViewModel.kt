@@ -15,10 +15,10 @@ import week.on.a.plate.app.mainActivity.logic.takePicture.TakePictureUseCase
 import week.on.a.plate.app.mainActivity.logic.voice.VoiceInputUseCase
 import week.on.a.plate.app.mainActivity.view.MainActivity
 import week.on.a.plate.core.Event
+import week.on.a.plate.core.dialogCore.DialogUseCase
+import week.on.a.plate.core.dialogCore.DialogViewModel
 import week.on.a.plate.data.dataView.week.ForWeek
 import week.on.a.plate.data.dataView.week.NonPosed
-import week.on.a.plate.dialogs.core.DialogUseCase
-import week.on.a.plate.dialogs.core.DialogViewModel
 import week.on.a.plate.screens.additional.createRecipe.logic.RecipeCreateViewModel
 import week.on.a.plate.screens.additional.deleteApply.logic.DeleteApplyViewModel
 import week.on.a.plate.screens.additional.filters.logic.FilterViewModel
@@ -29,7 +29,7 @@ import week.on.a.plate.screens.additional.specifyRecipeToCookPlan.logic.SpecifyR
 import week.on.a.plate.screens.additional.specifySelection.logic.SpecifySelectionViewModel
 import week.on.a.plate.screens.additional.tutorial.logic.TutorialViewModel
 import week.on.a.plate.screens.base.cookPlanner.logic.CookPlannerViewModel
-import week.on.a.plate.screens.base.menu.logic.MenuViewModel
+import week.on.a.plate.screens.base.menu.presenter.logic.MenuViewModel
 import week.on.a.plate.screens.base.searchRecipes.logic.SearchViewModel
 import week.on.a.plate.screens.base.settings.logic.SettingsViewModel
 import week.on.a.plate.screens.base.shoppingList.logic.ShoppingListViewModel
@@ -120,8 +120,9 @@ class MainViewModel @Inject constructor(
         val nonPosedText = mainActivity.getString(NonPosed.fullName)
         val forWeek = mainActivity.getString(ForWeek.fullName)
         specifySelectionViewModel.state.nonPosedText = nonPosedText
-        menuViewModel.menuUIState.forWeekFullName.value = forWeek
-        menuViewModel.menuUIState.nonPosedFullName.value = nonPosedText
+
+        menuViewModel.menuUIState.value.forWeekFullName.value = forWeek
+        menuViewModel.menuUIState.value.nonPosedFullName.value = nonPosedText
 
         specifySelectionViewModel.updateSelections()
 

@@ -19,7 +19,7 @@ import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.buttons.PlusButtonTitle
 import week.on.a.plate.data.dataView.week.NonPosed
 import week.on.a.plate.data.dataView.week.SelectionView
-import week.on.a.plate.screens.base.menu.event.MenuEvent
+import week.on.a.plate.screens.base.menu.presenter.event.MenuEvent
 import java.time.LocalDate
 
 @OptIn(ExperimentalFoundationApi::class)

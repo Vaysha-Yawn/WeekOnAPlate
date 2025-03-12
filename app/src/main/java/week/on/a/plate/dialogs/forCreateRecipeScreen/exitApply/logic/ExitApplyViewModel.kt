@@ -2,7 +2,7 @@ package week.on.a.plate.dialogs.forCreateRecipeScreen.exitApply.logic
 
 import kotlinx.coroutines.CoroutineScope
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
-import week.on.a.plate.dialogs.core.DialogViewModel
+import week.on.a.plate.core.dialogCore.DialogViewModel
 import week.on.a.plate.dialogs.forCreateRecipeScreen.exitApply.event.ExitApplyEvent
 
 

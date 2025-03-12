@@ -12,7 +12,7 @@ import week.on.a.plate.data.dataView.week.RecipeShortView
 import week.on.a.plate.data.preference.PreferenceUseCase
 import week.on.a.plate.dialogs.changePortions.logic.ChangePortionsCountViewModel
 import week.on.a.plate.screens.additional.specifySelection.navigation.SpecifySelectionDestination
-import week.on.a.plate.screens.base.menu.logic.usecase.dbusecase.AddRecipePosToDBUseCase
+import week.on.a.plate.screens.base.menu.domain.dbusecase.AddRecipePosToDBUseCase
 import week.on.a.plate.screens.base.searchRecipes.state.SearchUIState
 import javax.inject.Inject
 

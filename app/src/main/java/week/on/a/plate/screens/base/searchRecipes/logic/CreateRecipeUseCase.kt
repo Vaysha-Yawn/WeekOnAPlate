@@ -6,7 +6,7 @@ import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.data.dataView.recipe.RecipeStepView
 import week.on.a.plate.data.dataView.recipe.RecipeView
-import week.on.a.plate.data.repository.tables.recipe.recipe.RecipeRepository
+import week.on.a.plate.data.repository.room.recipe.recipe.RecipeRepository
 import week.on.a.plate.screens.additional.createRecipe.navigation.RecipeCreateDestination
 import week.on.a.plate.screens.additional.createRecipe.state.RecipeCreateUIState
 import week.on.a.plate.screens.base.searchRecipes.state.SearchUIState

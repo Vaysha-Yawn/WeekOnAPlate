@@ -1,7 +1,7 @@
 package week.on.a.plate.screens.additional.recipeDetails.logic
 
 
-import week.on.a.plate.data.repository.tables.recipe.recipe.RecipeRepository
+import week.on.a.plate.data.repository.room.recipe.recipe.RecipeRepository
 import week.on.a.plate.screens.additional.recipeDetails.state.RecipeDetailsState
 import javax.inject.Inject
 

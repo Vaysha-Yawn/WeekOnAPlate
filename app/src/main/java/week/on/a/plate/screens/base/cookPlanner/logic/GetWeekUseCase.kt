@@ -2,7 +2,7 @@ package week.on.a.plate.screens.base.cookPlanner.logic
 
 import kotlinx.coroutines.flow.Flow
 import week.on.a.plate.data.dataView.CookPlannerGroupView
-import week.on.a.plate.data.repository.tables.cookPlanner.CookPlannerStepRepository
+import week.on.a.plate.data.repository.room.cookPlanner.CookPlannerStepRepository
 import java.time.LocalDate
 import java.util.Locale
 import javax.inject.Inject

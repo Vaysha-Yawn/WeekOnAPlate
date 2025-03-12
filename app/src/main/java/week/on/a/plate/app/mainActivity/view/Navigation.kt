@@ -33,8 +33,8 @@ import week.on.a.plate.screens.additional.specifySelection.view.SpecifySelection
 import week.on.a.plate.screens.additional.tutorial.navigation.TutorialDestination
 import week.on.a.plate.screens.additional.tutorial.view.TutorialStart
 import week.on.a.plate.screens.base.cookPlanner.view.CookPlannerStart
-import week.on.a.plate.screens.base.menu.event.MenuEvent
-import week.on.a.plate.screens.base.menu.view.main.MenuScreen
+import week.on.a.plate.screens.base.menu.presenter.event.MenuEvent
+import week.on.a.plate.screens.base.menu.presenter.view.main.MenuScreen
 import week.on.a.plate.screens.base.searchRecipes.event.SearchScreenEvent
 import week.on.a.plate.screens.base.searchRecipes.view.main.SearchStart
 import week.on.a.plate.screens.base.settings.view.SettingsStart

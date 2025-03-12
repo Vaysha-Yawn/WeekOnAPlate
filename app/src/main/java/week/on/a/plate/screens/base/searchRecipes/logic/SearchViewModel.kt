@@ -7,20 +7,16 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import week.on.a.plate.app.mainActivity.event.MainEvent
+import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.core.Event
 import week.on.a.plate.data.dataView.recipe.IngredientView
 import week.on.a.plate.data.dataView.recipe.RecipeTagView
 import week.on.a.plate.data.dataView.recipe.RecipeView
 import week.on.a.plate.data.dataView.recipe.TagCategoryView
-import week.on.a.plate.data.repository.tables.filters.recipeTagCategory.RecipeTagCategoryRepository
-import week.on.a.plate.data.repository.tables.recipe.recipe.RecipeRepository
-import week.on.a.plate.app.mainActivity.event.MainEvent
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
-import week.on.a.plate.screens.additional.filters.navigation.FilterDestination
-import week.on.a.plate.screens.additional.filters.state.FilterEnum
-import week.on.a.plate.screens.additional.filters.state.FilterMode
+import week.on.a.plate.data.repository.room.filters.recipeTagCategory.RecipeTagCategoryRepository
+import week.on.a.plate.data.repository.room.recipe.recipe.RecipeRepository
 import week.on.a.plate.screens.base.searchRecipes.event.SearchScreenEvent
-import week.on.a.plate.screens.base.searchRecipes.state.SearchState
 import week.on.a.plate.screens.base.searchRecipes.state.SearchUIState
 import javax.inject.Inject
 

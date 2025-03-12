@@ -1,10 +1,10 @@
 package week.on.a.plate.screens.additional.filters.dialogs.selectedFilters.logic
 
 import kotlinx.coroutines.CoroutineScope
+import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.core.dialogCore.DialogViewModel
 import week.on.a.plate.data.dataView.recipe.IngredientView
 import week.on.a.plate.data.dataView.recipe.RecipeTagView
-import week.on.a.plate.dialogs.core.DialogViewModel
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.screens.additional.filters.dialogs.selectedFilters.event.SelectedFiltersEvent
 import week.on.a.plate.screens.additional.filters.dialogs.selectedFilters.state.SelectedFiltersUIState
 

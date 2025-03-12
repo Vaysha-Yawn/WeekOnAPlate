@@ -27,10 +27,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import week.on.a.plate.app.mainActivity.event.MainEvent
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.core.dialogCore.DialogsContainer
 import week.on.a.plate.core.theme.ColorBackgroundWhite
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.buttons.ActionPlusButton
-import week.on.a.plate.dialogs.core.DialogsContainer
 import week.on.a.plate.screens.additional.createRecipe.logic.RecipeCreateViewModel
 import week.on.a.plate.screens.additional.deleteApply.logic.DeleteApplyViewModel
 import week.on.a.plate.screens.additional.filters.logic.FilterViewModel
@@ -41,7 +41,7 @@ import week.on.a.plate.screens.additional.specifyRecipeToCookPlan.logic.SpecifyR
 import week.on.a.plate.screens.additional.specifySelection.logic.SpecifySelectionViewModel
 import week.on.a.plate.screens.additional.tutorial.logic.TutorialViewModel
 import week.on.a.plate.screens.base.cookPlanner.logic.CookPlannerViewModel
-import week.on.a.plate.screens.base.menu.logic.MenuViewModel
+import week.on.a.plate.screens.base.menu.presenter.logic.MenuViewModel
 import week.on.a.plate.screens.base.searchRecipes.logic.SearchViewModel
 import week.on.a.plate.screens.base.settings.logic.SettingsViewModel
 import week.on.a.plate.screens.base.shoppingList.logic.ShoppingListViewModel

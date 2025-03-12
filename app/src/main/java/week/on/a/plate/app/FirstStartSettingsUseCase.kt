@@ -7,13 +7,13 @@ import kotlinx.coroutines.launch
 import week.on.a.plate.data.dataView.example.getStartIngredients
 import week.on.a.plate.data.dataView.example.getTags
 import week.on.a.plate.data.dataView.week.getStdCategoriesSelection
-import week.on.a.plate.data.repository.tables.filters.ingredient.IngredientRepository
-import week.on.a.plate.data.repository.tables.filters.ingredientCategory.IngredientCategoryRepository
-import week.on.a.plate.data.repository.tables.filters.recipeTag.RecipeTagRepository
-import week.on.a.plate.data.repository.tables.filters.recipeTagCategory.RecipeTagCategoryRepository
-import week.on.a.plate.data.repository.tables.filters.recipeTagCategory.startCategoryName
-import week.on.a.plate.data.repository.tables.menu.category_selection.CategorySelectionDAO
-import week.on.a.plate.data.repository.tables.menu.category_selection.CategorySelectionRoom
+import week.on.a.plate.data.repository.room.filters.ingredient.IngredientRepository
+import week.on.a.plate.data.repository.room.filters.ingredientCategory.IngredientCategoryRepository
+import week.on.a.plate.data.repository.room.filters.recipeTag.RecipeTagRepository
+import week.on.a.plate.data.repository.room.filters.recipeTagCategory.RecipeTagCategoryRepository
+import week.on.a.plate.data.repository.room.filters.recipeTagCategory.startCategoryName
+import week.on.a.plate.data.repository.room.menu.category_selection.CategorySelectionDAO
+import week.on.a.plate.data.repository.room.menu.category_selection.CategorySelectionRoom
 import javax.inject.Inject
 
 

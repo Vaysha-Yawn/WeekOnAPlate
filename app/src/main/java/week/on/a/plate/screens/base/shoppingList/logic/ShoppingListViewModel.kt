@@ -7,11 +7,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import week.on.a.plate.core.Event
-import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
-import week.on.a.plate.data.repository.tables.shoppingList.ShoppingItemRepository
 import week.on.a.plate.app.mainActivity.event.MainEvent
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.core.Event
+import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
+import week.on.a.plate.data.repository.room.shoppingList.ShoppingItemRepository
 import week.on.a.plate.screens.base.shoppingList.event.ShoppingListEvent
 import week.on.a.plate.screens.base.shoppingList.state.ShoppingListUIState
 import javax.inject.Inject

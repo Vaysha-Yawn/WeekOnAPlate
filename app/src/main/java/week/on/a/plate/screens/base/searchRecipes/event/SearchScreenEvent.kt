@@ -7,22 +7,24 @@ import week.on.a.plate.data.dataView.recipe.RecipeView
 import week.on.a.plate.screens.base.searchRecipes.state.ResultSortType
 import week.on.a.plate.screens.base.searchRecipes.state.ResultSortingDirection
 
-sealed class SearchScreenEvent : Event(){
-    data object Search : SearchScreenEvent()
-    class FlipFavorite(val recipe: RecipeView, val inFavorite: Boolean) : SearchScreenEvent()
-    data class VoiceSearch(val context: Context) : SearchScreenEvent()
-    data object Back : SearchScreenEvent()
-    class AddToMenu(val recipeView: RecipeView, val context: Context): SearchScreenEvent()
-    class NavigateToFullRecipe(val recipeView: RecipeView): SearchScreenEvent()
-    class SelectTag(val recipeTagView: RecipeTagView) : SearchScreenEvent()
-    class ChangeSort(val type : ResultSortType, val direction: ResultSortingDirection) : SearchScreenEvent()
-    data object ToFilter : SearchScreenEvent()
-    data object CreateRecipe : SearchScreenEvent()
-    data object Clear : SearchScreenEvent()
-    data object SearchFavorite : SearchScreenEvent()
-    data object SearchAll : SearchScreenEvent()
-    data object SearchRandom : SearchScreenEvent()
-    data object SortMore : SearchScreenEvent()
-    data object SavePreset : SearchScreenEvent()
-    data object FiltersMore : SearchScreenEvent()
+sealed interface SearchScreenEvent : Event {
+    object Search : SearchScreenEvent
+    class FlipFavorite(val recipe: RecipeView, val inFavorite: Boolean) : SearchScreenEvent
+    class VoiceSearch(val context: Context) : SearchScreenEvent
+    object Back : SearchScreenEvent
+    class AddToMenu(val recipeView: RecipeView, val context: Context) : SearchScreenEvent
+    class NavigateToFullRecipe(val recipeView: RecipeView) : SearchScreenEvent
+    class SelectTag(val recipeTagView: RecipeTagView) : SearchScreenEvent
+    class ChangeSort(val type: ResultSortType, val direction: ResultSortingDirection) :
+        SearchScreenEvent
+
+    object ToFilter : SearchScreenEvent
+    object CreateRecipe : SearchScreenEvent
+    object Clear : SearchScreenEvent
+    object SearchFavorite : SearchScreenEvent
+    object SearchAll : SearchScreenEvent
+    object SearchRandom : SearchScreenEvent
+    object SortMore : SearchScreenEvent
+    object SavePreset : SearchScreenEvent
+    object FiltersMore : SearchScreenEvent
 }

@@ -4,7 +4,6 @@ import android.content.Context
 import week.on.a.plate.R
 import week.on.a.plate.data.dataView.recipe.IngredientCategoryView
 import week.on.a.plate.data.dataView.recipe.IngredientView
-import week.on.a.plate.data.repository.tables.filters.recipeTagCategory.startCategoryName
 
 enum class Measure(val small: Int, val big: Int) {
     Grams(R.string.gram, R.string.kilogram),

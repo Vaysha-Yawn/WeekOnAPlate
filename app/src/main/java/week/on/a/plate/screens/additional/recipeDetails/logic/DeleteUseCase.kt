@@ -4,7 +4,7 @@ import android.content.Context
 import week.on.a.plate.R
 import week.on.a.plate.app.mainActivity.event.MainEvent
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
-import week.on.a.plate.data.repository.tables.recipe.recipe.RecipeRepository
+import week.on.a.plate.data.repository.room.recipe.recipe.RecipeRepository
 import week.on.a.plate.screens.additional.deleteApply.event.DeleteApplyEvent
 import week.on.a.plate.screens.additional.deleteApply.navigation.DeleteApplyDestination
 import week.on.a.plate.screens.additional.recipeDetails.state.RecipeDetailsState

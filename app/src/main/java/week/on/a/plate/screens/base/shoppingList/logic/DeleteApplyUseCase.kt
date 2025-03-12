@@ -3,7 +3,7 @@ package week.on.a.plate.screens.base.shoppingList.logic
 import android.content.Context
 import week.on.a.plate.R
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
-import week.on.a.plate.data.repository.tables.shoppingList.ShoppingItemRepository
+import week.on.a.plate.data.repository.room.shoppingList.ShoppingItemRepository
 import week.on.a.plate.screens.additional.deleteApply.event.DeleteApplyEvent
 import week.on.a.plate.screens.additional.deleteApply.navigation.DeleteApplyDestination
 import javax.inject.Inject

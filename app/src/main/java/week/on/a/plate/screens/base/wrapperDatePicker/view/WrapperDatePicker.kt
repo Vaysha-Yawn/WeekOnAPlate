@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.utils.dateToString
-import week.on.a.plate.screens.base.menu.event.MenuEvent
+import week.on.a.plate.screens.base.menu.presenter.event.MenuEvent
 import week.on.a.plate.screens.base.wrapperDatePicker.event.WrapperDatePickerEvent
 import week.on.a.plate.screens.base.wrapperDatePicker.state.WrapperDatePickerUIState
 import week.on.a.plate.screens.base.wrapperDatePicker.view.calendar.BlockCalendar

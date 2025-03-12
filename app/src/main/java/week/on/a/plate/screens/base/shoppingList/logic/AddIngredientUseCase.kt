@@ -7,7 +7,7 @@ import week.on.a.plate.app.mainActivity.event.MainEvent
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.core.navigation.ShoppingListDestination
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
-import week.on.a.plate.data.repository.tables.shoppingList.ShoppingItemRepository
+import week.on.a.plate.data.repository.room.shoppingList.ShoppingItemRepository
 import week.on.a.plate.screens.additional.filters.navigation.FilterDestination
 import week.on.a.plate.screens.additional.filters.state.FilterEnum
 import week.on.a.plate.screens.additional.filters.state.FilterMode

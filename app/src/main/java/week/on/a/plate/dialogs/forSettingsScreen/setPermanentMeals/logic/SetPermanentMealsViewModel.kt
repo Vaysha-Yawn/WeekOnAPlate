@@ -5,17 +5,15 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import week.on.a.plate.R
-import week.on.a.plate.data.repository.tables.menu.category_selection.CategorySelectionDAO
-import week.on.a.plate.data.repository.tables.menu.category_selection.CategorySelectionRoom
-import week.on.a.plate.dialogs.addPositionChoose.event.AddPositionEvent
-import week.on.a.plate.dialogs.addPositionChoose.logic.AddPositionViewModel
-import week.on.a.plate.dialogs.core.DialogViewModel
-import week.on.a.plate.dialogs.forMenuScreen.editSelection.logic.EditSelectionViewModel
-import week.on.a.plate.dialogs.forMenuScreen.editSelection.state.EditSelectionUIState
-import week.on.a.plate.dialogs.forSettingsScreen.setPermanentMeals.event.SetPermanentMealsEvent
-import week.on.a.plate.dialogs.forSettingsScreen.setPermanentMeals.state.SetPermanentMealsUIState
 import week.on.a.plate.app.mainActivity.event.MainEvent
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.core.dialogCore.DialogViewModel
+import week.on.a.plate.data.repository.room.menu.category_selection.CategorySelectionDAO
+import week.on.a.plate.data.repository.room.menu.category_selection.CategorySelectionRoom
+import week.on.a.plate.dialogs.forSettingsScreen.setPermanentMeals.event.SetPermanentMealsEvent
+import week.on.a.plate.dialogs.forSettingsScreen.setPermanentMeals.state.SetPermanentMealsUIState
+import week.on.a.plate.screens.base.menu.dialogs.editSelectionDialog.logic.EditSelectionViewModel
+import week.on.a.plate.screens.base.menu.dialogs.editSelectionDialog.state.EditSelectionUIState
 
 
 class SetPermanentMealsViewModel(

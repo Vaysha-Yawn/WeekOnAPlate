@@ -4,7 +4,6 @@ import android.content.Context
 import week.on.a.plate.R
 import week.on.a.plate.data.dataView.recipe.RecipeTagView
 import week.on.a.plate.data.dataView.recipe.TagCategoryView
-import week.on.a.plate.data.repository.tables.filters.recipeTagCategory.startCategoryName
 
 fun getTags(context:Context): List<TagCategoryView> {
     return listOf(

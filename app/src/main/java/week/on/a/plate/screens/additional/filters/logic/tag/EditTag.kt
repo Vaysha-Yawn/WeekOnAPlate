@@ -5,7 +5,7 @@ import kotlinx.coroutines.launch
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.data.dataView.recipe.RecipeTagView
 import week.on.a.plate.data.dataView.recipe.TagCategoryView
-import week.on.a.plate.data.repository.tables.filters.recipeTag.RecipeTagRepository
+import week.on.a.plate.data.repository.room.filters.recipeTag.RecipeTagRepository
 import week.on.a.plate.screens.additional.filters.dialogs.editOrCreateTag.logic.AddTagViewModel
 import javax.inject.Inject
 

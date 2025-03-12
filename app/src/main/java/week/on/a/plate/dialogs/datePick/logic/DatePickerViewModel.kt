@@ -4,8 +4,8 @@ import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import kotlinx.coroutines.CoroutineScope
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.core.dialogCore.DialogViewModel
 import week.on.a.plate.core.utils.dateToLocalDate
-import week.on.a.plate.dialogs.core.DialogViewModel
 import week.on.a.plate.dialogs.datePick.event.DatePickerEvent
 import week.on.a.plate.dialogs.datePick.state.DatePickerUIState
 import java.time.LocalDate

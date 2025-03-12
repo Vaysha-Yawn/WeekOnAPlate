@@ -7,7 +7,7 @@ import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.data.dataView.week.RecipeShortView
 import week.on.a.plate.screens.additional.recipeDetails.state.RecipeDetailsState
 import week.on.a.plate.screens.additional.specifySelection.navigation.SpecifySelectionDestination
-import week.on.a.plate.screens.base.menu.logic.usecase.dbusecase.AddRecipePosToDBUseCase
+import week.on.a.plate.screens.base.menu.domain.dbusecase.AddRecipePosToDBUseCase
 import javax.inject.Inject
 
 class AddToMenuUseCase @Inject constructor(

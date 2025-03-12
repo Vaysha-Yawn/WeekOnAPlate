@@ -24,11 +24,11 @@ import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.DoneButton
-import week.on.a.plate.data.repository.tables.menu.category_selection.CategorySelectionRoom
+import week.on.a.plate.core.uitools.clickNoRipple
+import week.on.a.plate.data.repository.room.menu.category_selection.CategorySelectionRoom
 import week.on.a.plate.dialogs.forSettingsScreen.setPermanentMeals.event.SetPermanentMealsEvent
 import week.on.a.plate.dialogs.forSettingsScreen.setPermanentMeals.state.SetPermanentMealsUIState
 import week.on.a.plate.screens.base.cookPlanner.view.normalizeTimeToText
-import week.on.a.plate.core.uitools.clickNoRipple
 import java.time.LocalTime
 
 @Composable

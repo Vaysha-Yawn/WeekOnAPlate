@@ -4,7 +4,7 @@ import android.content.Context
 import week.on.a.plate.R
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.data.dataView.recipe.IngredientView
-import week.on.a.plate.data.repository.tables.filters.ingredient.IngredientRepository
+import week.on.a.plate.data.repository.room.filters.ingredient.IngredientRepository
 import week.on.a.plate.screens.additional.deleteApply.event.DeleteApplyEvent
 import week.on.a.plate.screens.additional.deleteApply.navigation.DeleteApplyDestination
 import javax.inject.Inject

@@ -8,29 +8,34 @@ import week.on.a.plate.data.dataView.recipe.RecipeTagView
 import week.on.a.plate.data.dataView.recipe.TagCategoryView
 
 
-sealed class FilterEvent : Event() {
-    class SearchFilter(val text: String = "") : FilterEvent()
-    data class VoiceSearchFilters(val context: Context) : FilterEvent()
-    data object ClearSearch: FilterEvent()
+sealed interface FilterEvent : Event {
+    class SearchFilter(val text: String = "") : FilterEvent
+    class VoiceSearchFilters(val context: Context) : FilterEvent
+    object ClearSearch : FilterEvent
 
-    data class CreateActive(val context:Context): FilterEvent()
-    data class CreateTag(val context:Context) : FilterEvent()
-    data class CreateIngredient(val context:Context) : FilterEvent()
-    data class CreateTagCategory(val context:Context) : FilterEvent()
-    data class CreateIngredientCategory(val context:Context) : FilterEvent()
+    class CreateActive(val context: Context) : FilterEvent
+    class CreateTag(val context: Context) : FilterEvent
+    class CreateIngredient(val context: Context) : FilterEvent
+    class CreateTagCategory(val context: Context) : FilterEvent
+    class CreateIngredientCategory(val context: Context) : FilterEvent
 
-    data object Back : FilterEvent()
-    data object Done : FilterEvent()
+    object Back : FilterEvent
+    object Done : FilterEvent
 
-    data object SelectedFilters : FilterEvent()
+    object SelectedFilters : FilterEvent
 
-    data class SelectTag(val tag: RecipeTagView) : FilterEvent()
-    data class SelectIngredient(val ingredient: IngredientView) : FilterEvent()
-    data class SelectTagCategory(val tagCategoryView: TagCategoryView) : FilterEvent()
-    data class SelectIngredientCategory(val ingredientCategoryView: IngredientCategoryView) : FilterEvent()
+    class SelectTag(val tag: RecipeTagView) : FilterEvent
+    class SelectIngredient(val ingredient: IngredientView) : FilterEvent
+    class SelectTagCategory(val tagCategoryView: TagCategoryView) : FilterEvent
+    class SelectIngredientCategory(val ingredientCategoryView: IngredientCategoryView) : FilterEvent
 
-    data class EditOrDeleteTag(val context:Context, val tag: RecipeTagView) : FilterEvent()
-    data class EditOrDeleteIngredient(val context:Context, val ingredient: IngredientView) : FilterEvent()
-    data class EditOrDeleteTagCategory(val tagCategory: TagCategoryView, val context:Context) : FilterEvent()
-    data class EditOrDeleteIngredientCategory(val ingredientCategory: IngredientCategoryView, val context:Context) : FilterEvent()
+    class EditOrDeleteTag(val context: Context, val tag: RecipeTagView) : FilterEvent
+    class EditOrDeleteIngredient(val context: Context, val ingredient: IngredientView) : FilterEvent
+    class EditOrDeleteTagCategory(val tagCategory: TagCategoryView, val context: Context) :
+        FilterEvent
+
+    class EditOrDeleteIngredientCategory(
+        val ingredientCategory: IngredientCategoryView,
+        val context: Context
+    ) : FilterEvent
 }
