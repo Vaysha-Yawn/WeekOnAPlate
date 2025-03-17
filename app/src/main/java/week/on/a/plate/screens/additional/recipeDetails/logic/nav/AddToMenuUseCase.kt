@@ -1,4 +1,4 @@
-package week.on.a.plate.screens.additional.recipeDetails.logic
+package week.on.a.plate.screens.additional.recipeDetails.logic.nav
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch

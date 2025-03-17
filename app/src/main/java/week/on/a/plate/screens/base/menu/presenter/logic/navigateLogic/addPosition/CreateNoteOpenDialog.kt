@@ -2,7 +2,7 @@ package week.on.a.plate.screens.base.menu.presenter.logic.navigateLogic.addPosit
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import week.on.a.plate.R
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.dialogs.editOneString.logic.EditOneStringViewModel
@@ -23,7 +23,7 @@ class CreateNoteOpenDialog @Inject constructor(
                 R.string.enter_text_note
             )
         ) { newNote ->
-            launch(Dispatchers.IO) {
+            withContext(Dispatchers.IO) {
                 addNote(newNote, selId)
             }
         }

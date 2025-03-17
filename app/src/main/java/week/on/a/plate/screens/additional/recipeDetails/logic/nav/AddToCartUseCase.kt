@@ -1,4 +1,4 @@
-package week.on.a.plate.screens.additional.recipeDetails.logic
+package week.on.a.plate.screens.additional.recipeDetails.logic.nav
 
 import android.content.Context
 import kotlinx.coroutines.CoroutineScope
@@ -19,7 +19,7 @@ class AddToCartUseCase @Inject constructor() {
         if (state.recipe.ingredients.isNotEmpty()) {
             scope.launch {
                 mainViewModel.nav.navigate(InventoryDestination)
-                mainViewModel.inventoryViewModel.launchAndGet(state.ingredientsCounts.value)
+                mainViewModel.inventoryViewModel.launchAndGet(state.ingredients.value)
             }
         } else {
             mainViewModel.onEvent(MainEvent.ShowSnackBar(context.getString(R.string.no_ingredients)))

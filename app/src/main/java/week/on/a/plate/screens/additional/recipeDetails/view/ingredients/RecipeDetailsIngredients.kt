@@ -47,7 +47,7 @@ fun RecipeDetailsIngredients(state: RecipeDetailsState, onEvent: (RecipeDetailsE
         for ((index, ingredient) in state.recipe.ingredients.withIndex()) {
             IngredientInRecipeCard(
                 ingredient,
-                state.ingredientsCounts.value[index].count,
+                state.ingredients.value[index].count,
                 isDeletable = false
             )
             Spacer(modifier = Modifier.height(12.dp))

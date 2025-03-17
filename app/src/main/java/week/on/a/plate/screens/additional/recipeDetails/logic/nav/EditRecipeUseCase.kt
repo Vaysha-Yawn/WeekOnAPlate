@@ -1,29 +1,28 @@
-package week.on.a.plate.screens.additional.recipeDetails.logic
+package week.on.a.plate.screens.additional.recipeDetails.logic.nav
 
-import kotlinx.coroutines.CoroutineScope
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.data.dataView.recipe.RecipeStepView
 import week.on.a.plate.data.dataView.recipe.RecipeView
-import week.on.a.plate.data.repository.room.recipe.recipe.RecipeRepository
 import week.on.a.plate.screens.additional.createRecipe.navigation.RecipeCreateDestination
+import week.on.a.plate.screens.additional.recipeDetails.logic.dataLogic.EditRecipeUseCaseDB
 import week.on.a.plate.screens.additional.recipeDetails.state.RecipeDetailsState
 import java.time.LocalDateTime
 import javax.inject.Inject
 
 class EditRecipeUseCase @Inject constructor(
-    private val recipeRepository: RecipeRepository
+    private val editRecipeUseCaseDB: EditRecipeUseCaseDB
 ) {
     suspend operator fun invoke(
         mainViewModel: MainViewModel,
-        viewModelScope: CoroutineScope,
-        state: RecipeDetailsState,
-        update: () -> Unit
-    ) {
+        state: RecipeDetailsState
+    ) = coroutineScope {
         val vm = mainViewModel.recipeCreateViewModel
         mainViewModel.nav.navigate(RecipeCreateDestination)
         vm.launchAndGet(state.recipe, false) { recipe ->
-            viewModelScope.launch {
+            mainViewModel.viewModelScope.launch {
                 val newRecipe = RecipeView(
                     id = state.recipe.id,
                     name = recipe.name.value,
@@ -45,8 +44,7 @@ class EditRecipeUseCase @Inject constructor(
                     LocalDateTime.now(),
                     recipe.duration.value
                 )
-                recipeRepository.updateRecipe(state.recipe, newRecipe)
-                update()
+                editRecipeUseCaseDB(state.recipe, newRecipe)
             }
         }
     }

@@ -2,7 +2,6 @@ package week.on.a.plate.screens.base.menu.presenter.logic.navigateLogic.addPosit
 
 import android.content.Context
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.dialogs.addPositionChoose.event.AddPositionEvent
 import week.on.a.plate.dialogs.addPositionChoose.logic.AddPositionViewModel
@@ -19,18 +18,17 @@ class AddPositionOpenDialog @Inject constructor(
         mainViewModel: MainViewModel
     ) = coroutineScope {
         AddPositionViewModel.launch(mainViewModel) { event ->
-            launch {
-                when (event) {
-                    AddPositionEvent.AddDraft -> createDraftNavToScreen(selId, mainViewModel)
-                    AddPositionEvent.AddIngredient -> addIngredientOpenDialog(selId, mainViewModel)
-                    AddPositionEvent.AddNote -> createNoteOpenDialog(selId, mainViewModel)
-                    AddPositionEvent.AddRecipe -> addRecipeNavToScreen(
-                        selId,
-                        context,
-                        mainViewModel
-                    )
-                    AddPositionEvent.Close -> {}
-                }
+            when (event) {
+                AddPositionEvent.AddDraft -> createDraftNavToScreen(selId, mainViewModel)
+                AddPositionEvent.AddIngredient -> addIngredientOpenDialog(selId, mainViewModel)
+                AddPositionEvent.AddNote -> createNoteOpenDialog(selId, mainViewModel)
+                AddPositionEvent.AddRecipe -> addRecipeNavToScreen(
+                    selId,
+                    context,
+                    mainViewModel
+                )
+
+                AddPositionEvent.Close -> {}
             }
         }
     }

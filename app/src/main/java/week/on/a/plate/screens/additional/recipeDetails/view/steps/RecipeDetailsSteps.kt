@@ -30,12 +30,12 @@ import week.on.a.plate.core.theme.bodyMediumSemiBold
 import week.on.a.plate.core.uitools.ImageLoad
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextInApp
+import week.on.a.plate.core.uitools.clickNoRipple
 import week.on.a.plate.core.utils.timeToString
 import week.on.a.plate.data.dataView.example.recipeTom
-import week.on.a.plate.core.uitools.clickNoRipple
 import week.on.a.plate.screens.additional.createRecipe.view.recipe.PinnedIngredientsForStep
 import week.on.a.plate.screens.additional.recipeDetails.event.RecipeDetailsEvent
-import week.on.a.plate.screens.additional.recipeDetails.logic.setTimer
+import week.on.a.plate.screens.additional.recipeDetails.logic.utils.setTimer
 import week.on.a.plate.screens.additional.recipeDetails.state.RecipeDetailsState
 
 @Composable

@@ -1,17 +1,17 @@
-package week.on.a.plate.screens.additional.recipeDetails.logic
+package week.on.a.plate.screens.additional.recipeDetails.logic.nav
 
 import android.content.Context
 import week.on.a.plate.R
 import week.on.a.plate.app.mainActivity.event.MainEvent
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
-import week.on.a.plate.data.repository.room.recipe.recipe.RecipeRepository
 import week.on.a.plate.screens.additional.deleteApply.event.DeleteApplyEvent
 import week.on.a.plate.screens.additional.deleteApply.navigation.DeleteApplyDestination
+import week.on.a.plate.screens.additional.recipeDetails.logic.dataLogic.DeleteUseCaseDB
 import week.on.a.plate.screens.additional.recipeDetails.state.RecipeDetailsState
 import javax.inject.Inject
 
 class DeleteUseCase @Inject constructor(
-    private val recipeRepository: RecipeRepository
+    private val deleteUseCaseDB: DeleteUseCaseDB
 ) {
     suspend operator fun invoke(
         context: Context,
@@ -23,7 +23,7 @@ class DeleteUseCase @Inject constructor(
         mainViewModel.nav.navigate(DeleteApplyDestination)
         vm.launchAndGet(context, message = mes) { event ->
             if (event == DeleteApplyEvent.Apply) {
-                recipeRepository.delete(state.recipe.id)
+                deleteUseCaseDB.invoke(state)
                 mainViewModel.onEvent(MainEvent.NavigateBack)
             }
         }

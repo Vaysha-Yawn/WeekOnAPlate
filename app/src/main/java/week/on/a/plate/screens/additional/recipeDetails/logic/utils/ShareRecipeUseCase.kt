@@ -1,11 +1,11 @@
-package week.on.a.plate.screens.additional.recipeDetails.logic
+package week.on.a.plate.screens.additional.recipeDetails.logic.utils
 
 import android.content.Context
 import week.on.a.plate.R
+import week.on.a.plate.core.ShareUseCase
 import week.on.a.plate.core.utils.getIngredientCountAndMeasure1000
 import week.on.a.plate.core.utils.timeToString
 import week.on.a.plate.data.dataView.recipe.RecipeView
-import week.on.a.plate.core.ShareUseCase
 
 class ShareRecipeUseCase(context: Context): ShareUseCase(context) {
     private fun getTextShareRecipe(

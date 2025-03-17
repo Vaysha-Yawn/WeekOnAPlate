@@ -10,7 +10,7 @@ class AddPositionViewModel(
     scope: CoroutineScope,
     openDialog: (DialogViewModel<*>) -> Unit,
     closeDialog: () -> Unit,
-    use: (AddPositionEvent) -> Unit
+    use: suspend (AddPositionEvent) -> Unit
 ) : DialogViewModel<AddPositionEvent>(
     scope,
     openDialog,
@@ -27,7 +27,7 @@ class AddPositionViewModel(
 
     companion object {
         fun launch(
-            mainViewModel: MainViewModel, useResult: (AddPositionEvent) -> Unit
+            mainViewModel: MainViewModel, useResult: suspend (AddPositionEvent) -> Unit
         ) {
             AddPositionViewModel(
                 mainViewModel.getCoroutineScope(),

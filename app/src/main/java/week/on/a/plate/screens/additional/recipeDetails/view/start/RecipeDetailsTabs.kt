@@ -8,7 +8,6 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -16,12 +15,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
-import week.on.a.plate.data.dataView.example.recipeTom
+import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.TextSmall
+import week.on.a.plate.core.utils.timeToString
+import week.on.a.plate.data.dataView.example.recipeTom
 import week.on.a.plate.screens.additional.recipeDetails.event.RecipeDetailsEvent
 import week.on.a.plate.screens.additional.recipeDetails.state.RecipeDetailsState
-import week.on.a.plate.core.theme.WeekOnAPlateTheme
-import week.on.a.plate.core.utils.timeToString
 
 @Composable
 fun RecipeDetailsTabs(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) -> Unit) {
@@ -45,7 +44,7 @@ fun RecipeDetailsTabs(state: RecipeDetailsState, onEvent: (RecipeDetailsEvent) -
                             text =
                             when (index) {
                                 0 -> state.recipe.duration.toSecondOfDay().timeToString(LocalContext.current)
-                                1 -> state.recipe.ingredients.size.toString()
+                                1 -> state.ingredients.value.size.toString()
                                 2 -> ""
                                 else -> ""
                             }

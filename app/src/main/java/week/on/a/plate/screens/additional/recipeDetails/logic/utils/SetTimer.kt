@@ -1,4 +1,4 @@
-package week.on.a.plate.screens.additional.recipeDetails.logic
+package week.on.a.plate.screens.additional.recipeDetails.logic.utils
 
 import android.content.Context
 import android.content.Intent

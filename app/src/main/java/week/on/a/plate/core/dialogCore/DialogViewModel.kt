@@ -10,7 +10,7 @@ abstract class DialogViewModel<T>(
     val viewModelScope : CoroutineScope,
     val openDialog: (DialogViewModel<*>) -> Unit,
     val closeDialog:() -> Unit,
-    val useResult: (T) -> Unit
+    val useResult: suspend (T) -> Unit
 ){
     val show = mutableStateOf(true)
     protected lateinit var resultFlow: MutableStateFlow<T?>

@@ -4,7 +4,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEmpty
-import kotlinx.coroutines.flow.zip
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.data.dataView.recipe.RecipeStepView
 import week.on.a.plate.data.dataView.recipe.RecipeView
@@ -69,22 +68,6 @@ class RecipeRepository @Inject constructor(
                     steps = steps
                 )
             }
-        }
-    }
-
-    private fun <A, B, C, D, E> zip(
-        flowA: Flow<A>,
-        flowB: Flow<B>,
-        flowC: Flow<C>,
-        flowD: Flow<D>,
-        transform: (A, B, C, D) -> E
-    ): Flow<E> {
-        return flowA.zip(flowB) { a, b ->
-            Pair(a, b)
-        }.zip(flowC) { pairab, c ->
-            Pair(pairab, c)
-        }.zip(flowD) { pairabc, d ->
-            transform(pairabc.first.first, pairabc.first.second, pairabc.second, d)
         }
     }
 

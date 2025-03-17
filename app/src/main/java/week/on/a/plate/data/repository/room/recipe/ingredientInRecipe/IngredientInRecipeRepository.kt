@@ -2,11 +2,11 @@ package week.on.a.plate.data.repository.room.recipe.ingredientInRecipe
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.data.repository.room.filters.ingredient.IngredientRepository
+import week.on.a.plate.data.repository.utils.combineSafeIfFlowIsEmpty
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -40,7 +40,7 @@ class IngredientInRecipeRepository @Inject constructor(
                                 }
                             }
                     }
-                combine(ingredientFlows) { it.toList() }
+                ingredientFlows.combineSafeIfFlowIsEmpty()
             }
     }
 

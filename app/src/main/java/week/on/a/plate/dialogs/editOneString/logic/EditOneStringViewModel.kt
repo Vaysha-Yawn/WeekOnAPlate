@@ -12,7 +12,7 @@ class EditOneStringViewModel(
     viewModelScope: CoroutineScope,
     openDialog: (DialogViewModel<*>) -> Unit,
     closeDialog: () -> Unit,
-    useResult: (String) -> Unit,
+    useResult: suspend (String) -> Unit,
 ) : DialogViewModel<String>(
     viewModelScope,
     openDialog,
@@ -31,7 +31,7 @@ class EditOneStringViewModel(
     companion object {
         fun launch(
             mainViewModel: MainViewModel, oldData: EditOneStringUIState,
-            useResult: (String) -> Unit,
+            useResult: suspend (String) -> Unit,
         ) {
             EditOneStringViewModel(
                 oldData,
