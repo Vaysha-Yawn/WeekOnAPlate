@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.core.navigation.CookPlannerDestination
 import week.on.a.plate.core.navigation.MenuDestination
@@ -47,7 +48,7 @@ fun Navigation(
     innerPadding: PaddingValues,
 ) {
     NavHost(
-        navController = viewModel.nav,
+        navController = rememberNavController(),
         startDestination = MenuDestination,
         Modifier.padding(innerPadding)
     ) {
@@ -59,9 +60,7 @@ fun Navigation(
             val context = LocalContext.current
             viewModel.actionPlusButton.value =
                 { viewModel.menuViewModel.onEvent(MenuEvent.GetSelIdAndCreate (context)) }
-            MenuScreen(
-                viewModel.menuViewModel
-            )
+            MenuScreen()
         }
         composable<SearchDestination> {
             viewModel.isActiveBaseScreen.value = true
@@ -69,7 +68,7 @@ fun Navigation(
             viewModel.isActiveFilterScreen.value = false
             viewModel.actionPlusButton.value =
                 { viewModel.searchViewModel.onEvent(SearchScreenEvent.CreateRecipe) }
-            SearchStart( viewModel)
+            SearchStart()
         }
         composable<ShoppingListDestination> {
             viewModel.isActiveBaseScreen.value = true
@@ -77,20 +76,20 @@ fun Navigation(
             viewModel.isActiveFilterScreen.value = false
             viewModel.actionPlusButton.value =
                 { viewModel.shoppingListViewModel.onEvent(ShoppingListEvent.Add) }
-            ShoppingListStart(viewModel.shoppingListViewModel)
+            ShoppingListStart()
         }
         composable<SettingsDestination> {
             viewModel.isActivePlusButton.value = false
             viewModel.isActiveBaseScreen.value = true
             viewModel.isActiveFilterScreen.value = false
-            SettingsStart(viewModel.settingsViewModel)
+            SettingsStart()
         }
 
         composable<CookPlannerDestination> {
             viewModel.isActivePlusButton.value = false
             viewModel.isActiveBaseScreen.value = true
             viewModel.isActiveFilterScreen.value = false
-            CookPlannerStart(viewModel.cookPlannerViewModel)
+            CookPlannerStart()
         }
 
         //others
@@ -98,14 +97,14 @@ fun Navigation(
             viewModel.isActiveBaseScreen.value = false
             viewModel.isActivePlusButton.value = false
             viewModel.isActiveFilterScreen.value = false
-            SpecifySelectionAltStart(viewModel.specifySelectionViewModel)
+            SpecifySelectionAltStart()
         }
 
         composable<TutorialDestination> {
             viewModel.isActiveBaseScreen.value = false
             viewModel.isActivePlusButton.value = false
             viewModel.isActiveFilterScreen.value = false
-            TutorialStart(viewModel.tutorialViewModel)
+            TutorialStart()
         }
 
         composable<FilterDestination>() {
@@ -115,49 +114,49 @@ fun Navigation(
             viewModel.isActiveFilterScreen.value = true
             viewModel.actionPlusButton.value =
                 { viewModel.filterViewModel.onEvent(FilterEvent.CreateActive(context)) }
-            FilterStart(viewModel.filterViewModel)
+            FilterStart()
         }
 
         composable<RecipeDetailsDestination> {
             viewModel.isActiveBaseScreen.value = false
             viewModel.isActivePlusButton.value = false
             viewModel.isActiveFilterScreen.value = false
-            RecipeDetailsStart(viewModel.recipeDetailsViewModel)
+            RecipeDetailsStart()
         }
 
         composable<RecipeCreateDestination> {
             viewModel.isActiveBaseScreen.value = false
             viewModel.isActivePlusButton.value = false
             viewModel.isActiveFilterScreen.value = false
-            RecipeCreateStart(viewModel.recipeCreateViewModel)
+            RecipeCreateStart()
         }
 
         composable<InventoryDestination> {
             viewModel.isActiveBaseScreen.value = false
             viewModel.isActivePlusButton.value = false
             viewModel.isActiveFilterScreen.value = false
-            InventoryStart(viewModel.inventoryViewModel)
+            InventoryStart()
         }
 
         composable<DeleteApplyDestination> {
             viewModel.isActiveBaseScreen.value = false
             viewModel.isActivePlusButton.value = false
             viewModel.isActiveFilterScreen.value = false
-            DeleteApplyStart(viewModel.deleteApplyViewModel)
+            DeleteApplyStart()
         }
 
         composable<SpecifyForCookPlanDestination> {
             viewModel.isActiveBaseScreen.value = false
             viewModel.isActivePlusButton.value = false
             viewModel.isActiveFilterScreen.value = false
-            SpecifyForCookPlanStart(viewModel.specifyRecipeToCookPlanViewModel)
+            SpecifyForCookPlanStart()
         }
 
         composable<DocumentsWebDestination> {
             viewModel.isActiveBaseScreen.value = false
             viewModel.isActivePlusButton.value = false
             viewModel.isActiveFilterScreen.value = false
-            DocumentsWebStart(viewModel.documentsWebViewModel)
+            DocumentsWebStart()
         }
     }
 }

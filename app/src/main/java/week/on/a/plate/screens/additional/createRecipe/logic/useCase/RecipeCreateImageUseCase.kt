@@ -1,22 +1,34 @@
 package week.on.a.plate.screens.additional.createRecipe.logic.useCase
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import week.on.a.plate.dialogs.forCreateRecipeScreen.chooseHowImagePick.logic.ChooseHowImagePickViewModel
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.app.mainActivity.logic.imageFromGallery.getSavedPicture
+import week.on.a.plate.core.dialogCore.DialogOpenParams
+import week.on.a.plate.dialogs.forCreateRecipeScreen.chooseHowImagePick.logic.ChooseHowImagePickViewModel
+import week.on.a.plate.screens.additional.createRecipe.event.RecipeCreateEvent
 import week.on.a.plate.screens.additional.createRecipe.state.RecipeCreateUIState
+import javax.inject.Inject
 
-class RecipeCreateImageUseCase(val mainViewModel: MainViewModel, val state: RecipeCreateUIState) {
+class RecipeCreateImageUseCase @Inject constructor() {
 
-    private fun getImage(oldValue: String?, use: (String) -> Unit) {
-        ChooseHowImagePickViewModel.launch(mainViewModel, oldValue, use)
+    private fun getImage(
+        dialogOpenParams: MutableState<DialogOpenParams?>,
+        oldValue: String?,
+        use: (String) -> Unit,
+    ) {
+        val params = ChooseHowImagePickViewModel.ChooseHowImagePickDialogParams(oldValue, use)
+        dialogOpenParams.value = params
     }
 
-    fun editMainImage(event: week.on.a.plate.screens.additional.createRecipe.event.RecipeCreateEvent.EditMainImage) {
-        getImage(state.photoLink.value) { nameImage ->
-            mainViewModel.viewModelScope.launch {
+    suspend fun editMainImage(
+        state: RecipeCreateUIState,
+        dialogOpenParams: MutableState<DialogOpenParams?>,
+        event: RecipeCreateEvent.EditMainImage
+    ) = coroutineScope {
+        getImage(dialogOpenParams, state.photoLink.value) { nameImage ->
+            launch {
                 state.photoLink.value = nameImage
                 if (!nameImage.startsWith("http")) {
                     val picture = getSavedPicture(event.context, nameImage)
@@ -26,9 +38,12 @@ class RecipeCreateImageUseCase(val mainViewModel: MainViewModel, val state: Reci
         }
     }
 
-    fun editImage(event: week.on.a.plate.screens.additional.createRecipe.event.RecipeCreateEvent.EditImage) {
-        getImage(event.recipeStepState.image.value) { nameImage ->
-            mainViewModel.viewModelScope.launch {
+    suspend fun editImage(
+        dialogOpenParams: MutableState<DialogOpenParams?>,
+        event: RecipeCreateEvent.EditImage
+    ) = coroutineScope {
+        getImage(dialogOpenParams, event.recipeStepState.image.value) { nameImage ->
+            launch {
                 event.recipeStepState.image.value = nameImage
                 if (!nameImage.startsWith("http")) {
                     val picture = getSavedPicture(event.context, nameImage)
@@ -38,7 +53,7 @@ class RecipeCreateImageUseCase(val mainViewModel: MainViewModel, val state: Reci
         }
     }
 
-    fun deleteImage(event: week.on.a.plate.screens.additional.createRecipe.event.RecipeCreateEvent.DeleteImage) {
+    fun deleteImage(event: RecipeCreateEvent.DeleteImage) {
         event.recipeStepState.image.value = ""
     }
 }

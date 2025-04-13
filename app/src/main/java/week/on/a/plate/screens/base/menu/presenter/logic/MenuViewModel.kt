@@ -7,10 +7,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import week.on.a.plate.app.mainActivity.event.MainEvent
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.core.Event
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.data.dataView.week.getTitleWeek
+import week.on.a.plate.screens.additional.recipeDetails.navigation.RecipeDetailsDestination
+import week.on.a.plate.screens.additional.recipeDetails.navigation.RecipeDetailsNavParams
 import week.on.a.plate.screens.base.menu.domain.dbusecase.GetWeekFlowUseCase
 import week.on.a.plate.screens.base.menu.presenter.event.MenuEvent
 import week.on.a.plate.screens.base.menu.presenter.event.MenuNavEvent
@@ -57,12 +59,13 @@ class MenuViewModel @Inject constructor(
     private val createWeekSelIdAndCreatePos: CreateWeekSelIdAndCreatePosOpenDialog,
 ) : ViewModel() {
 
-    lateinit var mainViewModel: MainViewModel
     val menuUIState = mutableStateOf(MenuUIState.MenuUIStateExample)
     private val activeDay = menuUIState.value.wrapperDatePickerUIState.activeDay
 
-    fun initWithMainVM(mainVM: MainViewModel) {
-        mainViewModel = mainVM
+    val dialogOpenParams = mutableStateOf<DialogOpenParams?>(null)
+    val mainEvent = mutableStateOf<MainEvent?>(null)
+
+    init {
         updateWeek()
     }
 
@@ -87,7 +90,7 @@ class MenuViewModel @Inject constructor(
     fun onEvent(event: Event) {
         when (event) {
             is MenuEvent -> onEvent(event)
-            is MainEvent -> mainViewModel.onEvent(event)
+            is MainEvent -> mainEvent.value = event
             is WrapperDatePickerEvent -> onEvent(MenuEvent.ActionWrapperDatePicker(event))
         }
     }
@@ -99,9 +102,14 @@ class MenuViewModel @Inject constructor(
                 onEvent(MenuEvent.ClearSelected)
                 when (event.navData) {
                     is MenuNavEvent.NavToFullRecipe -> {
-                        mainViewModel.recipeDetailsViewModel.launch(
-                            event.navData.recId,
-                            event.navData.portionsCount
+                        onEvent(
+                            MainEvent.Navigate(
+                                RecipeDetailsDestination,
+                                RecipeDetailsNavParams(
+                                    event.navData.recId,
+                                    event.navData.portionsCount
+                                )
+                            )
                         )
                     }
                 }
@@ -112,17 +120,22 @@ class MenuViewModel @Inject constructor(
                 menuUIState.value
             )
 
-            is MenuEvent.GetSelIdAndCreate -> getSelAndCreate(
-                event.context,
-                mainViewModel,
-                ::onEvent
-            )
+            is MenuEvent.GetSelIdAndCreate -> {
+                viewModelScope.launch {
+                    getSelAndCreate(
+                        event.context,
+                        dialogOpenParams,
+                        ::onEvent
+                    )
+                }
+            }
 
             is MenuEvent.CreatePosition -> viewModelScope.launch(Dispatchers.IO) {
                 addPosition(
                     event.selId,
                     event.context,
-                    mainViewModel
+                    dialogOpenParams,
+                    ::onEvent
                 )
             }
 
@@ -131,13 +144,13 @@ class MenuViewModel @Inject constructor(
                     if (event.position is Position.PositionRecipeView) {
                         recipePositionActionsMore(
                             event.position,
-                            mainViewModel,
+                            dialogOpenParams,
                             ::onEvent
                         )
                     } else otherPositionActionsMore(
                         event.position,
-                        mainViewModel,
-                        mainViewModel::onEvent, ::onEvent
+                        dialogOpenParams,
+                        ::onEvent
                     )
                 }
             }
@@ -151,14 +164,13 @@ class MenuViewModel @Inject constructor(
                 selectedToShopList(
                     menuUIState.value,
                     ::onEvent,
-                    mainViewModel,
                     selectedRecipeManager::getSelected
                 )
             }
 
             is MenuEvent.ActionWrapperDatePicker -> menuWrapperDatePickerManager.invoke(
                 event.event,
-                mainViewModel,
+                dialogOpenParams,
                 ::updateWeek,
                 menuUIState.value.wrapperDatePickerUIState,
                 ::onEvent
@@ -166,7 +178,7 @@ class MenuViewModel @Inject constructor(
 
             is MenuEvent.SearchByDraft -> viewModelScope.launch {
                 searchByDraft(
-                    event.draft, mainViewModel
+                    event.draft, ::onEvent
                 )
             }
 
@@ -174,23 +186,28 @@ class MenuViewModel @Inject constructor(
                 createFirstNonPosedPosition(
                     event.context,
                     activeDay,
-                    mainViewModel,
+                    dialogOpenParams, ::onEvent
                 )
             }
 
             is MenuEvent.EditOrDeleteSelection ->
                 viewModelScope.launch(Dispatchers.IO) {
-                    editOrDeleteSelection(event.sel, mainViewModel)
+                    editOrDeleteSelection(event.sel, dialogOpenParams)
                 }
 
             is MenuEvent.CreateSelection ->
                 viewModelScope.launch(Dispatchers.IO) {
-                    createSelection(event.date, event.isForWeek, mainViewModel)
+                    createSelection(event.date, event.isForWeek, dialogOpenParams)
                 }
 
             is MenuEvent.CreateWeekSelIdAndCreatePosition ->
                 viewModelScope.launch(Dispatchers.IO) {
-                    createWeekSelIdAndCreatePos(event.context, activeDay, mainViewModel)
+                    createWeekSelIdAndCreatePos(
+                        event.context,
+                        activeDay,
+                        dialogOpenParams,
+                        ::onEvent
+                    )
                 }
 
             MenuEvent.ClearSelected -> {

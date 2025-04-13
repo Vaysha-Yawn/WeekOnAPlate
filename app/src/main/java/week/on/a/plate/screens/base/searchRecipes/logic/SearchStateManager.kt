@@ -1,13 +1,12 @@
 package week.on.a.plate.screens.base.searchRecipes.logic
 
 import week.on.a.plate.app.mainActivity.event.MainEvent
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.screens.base.searchRecipes.state.SearchState
 import week.on.a.plate.screens.base.searchRecipes.state.SearchUIState
 import javax.inject.Inject
 
 class SearchStateManager @Inject constructor() {
-    fun close(state: SearchUIState, mainViewModel: MainViewModel) {
+    fun close(state: SearchUIState, onEvent: (MainEvent) -> Unit) {
         if (state.resultSearch.value.isNotEmpty() || state.selectedTags.value.isNotEmpty() ||
             state.selectedIngredients.value.isNotEmpty() ||
             state.searchText.value != "" || state.searched.value == SearchState.Done
@@ -21,7 +20,7 @@ class SearchStateManager @Inject constructor() {
             state.allTime.intValue = 0
             state.prepTime.intValue = 0
         } else {
-            mainViewModel.onEvent(MainEvent.NavigateBack)
+            onEvent(MainEvent.NavigateBack)
         }
     }
 

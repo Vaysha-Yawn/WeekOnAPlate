@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -42,16 +44,12 @@ fun LazyListScope.RecipeEditPage(
             TextTitle(text = stringResource(R.string.ingredients))
         }
     }
-    items(state.ingredients.value.size) {
-        if (state.ingredients.value.isNotEmpty()) {
-            if (state.ingredients.value.isNotEmpty()) {
-                IngredientRecipeEdit(
-                    state.ingredients.value[it],
-                    onEvent
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-            }
-        }
+    items(items = state.ingredients.value, key = { it.id }) { ingredient ->
+        IngredientRecipeEdit(
+            ingredient,
+            onEvent
+        )
+        Spacer(modifier = Modifier.height(12.dp))
     }
     item {
         Column(
@@ -70,11 +68,11 @@ fun LazyListScope.RecipeEditPage(
             TextTitle(text = stringResource(R.string.step_by_step_recipe))
         }
     }
-    items(state.steps.value.size) {
+    itemsIndexed(items = state.steps.value, key = { _, step -> step.id }) { ind, step ->
         Column(Modifier.padding(horizontal = 24.dp)) {
             StepRecipeEdit(
-                it,
-                state.steps.value[it],
+                ind,
+                step,
                 state,
                 onEvent
             )

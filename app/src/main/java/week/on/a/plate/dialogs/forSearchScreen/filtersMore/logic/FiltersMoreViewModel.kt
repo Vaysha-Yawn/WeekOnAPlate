@@ -2,6 +2,7 @@ package week.on.a.plate.dialogs.forSearchScreen.filtersMore.logic
 
 import kotlinx.coroutines.CoroutineScope
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.core.dialogCore.DialogViewModel
 import week.on.a.plate.dialogs.forSearchScreen.filtersMore.event.FiltersMoreEvent
 import week.on.a.plate.dialogs.forSearchScreen.filtersMore.state.FiltersMoreUIState
@@ -32,11 +33,12 @@ class FiltersMoreViewModel(
         }
     }
 
-    companion object {
-        fun launch(
-            favoriteChecked: Boolean, allTime: Int,
-            mainViewModel: MainViewModel, useResult: (FiltersMoreUIState) -> Unit
-        ) {
+    class FiltersMoreDialogParams(
+        private val favoriteChecked: Boolean, private val allTime: Int,
+        private val useResult: (FiltersMoreUIState) -> Unit
+    ) :
+        DialogOpenParams {
+        override fun openDialog(mainViewModel: MainViewModel) {
             FiltersMoreViewModel(
                 favoriteChecked, allTime,
                 mainViewModel.getCoroutineScope(),
@@ -46,5 +48,4 @@ class FiltersMoreViewModel(
             )
         }
     }
-
 }

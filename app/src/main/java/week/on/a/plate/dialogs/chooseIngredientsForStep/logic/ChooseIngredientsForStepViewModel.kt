@@ -3,6 +3,7 @@ package week.on.a.plate.dialogs.chooseIngredientsForStep.logic
 import androidx.compose.runtime.mutableStateOf
 import kotlinx.coroutines.CoroutineScope
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.core.dialogCore.DialogViewModel
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.dialogs.chooseIngredientsForStep.event.ChooseIngredientsForStepEvent
@@ -47,11 +48,12 @@ class ChooseIngredientsForStepViewModel(
         }
     }
 
-    companion object {
-        fun launch(
-            mainViewModel: MainViewModel, ingredientsAll: List<IngredientInRecipeView>,
-            chosenIngredients: List<Long>, useResult: (List<Long>) -> Unit
-        ) {
+    class ChooseIngredientsForStepDialogParams(
+        private val ingredientsAll: List<IngredientInRecipeView>,
+        private val chosenIngredients: List<Long>, private val useResult: (List<Long>) -> Unit
+    ) :
+        DialogOpenParams {
+        override fun openDialog(mainViewModel: MainViewModel) {
             ChooseIngredientsForStepViewModel(
                 ingredientsAll, chosenIngredients,
                 mainViewModel.getCoroutineScope(),

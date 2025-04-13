@@ -5,7 +5,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import week.on.a.plate.data.preference.PreferenceUseCase
 
@@ -48,7 +47,7 @@ fun WeekOnAPlateTheme(
     content: @Composable () -> Unit
 ) {
 
-    val themeInd = PreferenceUseCase().getActiveThemeId(LocalContext.current)
+    val themeInd = PreferenceUseCase.getActiveThemeId(LocalContext.current)
     val group = palettes[themeInd]
     val colorScheme = group.getColorScheme(darkTheme)
 

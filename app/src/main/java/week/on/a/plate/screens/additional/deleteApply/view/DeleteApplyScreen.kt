@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import week.on.a.plate.R
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.TextDisplayItalic
@@ -26,7 +27,7 @@ import week.on.a.plate.screens.additional.deleteApply.state.DeleteApplyUIState
 
 @Composable
 fun DeleteApplyStart(
-    viewModel: DeleteApplyViewModel,
+    viewModel: DeleteApplyViewModel = viewModel()
 ) {
     val onEvent = { eventData: DeleteApplyEvent ->
         viewModel.onEvent(eventData)
@@ -36,7 +37,7 @@ fun DeleteApplyStart(
 }
 
 @Composable
-fun DeleteApplyScreen(
+private fun DeleteApplyScreen(
     state: DeleteApplyUIState,
     onEvent: (DeleteApplyEvent) -> Unit,
 ) {

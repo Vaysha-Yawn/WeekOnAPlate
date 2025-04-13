@@ -51,9 +51,9 @@ fun SearchCategoriesScreen(stateUI: SearchUIState, onEvent: (SearchScreenEvent) 
             }
             Spacer(modifier = Modifier.size(24.dp))
         }
-        items(stateUI.allTagsCategories.value) {
-            if (it.id != 1L)
-                CategorySelection(it, onEvent)
+        items(items = stateUI.allTagsCategories.value, key = { it.id }) { tagCategory ->
+            if (tagCategory.id != 1L)
+                CategorySelection(tagCategory, onEvent)
         }
         item {
             Spacer(Modifier.height(80.dp))
@@ -66,8 +66,8 @@ fun CategorySelection(tagCategoryView: TagCategoryView, onEvent: (SearchScreenEv
     TextTitle(text = tagCategoryView.name, Modifier.padding(start = 12.dp))
     Spacer(modifier = Modifier.height(12.dp))
     LazyRow {
-        items(tagCategoryView.tags.size) {
-            CardTag(tagCategoryView.tags[it], onEvent)
+        items(items = tagCategoryView.tags, key = { it.id }) { tag ->
+            CardTag(tag, onEvent)
         }
     }
     Spacer(modifier = Modifier.height(24.dp))

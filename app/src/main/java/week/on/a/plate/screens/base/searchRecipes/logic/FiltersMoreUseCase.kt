@@ -1,22 +1,23 @@
 package week.on.a.plate.screens.base.searchRecipes.logic
 
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import androidx.compose.runtime.MutableState
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.dialogs.forSearchScreen.filtersMore.logic.FiltersMoreViewModel
 import week.on.a.plate.screens.base.searchRecipes.state.SearchUIState
 import javax.inject.Inject
 
 class FiltersMoreUseCase @Inject constructor() {
     operator fun invoke(
-        mainViewModel: MainViewModel, state: SearchUIState, search: () -> Unit
+        dialogOpenParams: MutableState<DialogOpenParams?>, state: SearchUIState, search: () -> Unit
     ) {
-        FiltersMoreViewModel.launch(
+        val params = FiltersMoreViewModel.FiltersMoreDialogParams(
             state.favoriteChecked.value,
-            state.allTime.intValue,
-            mainViewModel
+            state.allTime.intValue
         ) { stated ->
             state.allTime.intValue = stated.allTime.intValue
             state.favoriteChecked.value = stated.favoriteIsChecked.value
             search()
         }
+        dialogOpenParams.value = params
     }
 }

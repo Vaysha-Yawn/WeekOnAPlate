@@ -7,40 +7,39 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import week.on.a.plate.app.mainActivity.event.MainEvent
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.core.Event
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.data.dataView.week.getTitleWeek
+import week.on.a.plate.screens.additional.recipeDetails.navigation.RecipeDetailsDestination
+import week.on.a.plate.screens.additional.recipeDetails.navigation.RecipeDetailsNavParams
 import week.on.a.plate.screens.base.cookPlanner.event.CookPlannerEvent
 import week.on.a.plate.screens.base.cookPlanner.logic.stepMore.CookPlannerCardActions
 import week.on.a.plate.screens.base.cookPlanner.logic.stepMore.usecases.CheckStepUseCase
-import week.on.a.plate.screens.base.cookPlanner.logic.stepMore.usecases.UseCaseWrapperCookPlannerCardActions
 import week.on.a.plate.screens.base.cookPlanner.state.CookPlannerUIState
 import week.on.a.plate.screens.base.wrapperDatePicker.event.WrapperDatePickerEvent
 import week.on.a.plate.screens.base.wrapperDatePicker.logic.WrapperDatePickerManager
+import java.util.Locale
 import javax.inject.Inject
+
 
 @HiltViewModel
 class CookPlannerViewModel @Inject constructor(
     private val wrapperDatePickerManager: WrapperDatePickerManager,
     private val checkStepUseCase: CheckStepUseCase,
-    private val cardActionsUseCases: UseCaseWrapperCookPlannerCardActions,
     private val getWeekUseCase: GetWeekUseCase,
+    private val cookPlannerCardActions: CookPlannerCardActions
 ) : ViewModel() {
 
-    lateinit var mainViewModel: MainViewModel
     val state: MutableState<CookPlannerUIState> = mutableStateOf(CookPlannerUIState())
-    private lateinit var cookPlannerCardActions: CookPlannerCardActions
-    private lateinit var cookPlannerWrapperDatePickerManager: CookPlannerWrapperDatePickerManager
-
-    fun initWithMainVM(mainViewModel: MainViewModel) {
-        cookPlannerCardActions = CookPlannerCardActions(
-            mainViewModel, viewModelScope, cardActionsUseCases
-        )
-        cookPlannerWrapperDatePickerManager = CookPlannerWrapperDatePickerManager(
+    val dialogOpenParams: MutableState<DialogOpenParams?> = mutableStateOf(null)
+    private var cookPlannerWrapperDatePickerManager: CookPlannerWrapperDatePickerManager =
+        CookPlannerWrapperDatePickerManager(
             wrapperDatePickerManager = wrapperDatePickerManager,
-            mainViewModel,
             state.value.wrapperDatePickerUIState
         )
+    val mainEvent: MutableState<MainEvent?> = mutableStateOf(null)
+
+    init {
         val activeDate = state.value.wrapperDatePickerUIState.activeDay.value
         val startWeek = activeDate.minusDays(activeDate.dayOfWeek.ordinal.toLong())
         val endWeek = activeDate.plusDays(6 - activeDate.dayOfWeek.ordinal.toLong())
@@ -53,7 +52,7 @@ class CookPlannerViewModel @Inject constructor(
     suspend fun update() {
         val week = getWeekUseCase(
             state.value.wrapperDatePickerUIState.activeDay.value,
-            mainViewModel.locale
+            Locale.getDefault()
         )
 
         val weekResult = week.keys.map {
@@ -86,11 +85,15 @@ class CookPlannerViewModel @Inject constructor(
 
     fun onEvent(event: Event) {
         when (event) {
-            is MainEvent -> mainViewModel.onEvent(event)
+            is MainEvent -> {
+                mainEvent.value = event
+            }
 
             is WrapperDatePickerEvent -> {
                 wrapperDatePickerManager.onEvent(event, state.value.wrapperDatePickerUIState)
-                cookPlannerWrapperDatePickerManager.onEvent(event, ::update)
+                viewModelScope.launch {
+                    cookPlannerWrapperDatePickerManager.onEvent(dialogOpenParams, event, ::update)
+                }
             }
 
             is CookPlannerEvent -> onEvent(event)
@@ -98,13 +101,22 @@ class CookPlannerViewModel @Inject constructor(
     }
 
     fun onEvent(event: CookPlannerEvent) {
-        when (event) {
-            is CookPlannerEvent.CheckStep -> viewModelScope.launch { checkStepUseCase(event) }
-            is CookPlannerEvent.ShowStepMore -> cookPlannerCardActions.showStepMore(event)
-            is CookPlannerEvent.NavToFullStep -> mainViewModel.recipeDetailsViewModel.launch(
-                event.groupView.recipeId,
-                event.groupView.portionsCount
-            )
+        viewModelScope.launch {
+            when (event) {
+                is CookPlannerEvent.CheckStep -> checkStepUseCase(event)
+                is CookPlannerEvent.ShowStepMore -> cookPlannerCardActions.showStepMore(
+                    event,
+                    dialogOpenParams
+                )
+
+                is CookPlannerEvent.NavToFullStep ->
+                    mainEvent.value = MainEvent.Navigate(
+                        RecipeDetailsDestination, RecipeDetailsNavParams(
+                            event.groupView.recipeId,
+                            event.groupView.portionsCount
+                        )
+                    )
+            }
         }
     }
 

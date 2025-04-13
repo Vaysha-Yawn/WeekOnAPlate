@@ -1,13 +1,17 @@
 package week.on.a.plate.screens.base.menu.presenter.logic.navigateLogic
 
 import android.content.Context
-import androidx.lifecycle.viewModelScope
+import androidx.compose.runtime.MutableState
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.app.mainActivity.event.MainEvent
+import week.on.a.plate.core.Event
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.screens.additional.specifySelection.logic.SpecifySelectionResult
 import week.on.a.plate.screens.additional.specifySelection.navigation.SpecifySelectionDestination
+import week.on.a.plate.screens.additional.specifySelection.navigation.SpecifySelectionParams
 import week.on.a.plate.screens.base.menu.domain.dbusecase.DraftDoublePositionInMenuDB
 import week.on.a.plate.screens.base.menu.domain.dbusecase.DraftMovePositionInMenuDB
 import week.on.a.plate.screens.base.menu.domain.dbusecase.IngredientDoublePositionInMenuDB
@@ -23,15 +27,11 @@ import javax.inject.Inject
 
 class SpecifyDateNavToScreen @Inject constructor() {
     operator fun invoke(
-        mainViewModel: MainViewModel,
-        onMenuEvent: (MenuEvent) -> Unit,
+        onEvent: (Event) -> Unit,
         use: (SpecifySelectionResult) -> Unit
     ) {
-        mainViewModel.viewModelScope.launch {
-            onMenuEvent(MenuEvent.ClearSelected)
-            mainViewModel.nav.navigate(SpecifySelectionDestination)
-            mainViewModel.specifySelectionViewModel.launchAndGet(use)
-        }
+        onEvent(MenuEvent.ClearSelected)
+        onEvent(MainEvent.Navigate(SpecifySelectionDestination, SpecifySelectionParams(use)))
     }
 }
 
@@ -39,17 +39,18 @@ class GetSelAndCreateUseCase @Inject constructor(
     private val specifyDate: SpecifyDateNavToScreen,
     private val addPosition: AddPositionOpenDialog,
 ) {
-    operator fun invoke(
+    suspend operator fun invoke(
         context: Context,
-        mainViewModel: MainViewModel,
-        onMenuEvent: (MenuEvent) -> Unit,
-    ) {
-        specifyDate(mainViewModel, onMenuEvent) { res ->
-            mainViewModel.viewModelScope.launch {
+        dialogOpenParams: MutableState<DialogOpenParams?>,
+        onEvent: (Event) -> Unit,
+    ) = coroutineScope {
+        specifyDate(onEvent) { res ->
+            launch {
                 addPosition(
                     res.selId,
                     context,
-                    mainViewModel
+                    dialogOpenParams,
+                    onEvent
                 )
             }
         }
@@ -63,13 +64,12 @@ class GetSelAndMoveUseCase @Inject constructor(
     private val ingredientMove: IngredientMovePositionInMenuDB,
     private val noteMove: NoteMovePositionInMenuDB,
 ) {
-    operator fun invoke(
+    suspend operator fun invoke(
         position: Position,
-        mainViewModel: MainViewModel,
-        onMenuEvent: (MenuEvent) -> Unit,
-    ) {
-        specifyDate(mainViewModel, onMenuEvent) { res ->
-            mainViewModel.viewModelScope.launch(Dispatchers.IO) {
+        onEvent: (Event) -> Unit,
+    ) = coroutineScope {
+        specifyDate(onEvent) { res ->
+            launch(Dispatchers.IO) {
                 when (position) {
                     is Position.PositionDraftView -> draftMove(position, res.selId)
                     is Position.PositionIngredientView -> ingredientMove(position, res.selId)
@@ -83,20 +83,18 @@ class GetSelAndMoveUseCase @Inject constructor(
 
 class GetSelAndDoubleUseCase @Inject constructor(
     private val specifyDate: SpecifyDateNavToScreen,
-
     private val ingredientDouble: IngredientDoublePositionInMenuDB,
     private val recipeDouble: RecipeDoublePositionInMenuDB,
     private val draftDouble: DraftDoublePositionInMenuDB,
     private val noteDouble: NoteDoublePositionInMenuDB,
 ) {
 
-    operator fun invoke(
+    suspend operator fun invoke(
         position: Position,
-        mainViewModel: MainViewModel,
-        onMenuEvent: (MenuEvent) -> Unit,
-    ) {
-        specifyDate(mainViewModel, onMenuEvent) { res ->
-            mainViewModel.viewModelScope.launch(Dispatchers.IO) {
+        onEvent: (Event) -> Unit,
+    ) = coroutineScope {
+        specifyDate(onEvent) { res ->
+            launch(Dispatchers.IO) {
                 when (position) {
                     is Position.PositionDraftView -> draftDouble(position, res.selId)
                     is Position.PositionIngredientView -> ingredientDouble(position, res.selId)

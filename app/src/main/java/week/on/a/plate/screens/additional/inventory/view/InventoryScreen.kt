@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.MaterialTheme
@@ -65,8 +66,10 @@ fun InventoryScreen(
                 .padding(bottom = 24.dp)
         )
         LazyColumn(Modifier.weight(1f)) {
-            items(state.list.value.size) {
-                CardInventory(state.list.value[it], onEvent)
+            items(
+                items = state.list.value,
+                key = { it.ingredient.ingredientId }) { inventoryPositionData ->
+                CardInventory(inventoryPositionData, onEvent)
             }
         }
         DoneButton(stringResource(id = R.string.done), Modifier.padding(24.dp)) {

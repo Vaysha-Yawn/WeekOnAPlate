@@ -1,12 +1,15 @@
 package week.on.a.plate.dialogs.forSettingsScreen.setPermanentMeals.logic
 
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import week.on.a.plate.R
 import week.on.a.plate.app.mainActivity.event.MainEvent
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.core.dialogCore.DialogViewModel
 import week.on.a.plate.data.repository.room.menu.category_selection.CategorySelectionDAO
 import week.on.a.plate.data.repository.room.menu.category_selection.CategorySelectionRoom
@@ -29,14 +32,13 @@ class SetPermanentMealsViewModel(
     {}
 ) {
     val state = SetPermanentMealsUIState()
+    val dialogOpenParams: MutableState<DialogOpenParams?> = mutableStateOf(null)
 
     fun onEvent(event: SetPermanentMealsEvent) {
         when (event) {
             is SetPermanentMealsEvent.Add -> add()
             SetPermanentMealsEvent.Close -> {
                 close()
-                //mainViewModel.menuViewModel.updateWeek()
-                mainViewModel.specifySelectionViewModel.updateSelections()
             }
 
             is SetPermanentMealsEvent.Delete -> delete(event.sel)
@@ -71,12 +73,13 @@ class SetPermanentMealsViewModel(
                 selectedTime.value = sel.stdTime
             }
 
-            EditSelectionViewModel.launch(stateToEdit, mainViewModel) { selState ->
+            val params = EditSelectionViewModel.EditSelectionDialogParams(stateToEdit) { selState ->
                 mainViewModel.viewModelScope.launch {
                     applyEdit(sel, selState)
                     mainViewModel.onEvent(MainEvent.ShowDialog)
                 }
             }
+            dialogOpenParams.value = params
             mainViewModel.onEvent(MainEvent.HideDialog)
         }
     }
@@ -103,17 +106,18 @@ class SetPermanentMealsViewModel(
 
     private fun add() {
         mainViewModel.viewModelScope.launch {
-            EditSelectionViewModel.launch(
+            val params = EditSelectionViewModel.EditSelectionDialogParams(
                 EditSelectionUIState(
                     title = R.string.add_meal,
                     placeholder = R.string.hint_breakfast
-                ), mainViewModel
+                )
             ) { selState ->
                 mainViewModel.viewModelScope.launch {
                     applyAdd(selState)
                 }
                 mainViewModel.onEvent(MainEvent.ShowDialog)
             }
+            dialogOpenParams.value = params
             mainViewModel.onEvent(MainEvent.HideDialog)
         }
     }
@@ -137,10 +141,9 @@ class SetPermanentMealsViewModel(
         )
     }
 
-    companion object {
-        fun launch( dao: CategorySelectionDAO,
-            mainViewModel: MainViewModel
-        ) {
+    class SetPermanentMealsDialogParams(private val dao: CategorySelectionDAO) :
+        DialogOpenParams {
+        override fun openDialog(mainViewModel: MainViewModel) {
             SetPermanentMealsViewModel(
                 dao,
                 mainViewModel,

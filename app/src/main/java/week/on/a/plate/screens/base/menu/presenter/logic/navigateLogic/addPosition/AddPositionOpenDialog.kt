@@ -1,8 +1,10 @@
 package week.on.a.plate.screens.base.menu.presenter.logic.navigateLogic.addPosition
 
 import android.content.Context
+import androidx.compose.runtime.MutableState
 import kotlinx.coroutines.coroutineScope
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.core.Event
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.dialogs.addPositionChoose.event.AddPositionEvent
 import week.on.a.plate.dialogs.addPositionChoose.logic.AddPositionViewModel
 import javax.inject.Inject
@@ -15,21 +17,23 @@ class AddPositionOpenDialog @Inject constructor(
 ) {
     suspend operator fun invoke(
         selId: Long, context: Context,
-        mainViewModel: MainViewModel
+        dialogOpenParams: MutableState<DialogOpenParams?>,
+        onEvent: (Event) -> Unit
     ) = coroutineScope {
-        AddPositionViewModel.launch(mainViewModel) { event ->
+        val params = AddPositionViewModel.AddPositionDialogParams { event ->
             when (event) {
-                AddPositionEvent.AddDraft -> createDraftNavToScreen(selId, mainViewModel)
-                AddPositionEvent.AddIngredient -> addIngredientOpenDialog(selId, mainViewModel)
-                AddPositionEvent.AddNote -> createNoteOpenDialog(selId, mainViewModel)
+                AddPositionEvent.AddDraft -> createDraftNavToScreen(selId, onEvent)
+                AddPositionEvent.AddIngredient -> addIngredientOpenDialog(selId, dialogOpenParams)
+                AddPositionEvent.AddNote -> createNoteOpenDialog(selId, dialogOpenParams)
                 AddPositionEvent.AddRecipe -> addRecipeNavToScreen(
                     selId,
                     context,
-                    mainViewModel
+                    dialogOpenParams, onEvent
                 )
 
                 AddPositionEvent.Close -> {}
             }
         }
+        dialogOpenParams.value = params
     }
 }

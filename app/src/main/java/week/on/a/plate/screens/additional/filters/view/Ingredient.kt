@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
@@ -30,26 +31,30 @@ fun LazyListScope.ingredient(
         || stateUI.filterEnum.value == FilterEnum.Ingredient
     ) {
         if (stateUI.searchText.value != "") {
-            items(stateUI.resultSearchIngredients.value.size) {
+            items(
+                items = stateUI.resultSearchIngredients.value,
+                key = { it.ingredientId }) { ingredient ->
                 Spacer(modifier = Modifier.height(24.dp))
                 FilterItemWithMore(
-                    stateUI.resultSearchIngredients.value[it].name,
-                    stateUI.selectedIngredients.value.contains(stateUI.resultSearchIngredients.value[it]),
+                    ingredient.name,
+                    stateUI.selectedIngredients.value.contains(ingredient),
                     true,
-                    click = { onEvent(FilterEvent.SelectIngredient(stateUI.resultSearchIngredients.value[it])) })
+                    click = { onEvent(FilterEvent.SelectIngredient(ingredient)) })
                 {
                     onEvent(
                         FilterEvent.EditOrDeleteIngredient(
                             context,
-                            stateUI.resultSearchIngredients.value[it]
+                            ingredient
                         )
                     )
                 }
             }
         } else {
-            items(stateUI.allIngredientsCategories.value.size) {
+            items(
+                items = stateUI.allIngredientsCategories.value,
+                key = { it.id }) { ingredientCategory ->
                 IngredientCategories(
-                    stateUI.allIngredientsCategories.value[it],
+                    ingredientCategory,
                     stateUI.selectedIngredients, onEvent
                 )
             }

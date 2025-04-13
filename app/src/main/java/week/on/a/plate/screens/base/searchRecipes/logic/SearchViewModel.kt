@@ -1,5 +1,7 @@
 package week.on.a.plate.screens.base.searchRecipes.logic
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -8,14 +10,16 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import week.on.a.plate.app.mainActivity.event.MainEvent
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.core.Event
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.data.dataView.recipe.IngredientView
 import week.on.a.plate.data.dataView.recipe.RecipeTagView
 import week.on.a.plate.data.dataView.recipe.RecipeView
 import week.on.a.plate.data.dataView.recipe.TagCategoryView
 import week.on.a.plate.data.repository.room.filters.recipeTagCategory.RecipeTagCategoryRepository
 import week.on.a.plate.data.repository.room.recipe.recipe.RecipeRepository
+import week.on.a.plate.screens.additional.recipeDetails.navigation.RecipeDetailsDestination
+import week.on.a.plate.screens.additional.recipeDetails.navigation.RecipeDetailsNavParams
 import week.on.a.plate.screens.base.searchRecipes.event.SearchScreenEvent
 import week.on.a.plate.screens.base.searchRecipes.state.SearchUIState
 import javax.inject.Inject
@@ -35,12 +39,14 @@ class SearchViewModel @Inject constructor(
     private val sortingManager: SortingManager
 ) : ViewModel() {
 
-    lateinit var mainViewModel: MainViewModel
     var state = SearchUIState()
     lateinit var allTagCategories: StateFlow<List<TagCategoryView>>
 
     private lateinit var floAllRecipe: StateFlow<List<RecipeView>>
     private var resultFlow: MutableStateFlow<RecipeView?>? = null
+
+    val dialogOpenParams: MutableState<DialogOpenParams?> = mutableStateOf(null)
+    val mainEvent = mutableStateOf<MainEvent?>(null)
 
     init {
         viewModelScope.launch {
@@ -52,51 +58,68 @@ class SearchViewModel @Inject constructor(
 
     fun onEvent(event: Event) {
         when (event) {
-            is MainEvent -> mainViewModel.onEvent(event)
+            is MainEvent -> mainEvent.value = event
             is SearchScreenEvent -> onEvent(event)
         }
     }
 
     fun onEvent(event: SearchScreenEvent) {
+        viewModelScope.launch {
         when (event) {
-            is SearchScreenEvent.Search -> searchManager.search(state, viewModelScope, floAllRecipe)
+            is SearchScreenEvent.Search -> searchManager.search(state, floAllRecipe)
             is SearchScreenEvent.VoiceSearch -> onEvent(MainEvent.VoiceToText(event.context) {
                 state.searchText.value = it?.joinToString() ?: ""
                 onEvent(SearchScreenEvent.Search)
             })
 
-            SearchScreenEvent.Back -> searchStateManager.close(state, mainViewModel)
-            is SearchScreenEvent.FlipFavorite -> viewModelScope.launch{
+            SearchScreenEvent.Back -> searchStateManager.close(state, ::onEvent)
+            is SearchScreenEvent.FlipFavorite ->
                 flipFavorite(event.recipe, event.inFavorite)
-            }
-            is SearchScreenEvent.AddToMenu -> viewModelScope.launch{
-                addToMenu(event.recipeView, event.context, mainViewModel, viewModelScope, searchStateManager::close, resultFlow, state)
-            }
+
+            is SearchScreenEvent.AddToMenu ->
+                addToMenu(
+                    event.recipeView,
+                    event.context,
+                    searchStateManager::close,
+                    resultFlow,
+                    state,
+                    dialogOpenParams,
+                    ::onEvent
+                )
+
             is SearchScreenEvent.NavigateToFullRecipe -> navigateToFullRecipe(event.recipeView.id)
-            SearchScreenEvent.ToFilter -> viewModelScope.launch{
-                openFilters(mainViewModel, state){
+            SearchScreenEvent.ToFilter ->
+                openFilters(::onEvent, state) {
                     onEvent(SearchScreenEvent.Search)
                 }
-            }
+
             is SearchScreenEvent.SelectTag -> selectTags(event.recipeTagView, state)
-            is SearchScreenEvent.CreateRecipe -> viewModelScope.launch{
-                createRecipe(mainViewModel, state, viewModelScope)
-            }
+            is SearchScreenEvent.CreateRecipe ->
+                createRecipe(state) { mainEvent.value = it }
+
             SearchScreenEvent.Clear -> searchStateManager.searchClear(state)
-            SearchScreenEvent.SearchFavorite -> searchManager.searchFavorite(state, viewModelScope, floAllRecipe)
-            SearchScreenEvent.SearchAll -> searchManager.searchAll(state, viewModelScope, floAllRecipe)
-            SearchScreenEvent.SearchRandom -> searchManager.searchRandom(state, viewModelScope, floAllRecipe)
+            SearchScreenEvent.SearchFavorite -> searchManager.searchFavorite(state, floAllRecipe)
+            SearchScreenEvent.SearchAll -> searchManager.searchAll(state, floAllRecipe)
+            SearchScreenEvent.SearchRandom -> searchManager.searchRandom(state, floAllRecipe)
             is SearchScreenEvent.ChangeSort -> sortingManager.changeSort(event.type, event.direction, state)
-            SearchScreenEvent.FiltersMore -> filtersMore(mainViewModel, state){
+            SearchScreenEvent.FiltersMore -> filtersMore(
+                dialogOpenParams = dialogOpenParams,
+                state
+            ) {
                 onEvent(SearchScreenEvent.Search)
             }
             SearchScreenEvent.SavePreset -> TODO()
-            SearchScreenEvent.SortMore -> sortingManager.sortMore(mainViewModel, ::onEvent)
+            SearchScreenEvent.SortMore -> sortingManager.sortMore(
+                dialogOpenParams = dialogOpenParams,
+                ::onEvent
+            )
+        }
         }
     }
 
     private fun navigateToFullRecipe(id: Long) {
-        mainViewModel.recipeDetailsViewModel.launch(id)
+        mainEvent.value =
+            MainEvent.Navigate(RecipeDetailsDestination, RecipeDetailsNavParams(id, null))
     }
 
     fun start(): MutableStateFlow<RecipeView?> {

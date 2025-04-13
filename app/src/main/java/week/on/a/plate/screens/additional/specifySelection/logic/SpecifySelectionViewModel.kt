@@ -1,15 +1,17 @@
 package week.on.a.plate.screens.additional.specifySelection.logic
 
 import android.content.Context
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import week.on.a.plate.app.mainActivity.event.EmptyNavParams
 import week.on.a.plate.app.mainActivity.event.MainEvent
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.core.Event
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.core.navigation.MenuDestination
 import week.on.a.plate.data.dataView.week.ForWeek
 import week.on.a.plate.data.dataView.week.NonPosed
@@ -21,6 +23,7 @@ import week.on.a.plate.dialogs.calendarMy.logic.CalendarMyUseCase
 import week.on.a.plate.dialogs.calendarMy.state.StateCalendarMy
 import week.on.a.plate.screens.additional.specifySelection.event.SpecifySelectionEvent
 import week.on.a.plate.screens.additional.specifySelection.state.SpecifySelectionUIState
+import week.on.a.plate.screens.base.menu.presenter.logic.MenuViewModel
 import week.on.a.plate.screens.base.wrapperDatePicker.event.WrapperDatePickerEvent
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -36,10 +39,13 @@ class SpecifySelectionViewModel @Inject constructor(
     private val categorySelectionDAO: CategorySelectionDAO,
     private val addCustomSelectionUseCase: AddCustomSelectionUseCase,
 ) : ViewModel() {
-    lateinit var mainViewModel: MainViewModel
+
     val state: SpecifySelectionUIState = SpecifySelectionUIState()
     private lateinit var resultFlow: MutableStateFlow<SpecifySelectionResult?>
     var stateCalendar: StateCalendarMy = StateCalendarMy.emptyState
+
+    val dialogOpenParams = mutableStateOf<DialogOpenParams?>(null)
+    val mainEvent = mutableStateOf<MainEvent?>(null)
 
     init {
         val firstRow = calendarMyUseCase.getFirstRow(Locale.getDefault())
@@ -55,7 +61,7 @@ class SpecifySelectionViewModel @Inject constructor(
     fun onEvent(event: Event) {
         when (event) {
             is MainEvent -> {
-                mainViewModel.onEvent(event)
+                mainEvent.value = event
             }
 
             is CalendarMyEvent -> {
@@ -72,7 +78,13 @@ class SpecifySelectionViewModel @Inject constructor(
         when (event) {
             SpecifySelectionEvent.Back -> close()
             is SpecifySelectionEvent.Done -> done(event.context)
-            is SpecifySelectionEvent.AddCustomSelection -> viewModelScope.launch {  addCustomSelectionUseCase(mainViewModel, state, viewModelScope) }
+            is SpecifySelectionEvent.AddCustomSelection -> viewModelScope.launch {
+                addCustomSelectionUseCase(
+                    dialogOpenParams,
+                    state,
+                    viewModelScope
+                )
+            }
             is SpecifySelectionEvent.UpdatePreview -> updatePreview(event.date)
             is SpecifySelectionEvent.UpdateSelections -> updateSelections()
             is SpecifySelectionEvent.ApplyDate -> applyDate(event.date)
@@ -120,12 +132,12 @@ class SpecifySelectionViewModel @Inject constructor(
 
     fun done(context: Context) {
         val category = getCategory(context) ?: return
-        mainViewModel.viewModelScope.launch {
+        viewModelScope.launch {
             val selId = weekMenuRepository.getSelIdOrCreate(
                 LocalDateTime.of(state.date.value, LocalTime.of(0, 0)),
                 state.checkWeek.value,
                 category,
-                mainViewModel.locale,
+                Locale.getDefault(),
             )
             resultFlow.value =
                 SpecifySelectionResult(selId, state.date.value, state.portionsCount.intValue)
@@ -133,7 +145,7 @@ class SpecifySelectionViewModel @Inject constructor(
     }
 
     fun close() {
-        mainViewModel.onEvent(MainEvent.NavigateBack)
+        mainEvent.value = MainEvent.NavigateBack
     }
 
     fun start(): Flow<SpecifySelectionResult?> {
@@ -142,14 +154,14 @@ class SpecifySelectionViewModel @Inject constructor(
         return flow
     }
 
-    suspend fun launchAndGet(use: suspend (SpecifySelectionResult) -> Unit) {
+    suspend fun launchAndGet(use: (SpecifySelectionResult) -> Unit, menuViewModel: MenuViewModel) {
         calendarMyUseCase.updateMonthValue(stateCalendar, true)
         val flow = start()
         flow.collect { value ->
             if (value != null) {
                 use(value)
-                mainViewModel.menuViewModel.onEvent(WrapperDatePickerEvent.ChangeWeek(value.date))
-                mainViewModel.nav.navigate(MenuDestination)
+                menuViewModel.onEvent(WrapperDatePickerEvent.ChangeWeek(value.date))
+                mainEvent.value = MainEvent.Navigate(MenuDestination, EmptyNavParams)
             }
         }
     }

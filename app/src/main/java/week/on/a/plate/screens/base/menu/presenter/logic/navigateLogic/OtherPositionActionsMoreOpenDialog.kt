@@ -1,13 +1,14 @@
 package week.on.a.plate.screens.base.menu.presenter.logic.navigateLogic
 
+
+import androidx.compose.runtime.MutableState
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import week.on.a.plate.app.mainActivity.event.MainEvent
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.core.Event
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.screens.base.menu.dialogs.editOtherPositionMoreDialog.logic.EditOtherPositionViewModel
 import week.on.a.plate.screens.base.menu.dialogs.editOtherPositionMoreDialog.logic.OtherPositionActionsMore
-import week.on.a.plate.screens.base.menu.presenter.event.MenuEvent
 import javax.inject.Inject
 
 class OtherPositionActionsMoreOpenDialog @Inject constructor(
@@ -15,17 +16,16 @@ class OtherPositionActionsMoreOpenDialog @Inject constructor(
 ) {
     suspend operator fun invoke(
         position: Position,
-        mainViewModel: MainViewModel,
-        onEventMain: (MainEvent) -> Unit,
-        onEventMenu: (MenuEvent) -> Unit,
+        dialogOpenParams: MutableState<DialogOpenParams?>,
+        onEvent: (Event) -> Unit,
     ) = coroutineScope {
-        EditOtherPositionViewModel.launch(
+        val params = EditOtherPositionViewModel.EditOtherPositionDialogParams(
             position is Position.PositionIngredientView,
-            mainViewModel
         ) { event ->
             launch {
-                otherPositionActionsMore(position, mainViewModel, onEventMain, onEventMenu, event)
+                otherPositionActionsMore(position, dialogOpenParams, onEvent, event)
             }
         }
+        dialogOpenParams.value = params
     }
 }

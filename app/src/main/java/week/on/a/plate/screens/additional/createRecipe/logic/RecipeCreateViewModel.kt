@@ -1,15 +1,21 @@
 package week.on.a.plate.screens.additional.createRecipe.logic
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
+import week.on.a.plate.app.mainActivity.event.MainEvent
+import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.core.Event
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.data.dataView.recipe.RecipeView
 import week.on.a.plate.dialogs.forCreateRecipeScreen.exitApply.event.ExitApplyEvent
 import week.on.a.plate.dialogs.forCreateRecipeScreen.exitApply.logic.ExitApplyViewModel
-import week.on.a.plate.app.mainActivity.event.MainEvent
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.screens.additional.createRecipe.event.RecipeCreateEvent
 import week.on.a.plate.screens.additional.createRecipe.logic.useCase.EditTagsUseCase
 import week.on.a.plate.screens.additional.createRecipe.logic.useCase.RecipeCreateImageUseCase
 import week.on.a.plate.screens.additional.createRecipe.logic.useCase.RecipeCreateIngredientUseCase
@@ -22,20 +28,20 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RecipeCreateViewModel @Inject constructor(
-    private val editTagsUseCase: EditTagsUseCase
+    private val editTagsUseCase: EditTagsUseCase,
+    private val recipeCreateImageUseCase: RecipeCreateImageUseCase,
+    private val recipeCreateTimeUseCase: RecipeCreateTimeUseCase,
 ) : ViewModel() {
     lateinit var mainViewModel: MainViewModel
     var state = RecipeCreateUIState()
     private lateinit var resultFlow: MutableStateFlow<RecipeCreateUIState?>
 
-    private lateinit var recipeCreateImageUseCase: RecipeCreateImageUseCase
-    private lateinit var recipeCreateTimeUseCase: RecipeCreateTimeUseCase
     private lateinit var recipeCreateStepUseCase: RecipeCreateStepUseCase
     private lateinit var recipeCreateIngredientUseCase: RecipeCreateIngredientUseCase
 
+    val dialogOpenParams: MutableState<DialogOpenParams?> = mutableStateOf(null)
+
     fun initWithMainVM(mainViewModel: MainViewModel) {
-        recipeCreateImageUseCase = RecipeCreateImageUseCase(mainViewModel, state)
-        recipeCreateTimeUseCase = RecipeCreateTimeUseCase(mainViewModel, state)
         recipeCreateStepUseCase = RecipeCreateStepUseCase(mainViewModel, state)
         recipeCreateIngredientUseCase = RecipeCreateIngredientUseCase(mainViewModel, state)
     }
@@ -43,76 +49,86 @@ class RecipeCreateViewModel @Inject constructor(
     fun onEvent(event: Event) {
         when (event) {
             is MainEvent -> mainViewModel.onEvent(event)
-            is week.on.a.plate.screens.additional.createRecipe.event.RecipeCreateEvent -> onEvent(
+            is RecipeCreateEvent -> onEvent(
                 event
             )
         }
     }
 
-    fun onEvent(event: week.on.a.plate.screens.additional.createRecipe.event.RecipeCreateEvent) {
-        when (event) {
-            week.on.a.plate.screens.additional.createRecipe.event.RecipeCreateEvent.Close -> mainViewModel.nav.popBackStack()
-            week.on.a.plate.screens.additional.createRecipe.event.RecipeCreateEvent.Done -> done()
-            week.on.a.plate.screens.additional.createRecipe.event.RecipeCreateEvent.EditTags -> editTagsUseCase(
-                mainViewModel,
-                state.tags
-            )
+    fun onEvent(event: RecipeCreateEvent) {
+        viewModelScope.launch {
+            when (event) {
+                RecipeCreateEvent.Close -> mainViewModel.nav.popBackStack()
+                RecipeCreateEvent.Done -> done()
+                RecipeCreateEvent.EditTags -> editTagsUseCase(
+                    mainViewModel,
+                    state.tags
+                )
 
-            week.on.a.plate.screens.additional.createRecipe.event.RecipeCreateEvent.AddIngredient -> recipeCreateIngredientUseCase.addIngredient()
-            is week.on.a.plate.screens.additional.createRecipe.event.RecipeCreateEvent.EditIngredient -> recipeCreateIngredientUseCase.editIngredient(
-                event
-            )
+                RecipeCreateEvent.AddIngredient -> recipeCreateIngredientUseCase.addIngredient(
+                    dialogOpenParams
+                )
 
-            is week.on.a.plate.screens.additional.createRecipe.event.RecipeCreateEvent.DeleteStep -> recipeCreateStepUseCase.deleteStep(
-                event
-            )
+                is RecipeCreateEvent.EditIngredient -> recipeCreateIngredientUseCase.editIngredient(
+                    event, dialogOpenParams
+                )
 
-            is week.on.a.plate.screens.additional.createRecipe.event.RecipeCreateEvent.ClearTimer -> recipeCreateTimeUseCase.clearTimer(
-                event
-            )
+                is RecipeCreateEvent.DeleteStep -> recipeCreateStepUseCase.deleteStep(
+                    event
+                )
 
-            is week.on.a.plate.screens.additional.createRecipe.event.RecipeCreateEvent.DeleteImage -> recipeCreateImageUseCase.deleteImage(
-                event
-            )
+                is RecipeCreateEvent.ClearTimer -> recipeCreateTimeUseCase.clearTimer(
+                    event
+                )
 
-            is week.on.a.plate.screens.additional.createRecipe.event.RecipeCreateEvent.EditTimer -> recipeCreateTimeUseCase.editTimer(
-                event
-            )
+                is RecipeCreateEvent.DeleteImage -> recipeCreateImageUseCase.deleteImage(
+                    event
+                )
 
-            week.on.a.plate.screens.additional.createRecipe.event.RecipeCreateEvent.AddStep -> recipeCreateStepUseCase.addStep()
-            is week.on.a.plate.screens.additional.createRecipe.event.RecipeCreateEvent.EditImage -> recipeCreateImageUseCase.editImage(
-                event
-            )
+                is RecipeCreateEvent.EditTimer -> recipeCreateTimeUseCase.editTimer(
+                    dialogOpenParams,
+                    event
+                )
 
-            is week.on.a.plate.screens.additional.createRecipe.event.RecipeCreateEvent.EditMainImage -> recipeCreateImageUseCase.editMainImage(
-                event
-            )
+                RecipeCreateEvent.AddStep -> recipeCreateStepUseCase.addStep()
+                is RecipeCreateEvent.EditImage -> recipeCreateImageUseCase.editImage(
+                    dialogOpenParams, event
+                )
 
-            week.on.a.plate.screens.additional.createRecipe.event.RecipeCreateEvent.AddManyIngredients -> recipeCreateIngredientUseCase.addManyIngredients()
-            is week.on.a.plate.screens.additional.createRecipe.event.RecipeCreateEvent.DeleteIngredient -> recipeCreateIngredientUseCase.deleteIngredient(
-                event.ingredient
-            )
+                is RecipeCreateEvent.EditMainImage -> recipeCreateImageUseCase.editMainImage(
+                    state, dialogOpenParams, event
+                )
 
-            is week.on.a.plate.screens.additional.createRecipe.event.RecipeCreateEvent.EditPinnedIngredients -> recipeCreateStepUseCase.editPinnedIngredients(
-                event.recipeStepState
-            )
+                RecipeCreateEvent.AddManyIngredients -> recipeCreateIngredientUseCase.addManyIngredients()
+                is RecipeCreateEvent.DeleteIngredient -> recipeCreateIngredientUseCase.deleteIngredient(
+                    event.ingredient
+                )
 
-            is week.on.a.plate.screens.additional.createRecipe.event.RecipeCreateEvent.EditRecipeDuration -> recipeCreateTimeUseCase.editRecipeDuration()
-            week.on.a.plate.screens.additional.createRecipe.event.RecipeCreateEvent.OpenDialogExitApplyFromCreateRecipe -> openDialogExitApplyFromCreateRecipe()
-        }
-    }
+                is RecipeCreateEvent.EditPinnedIngredients -> recipeCreateStepUseCase.editPinnedIngredients(
+                    event.recipeStepState, dialogOpenParams
+                )
 
-    private fun openDialogExitApplyFromCreateRecipe() {
-        ExitApplyViewModel.launch(mainViewModel) { event ->
-            if (event == ExitApplyEvent.Exit) {
-                mainViewModel.nav.popBackStack()
+                is RecipeCreateEvent.EditRecipeDuration -> recipeCreateTimeUseCase.editRecipeDuration(
+                    dialogOpenParams,
+                    state
+                )
+
+                RecipeCreateEvent.OpenDialogExitApplyFromCreateRecipe -> openDialogExitApplyFromCreateRecipe()
             }
         }
     }
 
+    private fun openDialogExitApplyFromCreateRecipe() {
+        val params = ExitApplyViewModel.ExitApplyDialogParams { event ->
+            if (event == ExitApplyEvent.Exit) {
+                mainViewModel.nav.popBackStack()
+            }
+        }
+        dialogOpenParams.value = params
+    }
+
     private fun done() {
         resultFlow.value = state
-        //mainViewModel.cookPlannerViewModel.update()
         mainViewModel.nav.popBackStack()
     }
 
@@ -134,7 +150,6 @@ class RecipeCreateViewModel @Inject constructor(
         flow.collect { value ->
             if (value != null) {
                 use(value)
-                //mainViewModel.cookPlannerViewModel.update()
             }
         }
     }

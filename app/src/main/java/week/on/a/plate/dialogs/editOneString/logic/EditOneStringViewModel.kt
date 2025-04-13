@@ -2,6 +2,7 @@ package week.on.a.plate.dialogs.editOneString.logic
 
 import kotlinx.coroutines.CoroutineScope
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.core.dialogCore.DialogViewModel
 import week.on.a.plate.dialogs.editOneString.event.EditOneStringEvent
 import week.on.a.plate.dialogs.editOneString.state.EditOneStringUIState
@@ -28,11 +29,12 @@ class EditOneStringViewModel(
         }
     }
 
-    companion object {
-        fun launch(
-            mainViewModel: MainViewModel, oldData: EditOneStringUIState,
-            useResult: suspend (String) -> Unit,
-        ) {
+    class EditOneStringDialogParams(
+        private val oldData: EditOneStringUIState,
+        private val useResult: suspend (String) -> Unit,
+    ) :
+        DialogOpenParams {
+        override fun openDialog(mainViewModel: MainViewModel) {
             EditOneStringViewModel(
                 oldData,
                 mainViewModel.getCoroutineScope(),

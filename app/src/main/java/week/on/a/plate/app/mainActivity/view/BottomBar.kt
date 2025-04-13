@@ -14,7 +14,7 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -43,11 +43,11 @@ fun BottomBar(
     ) {
         Row() {
             bottomScreens.forEach { topLevelRoute ->
-                val sel = remember {
+                val selected = rememberSaveable {
                     mutableStateOf(false)
                 }
                 val isSelected = currentDestination?.hierarchy?.any { it.route?.substringBefore("?") == topLevelRoute.route::class.qualifiedName } == true
-                sel.value = isSelected
+                selected.value = isSelected
                 val radius by animateFloatAsState(
                     if (isSelected) 10.0f else 0.0f,
                     label = "", animationSpec = tween(300)

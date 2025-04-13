@@ -33,7 +33,6 @@ import week.on.a.plate.screens.base.menu.presenter.logic.MenuViewModel
 import week.on.a.plate.screens.base.searchRecipes.logic.SearchViewModel
 import week.on.a.plate.screens.base.settings.logic.SettingsViewModel
 import week.on.a.plate.screens.base.shoppingList.logic.ShoppingListViewModel
-import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -42,7 +41,6 @@ class MainViewModel @Inject constructor(
     val getSharedLinkUseCase: GetSharedLinkUseCase
 ) : ViewModel() {
 
-    var locale: Locale = Locale.getDefault()
     val actionPlusButton = mutableStateOf({})
     val voiceInputUseCase = VoiceInputUseCase(this)
     val imageFromGalleryUseCase = ImageFromGalleryUseCase(this)
@@ -53,7 +51,6 @@ class MainViewModel @Inject constructor(
     val isActivePlusButton = mutableStateOf(true)
     val isActiveFilterScreen = mutableStateOf(false)
 
-    lateinit var settingsViewModel: SettingsViewModel
     lateinit var menuViewModel: MenuViewModel
     lateinit var specifySelectionViewModel: SpecifySelectionViewModel
     lateinit var filterViewModel: FilterViewModel
@@ -63,9 +60,7 @@ class MainViewModel @Inject constructor(
     lateinit var recipeCreateViewModel: RecipeCreateViewModel
     lateinit var inventoryViewModel: InventoryViewModel
     lateinit var deleteApplyViewModel: DeleteApplyViewModel
-    lateinit var cookPlannerViewModel: CookPlannerViewModel
     lateinit var specifyRecipeToCookPlanViewModel: SpecifyRecipeToCookPlanViewModel
-    lateinit var tutorialViewModel: TutorialViewModel
     lateinit var documentsWebViewModel: DocumentsWebViewModel
 
     fun initViewModels(
@@ -94,26 +89,16 @@ class MainViewModel @Inject constructor(
         menuViewModel = menuView
         inventoryViewModel = inventory
         deleteApplyViewModel = delete
-        cookPlannerViewModel = cookPlanner
         specifyRecipeToCookPlanViewModel = specifyRecipeToCookPlan
-        settingsViewModel = settings
-        tutorialViewModel = tutorial
         documentsWebViewModel = documentsWeb
 
-        specifySelectionViewModel.mainViewModel = this
         filterViewModel.mainViewModel = this
-        searchViewModel.mainViewModel = this
-        recipeDetailsViewModel.mainViewModel = this
-        shoppingListViewModel.mainViewModel = this
         recipeCreateViewModel.mainViewModel = this
-        menuViewModel.mainViewModel = this
         inventoryViewModel.mainViewModel = this
         deleteApplyViewModel.mainViewModel = this
-        cookPlannerViewModel.mainViewModel = this
         specifyRecipeToCookPlanViewModel.mainViewModel = this
-        searchViewModel.mainViewModel = this
-        tutorialViewModel.mainViewModel = this
-        settingsViewModel.mainViewModel = this
+        tutorial.mainViewModel = this
+        settings.mainViewModel = this
         documentsWebViewModel.mainViewModel = this
 
 
@@ -126,9 +111,7 @@ class MainViewModel @Inject constructor(
 
         specifySelectionViewModel.updateSelections()
 
-        cookPlannerViewModel.initWithMainVM(this)
         recipeCreateViewModel.initWithMainVM(this)
-        menuViewModel.initWithMainVM(this)
     }
 
     fun onEvent(event: Event) {
@@ -138,18 +121,24 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    //todo можно вместо nav в view model создать flow который будет отслеживать события навигации в главном экране и передовать эти события туда
     fun onEvent(event: MainEvent) {
         when (event) {
             MainEvent.CloseDialog -> dialogUseCase.closeDialog()
             is MainEvent.OpenDialog -> dialogUseCase.openDialog(event.dialog)
             is MainEvent.ShowSnackBar -> showSnackBar(event.message)
-            is MainEvent.Navigate -> nav.navigate(event.destination)
+            is MainEvent.Navigate -> navigate(event)
             MainEvent.NavigateBack -> nav.popBackStack()
             MainEvent.HideDialog -> dialogUseCase.hide()
             MainEvent.ShowDialog -> dialogUseCase.show()
             is MainEvent.VoiceToText -> voiceToText(event.context, event.use)
             is MainEvent.UseSharedLink -> useSharedLink()
         }
+    }
+
+    fun navigate(event: MainEvent.Navigate) {
+        nav.navigate(event.destination)
+        event.navParams.launch(this)
     }
 
     fun openDialog(dialog: DialogViewModel<*>) {

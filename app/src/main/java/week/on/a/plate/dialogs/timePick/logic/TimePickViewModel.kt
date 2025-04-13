@@ -3,6 +3,7 @@ package week.on.a.plate.dialogs.timePick.logic
 import androidx.compose.material3.ExperimentalMaterial3Api
 import kotlinx.coroutines.CoroutineScope
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.core.dialogCore.DialogViewModel
 import week.on.a.plate.dialogs.timePick.event.TimePickEvent
 import week.on.a.plate.dialogs.timePick.state.TimePickUIState
@@ -33,8 +34,9 @@ class TimePickViewModel(
         }
     }
 
-    companion object{
-        fun launch(mainViewModel: MainViewModel, title: Int, useResult: (Long) -> Unit){
+    class TimePickDialogParams(private val title: Int, private val useResult: (Long) -> Unit) :
+        DialogOpenParams {
+        override fun openDialog(mainViewModel: MainViewModel) {
             TimePickViewModel(mainViewModel.getCoroutineScope(), mainViewModel::openDialog, mainViewModel::closeDialog, title, useResult)
         }
     }

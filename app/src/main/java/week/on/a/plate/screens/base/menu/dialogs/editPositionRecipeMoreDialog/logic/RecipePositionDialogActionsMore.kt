@@ -1,9 +1,11 @@
 package week.on.a.plate.screens.base.menu.dialogs.editPositionRecipeMoreDialog.logic
 
+import androidx.compose.runtime.MutableState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.core.Event
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.screens.base.menu.dialogs.editPositionRecipeMoreDialog.event.ActionMoreRecipePositionEvent
 import week.on.a.plate.screens.base.menu.dialogs.editPositionRecipeMoreDialog.logic.navigateLogic.ChangePortionsRecipePosOpenDialog
@@ -11,7 +13,6 @@ import week.on.a.plate.screens.base.menu.dialogs.editPositionRecipeMoreDialog.lo
 import week.on.a.plate.screens.base.menu.dialogs.editPositionRecipeMoreDialog.logic.navigateLogic.NavToAddRecipeToCookPlan
 import week.on.a.plate.screens.base.menu.dialogs.editPositionRecipeMoreDialog.logic.navigateLogic.RecipeToShopListWithInventoryUseCase
 import week.on.a.plate.screens.base.menu.domain.dbusecase.DeleteRecipePosInDBUseCase
-import week.on.a.plate.screens.base.menu.presenter.event.MenuEvent
 import week.on.a.plate.screens.base.menu.presenter.logic.navigateLogic.GetSelAndDoubleUseCase
 import week.on.a.plate.screens.base.menu.presenter.logic.navigateLogic.GetSelAndMoveUseCase
 import javax.inject.Inject
@@ -28,20 +29,20 @@ class RecipePositionDialogActionsMore @Inject constructor(
 ) {
     suspend operator fun invoke(
         position: Position.PositionRecipeView,
-        mainViewModel: MainViewModel,
+        dialogOpenParams: MutableState<DialogOpenParams?>,
         event: ActionMoreRecipePositionEvent,
-        onEventMenu: (MenuEvent) -> Unit
+        onEvent: (Event) -> Unit
     ) = coroutineScope {
         when (event) {
             ActionMoreRecipePositionEvent.AddToCart ->
                 recipeToShopList(
                     position,
-                    mainViewModel
+                    onEvent
                 )
 
             ActionMoreRecipePositionEvent.ChangePotionsCount -> changePortionsRecipePosOpenDialog(
                 position,
-                mainViewModel
+                dialogOpenParams
             )
 
             ActionMoreRecipePositionEvent.Delete ->
@@ -51,24 +52,21 @@ class RecipePositionDialogActionsMore @Inject constructor(
 
             ActionMoreRecipePositionEvent.Double -> getSelAndDouble(
                 position,
-                mainViewModel,
-                onEventMenu
+                onEvent,
             )
 
             is ActionMoreRecipePositionEvent.FindReplace ->
                 findRecipeAndReplace(
-                    position,
-                    mainViewModel, event.context
+                    position, dialogOpenParams, event.context, onEvent
                 )
 
             ActionMoreRecipePositionEvent.Move -> getSelAndMove(
                 position,
-                mainViewModel,
-                onEventMenu
+                onEvent
             )
 
             ActionMoreRecipePositionEvent.CookPlan -> navToAddRecipeToCookPlan(
-                position, mainViewModel
+                position, onEvent
             )
 
             ActionMoreRecipePositionEvent.Close -> {}

@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
@@ -32,12 +32,12 @@ import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextBodyDisActive
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.DoneButton
+import week.on.a.plate.core.uitools.clickNoRipple
 import week.on.a.plate.core.utils.getIngredientCountAndMeasure1000
 import week.on.a.plate.data.dataView.example.recipes
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.dialogs.chooseIngredientsForStep.event.ChooseIngredientsForStepEvent
 import week.on.a.plate.dialogs.chooseIngredientsForStep.state.ChooseIngredientsForStepUIState
-import week.on.a.plate.core.uitools.clickNoRipple
 
 
 @Composable
@@ -52,7 +52,7 @@ fun ChooseIngredientsForStep(state: ChooseIngredientsForStepUIState, onEvent: (C
         }
 
         LazyColumn() {
-            itemsIndexed(state.ingredientsAll){ind, item->
+            items(items = state.ingredientsAll, key = { it.id }) { item ->
                 IngredientRow(onEvent, item, state)
             }
         }

@@ -29,9 +29,9 @@ import week.on.a.plate.core.theme.ColorPaletteGroup
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.TextBody
 import week.on.a.plate.core.uitools.TextTitle
+import week.on.a.plate.core.uitools.clickNoRipple
 import week.on.a.plate.dialogs.forSettingsScreen.setTheme.event.SetThemeEvent
 import week.on.a.plate.dialogs.forSettingsScreen.setTheme.state.SetThemeUIState
-import week.on.a.plate.core.uitools.clickNoRipple
 
 
 @Composable
@@ -45,7 +45,7 @@ fun SetThemeStart(
             .fillMaxWidth()
             .padding(vertical = 24.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center
     ) {
-        itemsIndexed(state.themes){ind, theme ->
+        itemsIndexed(items = state.themes, key = { _, it -> it.name }) { ind, theme ->
             ThemeCard(ind, theme, onEvent)
             Spacer(Modifier.size(24.dp))
         }

@@ -4,6 +4,7 @@ import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import kotlinx.coroutines.CoroutineScope
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.core.dialogCore.DialogViewModel
 import week.on.a.plate.core.utils.dateToLocalDate
 import week.on.a.plate.dialogs.datePick.event.DatePickerEvent
@@ -39,12 +40,11 @@ class DatePickerViewModel(
         }
     }
 
-    companion object {
-        fun launch(
-            mainViewModel: MainViewModel, useResult: (LocalDate?) -> Unit
-        ) {
+    class DatePickerDialogParams(private val useResult: (LocalDate?) -> Unit) :
+        DialogOpenParams {
+        override fun openDialog(mainViewModel: MainViewModel) {
             DatePickerViewModel(
-                mainViewModel.locale,
+                Locale.getDefault(),
                 mainViewModel.getCoroutineScope(),
                 mainViewModel::openDialog,
                 mainViewModel::closeDialog,
@@ -52,4 +52,5 @@ class DatePickerViewModel(
             )
         }
     }
+
 }

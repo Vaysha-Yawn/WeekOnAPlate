@@ -26,7 +26,7 @@ fun SearchResultScreen(
 ) {
     if (result.isEmpty()) return
     LazyColumn() {
-        itemsIndexed(result) { index, recipe ->
+        itemsIndexed(result, key = { _, it -> it.id }) { index, recipe ->
             if (state.modeResultViewIsList.value) {
                 RowRecipeResultList(recipe, onEvent)
             } else {

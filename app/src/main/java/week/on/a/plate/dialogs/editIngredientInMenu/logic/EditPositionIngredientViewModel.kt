@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import week.on.a.plate.app.mainActivity.event.MainEvent
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.core.dialogCore.DialogViewModel
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.data.dataView.week.Position
@@ -76,14 +77,13 @@ class EditPositionIngredientViewModel(
         }
     }
 
-
-    companion object {
-        fun launch(
-            positionIngredient: Position.PositionIngredientView?,
-            isForAdd: Boolean,
-            mainViewModel: MainViewModel,
-            useResult: (Position.PositionIngredientView) -> Unit,
-        ) {
+    class EditPositionIngredientDialogParams(
+        private val positionIngredient: Position.PositionIngredientView?,
+        private val isForAdd: Boolean,
+        private val useResult: (Position.PositionIngredientView) -> Unit,
+    ) :
+        DialogOpenParams {
+        override fun openDialog(mainViewModel: MainViewModel) {
             EditPositionIngredientViewModel(
                 positionIngredient,
                 isForAdd,

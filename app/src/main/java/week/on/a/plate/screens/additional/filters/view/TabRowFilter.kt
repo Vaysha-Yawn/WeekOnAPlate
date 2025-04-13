@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
-import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.TabRowDefaults.SecondaryIndicator
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableIntState
@@ -25,10 +25,10 @@ fun TabRowFilter(
     TabRow(
         selectedTabIndex = activeFilterTabIndex.intValue,
         indicator = { tabPositions ->
-            TabRowDefaults.Indicator(
+            SecondaryIndicator(
                 modifier = Modifier.tabIndicatorOffset(tabPositions[activeFilterTabIndex.intValue]),
-                color = MaterialTheme.colorScheme.onBackground,
-                height = 2.dp
+                height = 2.dp,
+                color = MaterialTheme.colorScheme.onBackground
             )
         }) {
         tabTitles.forEachIndexed { index, title ->

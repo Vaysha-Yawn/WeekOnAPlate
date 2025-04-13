@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -48,17 +49,19 @@ fun DialogSelectedTags(
         ) {
             when (stateUI.activeFilterTabIndex.intValue) {
                 0 -> {
-                    items(stateUI.selectedTags.value.size) { ind ->
-                        TagSelected(stateUI.selectedTags.value[ind]) {
-                            event(SelectedFiltersEvent.RemoveSelectedTag(stateUI.selectedTags.value[ind]))
+                    items(items = stateUI.selectedTags.value, key = { it.id }) { tag ->
+                        TagSelected(tag) {
+                            event(SelectedFiltersEvent.RemoveSelectedTag(tag))
                         }
                     }
                 }
 
                 1 -> {
-                    items(stateUI.selectedIngredients.value.size) {
-                        IngredientSelected(stateUI.selectedIngredients.value[it]) {
-                            event(SelectedFiltersEvent.RemoveSelectedIngredient(stateUI.selectedIngredients.value[it]))
+                    items(
+                        items = stateUI.selectedIngredients.value,
+                        key = { it.ingredientId }) { ingredient ->
+                        IngredientSelected(ingredient) {
+                            event(SelectedFiltersEvent.RemoveSelectedIngredient(ingredient))
                         }
                     }
                 }

@@ -1,11 +1,14 @@
 package week.on.a.plate.dialogs.forCreateRecipeScreen.chooseHowImagePick.logic
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import week.on.a.plate.R
 import week.on.a.plate.app.mainActivity.event.MainEvent
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.core.dialogCore.DialogViewModel
 import week.on.a.plate.dialogs.editOneString.logic.EditOneStringViewModel
 import week.on.a.plate.dialogs.editOneString.state.EditOneStringUIState
@@ -25,6 +28,7 @@ class ChooseHowImagePickViewModel(
     useResult
 ) {
     private var old = oldValue ?: ""
+    val dialogOpenParams: MutableState<DialogOpenParams?> = mutableStateOf(null)
 
     fun onEvent(event: ChooseHowImagePickEvent) {
         when (event) {
@@ -56,23 +60,24 @@ class ChooseHowImagePickViewModel(
     }
 
     private fun choosePickImageByUrl() {
-        mainViewModel.viewModelScope.launch {
-            EditOneStringViewModel.launch(mainViewModel, EditOneStringUIState(
+        val params = EditOneStringViewModel.EditOneStringDialogParams(
+            EditOneStringUIState(
                 old,
                 R.string.edit_image_link,
                 R.string.enter_new_image_link
-            )){ url ->
-                done(url.lowercase())
-            }
+            )
+        ) { url ->
+            done(url.lowercase())
         }
+        dialogOpenParams.value = params
     }
 
-    companion object {
-        fun launch(
-            mainViewModel: MainViewModel,
-            oldValue: String?,
-            useResult: (String) -> Unit,
-        ) {
+    class ChooseHowImagePickDialogParams(
+        private val oldValue: String?,
+        private val useResult: (String) -> Unit,
+    ) :
+        DialogOpenParams {
+        override fun openDialog(mainViewModel: MainViewModel) {
             ChooseHowImagePickViewModel(
                 mainViewModel,
                 oldValue,

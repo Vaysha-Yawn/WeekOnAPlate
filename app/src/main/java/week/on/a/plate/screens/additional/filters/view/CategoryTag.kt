@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.screens.additional.filters.event.FilterEvent
@@ -17,34 +18,36 @@ fun LazyListScope.categoryTag(
 ) {
     if (stateUI.filterEnum.value == FilterEnum.CategoryTag) {
         if (stateUI.searchText.value != "") {
-            items(stateUI.resultSearchTagsCategories.value.size) {
+            items(
+                items = stateUI.resultSearchTagsCategories.value,
+                key = { it.id }) { tagCategory ->
                 Spacer(modifier = Modifier.height(24.dp))
                 FilterItemWithMore(
-                    stateUI.resultSearchTagsCategories.value[it].name,
-                    stateUI.selectedTagsCategories.value.contains(stateUI.resultSearchTagsCategories.value[it]),
+                    tagCategory.name,
+                    stateUI.selectedTagsCategories.value.contains(tagCategory),
                     false,
-                    click = { onEvent(FilterEvent.SelectTagCategory(stateUI.resultSearchTagsCategories.value[it])) })
+                    click = { onEvent(FilterEvent.SelectTagCategory(tagCategory)) })
                 {
                     onEvent(
                         FilterEvent.EditOrDeleteTagCategory(
-                            stateUI.resultSearchTagsCategories.value[it],
+                            tagCategory,
                             context
                         ),
                     )
                 }
             }
         } else {
-            items(stateUI.allTagsCategories.value.size) {
+            items(items = stateUI.allTagsCategories.value, key = { it.id }) { tagCategory ->
                 Spacer(modifier = Modifier.height(24.dp))
                 FilterItemWithMore(
-                    stateUI.allTagsCategories.value[it].name,
-                    stateUI.selectedTagsCategories.value.contains(stateUI.allTagsCategories.value[it]),
+                    tagCategory.name,
+                    stateUI.selectedTagsCategories.value.contains(tagCategory),
                     false,
-                    click = { onEvent(FilterEvent.SelectTagCategory(stateUI.allTagsCategories.value[it])) })
+                    click = { onEvent(FilterEvent.SelectTagCategory(tagCategory)) })
                 {
                     onEvent(
                         FilterEvent.EditOrDeleteTagCategory(
-                            stateUI.allTagsCategories.value[it],
+                            tagCategory,
                             context
                         )
                     )

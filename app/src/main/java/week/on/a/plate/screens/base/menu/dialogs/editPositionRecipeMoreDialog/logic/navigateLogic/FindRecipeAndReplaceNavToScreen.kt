@@ -1,11 +1,15 @@
 package week.on.a.plate.screens.base.menu.dialogs.editPositionRecipeMoreDialog.logic.navigateLogic
 
 import android.content.Context
+import androidx.compose.runtime.MutableState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.app.mainActivity.event.MainEvent
+import week.on.a.plate.core.Event
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.core.navigation.SearchDestination
+import week.on.a.plate.core.navigation.SearchNavParams
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.data.dataView.week.RecipeShortView
 import week.on.a.plate.screens.base.menu.domain.dbusecase.AddRecipePosToDBUseCase
@@ -20,12 +24,12 @@ class FindRecipeAndReplaceNavToScreen @Inject constructor(
 ) {
     suspend operator fun invoke(
         oldRecipe: Position.PositionRecipeView,
-        mainViewModel: MainViewModel, context: Context,
+        dialogOpenParams: MutableState<DialogOpenParams?>, context: Context,
+        onEvent: (Event) -> Unit
     ) = coroutineScope {
-        mainViewModel.nav.navigate(SearchDestination)
         val selId = oldRecipe.selectionId
-        mainViewModel.searchViewModel.launchAndGet(selId, null) { recipe ->
-            choosePortionsCount(context, mainViewModel) { count ->
+        val params = SearchNavParams(selId, null) { recipe ->
+            choosePortionsCount(context, dialogOpenParams) { count ->
                 val newRecipeToAdd = Position.PositionRecipeView(
                     0,
                     RecipeShortView(recipe.id, recipe.name, recipe.img),
@@ -38,5 +42,6 @@ class FindRecipeAndReplaceNavToScreen @Inject constructor(
                 deleteRecipe(oldRecipe)
             }
         }
+        onEvent(MainEvent.Navigate(SearchDestination, params))
     }
 }

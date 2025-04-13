@@ -3,8 +3,10 @@ package week.on.a.plate.screens.base.menu.presenter.logic.navigateLogic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.app.mainActivity.event.MainEvent
+import week.on.a.plate.core.Event
 import week.on.a.plate.core.navigation.SearchDestination
+import week.on.a.plate.core.navigation.SearchNavParams
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.data.dataView.week.RecipeShortView
 import week.on.a.plate.screens.base.menu.domain.dbusecase.AddRecipePosToDBUseCase
@@ -17,12 +19,10 @@ class SearchByDraftUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(
         draft: Position.PositionDraftView,
-        mainViewModel: MainViewModel
+        onEvent: (Event) -> Unit
     ) = coroutineScope {
-        mainViewModel.searchViewModel.launchAndGet(
-            draft.selectionId,
-            Pair(draft.tags, draft.ingredients)
-        ) { recipe ->
+        val params =
+            SearchNavParams(draft.selectionId, Pair(draft.tags, draft.ingredients)) { recipe ->
             launch(Dispatchers.IO) { deleteDraft(draft) }
             launch(Dispatchers.IO) {
                 val recipePosition = Position.PositionRecipeView(
@@ -34,6 +34,6 @@ class SearchByDraftUseCase @Inject constructor(
                 addRecipe(recipePosition, draft.selectionId)
             }
         }
-        mainViewModel.nav.navigate(SearchDestination)
+        onEvent(MainEvent.Navigate(SearchDestination, params))
     }
 }

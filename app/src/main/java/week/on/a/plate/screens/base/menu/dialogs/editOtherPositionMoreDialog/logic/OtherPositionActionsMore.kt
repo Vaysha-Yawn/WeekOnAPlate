@@ -1,9 +1,10 @@
 package week.on.a.plate.screens.base.menu.dialogs.editOtherPositionMoreDialog.logic
 
+import androidx.compose.runtime.MutableState
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import week.on.a.plate.app.mainActivity.event.MainEvent
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.core.Event
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.screens.base.menu.dialogs.editOtherPositionMoreDialog.event.OtherPositionMoreEvent
@@ -14,7 +15,6 @@ import week.on.a.plate.screens.base.menu.domain.dbusecase.DeleteDraftInDBUseCase
 import week.on.a.plate.screens.base.menu.domain.dbusecase.DeleteIngredientPositionInDBUseCase
 import week.on.a.plate.screens.base.menu.domain.dbusecase.DeleteNoteInDBUseCase
 import week.on.a.plate.screens.base.menu.domain.dbusecase.DeleteRecipePosInDBUseCase
-import week.on.a.plate.screens.base.menu.presenter.event.MenuEvent
 import week.on.a.plate.screens.base.menu.presenter.logic.navigateLogic.GetSelAndDoubleUseCase
 import week.on.a.plate.screens.base.menu.presenter.logic.navigateLogic.GetSelAndMoveUseCase
 import week.on.a.plate.screens.base.menu.presenter.logic.navigateLogic.shopList.AddIngredientToShoppingListInBd
@@ -36,9 +36,8 @@ class OtherPositionActionsMore @Inject constructor(
 ) {
     suspend operator fun invoke(
         position: Position,
-        mainViewModel: MainViewModel,
-        onEventMain: (MainEvent) -> Unit,
-        onEventMenu: (MenuEvent) -> Unit,
+        dialogOpenParams: MutableState<DialogOpenParams?>,
+        onEvent: (Event) -> Unit,
         event: OtherPositionMoreEvent,
     ) = coroutineScope {
         when (event) {
@@ -55,8 +54,7 @@ class OtherPositionActionsMore @Inject constructor(
 
             OtherPositionMoreEvent.Double -> getSelAndDouble(
                 position,
-                mainViewModel,
-                onEventMenu
+                onEvent
             )
 
             OtherPositionMoreEvent.Edit ->
@@ -64,23 +62,26 @@ class OtherPositionActionsMore @Inject constructor(
                     when (position) {
                         is Position.PositionDraftView -> editDraftOpenDialog(
                             position,
-                            mainViewModel
+                            onEvent
                         )
 
                         is Position.PositionIngredientView -> editIngredientOpenDialog(
                             position,
-                            mainViewModel
+                            dialogOpenParams
                         )
 
-                        is Position.PositionNoteView -> editNoteOpenDialog(position, mainViewModel)
+                        is Position.PositionNoteView -> editNoteOpenDialog(
+                            position,
+                            dialogOpenParams
+                        )
+
                         is Position.PositionRecipeView -> {}
                     }
                 }
 
             OtherPositionMoreEvent.Move -> getSelAndMove(
                 position,
-                mainViewModel,
-                onEventMenu
+                onEvent
             )
 
             is OtherPositionMoreEvent.AddToShopList -> {
@@ -95,7 +96,7 @@ class OtherPositionActionsMore @Inject constructor(
                         addIngredientToShoppingListInBd(
                             ingredientNew,
                             event.contextProvider,
-                            onEventMain
+                            onEvent
                         )
                     }
                 }

@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -22,10 +23,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import week.on.a.plate.BuildConfig
 import week.on.a.plate.R
 import week.on.a.plate.core.Event
-import week.on.a.plate.core.ads.NativeAdRow
 import week.on.a.plate.core.uitools.SubText
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.TitleMenuS
@@ -73,11 +72,9 @@ fun WeekMenu(
                 }
             }
             Spacer(modifier = Modifier.size(12.dp))
-            NativeAdRow(BuildConfig.menuWeekAdsId)
-            Spacer(modifier = Modifier.size(12.dp))
         }
-        items(week.days.size) { dayId ->
-            val day = week.days[dayId]
+
+        items(items = week.days, key = { it.date }) { day ->
             HorizontalDivider(
                 color = MaterialTheme.colorScheme.outline,
                 thickness = 1.dp,

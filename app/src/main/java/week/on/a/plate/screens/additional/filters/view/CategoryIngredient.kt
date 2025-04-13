@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.screens.additional.filters.event.FilterEvent
@@ -17,36 +18,40 @@ fun LazyListScope.categoryIngredient(
 ) {
     if (stateUI.filterEnum.value == FilterEnum.CategoryIngredient) {
         if (stateUI.searchText.value != "") {
-            items(stateUI.resultSearchIngredientsCategories.value.size) {
+            items(
+                items = stateUI.resultSearchIngredientsCategories.value,
+                key = { it.id }) { ingredientCategory ->
                 Spacer(modifier = Modifier.height(24.dp))
                 FilterItemWithMore(
-                    stateUI.resultSearchIngredientsCategories.value[it].name,
+                    ingredientCategory.name,
                     stateUI.selectedIngredientsCategories.value.contains(
-                        stateUI.resultSearchIngredientsCategories.value[it]
+                        ingredientCategory
                     ),
                     true,
-                    click = { onEvent(FilterEvent.SelectIngredientCategory(stateUI.resultSearchIngredientsCategories.value[it])) })
+                    click = { onEvent(FilterEvent.SelectIngredientCategory(ingredientCategory)) })
                 {
                     onEvent(
                         FilterEvent.EditOrDeleteIngredientCategory(
-                            stateUI.resultSearchIngredientsCategories.value[it],
+                            ingredientCategory,
                             context
                         )
                     )
                 }
             }
         } else {
-            items(stateUI.allIngredientsCategories.value.size) {
+            items(
+                items = stateUI.allIngredientsCategories.value,
+                key = { it.id }) { ingredientCategory ->
                 Spacer(modifier = Modifier.height(24.dp))
                 FilterItemWithMore(
-                    stateUI.allIngredientsCategories.value[it].name,
-                    stateUI.selectedIngredientsCategories.value.contains(stateUI.allIngredientsCategories.value[it]),
+                    ingredientCategory.name,
+                    stateUI.selectedIngredientsCategories.value.contains(ingredientCategory),
                     true,
-                    click = { onEvent(FilterEvent.SelectIngredientCategory(stateUI.allIngredientsCategories.value[it])) })
+                    click = { onEvent(FilterEvent.SelectIngredientCategory(ingredientCategory)) })
                 {
                     onEvent(
                         FilterEvent.EditOrDeleteIngredientCategory(
-                            stateUI.allIngredientsCategories.value[it],
+                            ingredientCategory,
                             context
                         )
                     )

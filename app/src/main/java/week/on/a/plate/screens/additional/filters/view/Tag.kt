@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
@@ -30,26 +31,26 @@ fun LazyListScope.tag(
         || stateUI.filterEnum.value == FilterEnum.Tag
     ) {
         if (stateUI.searchText.value != "") {
-            items(stateUI.resultSearchTags.value.size) {
+            items(items = stateUI.resultSearchTags.value, key = { it.id }) { tag ->
                 Spacer(modifier = Modifier.height(24.dp))
                 FilterItemWithMore(
-                    stateUI.resultSearchTags.value[it].tagName,
-                    stateUI.selectedIngredients.value.contains(stateUI.resultSearchIngredients.value[it]),
+                    tag.tagName,
+                    stateUI.selectedTags.value.contains(tag),
                     false,
-                    click = { onEvent(FilterEvent.SelectTag(stateUI.resultSearchTags.value[it])) })
+                    click = { onEvent(FilterEvent.SelectTag(tag)) })
                 {
                     onEvent(
                         FilterEvent.EditOrDeleteTag(
                             context,
-                            stateUI.resultSearchTags.value[it]
+                            tag
                         )
                     )
                 }
             }
         } else {
-            items(stateUI.allTagsCategories.value.size) {
+            items(items = stateUI.allTagsCategories.value, key = { it.id }) { tagCategory ->
                 CategoriesTags(
-                    stateUI.allTagsCategories.value[it],
+                    tagCategory,
                     stateUI.selectedTags, onEvent
                 )
             }

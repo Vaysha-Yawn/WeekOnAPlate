@@ -29,7 +29,7 @@ fun DayView(day: DayView, menuUIState: MenuUIState, onEvent: (event: Event) -> U
     LazyColumn(Modifier.fillMaxWidth()) {
         items(day.selections.size) { index ->
             BlockSelection(
-                selection = day.selections[index], menuUIState = menuUIState, onEvent, index==0
+                selection = day.selections[index], menuUIState = menuUIState, onEvent
             )
             Spacer(modifier = Modifier.size(12.dp))
         }

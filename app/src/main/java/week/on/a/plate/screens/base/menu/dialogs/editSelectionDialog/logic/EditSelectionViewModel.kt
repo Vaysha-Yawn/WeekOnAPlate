@@ -1,9 +1,11 @@
 package week.on.a.plate.screens.base.menu.dialogs.editSelectionDialog.logic
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import week.on.a.plate.R
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.core.dialogCore.DialogViewModel
 import week.on.a.plate.dialogs.timePick.logic.TimePickViewModel
 import week.on.a.plate.screens.base.menu.dialogs.editSelectionDialog.event.EditSelectionEvent
@@ -24,6 +26,7 @@ class EditSelectionViewModel(
     use
 ) {
     val state: EditSelectionUIState = oldData
+    val dialogOpenParams: MutableState<DialogOpenParams?> = mutableStateOf(null)
 
     fun onEvent(event: EditSelectionEvent) {
         when (event) {
@@ -33,20 +36,19 @@ class EditSelectionViewModel(
         }
     }
 
-    //hide? show?
     private fun chooseTime() {
-        viewModelScope.launch {
-            TimePickViewModel.launch(mainViewModel, R.string.set_meal_time) {
+        val params = TimePickViewModel.TimePickDialogParams(R.string.set_meal_time) {
                 state.selectedTime.value = LocalTime.ofSecondOfDay((it))
             }
-        }
+        dialogOpenParams.value = params
     }
 
-    companion object {
-        fun launch(
-            oldData: EditSelectionUIState,
-            mainViewModel: MainViewModel, useResult: (EditSelectionUIState) -> Unit
-        ) {
+    class EditSelectionDialogParams(
+        private val oldData: EditSelectionUIState,
+        private val useResult: (EditSelectionUIState) -> Unit
+    ) :
+        DialogOpenParams {
+        override fun openDialog(mainViewModel: MainViewModel) {
             EditSelectionViewModel(
                 mainViewModel,
                 oldData,

@@ -1,8 +1,9 @@
 package week.on.a.plate.screens.base.menu.dialogs.editOtherPositionMoreDialog.logic.navigateLogic
 
+import androidx.compose.runtime.MutableState
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.dialogs.editIngredientInMenu.logic.EditPositionIngredientViewModel
 import week.on.a.plate.screens.base.menu.domain.dbusecase.UpdateIngredientPositionInDBUseCase
@@ -13,16 +14,16 @@ class EditIngredientOpenDialog @Inject constructor(
 ) {
     suspend operator fun invoke(
         ingredientPos: Position.PositionIngredientView,
-        mainViewModel: MainViewModel,
+        dialogOpenParams: MutableState<DialogOpenParams?>,
     ) = coroutineScope {
-        EditPositionIngredientViewModel.launch(
+        val params = EditPositionIngredientViewModel.EditPositionIngredientDialogParams(
             ingredientPos,
-            false,
-            mainViewModel
+            false
         ) { updatedIngredient ->
             launch {
                 updateIngredient(updatedIngredient)
             }
         }
+        dialogOpenParams.value = params
     }
 }

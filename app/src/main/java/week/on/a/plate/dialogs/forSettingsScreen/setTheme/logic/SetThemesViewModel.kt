@@ -5,6 +5,7 @@ import android.content.Context
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.core.dialogCore.DialogViewModel
 import week.on.a.plate.data.preference.PreferenceUseCase
 import week.on.a.plate.dialogs.forSettingsScreen.setTheme.event.SetThemeEvent
@@ -23,7 +24,7 @@ class SetThemesViewModel(
     {}
 ) {
     val state = SetThemeUIState()
-    private val prefs = PreferenceUseCase()
+    private val prefs = PreferenceUseCase
 
     init{
         state.selectedInd.value = prefs.getActiveThemeId(context)
@@ -43,10 +44,9 @@ class SetThemesViewModel(
         }
     }
 
-    companion object {
-        fun launch(context: Context,
-            mainViewModel: MainViewModel
-        ) {
+    class SetThemesDialogOpenParams(private val context: Context) :
+        DialogOpenParams {
+        override fun openDialog(mainViewModel: MainViewModel) {
             SetThemesViewModel(context,
                 mainViewModel.getCoroutineScope(),
                 mainViewModel::openDialog,

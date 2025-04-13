@@ -1,12 +1,13 @@
 package week.on.a.plate.screens.base.menu.presenter.logic.navigateLogic
 
+import androidx.compose.runtime.MutableState
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.core.Event
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.screens.base.menu.dialogs.editPositionRecipeMoreDialog.logic.EditRecipePositionViewModel
 import week.on.a.plate.screens.base.menu.dialogs.editPositionRecipeMoreDialog.logic.RecipePositionDialogActionsMore
-import week.on.a.plate.screens.base.menu.presenter.event.MenuEvent
 import javax.inject.Inject
 
 class RecipePositionMoreOpenDialog @Inject constructor(
@@ -14,13 +15,17 @@ class RecipePositionMoreOpenDialog @Inject constructor(
 ) {
     suspend operator fun invoke(
         position: Position.PositionRecipeView,
-        mainViewModel: MainViewModel,
-        onMenuEvent: (MenuEvent) -> Unit
+        dialogOpenParams: MutableState<DialogOpenParams?>,
+        onMenuEvent: (Event) -> Unit
     ) = coroutineScope {
-        EditRecipePositionViewModel.launch(mainViewModel) { event ->
+        val params = EditRecipePositionViewModel.EditRecipePositionDialogParams() { event ->
             launch {
-                recipePositionDialogActionsMore(position, mainViewModel, event, onMenuEvent)
+                recipePositionDialogActionsMore(
+                    position, dialogOpenParams,
+                    event, onMenuEvent
+                )
             }
         }
+        dialogOpenParams.value = params
     }
 }

@@ -3,9 +3,11 @@ package week.on.a.plate.screens.base.menu.dialogs.editOtherPositionMoreDialog.lo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.app.mainActivity.event.MainEvent
+import week.on.a.plate.core.Event
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.screens.additional.filters.navigation.FilterDestination
+import week.on.a.plate.screens.additional.filters.navigation.FilterNavParams
 import week.on.a.plate.screens.additional.filters.state.FilterEnum
 import week.on.a.plate.screens.additional.filters.state.FilterMode
 import week.on.a.plate.screens.base.menu.domain.dbusecase.DeleteDraftInDBUseCase
@@ -18,11 +20,9 @@ class EditDraftOpenDialog @Inject constructor(
 ) {
     suspend operator fun invoke(
         oldDraft: Position.PositionDraftView,
-        mainViewModel: MainViewModel,
+        onEvent: (Event) -> Unit
     ) = coroutineScope {
-        val vm = mainViewModel.filterViewModel
-        vm.mainViewModel.nav.navigate(FilterDestination)
-        vm.launchAndGet(
+        val params = FilterNavParams(
             FilterMode.Multiple,
             FilterEnum.IngredientAndTag, Pair(oldDraft.tags, oldDraft.ingredients), false
         ) { filters ->
@@ -36,5 +36,6 @@ class EditDraftOpenDialog @Inject constructor(
                 }
             }
         }
+        onEvent(MainEvent.Navigate(FilterDestination, params))
     }
 }

@@ -1,12 +1,15 @@
 package week.on.a.plate.screens.additional.filters.dialogs.editOrCreateIngredient.logic
 
 import android.content.Context
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import week.on.a.plate.R
 import week.on.a.plate.app.mainActivity.event.MainEvent
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.core.dialogCore.DialogViewModel
 import week.on.a.plate.data.dataView.example.Measure
 import week.on.a.plate.data.dataView.recipe.IngredientCategoryView
@@ -44,6 +47,7 @@ class AddIngredientViewModel(
         category.value = defaultCategoryView
     }
 
+    val dialogOpenParams: MutableState<DialogOpenParams?> = mutableStateOf(null)
 
     fun onEvent(event: AddIngredientEvent) {
         when (event) {
@@ -70,9 +74,11 @@ class AddIngredientViewModel(
 
     private fun pickImage() {
         mainViewModel.onEvent(MainEvent.HideDialog)
-        ChooseHowImagePickViewModel.launch(mainViewModel, state.photoUri.value) {
+        val params =
+            ChooseHowImagePickViewModel.ChooseHowImagePickDialogParams(state.photoUri.value) {
             state.photoUri.value = it
         }
+        dialogOpenParams.value = params
     }
 
     private fun toSearchCategory() {

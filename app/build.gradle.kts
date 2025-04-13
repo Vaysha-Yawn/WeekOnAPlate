@@ -1,5 +1,3 @@
-import java.io.FileInputStream
-import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
@@ -32,11 +30,6 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-        buildConfigField("String", "cookPlannerAdsIdWeek", "\"${cookPlannerAdsIdWeek}\"")
-        buildConfigField("String", "cookPlannerAdsIdDay", "\"${cookPlannerAdsIdDay}\"")
-        buildConfigField("String", "shoppingAdsId", "\"${shoppingAdsId}\"")
-        buildConfigField("String", "menuWeekAdsId", "\"${menuWeekAdsId}\"")
-        buildConfigField("String", "menuDayAdsId", "\"${menuDayAdsId}\"")
     }
 
     buildTypes {
@@ -78,19 +71,18 @@ android {
 }
 
 dependencies {
-    implementation ("com.yandex.android:mobileads:7.9.0")
 
-    implementation("io.coil-kt:coil-compose:2.7.0")
+    implementation(libs.coil.compose)
 
     //nav
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.2")
-    implementation("androidx.navigation:navigation-compose:2.8.0")
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.androidx.navigation.compose)
 
     //hilt
-    implementation("com.google.dagger:hilt-android:2.51.1")
+    implementation(libs.hilt.android)
     implementation(libs.androidx.webkit)
-    ksp("com.google.dagger:hilt-android-compiler:2.51.1")
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    ksp(libs.hilt.android.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
 
     //room
     implementation(libs.gson)
@@ -115,18 +107,6 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.0")
-    testImplementation("io.mockk:mockk:1.13.7")
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mockk)
 }
-
-
-val localProperties = Properties()
-val localPropertiesFile = rootProject.file("local.properties")
-if (localPropertiesFile.exists()){
-    localProperties.load(FileInputStream(localPropertiesFile))
-}
-val cookPlannerAdsIdWeek = localProperties.getProperty("cookPlannerAdsIdWeek")?:""
-val cookPlannerAdsIdDay = localProperties.getProperty("cookPlannerAdsIdDay")?:""
-val shoppingAdsId = localProperties.getProperty("shoppingAdsId")?:""
-val menuWeekAdsId = localProperties.getProperty("menuWeekAdsId")?:""
-val menuDayAdsId = localProperties.getProperty("menuDayAdsId")?:""

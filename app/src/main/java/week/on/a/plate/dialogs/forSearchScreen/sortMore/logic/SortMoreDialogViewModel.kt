@@ -2,6 +2,7 @@ package week.on.a.plate.dialogs.forSearchScreen.sortMore.logic
 
 import kotlinx.coroutines.CoroutineScope
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.core.dialogCore.DialogViewModel
 import week.on.a.plate.dialogs.forSearchScreen.sortMore.event.SortMoreEvent
 
@@ -23,10 +24,9 @@ class SortMoreDialogViewModel(
         else done(event)
     }
 
-    companion object {
-        fun startDialog(
-            mainViewModel: MainViewModel, useResult: (SortMoreEvent) -> Unit
-        ) {
+    class SortMoreDialogParams(private val useResult: (SortMoreEvent) -> Unit) :
+        DialogOpenParams {
+        override fun openDialog(mainViewModel: MainViewModel) {
             SortMoreDialogViewModel(
                 mainViewModel.getCoroutineScope(),
                 mainViewModel::openDialog,

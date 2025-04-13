@@ -12,7 +12,7 @@ import week.on.a.plate.screens.base.menu.presenter.state.MenuUIState
 import week.on.a.plate.screens.base.wrapperDatePicker.event.WrapperDatePickerEvent
 import javax.inject.Inject
 
-//todo slice!
+
 class SelectedRecipeManager @Inject constructor(
     private val deleteRecipe: DeleteRecipePosInDBUseCase
 ) {

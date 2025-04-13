@@ -2,10 +2,10 @@ package week.on.a.plate.dialogs.changePortions.logic
 
 import kotlinx.coroutines.CoroutineScope
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.core.dialogCore.DialogViewModel
 import week.on.a.plate.dialogs.changePortions.event.ChangePortionsCountEvent
 import week.on.a.plate.dialogs.changePortions.state.ChangePortionsCountUIState
-
 
 class ChangePortionsCountViewModel(
     viewModelScope: CoroutineScope,
@@ -30,8 +30,11 @@ class ChangePortionsCountViewModel(
         }
     }
 
-    companion object {
-        fun launch(mainViewModel: MainViewModel, startValued: Int, useResult: (Int) -> Unit) {
+    class ChangePortionsCountDialogParams(
+        private val startValued: Int,
+        private val useResult: (Int) -> Unit
+    ) : DialogOpenParams {
+        override fun openDialog(mainViewModel: MainViewModel) {
             ChangePortionsCountViewModel(
                 mainViewModel.getCoroutineScope(),
                 mainViewModel::openDialog,

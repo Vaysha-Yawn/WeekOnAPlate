@@ -8,7 +8,8 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import week.on.a.plate.R
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.core.Event
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.data.dataView.week.ForWeek
 import week.on.a.plate.data.dataView.week.SelectionView
 import week.on.a.plate.dialogs.editOrDelete.event.EditOrDeleteEvent
@@ -32,7 +33,8 @@ class CreateWeekSelIdAndCreatePosOpenDialog @Inject constructor(
     suspend operator fun invoke(
         context: Context,
         activeDay: MutableState<LocalDate>,
-        mainViewModel: MainViewModel
+        dialogOpenParams: MutableState<DialogOpenParams?>,
+        onEvent: (Event) -> Unit
     ) = coroutineScope {
         launch(Dispatchers.IO) {
             val id = async {
@@ -44,7 +46,7 @@ class CreateWeekSelIdAndCreatePosOpenDialog @Inject constructor(
                     true, context.getString(ForWeek.fullName), Locale.getDefault(),
                 )
             }
-            addPosition(id.await(), context, mainViewModel)
+            addPosition(id.await(), context, dialogOpenParams, onEvent)
         }
     }
 }
@@ -55,23 +57,24 @@ class CreateSelectionOpenDialog @Inject constructor(
     suspend operator fun invoke(
         date: LocalDate,
         isForWeek: Boolean,
-        mainViewModel: MainViewModel,
+        dialogOpenParams: MutableState<DialogOpenParams?>,
     ) = coroutineScope {
-        EditSelectionViewModel.launch(
+        val params = EditSelectionViewModel.EditSelectionDialogParams(
             EditSelectionUIState(
                 title = R.string.add_meal,
                 placeholder = R.string.hint_breakfast
-            ), mainViewModel
+            )
         ) { state ->
             launch(Dispatchers.IO) {
                 val newName = state.text.value
                 val time = state.selectedTime.value
                 addSelectionToDB(
                     date,
-                    newName, mainViewModel.locale, isForWeek, time
+                    newName, Locale.getDefault(), isForWeek, time
                 )
             }
         }
+        dialogOpenParams.value = params
     }
 }
 
@@ -79,25 +82,32 @@ class EditOrDeleteSelectionOpenDialog @Inject constructor(
     private val deleteSelectionInDB: DeleteSelectionInDBUseCase,
     private val editSelection: EditSelectionOpenDialog,
 ) {
-    suspend operator fun invoke(sel: SelectionView, mainViewModel: MainViewModel) =
+    suspend operator fun invoke(
+        sel: SelectionView,
+        dialogOpenParams: MutableState<DialogOpenParams?>,
+    ) =
         coroutineScope {
             if (sel.isForWeek || sel.id == 0L) return@coroutineScope
-            EditOrDeleteViewModel.launch(mainViewModel) { event ->
+            val params = EditOrDeleteViewModel.EditOrDeleteDialogParams { event ->
                 launch(Dispatchers.IO) {
                     when (event) {
                         EditOrDeleteEvent.Close -> {}
                         EditOrDeleteEvent.Delete -> deleteSelectionInDB(sel)
-                        EditOrDeleteEvent.Edit -> editSelection(sel, mainViewModel)
+                        EditOrDeleteEvent.Edit -> editSelection(sel, dialogOpenParams)
                     }
                 }
             }
+            dialogOpenParams.value = params
         }
 }
 
 class EditSelectionOpenDialog @Inject constructor(
     private val editSelectionInDB: EditSelectionInDBUseCase,
 ) {
-    suspend operator fun invoke(sel: SelectionView, mainViewModel: MainViewModel) =
+    suspend operator fun invoke(
+        sel: SelectionView,
+        dialogOpenParams: MutableState<DialogOpenParams?>,
+    ) =
         coroutineScope {
             val oldState = EditSelectionUIState(
                 mutableStateOf(sel.name), R.string.edit_meal_name,
@@ -105,8 +115,8 @@ class EditSelectionOpenDialog @Inject constructor(
             ).apply {
                 this.selectedTime.value = sel.dateTime.toLocalTime()
             }
-            EditSelectionViewModel.launch(
-                oldState, mainViewModel
+            val params = EditSelectionViewModel.EditSelectionDialogParams(
+                oldState
             ) { state ->
                 launch(Dispatchers.IO) {
                     editSelectionInDB(
@@ -116,5 +126,6 @@ class EditSelectionOpenDialog @Inject constructor(
                     )
                 }
             }
+            dialogOpenParams.value = params
         }
 }

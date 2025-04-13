@@ -1,18 +1,22 @@
 package week.on.a.plate.screens.base.cookPlanner.logic
 
-import androidx.lifecycle.viewModelScope
+import androidx.compose.runtime.MutableState
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.screens.base.wrapperDatePicker.event.WrapperDatePickerEvent
 import week.on.a.plate.screens.base.wrapperDatePicker.logic.WrapperDatePickerManager
 import week.on.a.plate.screens.base.wrapperDatePicker.state.WrapperDatePickerUIState
 
 class CookPlannerWrapperDatePickerManager(
     private val wrapperDatePickerManager: WrapperDatePickerManager,
-    private val mainViewModel: MainViewModel,
     private val wrapperDatePickerUIState: WrapperDatePickerUIState
 ) {
-    fun onEvent(event: WrapperDatePickerEvent, update: suspend () -> Unit) {
+    suspend fun onEvent(
+        dialogOpenParams: MutableState<DialogOpenParams?>,
+        event: WrapperDatePickerEvent,
+        update: suspend () -> Unit
+    ) = coroutineScope {
         when (event) {
             is WrapperDatePickerEvent.ChangeWeek -> {
                 wrapperDatePickerManager.changeWeek(
@@ -20,7 +24,7 @@ class CookPlannerWrapperDatePickerManager(
                     wrapperDatePickerUIState
                 ) { date ->
                     wrapperDatePickerUIState.activeDay.value = date
-                    mainViewModel.viewModelScope.launch {
+                    launch {
                         update()
                     }
                 }
@@ -28,12 +32,12 @@ class CookPlannerWrapperDatePickerManager(
 
             WrapperDatePickerEvent.ChooseWeek -> {
                 wrapperDatePickerManager.chooseWeek(
-                    mainViewModel,
+                    dialogOpenParams,
                     wrapperDatePickerUIState,
                     false
                 ) { date ->
                     wrapperDatePickerUIState.activeDay.value = date
-                    mainViewModel.viewModelScope.launch {
+                    launch {
                         update()
                     }
                 }

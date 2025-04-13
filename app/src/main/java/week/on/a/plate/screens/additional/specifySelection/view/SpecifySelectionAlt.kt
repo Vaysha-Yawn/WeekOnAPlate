@@ -20,28 +20,33 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import week.on.a.plate.R
+import week.on.a.plate.app.mainActivity.event.MainEvent
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.TextTitleItalic
 import week.on.a.plate.core.uitools.buttons.CloseButton
 import week.on.a.plate.core.uitools.buttons.DoneButton
-import week.on.a.plate.app.mainActivity.event.MainEvent
+import week.on.a.plate.dialogs.calendarMy.state.StateCalendarMy
+import week.on.a.plate.dialogs.calendarMy.view.CalendarMy
 import week.on.a.plate.screens.additional.specifySelection.event.SpecifySelectionEvent
 import week.on.a.plate.screens.additional.specifySelection.logic.SpecifySelectionViewModel
 import week.on.a.plate.screens.additional.specifySelection.state.SpecifySelectionUIState
-import week.on.a.plate.dialogs.calendarMy.state.StateCalendarMy
-import week.on.a.plate.dialogs.calendarMy.view.CalendarMy
 import java.time.DayOfWeek
 import java.time.LocalDate
 
 @Composable
-fun SpecifySelectionAltStart(vm: SpecifySelectionViewModel){
+fun SpecifySelectionAltStart(vm: SpecifySelectionViewModel = viewModel()) {
     SpecifySelectionAltContent(vm.state, vm.stateCalendar, ) { vm.onEvent(it) }
 }
 
 @Composable
-fun SpecifySelectionAltContent(state: SpecifySelectionUIState, stateCalendarMy: StateCalendarMy, onEvent:(Event)->Unit){
+private fun SpecifySelectionAltContent(
+    state: SpecifySelectionUIState,
+    stateCalendarMy: StateCalendarMy,
+    onEvent: (Event) -> Unit
+) {
     val context = LocalContext.current
     Column(
         modifier = Modifier

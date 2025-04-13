@@ -1,5 +1,7 @@
 package week.on.a.plate.screens.additional.specifyRecipeToCookPlan.logic
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -8,6 +10,7 @@ import week.on.a.plate.R
 import week.on.a.plate.app.mainActivity.event.MainEvent
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.core.Event
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.core.navigation.CookPlannerDestination
 import week.on.a.plate.data.dataView.recipe.RecipeView
 import week.on.a.plate.data.dataView.week.Position
@@ -37,6 +40,7 @@ class SpecifyRecipeToCookPlanViewModel @Inject constructor(
     var stateCalendar: StateCalendarMy = StateCalendarMy.emptyState
     var recipe: RecipeView? = null
     var portionsCount: Int? = null
+    val dialogOpenParams: MutableState<DialogOpenParams?> = mutableStateOf(null)
 
     init {
         val firstRow = calendarMyUseCase.getFirstRow(Locale.getDefault())
@@ -74,11 +78,10 @@ class SpecifyRecipeToCookPlanViewModel @Inject constructor(
     }
 
     private fun openTimePick() {
-        mainViewModel.viewModelScope.launch {
-            TimePickViewModel.launch(mainViewModel, R.string.select_time_cook) { time ->
-                state.time.value = LocalTime.ofSecondOfDay(time)
-            }
+        val params = TimePickViewModel.TimePickDialogParams(R.string.select_time_cook) { time ->
+            state.time.value = LocalTime.ofSecondOfDay(time)
         }
+        dialogOpenParams.value = params
     }
 
     fun done() {

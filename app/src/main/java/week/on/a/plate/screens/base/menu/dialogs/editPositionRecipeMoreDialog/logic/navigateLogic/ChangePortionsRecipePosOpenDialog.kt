@@ -1,9 +1,10 @@
 package week.on.a.plate.screens.base.menu.dialogs.editPositionRecipeMoreDialog.logic.navigateLogic
 
+import androidx.compose.runtime.MutableState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.dialogs.changePortions.logic.ChangePortionsCountViewModel
 import week.on.a.plate.screens.base.menu.domain.dbusecase.ChangePortionsRecipePosInDBUseCase
@@ -14,10 +15,9 @@ class ChangePortionsRecipePosOpenDialog @Inject constructor(
 ) {
     suspend operator fun invoke(
         recipe: Position.PositionRecipeView,
-        mainViewModel: MainViewModel
+        dialogOpenParams: MutableState<DialogOpenParams?>,
     ) = coroutineScope {
-        ChangePortionsCountViewModel.launch(
-            mainViewModel,
+        val params = ChangePortionsCountViewModel.ChangePortionsCountDialogParams(
             recipe.portionsCount
         ) { portionsCount ->
             launch(Dispatchers.IO) {
@@ -27,5 +27,6 @@ class ChangePortionsRecipePosOpenDialog @Inject constructor(
                 )
             }
         }
+        dialogOpenParams.value = params
     }
 }

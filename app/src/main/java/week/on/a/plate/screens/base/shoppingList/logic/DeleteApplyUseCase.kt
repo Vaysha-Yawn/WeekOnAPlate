@@ -2,10 +2,11 @@ package week.on.a.plate.screens.base.shoppingList.logic
 
 import android.content.Context
 import week.on.a.plate.R
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.app.mainActivity.event.MainEvent
 import week.on.a.plate.data.repository.room.shoppingList.ShoppingItemRepository
 import week.on.a.plate.screens.additional.deleteApply.event.DeleteApplyEvent
 import week.on.a.plate.screens.additional.deleteApply.navigation.DeleteApplyDestination
+import week.on.a.plate.screens.additional.deleteApply.navigation.DeleteApplyNavParams
 import javax.inject.Inject
 
 class DeleteApplyUseCase @Inject constructor(
@@ -13,12 +14,10 @@ class DeleteApplyUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(
         context: Context,
-        mainViewModel: MainViewModel,
+        onEvent: (MainEvent) -> Unit
     ) {
-        val vmDel = mainViewModel.deleteApplyViewModel
         val mes = context.getString(R.string.hint_cannot_undone)
-        mainViewModel.nav.navigate(DeleteApplyDestination)
-        vmDel.launchAndGet(
+        val params = DeleteApplyNavParams(
             context,
             title = context.getString(R.string.hint_clear_shopping_list),
             message = mes
@@ -27,5 +26,6 @@ class DeleteApplyUseCase @Inject constructor(
                 shoppingItemRepository.deleteAll()
             }
         }
+        onEvent(MainEvent.Navigate(DeleteApplyDestination, params))
     }
 }

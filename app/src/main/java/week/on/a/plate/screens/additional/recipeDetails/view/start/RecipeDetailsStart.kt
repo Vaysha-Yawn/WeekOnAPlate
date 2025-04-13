@@ -8,7 +8,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
+import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.core.Event
+import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.data.dataView.example.recipeTom
 import week.on.a.plate.screens.additional.recipeDetails.event.RecipeDetailsEvent
 import week.on.a.plate.screens.additional.recipeDetails.logic.RecipeDetailsViewModel
@@ -17,19 +20,21 @@ import week.on.a.plate.screens.additional.recipeDetails.view.base.RecipeBase
 import week.on.a.plate.screens.additional.recipeDetails.view.ingredients.RecipeDetailsIngredients
 import week.on.a.plate.screens.additional.recipeDetails.view.source.RecipeDetailsSource
 import week.on.a.plate.screens.additional.recipeDetails.view.steps.RecipeDetailsSteps
-import week.on.a.plate.core.theme.WeekOnAPlateTheme
 
 @Composable
-fun RecipeDetailsStart(vm: RecipeDetailsViewModel) {
+fun RecipeDetailsStart(
+    vm: RecipeDetailsViewModel = viewModel(),
+    mainViewModel: MainViewModel = viewModel()
+) {
     RecipeDetailsStart(vm.state, { event: Event ->
-        vm.mainViewModel.onEvent(event)
+        mainViewModel.onEvent(event)
     }) { event: RecipeDetailsEvent ->
         vm.onEvent(event)
     }
 }
 
 @Composable
-fun RecipeDetailsStart(
+private fun RecipeDetailsStart(
     state: RecipeDetailsState,
     onEventMain: (Event) -> Unit,
     onEvent: (RecipeDetailsEvent) -> Unit

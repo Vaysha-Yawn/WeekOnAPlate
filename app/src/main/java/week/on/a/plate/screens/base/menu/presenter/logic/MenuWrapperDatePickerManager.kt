@@ -1,6 +1,7 @@
 package week.on.a.plate.screens.base.menu.presenter.logic
 
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import androidx.compose.runtime.MutableState
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.screens.base.menu.presenter.event.MenuEvent
 import week.on.a.plate.screens.base.wrapperDatePicker.event.WrapperDatePickerEvent
 import week.on.a.plate.screens.base.wrapperDatePicker.logic.WrapperDatePickerManager
@@ -10,7 +11,7 @@ import javax.inject.Inject
 class MenuWrapperDatePickerManager @Inject constructor(private val wrapperDatePickerManager: WrapperDatePickerManager) {
     operator fun invoke(
         event: WrapperDatePickerEvent,
-        mainViewModel: MainViewModel,
+        dialogOpenParams: MutableState<DialogOpenParams?>,
         updateWeek: () -> Unit,
         wrapperDatePickerUIState: WrapperDatePickerUIState,
         onMenuEvent: (MenuEvent) -> Unit
@@ -19,7 +20,7 @@ class MenuWrapperDatePickerManager @Inject constructor(private val wrapperDatePi
         when (event) {
             is WrapperDatePickerEvent.ChooseWeek ->
                 wrapperDatePickerManager.chooseWeek(
-                    mainViewModel,
+                    dialogOpenParams,
                     wrapperDatePickerUIState, isForMenu = true
                 ) {
                     activeDay.value = it

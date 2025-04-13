@@ -2,9 +2,11 @@ package week.on.a.plate.screens.base.menu.presenter.logic.navigateLogic.shopList
 
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.app.mainActivity.event.MainEvent
+import week.on.a.plate.core.Event
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.screens.additional.inventory.navigation.InventoryDestination
+import week.on.a.plate.screens.additional.inventory.navigation.InventoryNavParams
 import week.on.a.plate.screens.base.menu.domain.dbusecase.GetRecipeUseCase
 import week.on.a.plate.screens.base.menu.domain.utilsUseCase.IngredientsMapByPortionsUseCase
 import week.on.a.plate.screens.base.menu.presenter.event.MenuEvent
@@ -18,8 +20,7 @@ class SelectedToShopListNavToInventory @Inject constructor(
 ) {
     suspend operator fun invoke(
         menuUIState: MenuUIState,
-        onEvent: (MenuEvent) -> Unit,
-        mainViewModel: MainViewModel,
+        onEvent: (Event) -> Unit,
         getSelected: (MenuUIState) -> List<Position.PositionRecipeView>
     ) = coroutineScope {
         onEvent(MenuEvent.ActionWrapperDatePicker(WrapperDatePickerEvent.SwitchEditMode))
@@ -30,7 +31,6 @@ class SelectedToShopListNavToInventory @Inject constructor(
                 ingredientsMapByPortions(positionRecipeView.portionsCount, recipe.await())
             ingredients
         }
-        mainViewModel.inventoryViewModel.launchAndGetMore(list)
-        mainViewModel.nav.navigate(InventoryDestination)
+        onEvent(MainEvent.Navigate(InventoryDestination, InventoryNavParams(list)))
     }
 }

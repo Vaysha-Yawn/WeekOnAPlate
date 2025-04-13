@@ -29,7 +29,7 @@ class FirstStartSettingsUseCase @Inject constructor(
     val scope = CoroutineScope(Dispatchers.IO)
 
     fun setStartValue(context: Context) {
-        scope.launch {
+        val job = scope.launch {
             val b = tagCategoryRepository.isStartCategoryInstalled()
             if (!b) {
                 val startCategory = context.getString(startCategoryName)
@@ -69,6 +69,7 @@ class FirstStartSettingsUseCase @Inject constructor(
             }
 
         }
+
     }
 
 }

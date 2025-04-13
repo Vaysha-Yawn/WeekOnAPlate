@@ -19,7 +19,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.compose.rememberNavController
@@ -122,7 +121,6 @@ class MainActivity : ComponentActivity() {
         )
 
         setContent {
-            viewModel.locale = LocalContext.current.resources.configuration.locales[0]
             viewModel.nav = rememberNavController()
 
             WeekOnAPlateTheme {
@@ -181,7 +179,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    //todo: test
+
     override fun onRestart() {
         super.onRestart()
 

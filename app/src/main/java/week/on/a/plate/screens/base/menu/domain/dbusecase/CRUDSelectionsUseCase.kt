@@ -6,7 +6,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.data.dataView.week.SelectionView
 import week.on.a.plate.data.dataView.week.WeekView
 import week.on.a.plate.screens.base.menu.domain.repositoryInterface.ISelectionRepository
@@ -91,7 +90,6 @@ class CreateFirstNonPosedPositionUseCase @Inject constructor(
         date: LocalDate,
         selectionView: SelectionView,
         context: Context,
-        mainViewModel: MainViewModel,
         onEvent: (MenuEvent) -> Unit
     ) {
         val time = selectionView.dateTime.toLocalTime()
@@ -99,7 +97,7 @@ class CreateFirstNonPosedPositionUseCase @Inject constructor(
             LocalDateTime.of(date, time),
             false,
             selectionView.name,
-            mainViewModel.locale,
+            Locale.getDefault(),
         )
         onEvent(MenuEvent.CreatePosition(sel, context))
     }

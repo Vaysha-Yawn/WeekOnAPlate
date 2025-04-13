@@ -1,6 +1,6 @@
 package week.on.a.plate.screens.base.searchRecipes.logic
 
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -10,13 +10,12 @@ import week.on.a.plate.screens.base.searchRecipes.state.SearchUIState
 import javax.inject.Inject
 
 class SearchManager @Inject constructor() {
-    fun search(
+    suspend fun search(
         state: SearchUIState,
-        viewModelScope: CoroutineScope,
         floAllRecipe: StateFlow<List<RecipeView>>,
-    ) {
+    ) = coroutineScope {
         searchAbstract(
-            state, viewModelScope, floAllRecipe
+            state, floAllRecipe
         ) { recipeView ->
             (if (state.favoriteChecked.value) {
                 recipeView.inFavorite
@@ -31,14 +30,13 @@ class SearchManager @Inject constructor() {
         }
     }
 
-    private fun searchAbstract(
+    private suspend fun searchAbstract(
         state: SearchUIState,
-        viewModelScope: CoroutineScope,
         floAllRecipe: StateFlow<List<RecipeView>>,
         filter: (RecipeView) -> Boolean,
-    ) {
+    ) = coroutineScope {
         state.searched.value = SearchState.Searching
-        viewModelScope.launch {
+        launch {
             state.searched.value = SearchState.Done
             floAllRecipe.map { it.filter { t -> filter(t) } }.collect {
                 state.resultSearch.value = it.sorted(state)
@@ -47,23 +45,21 @@ class SearchManager @Inject constructor() {
 
     }
 
-    fun searchAll(
+    suspend fun searchAll(
         state: SearchUIState,
-        viewModelScope: CoroutineScope,
         floAllRecipe: StateFlow<List<RecipeView>>,
-    ) {
+    ) = coroutineScope {
         searchAbstract(
-            state, viewModelScope, floAllRecipe,
+            state, floAllRecipe,
         ) { true }
     }
 
-    fun searchRandom(
+    suspend fun searchRandom(
         state: SearchUIState,
-        viewModelScope: CoroutineScope,
         floAllRecipe: StateFlow<List<RecipeView>>,
-    ) {
+    ) = coroutineScope {
         state.searched.value = SearchState.Searching
-        viewModelScope.launch {
+        launch {
             state.searched.value = SearchState.Done
             floAllRecipe.map { recipeViewList ->
                 if (recipeViewList.isNotEmpty()) {
@@ -84,13 +80,12 @@ class SearchManager @Inject constructor() {
         }
     }
 
-    fun searchFavorite(
+    suspend fun searchFavorite(
         state: SearchUIState,
-        viewModelScope: CoroutineScope,
         floAllRecipe: StateFlow<List<RecipeView>>,
     ) {
         searchAbstract(
-            state, viewModelScope, floAllRecipe
+            state, floAllRecipe
         ) { recipeView ->
             recipeView.inFavorite
         }

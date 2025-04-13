@@ -1,10 +1,11 @@
 package week.on.a.plate.screens.additional.recipeDetails.logic
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.app.mainActivity.event.MainEvent
 import week.on.a.plate.data.repository.room.cookPlanner.mapPinnedIngredients
 import week.on.a.plate.data.repository.room.recipe.recipe.RecipeRepository
 import week.on.a.plate.screens.additional.recipeDetails.event.RecipeDetailsEvent
@@ -15,7 +16,6 @@ import week.on.a.plate.screens.additional.recipeDetails.logic.nav.DeleteUseCase
 import week.on.a.plate.screens.additional.recipeDetails.logic.nav.EditRecipeUseCase
 import week.on.a.plate.screens.additional.recipeDetails.logic.utils.ChangePortionsManager
 import week.on.a.plate.screens.additional.recipeDetails.logic.utils.ShareRecipeUseCase
-import week.on.a.plate.screens.additional.recipeDetails.navigation.RecipeDetailsDestination
 import week.on.a.plate.screens.additional.recipeDetails.state.RecipeDetailsState
 import javax.inject.Inject
 
@@ -31,25 +31,31 @@ class RecipeDetailsViewModel @Inject constructor(
     private val switchFavoriteUseCase: SwitchFavoriteUseCase,
 ) : ViewModel() {
 
-    lateinit var mainViewModel: MainViewModel
+    val mainEvent = mutableStateOf<MainEvent?>(null)
     val state = RecipeDetailsState()
 
     fun onEvent(event: RecipeDetailsEvent) {
         when (event) {
-            is RecipeDetailsEvent.AddToCart -> addToCartUseCase(
-                event.context,
-                mainViewModel,
-                state,
-                viewModelScope
-            )
+            is RecipeDetailsEvent.AddToCart ->
+                viewModelScope.launch {
+                    addToCartUseCase(
+                        event.context,
+                        { mainEvent.value = it },
+                        state,
+                    )
+                }
 
             RecipeDetailsEvent.AddToMenu -> viewModelScope.launch {
-                addToMenuUseCase(mainViewModel, viewModelScope, state)
+                addToMenuUseCase(state) { mainEvent.value = it }
             }
 
-            RecipeDetailsEvent.Back -> mainViewModel.nav.popBackStack()
+            RecipeDetailsEvent.Back -> {
+                mainEvent.value = MainEvent.NavigateBack
+            }
             RecipeDetailsEvent.Edit -> viewModelScope.launch {
-                editRecipeUseCase(mainViewModel, state)
+                editRecipeUseCase(state) {
+                    mainEvent.value = it
+                }
             }
 
             RecipeDetailsEvent.MinusPortionsView -> changePortionsManager.minusPortionsView(
@@ -67,7 +73,9 @@ class RecipeDetailsViewModel @Inject constructor(
             }
 
             is RecipeDetailsEvent.Delete -> viewModelScope.launch {
-                deleteUseCase(event.context, mainViewModel, state)
+                deleteUseCase(event.context, state) {
+                    mainEvent.value = it
+                }
             }
 
             is RecipeDetailsEvent.Share -> ShareRecipeUseCase(event.context).shareRecipe(state.recipe)
@@ -77,7 +85,6 @@ class RecipeDetailsViewModel @Inject constructor(
     fun launch(recipeId: Long, portionsCount: Int? = null) {
         viewModelScope.launch {
             val recipeFlow = recipeRepository.getRecipeFlow(recipeId)
-            mainViewModel.nav.navigate(RecipeDetailsDestination)
             recipeFlow.collect { recipe ->
                 if (recipe != null) {
                     state.recipe = recipe

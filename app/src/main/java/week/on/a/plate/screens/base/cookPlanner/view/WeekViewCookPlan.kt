@@ -8,9 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import week.on.a.plate.BuildConfig
 import week.on.a.plate.core.Event
-import week.on.a.plate.core.ads.NativeAdRow
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.screens.base.cookPlanner.state.CookPlannerUIState
 import java.time.format.TextStyle
@@ -21,9 +19,6 @@ fun WeekViewCookPlan(
     state: CookPlannerUIState,
     onEvent: (Event) -> Unit
 ) {
-    NativeAdRow(BuildConfig.cookPlannerAdsIdWeek)
-    Spacer(Modifier.height(12.dp))
-
     LazyColumn {
         for (day in state.week) {
             item {
@@ -39,9 +34,9 @@ fun WeekViewCookPlan(
                     Modifier.padding(start = 24.dp)
                 )
             }
-            items(day.value) {
+            items(items = day.value, key = { it.id }) { group ->
                 Spacer(Modifier.height(24.dp))
-                CookGroup(it, onEvent)
+                CookGroup(group, onEvent)
             }
         }
     }

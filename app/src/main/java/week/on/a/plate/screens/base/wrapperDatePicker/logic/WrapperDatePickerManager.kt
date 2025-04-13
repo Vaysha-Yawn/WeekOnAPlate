@@ -1,8 +1,7 @@
 package week.on.a.plate.screens.base.wrapperDatePicker.logic
 
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import androidx.compose.runtime.MutableState
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.data.repository.room.cookPlanner.CookPlannerStepRepository
 import week.on.a.plate.data.repository.room.menu.selection.WeekMenuRepository
 import week.on.a.plate.dialogs.calendarMy.logic.CalendarMyUseCase
@@ -24,24 +23,28 @@ class WrapperDatePickerManager @Inject constructor(
     ) {
         when (event) {
             is WrapperDatePickerEvent.ChooseWeek -> {} //use chooseWeek fun in vm
-            WrapperDatePickerEvent.SwitchWeekOrDayView -> switchWeekOrDayView(wrapperDatePickerUIState)
+            WrapperDatePickerEvent.SwitchWeekOrDayView -> switchWeekOrDayView(
+                wrapperDatePickerUIState
+            )
+
             WrapperDatePickerEvent.SwitchEditMode -> switchEditMode(wrapperDatePickerUIState)
             is WrapperDatePickerEvent.ChangeWeek -> {} //use changeWeek fun in vm
         }
     }
 
     fun chooseWeek(
-        mainViewModel: MainViewModel,
-        wrapperDatePickerUIState: WrapperDatePickerUIState, isForMenu:Boolean, use:(date: LocalDate)->Unit
+        dialogOpenParams: MutableState<DialogOpenParams?>,
+        wrapperDatePickerUIState: WrapperDatePickerUIState,
+        isForMenu: Boolean,
+        use: (date: LocalDate) -> Unit
     ) {
-        mainViewModel.viewModelScope.launch {
-            ChooseWeekViewModel.launch(
-                CalendarMyUseCase(repository, cookRepository),
-                isForMenu,
-                mainViewModel){ date ->
-                changeWeek(date, wrapperDatePickerUIState, use)
-            }
+        val params = ChooseWeekViewModel.ChooseWeekDialogParams(
+            CalendarMyUseCase(repository, cookRepository),
+            isForMenu
+        ) { date ->
+            changeWeek(date, wrapperDatePickerUIState, use)
         }
+        dialogOpenParams.value = params
     }
 
     private fun switchWeekOrDayView(wrapperDatePickerUIState: WrapperDatePickerUIState) {
@@ -49,10 +52,15 @@ class WrapperDatePickerManager @Inject constructor(
     }
 
     private fun switchEditMode(wrapperDatePickerUIState: WrapperDatePickerUIState) {
-        wrapperDatePickerUIState.isGroupSelectedModeActive.value = !wrapperDatePickerUIState.isGroupSelectedModeActive.value
+        wrapperDatePickerUIState.isGroupSelectedModeActive.value =
+            !wrapperDatePickerUIState.isGroupSelectedModeActive.value
     }
 
-    fun changeWeek(date: LocalDate, wrapperDatePickerUIState: WrapperDatePickerUIState, use:(date: LocalDate)->Unit) {
+    fun changeWeek(
+        date: LocalDate,
+        wrapperDatePickerUIState: WrapperDatePickerUIState,
+        use: (date: LocalDate) -> Unit
+    ) {
         wrapperDatePickerUIState.activeDay.value = date
         use(date)
     }

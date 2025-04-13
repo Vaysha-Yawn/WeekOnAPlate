@@ -80,7 +80,7 @@ private fun MonthName(
                 }
                 .size(36.dp))
         TextBody(
-            month.capitalize() + ", " + state.currentYear.intValue.toString(),
+            month.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() } + ", " + state.currentYear.intValue.toString(),
             textAlign = TextAlign.Center
         )
         Icon(painterResource(R.drawable.forward), "Next month",
@@ -99,7 +99,10 @@ private fun DaysOfWeek(
 ) {
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
         for (day in state.firstRow.value) {
-            Box(Modifier.weight(1f).height(cardWidth), contentAlignment = Alignment.Center) {
+            Box(
+                Modifier
+                    .weight(1f)
+                    .height(cardWidth), contentAlignment = Alignment.Center) {
                 TextBody(
                     day.getDisplayName(TextStyle.SHORT, Locale.getDefault())
                         .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() },
@@ -177,7 +180,8 @@ fun CardDayCalendar(
                         0.dp
                     }, bottom = 5.dp
                 )
-                .weight(1f).height(size)
+                .weight(1f)
+                .height(size)
                 .background(
                     if (activeDate == day) {
                         MaterialTheme.colorScheme.primary

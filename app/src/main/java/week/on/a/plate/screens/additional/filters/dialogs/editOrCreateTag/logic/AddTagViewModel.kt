@@ -59,7 +59,7 @@ class AddTagViewModel(
 
             val oldFilterState = vm.state.getCopy()
             mainViewModel.onEvent(MainEvent.HideDialog)
-            mainViewModel.nav.navigate(FilterDestination)
+            mainViewModel.nav.navigate(FilterDestination) //todo use main event nav
 
             vm.launchAndGet(FilterMode.One, FilterEnum.CategoryTag, null, true) { filters ->
                 val res = filters.tagsCategories?.getOrNull(0)

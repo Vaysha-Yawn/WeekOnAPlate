@@ -2,6 +2,7 @@ package week.on.a.plate.screens.base.menu.dialogs.editPositionRecipeMoreDialog.l
 
 import kotlinx.coroutines.CoroutineScope
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.core.dialogCore.DialogViewModel
 import week.on.a.plate.screens.base.menu.dialogs.editPositionRecipeMoreDialog.event.ActionMoreRecipePositionEvent
 
@@ -24,10 +25,9 @@ class EditRecipePositionViewModel(
         }
     }
 
-    companion object {
-        fun launch(
-            mainViewModel: MainViewModel, useResult: (ActionMoreRecipePositionEvent) -> Unit
-        ) {
+    class EditRecipePositionDialogParams(private val useResult: (ActionMoreRecipePositionEvent) -> Unit) :
+        DialogOpenParams {
+        override fun openDialog(mainViewModel: MainViewModel) {
             EditRecipePositionViewModel(
                 mainViewModel.getCoroutineScope(),
                 mainViewModel::openDialog,

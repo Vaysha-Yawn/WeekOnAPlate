@@ -1,7 +1,14 @@
 package week.on.a.plate.core.navigation
 
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import week.on.a.plate.R
+import week.on.a.plate.app.mainActivity.event.NavParams
+import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.data.dataView.recipe.IngredientView
+import week.on.a.plate.data.dataView.recipe.RecipeTagView
+import week.on.a.plate.data.dataView.recipe.RecipeView
 
 @Serializable
 sealed class BottomScreens<T>(val icon: Int, val route: T) {
@@ -44,6 +51,21 @@ object MenuDestination
 
 @Serializable
 object SearchDestination
+
+class SearchNavParams(
+    private val selIde: Long?,
+    private val filters: Pair<List<RecipeTagView>, List<IngredientView>>?,
+    private val use: suspend (RecipeView) -> Unit
+) : NavParams {
+    override fun launch(vm: MainViewModel) {
+        vm.viewModelScope.launch {
+            vm.searchViewModel.launchAndGet(
+                selIde,
+                filters, use
+            )
+        }
+    }
+}
 
 @Serializable
 object SettingsDestination

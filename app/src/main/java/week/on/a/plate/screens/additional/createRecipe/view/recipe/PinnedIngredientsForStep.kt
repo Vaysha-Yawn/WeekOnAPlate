@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -24,8 +25,7 @@ fun PinnedIngredientsForStep(
     listAdded: List<IngredientInRecipeView>,
 ) {
     LazyRow {
-        items(listAdded.size) {
-            val item = listAdded[it]
+        items(items = listAdded, key = { it.id }) { item ->
             Row(
                 Modifier
                     .background(MaterialTheme.colorScheme.background, RoundedCornerShape(20.dp))

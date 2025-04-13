@@ -1,9 +1,10 @@
 package week.on.a.plate.screens.base.searchRecipes.logic
 
+import androidx.compose.runtime.MutableState
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.data.dataView.recipe.RecipeView
 import week.on.a.plate.dialogs.forSearchScreen.sortMore.event.SortMoreEvent
 import week.on.a.plate.dialogs.forSearchScreen.sortMore.logic.SortMoreDialogViewModel
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.screens.base.searchRecipes.event.SearchScreenEvent
 import week.on.a.plate.screens.base.searchRecipes.state.ResultSortType
 import week.on.a.plate.screens.base.searchRecipes.state.ResultSortingDirection
@@ -11,8 +12,11 @@ import week.on.a.plate.screens.base.searchRecipes.state.SearchUIState
 import javax.inject.Inject
 
 class SortingManager @Inject constructor() {
-    fun sortMore(mainViewModel: MainViewModel, onEvent: (SearchScreenEvent) -> Unit) {
-        SortMoreDialogViewModel.startDialog(mainViewModel) { event ->
+    fun sortMore(
+        dialogOpenParams: MutableState<DialogOpenParams?>,
+        onEvent: (SearchScreenEvent) -> Unit
+    ) {
+        val params = SortMoreDialogViewModel.SortMoreDialogParams() { event ->
             when (event) {
                 SortMoreEvent.AlphabetNormal -> onEvent(
                     SearchScreenEvent.ChangeSort(
@@ -51,6 +55,7 @@ class SortingManager @Inject constructor() {
                 )
             }
         }
+        dialogOpenParams.value = params
     }
 
     fun changeSort(type: ResultSortType, direction: ResultSortingDirection, state: SearchUIState) {

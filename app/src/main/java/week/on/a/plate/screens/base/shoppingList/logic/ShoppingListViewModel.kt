@@ -1,5 +1,6 @@
 package week.on.a.plate.screens.base.shoppingList.logic
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -8,8 +9,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import week.on.a.plate.app.mainActivity.event.MainEvent
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.core.Event
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.data.repository.room.shoppingList.ShoppingItemRepository
 import week.on.a.plate.screens.base.shoppingList.event.ShoppingListEvent
@@ -27,11 +28,13 @@ class ShoppingListViewModel @Inject constructor(
     private val editIngredient: EditIngredientUseCase
 ) : ViewModel() {
 
-    lateinit var mainViewModel: MainViewModel
     val state = ShoppingListUIState()
 
     lateinit var allItemsChecked: StateFlow<List<IngredientInRecipeView>>
     lateinit var allItemsUnChecked: StateFlow<List<IngredientInRecipeView>>
+
+    val dialogOpenParams = mutableStateOf<DialogOpenParams?>(null)
+    val mainEvent = mutableStateOf<MainEvent?>(null)
 
     init {
         viewModelScope.launch {
@@ -46,7 +49,7 @@ class ShoppingListViewModel @Inject constructor(
 
     fun onEvent(event: Event) {
         when (event) {
-            is MainEvent -> mainViewModel.onEvent(event)
+            is MainEvent -> mainEvent.value = event
             is ShoppingListEvent -> onEvent(event)
         }
     }
@@ -55,8 +58,7 @@ class ShoppingListViewModel @Inject constructor(
         viewModelScope.launch {
             when (event) {
                 ShoppingListEvent.Add -> addIngredient(
-                    mainViewModel,
-                    viewModelScope,
+                    { event -> mainEvent.value = event },
                     allItemsUnChecked.value
                 )
 
@@ -65,15 +67,16 @@ class ShoppingListViewModel @Inject constructor(
                 is ShoppingListEvent.Uncheck -> updateCheck(false, event.position)
                 is ShoppingListEvent.Edit -> editIngredient(
                     event.ingredient,
-                    mainViewModel,
-                    viewModelScope
+                    dialogOpenParams
                 )
 
                 is ShoppingListEvent.Share -> ShareShoppingListUseCase(event.context).shareShoppingList(
                     state.listUnchecked.value
                 )
 
-                is ShoppingListEvent.DeleteAll -> deleteApply(event.context, mainViewModel)
+                is ShoppingListEvent.DeleteAll -> deleteApply(event.context) { event ->
+                    mainEvent.value = event
+                }
             }
         }
     }

@@ -24,6 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import week.on.a.plate.R
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
@@ -37,7 +38,7 @@ import week.on.a.plate.screens.base.settings.state.SettingsUIState
 data class SettingItem(val name: String, val imgRes: Int?, val event: SettingsEvent)
 
 @Composable
-fun SettingsStart(vm: SettingsViewModel) {
+fun SettingsStart(vm: SettingsViewModel = viewModel()) {
     val state = vm.state
     val onEvent = { event: Event ->
         vm.onEvent(event)
@@ -46,7 +47,7 @@ fun SettingsStart(vm: SettingsViewModel) {
 }
 
 @Composable
-fun SettingsContent(state: SettingsUIState, onEvent: (Event) -> Unit) {
+private fun SettingsContent(state: SettingsUIState, onEvent: (Event) -> Unit) {
     val context = LocalContext.current
     val listSettingsItems = remember {
         listOf(
@@ -94,7 +95,7 @@ fun SettingsContent(state: SettingsUIState, onEvent: (Event) -> Unit) {
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.Start
         ) {
-            itemsIndexed(listSettingsItems){ind, item->
+            itemsIndexed(listSettingsItems, key = { _, it -> it.name }) { ind, item ->
                 Spacer(Modifier.height(36.dp))
                 ButtonSettings(
                     item.imgRes?:R.drawable.settings,
@@ -109,7 +110,7 @@ fun SettingsContent(state: SettingsUIState, onEvent: (Event) -> Unit) {
 
 
 @Composable
-fun ButtonSettings(imgRec: Int, text: String, event: () -> Unit) {
+private fun ButtonSettings(imgRec: Int, text: String, event: () -> Unit) {
     Row(modifier = Modifier
         .clickNoRipple (event), verticalAlignment = Alignment.Top) {
         TextBody(text = text, modifier = Modifier.weight(1f), textAlign = TextAlign.Start)
