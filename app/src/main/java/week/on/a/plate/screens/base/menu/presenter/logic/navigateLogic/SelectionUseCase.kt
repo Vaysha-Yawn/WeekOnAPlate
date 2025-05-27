@@ -14,8 +14,8 @@ import week.on.a.plate.data.dataView.week.ForWeek
 import week.on.a.plate.data.dataView.week.SelectionView
 import week.on.a.plate.dialogs.editOrDelete.event.EditOrDeleteEvent
 import week.on.a.plate.dialogs.editOrDelete.logic.EditOrDeleteViewModel
-import week.on.a.plate.screens.base.menu.dialogs.editSelectionDialog.logic.EditSelectionViewModel
-import week.on.a.plate.screens.base.menu.dialogs.editSelectionDialog.state.EditSelectionUIState
+import week.on.a.plate.dialogs.editSelectionDialog.logic.EditSelectionViewModel
+import week.on.a.plate.dialogs.editSelectionDialog.state.EditSelectionUIState
 import week.on.a.plate.screens.base.menu.domain.dbusecase.AddSelectionToDBUseCase
 import week.on.a.plate.screens.base.menu.domain.dbusecase.DeleteSelectionInDBUseCase
 import week.on.a.plate.screens.base.menu.domain.dbusecase.EditSelectionInDBUseCase

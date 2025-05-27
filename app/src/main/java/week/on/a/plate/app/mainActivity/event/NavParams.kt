@@ -9,3 +9,8 @@ interface NavParams {
 object EmptyNavParams : NavParams {
     override fun launch(vm: MainViewModel) {}
 }
+
+object NavigateBackDest
+object BackNavParams : NavParams {
+    override fun launch(vm: MainViewModel) {}
+}

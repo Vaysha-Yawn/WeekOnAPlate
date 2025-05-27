@@ -13,10 +13,10 @@ import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.core.dialogCore.DialogViewModel
 import week.on.a.plate.data.repository.room.menu.category_selection.CategorySelectionDAO
 import week.on.a.plate.data.repository.room.menu.category_selection.CategorySelectionRoom
+import week.on.a.plate.dialogs.editSelectionDialog.logic.EditSelectionViewModel
+import week.on.a.plate.dialogs.editSelectionDialog.state.EditSelectionUIState
 import week.on.a.plate.dialogs.forSettingsScreen.setPermanentMeals.event.SetPermanentMealsEvent
 import week.on.a.plate.dialogs.forSettingsScreen.setPermanentMeals.state.SetPermanentMealsUIState
-import week.on.a.plate.screens.base.menu.dialogs.editSelectionDialog.logic.EditSelectionViewModel
-import week.on.a.plate.screens.base.menu.dialogs.editSelectionDialog.state.EditSelectionUIState
 
 
 class SetPermanentMealsViewModel(

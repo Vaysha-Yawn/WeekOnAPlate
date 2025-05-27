@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import week.on.a.plate.app.mainActivity.event.MainEvent
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.data.dataView.recipe.RecipeView
@@ -32,12 +31,11 @@ class RecipeCreateViewModel @Inject constructor(
     private val recipeCreateImageUseCase: RecipeCreateImageUseCase,
     private val recipeCreateTimeUseCase: RecipeCreateTimeUseCase,
     private val recipeCreateStepUseCase: RecipeCreateStepUseCase,
-    private val recipeCreateIngredientUseCase: RecipeCreateIngredientUseCase
+    private val recipeCreateIngredientUseCase: RecipeCreateIngredientUseCase,
 ) : ViewModel() {
 
     var state = RecipeCreateUIState()
     private lateinit var resultFlow: MutableStateFlow<RecipeCreateUIState?>
-
     val dialogOpenParams: MutableState<DialogOpenParams?> = mutableStateOf(null)
     val mainEvent: MutableState<MainEvent?> = mutableStateOf(null)
 

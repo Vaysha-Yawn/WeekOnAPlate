@@ -5,7 +5,7 @@ import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.data.repository.room.cookPlanner.CookPlannerStepRepository
 import week.on.a.plate.data.repository.room.menu.selection.WeekMenuRepository
 import week.on.a.plate.dialogs.calendarMy.logic.CalendarMyUseCase
-import week.on.a.plate.screens.base.menu.dialogs.chooseWeekInMenu.logic.ChooseWeekViewModel
+import week.on.a.plate.dialogs.chooseWeekInMenu.logic.ChooseWeekViewModel
 import week.on.a.plate.screens.base.wrapperDatePicker.event.WrapperDatePickerEvent
 import week.on.a.plate.screens.base.wrapperDatePicker.state.WrapperDatePickerUIState
 import java.time.LocalDate

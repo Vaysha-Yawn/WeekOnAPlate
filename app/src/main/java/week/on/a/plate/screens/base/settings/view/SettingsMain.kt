@@ -24,8 +24,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import week.on.a.plate.R
+import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.app.mainActivity.view.MainEventResolve
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
@@ -39,13 +40,13 @@ import week.on.a.plate.screens.base.settings.state.SettingsUIState
 data class SettingItem(val name: String, val imgRes: Int?, val event: SettingsEvent)
 
 @Composable
-fun SettingsStart(vm: SettingsViewModel = viewModel()) {
+fun SettingsStart(viewModel: MainViewModel, vm: SettingsViewModel = hiltViewModel()) {
     val state = vm.state
     val onEvent = { event: Event ->
         vm.onEvent(event)
     }
     SettingsContent(state, onEvent)
-    MainEventResolve(vm.mainEvent, vm.dialogOpenParams)
+    MainEventResolve(vm.mainEvent, vm.dialogOpenParams, viewModel)
 }
 
 @Composable

@@ -44,7 +44,7 @@ fun LazyListScope.RecipeEditPage(
             TextTitle(text = stringResource(R.string.ingredients))
         }
     }
-    items(items = state.ingredients.value, key = { it.id }) { ingredient ->
+    items(items = state.ingredients.value) { ingredient ->
         IngredientRecipeEdit(
             ingredient,
             onEvent

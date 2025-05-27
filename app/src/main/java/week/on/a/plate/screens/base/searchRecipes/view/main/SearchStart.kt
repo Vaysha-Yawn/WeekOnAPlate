@@ -12,7 +12,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.app.mainActivity.view.MainEventResolve
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
@@ -25,7 +25,8 @@ import week.on.a.plate.screens.base.searchRecipes.view.resultScreen.SearchResult
 
 @Composable
 fun SearchStart(
-    viewModel: SearchViewModel = viewModel()
+    viewModel: SearchViewModel,
+    viewModel1: MainViewModel,
 ) {
     val state = viewModel.state
     val onEvent = { eventData: Event ->
@@ -33,7 +34,7 @@ fun SearchStart(
     }
     state.allTagsCategories = viewModel.allTagCategories.collectAsState()
     SearchStartContent(state, onEvent)
-    MainEventResolve(viewModel.mainEvent, viewModel.dialogOpenParams)
+    MainEventResolve(viewModel.mainEvent, viewModel.dialogOpenParams, viewModel1)
 }
 
 @Composable

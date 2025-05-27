@@ -9,6 +9,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
@@ -20,12 +21,13 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import week.on.a.plate.app.mainActivity.event.MainEvent
+import week.on.a.plate.app.mainActivity.event.NavigateBackDest
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.core.dialogCore.DialogsContainer
 import week.on.a.plate.core.theme.ColorBackgroundWhite
@@ -50,8 +52,9 @@ import week.on.a.plate.screens.base.shoppingList.logic.ShoppingListViewModel
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private lateinit var viewModel: MainViewModel
+    private val viewModel: MainViewModel by viewModels()
 
+    private var nav: NavHostController? = null
     private val voiceInputLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -88,26 +91,29 @@ class MainActivity : ComponentActivity() {
 
 
         setContent {
-            val nav = rememberNavController()
+            nav = rememberNavController()
             LaunchedEffect(viewModel.navParams.value) {
-                nav.navigate(viewModel.navParams.value.toString())
+                if (viewModel.navParams.value == null) return@LaunchedEffect
+                if (viewModel.navParams.value is NavigateBackDest) {
+                    nav?.popBackStack()
+                    return@LaunchedEffect
+                }
+                nav!!.navigate(viewModel.navParams.value!!)
             }
-
-            viewModel = hiltViewModel()
-            val specifySelectionViewModel: SpecifySelectionViewModel = hiltViewModel()
-            val filterViewModel: FilterViewModel = hiltViewModel()
-            val searchViewModel: SearchViewModel = hiltViewModel()
-            val recipeDetailsViewModel: RecipeDetailsViewModel = hiltViewModel()
-            val shoppingListViewModel: ShoppingListViewModel = hiltViewModel()
-            val recipeCreateViewModel: RecipeCreateViewModel = hiltViewModel()
-            val menuViewModel: MenuViewModel = hiltViewModel()
-            val inventoryViewModel: InventoryViewModel = hiltViewModel()
-            val deleteApplyViewModel: DeleteApplyViewModel = hiltViewModel()
-            val cookPlannerViewModel: CookPlannerViewModel = hiltViewModel()
-            val specifyRecipeToCookPlanViewModel: SpecifyRecipeToCookPlanViewModel = hiltViewModel()
-            val settingsViewModel: SettingsViewModel = hiltViewModel()
-            val tutorialViewModel: TutorialViewModel = hiltViewModel()
-            val documentsWebViewModel: DocumentsWebViewModel = hiltViewModel()
+            val specifySelectionViewModel: SpecifySelectionViewModel = viewModel()
+            val filterViewModel: FilterViewModel = viewModel()
+            val searchViewModel: SearchViewModel = viewModel()
+            val recipeDetailsViewModel: RecipeDetailsViewModel = viewModel()
+            val shoppingListViewModel: ShoppingListViewModel = viewModel()
+            val recipeCreateViewModel: RecipeCreateViewModel = viewModel()
+            val menuViewModel: MenuViewModel = viewModel()
+            val inventoryViewModel: InventoryViewModel = viewModel()
+            val deleteApplyViewModel: DeleteApplyViewModel = viewModel()
+            val cookPlannerViewModel: CookPlannerViewModel = viewModel()
+            val specifyRecipeToCookPlanViewModel: SpecifyRecipeToCookPlanViewModel = viewModel()
+            val settingsViewModel: SettingsViewModel = viewModel()
+            val tutorialViewModel: TutorialViewModel = viewModel()
+            val documentsWebViewModel: DocumentsWebViewModel = viewModel()
 
             viewModel.voiceInputUseCase.voiceInputLauncher = voiceInputLauncher
             viewModel.imageFromGalleryUseCase.imageLauncher = getPictureLauncher
@@ -139,6 +145,7 @@ class MainActivity : ComponentActivity() {
                     .background(ColorBackgroundWhite),
                     bottomBar = {
                         BottomBar(
+                            nav!!,
                             viewModel.isActiveBaseScreen.value,
                             searchViewModel
                         )
@@ -154,7 +161,7 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     }, floatingActionButton = {
-                        if (viewModel.isActivePlusButton.value && viewModel.dialogUseCase.activeDialog.value == null) {
+                        if (viewModel.isActivePlusButton.value && viewModel.dialogUseCase._activeDialog.value == null) {
                             val pad = if (viewModel.isActiveFilterScreen.value) {
                                 50.dp
                             } else {
@@ -167,14 +174,19 @@ class MainActivity : ComponentActivity() {
                     }
                 ) { innerPadding ->
                     Navigation(
+                        nav!!,
                         viewModel,
                         innerPadding,
                     )
-                    DialogsContainer (viewModel.dialogUseCase.activeDialog.value) { event ->
+                    DialogsContainer(
+                        viewModel,
+                        viewModel.dialogUseCase._activeDialog.value
+                    ) { event ->
                         viewModel.onEvent(event)
                     }
                 }
             }
+
         }
     }
 
@@ -195,12 +207,22 @@ class MainActivity : ComponentActivity() {
             val text = intent.getStringExtra(Intent.EXTRA_TEXT) ?: return
             viewModel.getSharedLinkUseCase.setLink(text)
             viewModel.getSharedLinkUseCase.checkAndStart {
-                viewModel.onEvent(MainEvent.UseSharedLink)
+                useSharedLink()
             }
         }else{
             viewModel.getSharedLinkUseCase.checkAndStart {
-                viewModel.onEvent(MainEvent.UseSharedLink)
+                useSharedLink()
             }
+        }
+    }
+
+    private fun useSharedLink() {
+        if (!viewModel.getSharedLinkUseCase.isCheckedSharedAction && nav != null) {
+            viewModel.getSharedLinkUseCase.useSharedLink(
+                viewModel.viewModelScope,
+                nav!!,
+                viewModel.recipeCreateViewModel
+            )
         }
     }
 }

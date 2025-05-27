@@ -6,9 +6,9 @@ import kotlinx.coroutines.launch
 import week.on.a.plate.R
 import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.data.repository.room.menu.selection.WeekMenuRepository
+import week.on.a.plate.dialogs.editSelectionDialog.logic.EditSelectionViewModel
+import week.on.a.plate.dialogs.editSelectionDialog.state.EditSelectionUIState
 import week.on.a.plate.screens.additional.specifySelection.state.SpecifySelectionUIState
-import week.on.a.plate.screens.base.menu.dialogs.editSelectionDialog.logic.EditSelectionViewModel
-import week.on.a.plate.screens.base.menu.dialogs.editSelectionDialog.state.EditSelectionUIState
 import java.time.LocalDateTime
 import java.util.Locale
 import javax.inject.Inject

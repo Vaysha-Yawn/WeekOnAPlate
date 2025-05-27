@@ -15,6 +15,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.app.mainActivity.view.MainEventResolve
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.uitools.dialogs.BaseDialogContainer
@@ -29,6 +30,9 @@ import week.on.a.plate.dialogs.changePortions.view.ChangePortionsPanel
 import week.on.a.plate.dialogs.chooseIngredientsForStep.event.ChooseIngredientsForStepEvent
 import week.on.a.plate.dialogs.chooseIngredientsForStep.logic.ChooseIngredientsForStepViewModel
 import week.on.a.plate.dialogs.chooseIngredientsForStep.view.ChooseIngredientsForStep
+import week.on.a.plate.dialogs.chooseWeekInMenu.event.ChooseWeekDialogEvent
+import week.on.a.plate.dialogs.chooseWeekInMenu.logic.ChooseWeekViewModel
+import week.on.a.plate.dialogs.chooseWeekInMenu.state.ChooseWeekUIState
 import week.on.a.plate.dialogs.cookStepMore.event.CookStepMoreEvent
 import week.on.a.plate.dialogs.cookStepMore.logic.CookStepMoreDialogViewModel
 import week.on.a.plate.dialogs.cookStepMore.view.CookStepMoreContent
@@ -45,6 +49,15 @@ import week.on.a.plate.dialogs.editOneString.view.EditOneStringContent
 import week.on.a.plate.dialogs.editOrDelete.event.EditOrDeleteEvent
 import week.on.a.plate.dialogs.editOrDelete.logic.EditOrDeleteViewModel
 import week.on.a.plate.dialogs.editOrDelete.view.EditOrDeleteDialogContent
+import week.on.a.plate.dialogs.editOtherPositionMoreDialog.event.OtherPositionMoreEvent
+import week.on.a.plate.dialogs.editOtherPositionMoreDialog.logic.EditOtherPositionViewModel
+import week.on.a.plate.dialogs.editOtherPositionMoreDialog.view.EditOtherPositionDialogContent
+import week.on.a.plate.dialogs.editPositionRecipeMoreDialog.event.ActionMoreRecipePositionEvent
+import week.on.a.plate.dialogs.editPositionRecipeMoreDialog.logic.EditRecipePositionViewModel
+import week.on.a.plate.dialogs.editPositionRecipeMoreDialog.view.EditRecipePositionDialogContent
+import week.on.a.plate.dialogs.editSelectionDialog.event.EditSelectionEvent
+import week.on.a.plate.dialogs.editSelectionDialog.logic.EditSelectionViewModel
+import week.on.a.plate.dialogs.editSelectionDialog.view.EditSelectionContent
 import week.on.a.plate.dialogs.forCreateRecipeScreen.chooseHowImagePick.event.ChooseHowImagePickEvent
 import week.on.a.plate.dialogs.forCreateRecipeScreen.chooseHowImagePick.logic.ChooseHowImagePickViewModel
 import week.on.a.plate.dialogs.forCreateRecipeScreen.chooseHowImagePick.view.ChooseHowImagePickContent
@@ -78,23 +91,12 @@ import week.on.a.plate.screens.additional.filters.dialogs.filterVoiceApply.view.
 import week.on.a.plate.screens.additional.filters.dialogs.selectedFilters.event.SelectedFiltersEvent
 import week.on.a.plate.screens.additional.filters.dialogs.selectedFilters.logic.SelectedFiltersViewModel
 import week.on.a.plate.screens.additional.filters.dialogs.selectedFilters.view.DialogSelectedTags
-import week.on.a.plate.screens.base.menu.dialogs.chooseWeekInMenu.event.ChooseWeekDialogEvent
-import week.on.a.plate.screens.base.menu.dialogs.chooseWeekInMenu.logic.ChooseWeekViewModel
-import week.on.a.plate.screens.base.menu.dialogs.chooseWeekInMenu.state.ChooseWeekUIState
-import week.on.a.plate.screens.base.menu.dialogs.editOtherPositionMoreDialog.event.OtherPositionMoreEvent
-import week.on.a.plate.screens.base.menu.dialogs.editOtherPositionMoreDialog.logic.EditOtherPositionViewModel
-import week.on.a.plate.screens.base.menu.dialogs.editOtherPositionMoreDialog.view.EditOtherPositionDialogContent
-import week.on.a.plate.screens.base.menu.dialogs.editPositionRecipeMoreDialog.event.ActionMoreRecipePositionEvent
-import week.on.a.plate.screens.base.menu.dialogs.editPositionRecipeMoreDialog.logic.EditRecipePositionViewModel
-import week.on.a.plate.screens.base.menu.dialogs.editPositionRecipeMoreDialog.view.EditRecipePositionDialogContent
-import week.on.a.plate.screens.base.menu.dialogs.editSelectionDialog.event.EditSelectionEvent
-import week.on.a.plate.screens.base.menu.dialogs.editSelectionDialog.logic.EditSelectionViewModel
-import week.on.a.plate.screens.base.menu.dialogs.editSelectionDialog.view.EditSelectionContent
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DialogsContainer(
+    viewModel: MainViewModel,
     data: DialogViewModel<*>?,
     onEvent: (event: Event) -> Unit
 ) {
@@ -227,7 +229,7 @@ fun DialogsContainer(
             LaunchedEffect(Unit) {
                 sheetState.show()
             }
-            MainEventResolve(remember { mutableStateOf(null) }, data.dialogOpenParams)
+            MainEventResolve(remember { mutableStateOf(null) }, data.dialogOpenParams, viewModel)
         }
 
         is SelectedFiltersViewModel -> {
@@ -346,7 +348,7 @@ fun DialogsContainer(
             LaunchedEffect(Unit) {
                 sheetState.show()
             }
-            MainEventResolve(remember { mutableStateOf(null) }, data.dialogOpenParams)
+            MainEventResolve(remember { mutableStateOf(null) }, data.dialogOpenParams, viewModel)
         }
 
         is SetThemesViewModel -> {
@@ -375,7 +377,7 @@ fun DialogsContainer(
             LaunchedEffect(Unit) {
                 sheetState.show()
             }
-            MainEventResolve(remember { mutableStateOf(null) }, data.dialogOpenParams)
+            MainEventResolve(remember { mutableStateOf(null) }, data.dialogOpenParams, viewModel)
         }
 
         null -> {}

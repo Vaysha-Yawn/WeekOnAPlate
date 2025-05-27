@@ -7,8 +7,8 @@ import kotlinx.coroutines.launch
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.data.dataView.week.Position
-import week.on.a.plate.screens.base.menu.dialogs.editOtherPositionMoreDialog.logic.EditOtherPositionViewModel
-import week.on.a.plate.screens.base.menu.dialogs.editOtherPositionMoreDialog.logic.OtherPositionActionsMore
+import week.on.a.plate.dialogs.editOtherPositionMoreDialog.logic.EditOtherPositionViewModel
+import week.on.a.plate.dialogs.editOtherPositionMoreDialog.logic.OtherPositionActionsMore
 import javax.inject.Inject
 
 class OtherPositionActionsMoreOpenDialog @Inject constructor(

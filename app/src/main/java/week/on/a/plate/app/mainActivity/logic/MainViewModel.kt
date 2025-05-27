@@ -6,12 +6,11 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import week.on.a.plate.app.mainActivity.event.BackNavParams
 import week.on.a.plate.app.mainActivity.event.MainEvent
-import week.on.a.plate.app.mainActivity.event.NavParams
+import week.on.a.plate.app.mainActivity.event.NavigateBackDest
 import week.on.a.plate.app.mainActivity.logic.imageFromGallery.ImageFromGalleryUseCase
 import week.on.a.plate.app.mainActivity.logic.takePicture.TakePictureUseCase
 import week.on.a.plate.app.mainActivity.logic.voice.VoiceInputUseCase
@@ -115,11 +114,10 @@ class MainViewModel @Inject constructor(
             is MainEvent.OpenDialog -> dialogUseCase.openDialog(event.dialog)
             is MainEvent.ShowSnackBar -> showSnackBar(event.message)
             is MainEvent.Navigate -> navigate(event)
-            MainEvent.NavigateBack -> nav.popBackStack()
+            MainEvent.NavigateBack -> navigate(MainEvent.Navigate(NavigateBackDest, BackNavParams))
             MainEvent.HideDialog -> dialogUseCase.hide()
             MainEvent.ShowDialog -> dialogUseCase.show()
             is MainEvent.VoiceToText -> voiceToText(event.context, event.use)
-            is MainEvent.UseSharedLink -> useSharedLink()
         }
     }
 
@@ -137,17 +135,6 @@ class MainViewModel @Inject constructor(
     }
 
     fun getCoroutineScope() = viewModelScope
-
-    private fun useSharedLink() {
-        if (!getSharedLinkUseCase.isCheckedSharedAction && ::nav.isInitialized) {
-            getSharedLinkUseCase.useSharedLink(viewModelScope, nav, recipeCreateViewModel)
-        }else if (! ::nav.isInitialized){
-            viewModelScope.launch {
-                delay(500)
-                onEvent(MainEvent.UseSharedLink)
-            }
-        }
-    }
 
     private fun voiceToText(context: Context, use: (ArrayList<String>?) -> Unit) {
         viewModelScope.launch {

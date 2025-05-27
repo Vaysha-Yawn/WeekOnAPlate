@@ -11,6 +11,7 @@ import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.dialogs.editIngredientInMenu.event.EditPositionIngredientEvent
 import week.on.a.plate.dialogs.editIngredientInMenu.state.EditPositionIngredientUIState
 import week.on.a.plate.screens.additional.filters.navigation.FilterDestination
+import week.on.a.plate.screens.additional.filters.navigation.FilterNavParams
 import week.on.a.plate.screens.additional.filters.state.FilterEnum
 import week.on.a.plate.screens.additional.filters.state.FilterMode
 
@@ -61,10 +62,8 @@ class EditPositionIngredientViewModel(
 
     private fun chooseIngredient() {
         viewModelScope.launch {
-            mainViewModel.nav.navigate(FilterDestination)
-            mainViewModel.onEvent(MainEvent.HideDialog)
-            viewModelScope.launch {
-                mainViewModel.filterViewModel.launchAndGet(
+            mainViewModel.onEvent(
+                MainEvent.Navigate(FilterDestination, FilterNavParams(
                     FilterMode.One, FilterEnum.Ingredient,
                     Pair(listOf(), listOf()), false
                 ) {
@@ -72,8 +71,9 @@ class EditPositionIngredientViewModel(
                     val new = it.ingredients?.getOrNull(0)
                     if (new != null) state.ingredientState.value = new
                     else onEvent(EditPositionIngredientEvent.Close)
-                }
-            }
+                })
+            )
+            mainViewModel.onEvent(MainEvent.HideDialog)
         }
     }
 

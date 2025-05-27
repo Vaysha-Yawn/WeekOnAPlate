@@ -1,5 +1,6 @@
 package week.on.a.plate.core.dialogCore
 
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import week.on.a.plate.core.Event
 import week.on.a.plate.dialogs.addPositionChoose.event.AddPositionEvent
@@ -9,6 +10,8 @@ import week.on.a.plate.dialogs.changePortions.event.ChangePortionsCountEvent
 import week.on.a.plate.dialogs.changePortions.logic.ChangePortionsCountViewModel
 import week.on.a.plate.dialogs.chooseIngredientsForStep.event.ChooseIngredientsForStepEvent
 import week.on.a.plate.dialogs.chooseIngredientsForStep.logic.ChooseIngredientsForStepViewModel
+import week.on.a.plate.dialogs.chooseWeekInMenu.event.ChooseWeekDialogEvent
+import week.on.a.plate.dialogs.chooseWeekInMenu.logic.ChooseWeekViewModel
 import week.on.a.plate.dialogs.cookStepMore.event.CookStepMoreEvent
 import week.on.a.plate.dialogs.cookStepMore.logic.CookStepMoreDialogViewModel
 import week.on.a.plate.dialogs.datePick.event.DatePickerEvent
@@ -19,6 +22,12 @@ import week.on.a.plate.dialogs.editOneString.event.EditOneStringEvent
 import week.on.a.plate.dialogs.editOneString.logic.EditOneStringViewModel
 import week.on.a.plate.dialogs.editOrDelete.event.EditOrDeleteEvent
 import week.on.a.plate.dialogs.editOrDelete.logic.EditOrDeleteViewModel
+import week.on.a.plate.dialogs.editOtherPositionMoreDialog.event.OtherPositionMoreEvent
+import week.on.a.plate.dialogs.editOtherPositionMoreDialog.logic.EditOtherPositionViewModel
+import week.on.a.plate.dialogs.editPositionRecipeMoreDialog.event.ActionMoreRecipePositionEvent
+import week.on.a.plate.dialogs.editPositionRecipeMoreDialog.logic.EditRecipePositionViewModel
+import week.on.a.plate.dialogs.editSelectionDialog.event.EditSelectionEvent
+import week.on.a.plate.dialogs.editSelectionDialog.logic.EditSelectionViewModel
 import week.on.a.plate.dialogs.forCreateRecipeScreen.chooseHowImagePick.event.ChooseHowImagePickEvent
 import week.on.a.plate.dialogs.forCreateRecipeScreen.chooseHowImagePick.logic.ChooseHowImagePickViewModel
 import week.on.a.plate.dialogs.forCreateRecipeScreen.exitApply.event.ExitApplyEvent
@@ -41,19 +50,12 @@ import week.on.a.plate.screens.additional.filters.dialogs.filterVoiceApply.event
 import week.on.a.plate.screens.additional.filters.dialogs.filterVoiceApply.logic.FilterVoiceApplyViewModel
 import week.on.a.plate.screens.additional.filters.dialogs.selectedFilters.event.SelectedFiltersEvent
 import week.on.a.plate.screens.additional.filters.dialogs.selectedFilters.logic.SelectedFiltersViewModel
-import week.on.a.plate.screens.base.menu.dialogs.chooseWeekInMenu.event.ChooseWeekDialogEvent
-import week.on.a.plate.screens.base.menu.dialogs.chooseWeekInMenu.logic.ChooseWeekViewModel
-import week.on.a.plate.screens.base.menu.dialogs.editOtherPositionMoreDialog.event.OtherPositionMoreEvent
-import week.on.a.plate.screens.base.menu.dialogs.editOtherPositionMoreDialog.logic.EditOtherPositionViewModel
-import week.on.a.plate.screens.base.menu.dialogs.editPositionRecipeMoreDialog.event.ActionMoreRecipePositionEvent
-import week.on.a.plate.screens.base.menu.dialogs.editPositionRecipeMoreDialog.logic.EditRecipePositionViewModel
-import week.on.a.plate.screens.base.menu.dialogs.editSelectionDialog.event.EditSelectionEvent
-import week.on.a.plate.screens.base.menu.dialogs.editSelectionDialog.logic.EditSelectionViewModel
 import java.util.Stack
 import javax.inject.Inject
 
 class DialogUseCase @Inject constructor() {
-    val activeDialog = mutableStateOf<DialogViewModel<*>?>(null)
+    private val activeDialog = mutableStateOf<DialogViewModel<*>?>(null)
+    val _activeDialog: State<DialogViewModel<*>?> = activeDialog
     private val hiddenDialog = Stack<DialogViewModel<*>>()
     private val dialogsStack = Stack<DialogViewModel<*>>()
 

@@ -13,6 +13,5 @@ sealed class MainEvent : Event {
     data object NavigateBack : MainEvent()
     data object HideDialog : MainEvent()
     data object ShowDialog : MainEvent()
-    data object UseSharedLink : MainEvent()
     class VoiceToText(val context:Context, val use:(ArrayList<String>?)->Unit) : MainEvent()
 }

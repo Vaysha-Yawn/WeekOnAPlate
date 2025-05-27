@@ -5,10 +5,10 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import week.on.a.plate.R
 import week.on.a.plate.app.mainActivity.event.MainEvent
-import week.on.a.plate.app.mainActivity.event.NavParams
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.core.dialogCore.DialogViewModel
@@ -19,6 +19,7 @@ import week.on.a.plate.dialogs.forCreateRecipeScreen.chooseHowImagePick.logic.Ch
 import week.on.a.plate.screens.additional.filters.dialogs.editOrCreateIngredient.event.AddIngredientEvent
 import week.on.a.plate.screens.additional.filters.dialogs.editOrCreateIngredient.state.AddIngredientUIState
 import week.on.a.plate.screens.additional.filters.navigation.FilterDestination
+import week.on.a.plate.screens.additional.filters.navigation.FilterNavParams
 import week.on.a.plate.screens.additional.filters.state.FilterEnum
 import week.on.a.plate.screens.additional.filters.state.FilterMode
 
@@ -77,13 +78,13 @@ class AddIngredientViewModel(
         mainViewModel.onEvent(MainEvent.HideDialog)
         val params =
             ChooseHowImagePickViewModel.ChooseHowImagePickDialogParams(state.photoUri.value) {
-            state.photoUri.value = it
-        }
+                state.photoUri.value = it
+            }
         dialogOpenParams.value = params
     }
 
     private fun toSearchCategory() {
-        mainViewModel.viewModelScope.launch {
+        mainViewModel.viewModelScope.launch(Dispatchers.Default) {
             val vm = mainViewModel.filterViewModel
             vm.state.selectedIngredientsCategories.value = listOf()
             vm.state.resultSearchIngredientsCategories.value = listOf()
@@ -91,15 +92,17 @@ class AddIngredientViewModel(
 
             val oldFilterState = vm.state.getCopy()
             mainViewModel.onEvent(MainEvent.HideDialog)
-            mainViewModel.nav.navigate(FilterDestination)
-
-            vm.launchAndGet(FilterMode.One, FilterEnum.CategoryIngredient, null, true) { filters ->
+            mainViewModel.onEvent(
+                MainEvent.Navigate(FilterDestination, FilterNavParams(
+                    FilterMode.One, FilterEnum.CategoryIngredient, null, true
+                ) { filters ->
                 val res = filters.ingredientsCategories?.getOrNull(0)
                 if (res != null) state.category.value = res
                 mainViewModel.onEvent(MainEvent.ShowDialog)
                 vm.isForCategory = false
                 vm.state.restoreState(oldFilterState)
-            }
+                })
+            )
         }
     }
 

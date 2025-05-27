@@ -34,7 +34,7 @@ fun RecipeDetailsStart(
     }) { event: RecipeDetailsEvent ->
         vm.onEvent(event)
     }
-    MainEventResolve(vm.mainEvent, remember { mutableStateOf(null) })
+    MainEventResolve(vm.mainEvent, remember { mutableStateOf(null) }, mainViewModel)
 }
 
 @Composable

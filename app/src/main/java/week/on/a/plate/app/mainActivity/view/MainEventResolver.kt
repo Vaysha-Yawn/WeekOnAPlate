@@ -3,8 +3,6 @@ package week.on.a.plate.app.mainActivity.view
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import week.on.a.plate.app.mainActivity.event.MainEvent
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.core.dialogCore.DialogOpenParams
@@ -14,7 +12,7 @@ import week.on.a.plate.core.dialogCore.DialogOpenParams
 fun MainEventResolve(
     mainEvent: MutableState<MainEvent?>,
     dialogOpenParams: MutableState<DialogOpenParams?>,
-    mainVM: MainViewModel = hiltViewModel()
+    mainVM: MainViewModel
 ) {
     //nav
     LaunchedEffect(mainEvent.value) {

@@ -1,6 +1,7 @@
 package week.on.a.plate.core.navigation
 
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import week.on.a.plate.R
@@ -58,7 +59,7 @@ class SearchNavParams(
     private val use: suspend (RecipeView) -> Unit
 ) : NavParams {
     override fun launch(vm: MainViewModel) {
-        vm.viewModelScope.launch {
+        vm.viewModelScope.launch(Dispatchers.Default) {
             vm.searchViewModel.launchAndGet(
                 selIde,
                 filters, use

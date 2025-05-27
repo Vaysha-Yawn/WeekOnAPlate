@@ -16,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import week.on.a.plate.R
+import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.app.mainActivity.view.MainEventResolve
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
@@ -28,14 +29,15 @@ import week.on.a.plate.screens.additional.ppAndTermsOfUse.state.DocumentsWebUISt
 
 @Composable
 fun DocumentsWebStart(
-    viewModel: DocumentsWebViewModel = viewModel()
+    viewModel: DocumentsWebViewModel = viewModel(),
+    viewModel1: MainViewModel
 ) {
     val onEvent = { event: Event ->
         viewModel.onEvent(event)
     }
     val state = viewModel.state
     DocumentWebContent(state, onEvent)
-    MainEventResolve(viewModel.mainEvent, remember { mutableStateOf(null) })
+    MainEventResolve(viewModel.mainEvent, remember { mutableStateOf(null) }, viewModel1)
 }
 
 @Composable
