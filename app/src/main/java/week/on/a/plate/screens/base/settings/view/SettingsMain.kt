@@ -26,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import week.on.a.plate.R
+import week.on.a.plate.app.mainActivity.view.MainEventResolve
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.TextBody
@@ -44,6 +45,7 @@ fun SettingsStart(vm: SettingsViewModel = viewModel()) {
         vm.onEvent(event)
     }
     SettingsContent(state, onEvent)
+    MainEventResolve(vm.mainEvent, vm.dialogOpenParams)
 }
 
 @Composable

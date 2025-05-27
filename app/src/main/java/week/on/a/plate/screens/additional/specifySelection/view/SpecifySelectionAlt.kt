@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import week.on.a.plate.R
 import week.on.a.plate.app.mainActivity.event.MainEvent
+import week.on.a.plate.app.mainActivity.view.MainEventResolve
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.TextTitleItalic
@@ -39,6 +40,7 @@ import java.time.LocalDate
 @Composable
 fun SpecifySelectionAltStart(vm: SpecifySelectionViewModel = viewModel()) {
     SpecifySelectionAltContent(vm.state, vm.stateCalendar, ) { vm.onEvent(it) }
+    MainEventResolve(vm.mainEvent, vm.dialogOpenParams)
 }
 
 @Composable

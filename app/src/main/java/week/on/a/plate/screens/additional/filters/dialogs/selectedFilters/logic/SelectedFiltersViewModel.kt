@@ -2,6 +2,7 @@ package week.on.a.plate.screens.additional.filters.dialogs.selectedFilters.logic
 
 import kotlinx.coroutines.CoroutineScope
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.core.dialogCore.DialogViewModel
 import week.on.a.plate.data.dataView.recipe.IngredientView
 import week.on.a.plate.data.dataView.recipe.RecipeTagView
@@ -59,13 +60,13 @@ class SelectedFiltersViewModel(
         }
     }
 
-    companion object {
-        fun launch(
-            startIndicator: Int,
-            selectedTags: List<RecipeTagView>,
-            selectedIngredients: List<IngredientView>, mainViewModel: MainViewModel,
-            useResult: (Pair<List<RecipeTagView>, List<IngredientView>>) -> Unit,
-        ) {
+    class SelectedFiltersDialogNavParams(
+        private val startIndicator: Int,
+        private val selectedTags: List<RecipeTagView>,
+        private val selectedIngredients: List<IngredientView>,
+        private val useResult: (Pair<List<RecipeTagView>, List<IngredientView>>) -> Unit,
+    ) : DialogOpenParams {
+        override fun openDialog(mainViewModel: MainViewModel) {
             SelectedFiltersViewModel(
                 startIndicator,
                 selectedTags,
@@ -76,6 +77,7 @@ class SelectedFiltersViewModel(
                 useResult
             )
         }
+
     }
 
 }

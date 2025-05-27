@@ -2,6 +2,7 @@ package week.on.a.plate.screens.additional.filters.dialogs.filterVoiceApply.logi
 
 import kotlinx.coroutines.CoroutineScope
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.core.dialogCore.DialogViewModel
 import week.on.a.plate.data.dataView.recipe.IngredientView
 import week.on.a.plate.data.dataView.recipe.RecipeTagView
@@ -47,11 +48,12 @@ class FilterVoiceApplyViewModel(
         }
     }
 
-    companion object {
-        fun launch(selectedTags: List<RecipeTagView>,
-                   selectedIngredients: List<IngredientView>,
-                   mainViewModel: MainViewModel, useResult: (FilterVoiceApplyUIState) -> Unit
-        ) {
+    class FilterVoiceApplyNavParams(
+        private val selectedTags: List<RecipeTagView>,
+        private val selectedIngredients: List<IngredientView>,
+        private val useResult: (FilterVoiceApplyUIState) -> Unit
+    ) : DialogOpenParams {
+        override fun openDialog(mainViewModel: MainViewModel) {
             FilterVoiceApplyViewModel(selectedTags, selectedIngredients,
                 mainViewModel.getCoroutineScope(),
                 mainViewModel::openDialog,
@@ -59,6 +61,7 @@ class FilterVoiceApplyViewModel(
                 useResult
             )
         }
+
     }
 
 }

@@ -1,9 +1,10 @@
 package week.on.a.plate.screens.additional.filters.logic.ingredient
 
 import android.content.Context
-import kotlinx.coroutines.CoroutineScope
+import androidx.compose.runtime.MutableState
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.data.dataView.recipe.IngredientCategoryView
 import week.on.a.plate.data.dataView.recipe.IngredientView
 import week.on.a.plate.data.repository.room.filters.ingredient.IngredientRepository
@@ -15,27 +16,27 @@ class EditIngredient @Inject constructor(private val ingredientRepository: Ingre
     suspend operator fun invoke(
         context: Context,
         ingredient: IngredientView,
-        mainViewModel: MainViewModel,
-        scope: CoroutineScope,
-        allIngredients: List<IngredientCategoryView>
-    ) {
+        onEvent: (FilterEvent) -> Unit,
+        allIngredients: List<IngredientCategoryView>,
+        dialogOpenParams: MutableState<DialogOpenParams?>,
+    ) = coroutineScope {
         val oldCategory = allIngredients.find { it.ingredientViews.contains(ingredient) }!!
-        AddIngredientViewModel.launch(
+        val params = AddIngredientViewModel.AddIngredientDialogNavParams(
             context,
             ingredient,
             oldCategory,
-            oldCategory,
-            mainViewModel
+            oldCategory
         ) { newIngredientAndCategory ->
-            scope.launch {
+            launch {
                 editIngredientDB(
                     ingredient,
                     newIngredientAndCategory.first,
                     newIngredientAndCategory.second
                 )
-                mainViewModel.filterViewModel.onEvent(FilterEvent.SearchFilter())
+                onEvent(FilterEvent.SearchFilter())
             }
         }
+        dialogOpenParams.value = params
     }
 
     private suspend fun editIngredientDB(

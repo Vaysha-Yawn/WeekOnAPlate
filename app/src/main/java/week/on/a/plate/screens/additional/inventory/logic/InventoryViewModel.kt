@@ -1,12 +1,15 @@
 package week.on.a.plate.screens.additional.inventory.logic
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import week.on.a.plate.app.mainActivity.event.EmptyNavParams
 import week.on.a.plate.app.mainActivity.event.MainEvent
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.core.Event
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.core.navigation.ShoppingListDestination
 import week.on.a.plate.data.dataView.ShoppingItemView
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
@@ -17,17 +20,20 @@ import week.on.a.plate.screens.additional.inventory.state.InventoryUIState
 import week.on.a.plate.screens.additional.specifySelection.event.SpecifySelectionEvent
 import javax.inject.Inject
 
+
 @HiltViewModel
 class InventoryViewModel @Inject constructor(
     private val shoppingItemRepository: ShoppingItemRepository
 ) : ViewModel() {
-    lateinit var mainViewModel: MainViewModel
     val state: InventoryUIState = InventoryUIState()
+
+    val dialogOpenParams = mutableStateOf<DialogOpenParams?>(null)
+    val mainEvent = mutableStateOf<MainEvent?>(null)
 
     fun onEvent(event: Event) {
         when (event) {
             is MainEvent -> {
-                mainViewModel.onEvent(event)
+                mainEvent.value = event
             }
 
             is SpecifySelectionEvent -> {
@@ -57,7 +63,7 @@ class InventoryViewModel @Inject constructor(
     }
 
     fun close() {
-        mainViewModel.onEvent(MainEvent.NavigateBack)
+        mainEvent.value = MainEvent.NavigateBack
     }
 
     fun launchAndGet(
@@ -112,7 +118,7 @@ class InventoryViewModel @Inject constructor(
                     }
                 }
             }
-            mainViewModel.nav.navigate(ShoppingListDestination)
+            mainEvent.value = MainEvent.Navigate(ShoppingListDestination, EmptyNavParams)
         }
     }
 

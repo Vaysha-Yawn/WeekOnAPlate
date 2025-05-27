@@ -4,11 +4,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import week.on.a.plate.app.mainActivity.event.MainEvent
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.core.dialogCore.DialogViewModel
 import week.on.a.plate.data.dataView.recipe.TagCategoryView
 import week.on.a.plate.screens.additional.filters.dialogs.editOrCreateTag.event.AddTagEvent
 import week.on.a.plate.screens.additional.filters.dialogs.editOrCreateTag.state.AddTagUIState
 import week.on.a.plate.screens.additional.filters.navigation.FilterDestination
+import week.on.a.plate.screens.additional.filters.navigation.FilterNavParams
 import week.on.a.plate.screens.additional.filters.state.FilterEnum
 import week.on.a.plate.screens.additional.filters.state.FilterMode
 
@@ -59,26 +61,26 @@ class AddTagViewModel(
 
             val oldFilterState = vm.state.getCopy()
             mainViewModel.onEvent(MainEvent.HideDialog)
-            mainViewModel.nav.navigate(FilterDestination) //todo use main event nav
 
-            vm.launchAndGet(FilterMode.One, FilterEnum.CategoryTag, null, true) { filters ->
+            val params =
+                FilterNavParams(FilterMode.One, FilterEnum.CategoryTag, null, true) { filters ->
                 val res = filters.tagsCategories?.getOrNull(0)
                 if (res != null) state.category.value = res
                 mainViewModel.onEvent(MainEvent.ShowDialog)
                 vm.isForCategory = false
                 vm.state.restoreState(oldFilterState)
             }
+            mainViewModel.onEvent(MainEvent.Navigate(FilterDestination, params))
         }
     }
 
-
-    companion object {
-        fun launch(
-            oldName: String?,
-            oldCategory: TagCategoryView?,
-            defaultCategoryView: TagCategoryView,
-            mainViewModel: MainViewModel, useResult: (Pair<String, TagCategoryView>) -> Unit
-        ) {
+    class AddTagDialogNavParams(
+        private val oldName: String?,
+        private val oldCategory: TagCategoryView?,
+        private val defaultCategoryView: TagCategoryView,
+        private val useResult: (Pair<String, TagCategoryView>) -> Unit
+    ) : DialogOpenParams {
+        override fun openDialog(mainViewModel: MainViewModel) {
             AddTagViewModel(
                 mainViewModel,
                 oldName,
@@ -90,6 +92,7 @@ class AddTagViewModel(
                 useResult
             )
         }
+
     }
 
 }

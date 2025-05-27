@@ -14,13 +14,15 @@ import week.on.a.plate.dialogs.changePortions.logic.ChangePortionsCountViewModel
 import week.on.a.plate.dialogs.forSettingsScreen.setPermanentMeals.logic.SetPermanentMealsViewModel
 import week.on.a.plate.dialogs.forSettingsScreen.setTheme.logic.SetThemesViewModel
 import week.on.a.plate.screens.additional.ppAndTermsOfUse.navigation.DocumentsWebDestination
+import week.on.a.plate.screens.additional.ppAndTermsOfUse.navigation.DocumentsWebNavParams
 import week.on.a.plate.screens.base.settings.event.SettingsEvent
 import week.on.a.plate.screens.base.settings.state.SettingsUIState
 import javax.inject.Inject
 
+
 @HiltViewModel
 class SettingsViewModel @Inject constructor(val dao: CategorySelectionDAO) : ViewModel() {
-    lateinit var mainViewModel: MainViewModel
+
     val state = SettingsUIState()
     private val pref = PreferenceUseCase
 
@@ -45,7 +47,7 @@ class SettingsViewModel @Inject constructor(val dao: CategorySelectionDAO) : Vie
             is SettingsEvent.Export -> export(event.context)
             is SettingsEvent.Import -> import(event.context)
             is SettingsEvent.Premium -> premium(event.context)
-            is SettingsEvent.PrivacyPolicy -> privacyPolicy(event.context)
+            is SettingsEvent.PrivacyPolicy -> privacyPolicy()
             is SettingsEvent.Profile -> profile(event.context)
             is SettingsEvent.RateApp -> rateApp(event.context)
             is SettingsEvent.SetMenuSelections -> setMenuSelections()
@@ -72,14 +74,12 @@ class SettingsViewModel @Inject constructor(val dao: CategorySelectionDAO) : Vie
 
     }
 
-    private fun privacyPolicy(context: Context) {
-        mainViewModel.documentsWebViewModel.launch(true)
-        mainViewModel.nav.navigate(DocumentsWebDestination)
+    private fun privacyPolicy() {
+        mainEvent.value = MainEvent.Navigate(DocumentsWebDestination, DocumentsWebNavParams(true))
     }
 
     private fun termsOfUse() {
-        mainViewModel.documentsWebViewModel.launch(false)
-        mainViewModel.nav.navigate(DocumentsWebDestination)
+        mainEvent.value = MainEvent.Navigate(DocumentsWebDestination, DocumentsWebNavParams(false))
     }
 
     private fun profile(context: Context) {

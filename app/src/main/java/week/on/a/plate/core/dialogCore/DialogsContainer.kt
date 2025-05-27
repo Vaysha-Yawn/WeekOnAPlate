@@ -11,8 +11,11 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import week.on.a.plate.app.mainActivity.view.MainEventResolve
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.uitools.dialogs.BaseDialogContainer
 import week.on.a.plate.core.uitools.dialogs.BottomDialogContainer
@@ -224,6 +227,7 @@ fun DialogsContainer(
             LaunchedEffect(Unit) {
                 sheetState.show()
             }
+            MainEventResolve(remember { mutableStateOf(null) }, data.dialogOpenParams)
         }
 
         is SelectedFiltersViewModel -> {
@@ -342,6 +346,7 @@ fun DialogsContainer(
             LaunchedEffect(Unit) {
                 sheetState.show()
             }
+            MainEventResolve(remember { mutableStateOf(null) }, data.dialogOpenParams)
         }
 
         is SetThemesViewModel -> {
@@ -370,6 +375,7 @@ fun DialogsContainer(
             LaunchedEffect(Unit) {
                 sheetState.show()
             }
+            MainEventResolve(remember { mutableStateOf(null) }, data.dialogOpenParams)
         }
 
         null -> {}

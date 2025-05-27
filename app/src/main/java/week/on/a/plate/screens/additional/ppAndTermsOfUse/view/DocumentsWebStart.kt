@@ -8,12 +8,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import week.on.a.plate.R
+import week.on.a.plate.app.mainActivity.view.MainEventResolve
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.clickNoRipple
@@ -31,7 +34,8 @@ fun DocumentsWebStart(
         viewModel.onEvent(event)
     }
     val state = viewModel.state
-    DocumentWebContent( state, onEvent,)
+    DocumentWebContent(state, onEvent)
+    MainEventResolve(viewModel.mainEvent, remember { mutableStateOf(null) })
 }
 
 @Composable

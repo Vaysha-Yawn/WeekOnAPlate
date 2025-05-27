@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import week.on.a.plate.R
+import week.on.a.plate.app.mainActivity.event.EmptyNavParams
 import week.on.a.plate.app.mainActivity.event.MainEvent
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.core.Event
@@ -28,6 +29,7 @@ import java.time.LocalTime
 import java.util.Locale
 import javax.inject.Inject
 
+
 @HiltViewModel
 class SpecifyRecipeToCookPlanViewModel @Inject constructor(
     private val calendarMyUseCase: CalendarMyUseCase,
@@ -35,12 +37,13 @@ class SpecifyRecipeToCookPlanViewModel @Inject constructor(
     private val recipeRepository: RecipeRepository,
 ) : ViewModel() {
 
-    lateinit var mainViewModel: MainViewModel
     val state: SpecifyRecipeToCookPlanUIState = SpecifyRecipeToCookPlanUIState()
     var stateCalendar: StateCalendarMy = StateCalendarMy.emptyState
     var recipe: RecipeView? = null
     var portionsCount: Int? = null
+
     val dialogOpenParams: MutableState<DialogOpenParams?> = mutableStateOf(null)
+    val mainEvent = mutableStateOf<MainEvent?>(null)
 
     init {
         val firstRow = calendarMyUseCase.getFirstRow(Locale.getDefault())
@@ -54,7 +57,7 @@ class SpecifyRecipeToCookPlanViewModel @Inject constructor(
 
     fun onEvent(event: Event) {
         when (event) {
-            is MainEvent -> mainViewModel.onEvent(event)
+            is MainEvent -> mainEvent.value = event
 
             is CalendarMyEvent -> calendarMyUseCase.onEvent(event, stateCalendar, false)
 
@@ -99,13 +102,13 @@ class SpecifyRecipeToCookPlanViewModel @Inject constructor(
                     portionsCount
                 )
 
-            mainViewModel.nav.popBackStack()
-            mainViewModel.nav.navigate(CookPlannerDestination)
+            mainEvent.value = MainEvent.NavigateBack
+            mainEvent.value = MainEvent.Navigate(CookPlannerDestination, EmptyNavParams)
         }
     }
 
     fun close() {
-        mainViewModel.onEvent(MainEvent.NavigateBack)
+        mainEvent.value = MainEvent.NavigateBack
     }
 
     fun launchAndGet(recipePos: Position.PositionRecipeView) {

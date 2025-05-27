@@ -31,24 +31,19 @@ class RecipeCreateViewModel @Inject constructor(
     private val editTagsUseCase: EditTagsUseCase,
     private val recipeCreateImageUseCase: RecipeCreateImageUseCase,
     private val recipeCreateTimeUseCase: RecipeCreateTimeUseCase,
+    private val recipeCreateStepUseCase: RecipeCreateStepUseCase,
+    private val recipeCreateIngredientUseCase: RecipeCreateIngredientUseCase
 ) : ViewModel() {
-    lateinit var mainViewModel: MainViewModel
+
     var state = RecipeCreateUIState()
     private lateinit var resultFlow: MutableStateFlow<RecipeCreateUIState?>
 
-    private lateinit var recipeCreateStepUseCase: RecipeCreateStepUseCase
-    private lateinit var recipeCreateIngredientUseCase: RecipeCreateIngredientUseCase
-
     val dialogOpenParams: MutableState<DialogOpenParams?> = mutableStateOf(null)
-
-    fun initWithMainVM(mainViewModel: MainViewModel) {
-        recipeCreateStepUseCase = RecipeCreateStepUseCase(mainViewModel, state)
-        recipeCreateIngredientUseCase = RecipeCreateIngredientUseCase(mainViewModel, state)
-    }
+    val mainEvent: MutableState<MainEvent?> = mutableStateOf(null)
 
     fun onEvent(event: Event) {
         when (event) {
-            is MainEvent -> mainViewModel.onEvent(event)
+            is MainEvent -> mainEvent.value = event
             is RecipeCreateEvent -> onEvent(
                 event
             )
@@ -58,23 +53,22 @@ class RecipeCreateViewModel @Inject constructor(
     fun onEvent(event: RecipeCreateEvent) {
         viewModelScope.launch {
             when (event) {
-                RecipeCreateEvent.Close -> mainViewModel.nav.popBackStack()
+                RecipeCreateEvent.Close -> mainEvent.value = MainEvent.NavigateBack
                 RecipeCreateEvent.Done -> done()
                 RecipeCreateEvent.EditTags -> editTagsUseCase(
-                    mainViewModel,
                     state.tags
-                )
+                ) { mainEvent.value = it }
 
                 RecipeCreateEvent.AddIngredient -> recipeCreateIngredientUseCase.addIngredient(
-                    dialogOpenParams
+                    dialogOpenParams, state
                 )
 
                 is RecipeCreateEvent.EditIngredient -> recipeCreateIngredientUseCase.editIngredient(
-                    event, dialogOpenParams
+                    event, dialogOpenParams, state
                 )
 
                 is RecipeCreateEvent.DeleteStep -> recipeCreateStepUseCase.deleteStep(
-                    event
+                    event, state
                 )
 
                 is RecipeCreateEvent.ClearTimer -> recipeCreateTimeUseCase.clearTimer(
@@ -90,7 +84,7 @@ class RecipeCreateViewModel @Inject constructor(
                     event
                 )
 
-                RecipeCreateEvent.AddStep -> recipeCreateStepUseCase.addStep()
+                RecipeCreateEvent.AddStep -> recipeCreateStepUseCase.addStep(state)
                 is RecipeCreateEvent.EditImage -> recipeCreateImageUseCase.editImage(
                     dialogOpenParams, event
                 )
@@ -99,13 +93,15 @@ class RecipeCreateViewModel @Inject constructor(
                     state, dialogOpenParams, event
                 )
 
-                RecipeCreateEvent.AddManyIngredients -> recipeCreateIngredientUseCase.addManyIngredients()
+                RecipeCreateEvent.AddManyIngredients -> recipeCreateIngredientUseCase.addManyIngredients(
+                    state
+                ) { mainEvent.value = it }
                 is RecipeCreateEvent.DeleteIngredient -> recipeCreateIngredientUseCase.deleteIngredient(
-                    event.ingredient
+                    event.ingredient, state
                 )
 
                 is RecipeCreateEvent.EditPinnedIngredients -> recipeCreateStepUseCase.editPinnedIngredients(
-                    event.recipeStepState, dialogOpenParams
+                    event.recipeStepState, dialogOpenParams, state
                 )
 
                 is RecipeCreateEvent.EditRecipeDuration -> recipeCreateTimeUseCase.editRecipeDuration(
@@ -121,7 +117,7 @@ class RecipeCreateViewModel @Inject constructor(
     private fun openDialogExitApplyFromCreateRecipe() {
         val params = ExitApplyViewModel.ExitApplyDialogParams { event ->
             if (event == ExitApplyEvent.Exit) {
-                mainViewModel.nav.popBackStack()
+                mainEvent.value = MainEvent.NavigateBack
             }
         }
         dialogOpenParams.value = params
@@ -129,7 +125,7 @@ class RecipeCreateViewModel @Inject constructor(
 
     private fun done() {
         resultFlow.value = state
-        mainViewModel.nav.popBackStack()
+        mainEvent.value = MainEvent.NavigateBack
     }
 
     fun start(): Flow<RecipeCreateUIState?> {

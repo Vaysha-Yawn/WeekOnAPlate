@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import week.on.a.plate.app.mainActivity.view.MainEventResolve
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.screens.base.searchRecipes.event.SearchScreenEvent
@@ -32,6 +33,7 @@ fun SearchStart(
     }
     state.allTagsCategories = viewModel.allTagCategories.collectAsState()
     SearchStartContent(state, onEvent)
+    MainEventResolve(viewModel.mainEvent, viewModel.dialogOpenParams)
 }
 
 @Composable

@@ -12,7 +12,7 @@ import javax.inject.Inject
 //todo
 @HiltViewModel
 class TutorialViewModel @Inject constructor() : ViewModel() {
-    lateinit var mainViewModel: MainViewModel
+
     var targetDestination: TutorialDestination = TutorialDestination.Menu
     private val listPages: List<TutorialPage> = listOf()
 

@@ -1,5 +1,6 @@
 package week.on.a.plate.screens.additional.ppAndTermsOfUse.logic
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import week.on.a.plate.app.mainActivity.event.MainEvent
@@ -9,22 +10,23 @@ import week.on.a.plate.screens.additional.ppAndTermsOfUse.event.DocumentsWebEven
 import week.on.a.plate.screens.additional.ppAndTermsOfUse.state.DocumentsWebUIState
 import javax.inject.Inject
 
+
 @HiltViewModel
 class DocumentsWebViewModel @Inject constructor() : ViewModel() {
 
-    lateinit var mainViewModel: MainViewModel
     val state = DocumentsWebUIState()
+    val mainEvent = mutableStateOf<MainEvent?>(null)
 
     fun onEvent(event: Event) {
         when (event) {
             is DocumentsWebEvent -> onEvent(event)
-            is MainEvent -> mainViewModel.onEvent(event)
+            is MainEvent -> mainEvent.value = event
         }
     }
 
     fun onEvent(event: DocumentsWebEvent) {
         when (event) {
-            DocumentsWebEvent.Back -> mainViewModel.nav.popBackStack()
+            DocumentsWebEvent.Back -> mainEvent.value = MainEvent.NavigateBack
         }
     }
 

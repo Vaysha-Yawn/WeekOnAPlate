@@ -1,7 +1,10 @@
 package week.on.a.plate.screens.additional.inventory.view
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.lifecycle.viewmodel.compose.viewModel
+import week.on.a.plate.app.mainActivity.view.MainEventResolve
 import week.on.a.plate.screens.additional.inventory.event.InventoryEvent
 import week.on.a.plate.screens.additional.inventory.logic.InventoryViewModel
 
@@ -14,4 +17,5 @@ fun InventoryStart(
     }
     val state = viewModel.state
     InventoryScreen(state, onEvent)
+    MainEventResolve(viewModel.mainEvent, viewModel.dialogOpenParams)
 }

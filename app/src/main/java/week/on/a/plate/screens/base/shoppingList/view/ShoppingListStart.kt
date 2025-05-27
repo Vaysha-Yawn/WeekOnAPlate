@@ -15,6 +15,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import week.on.a.plate.app.mainActivity.view.MainEventResolve
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.screens.base.shoppingList.event.ShoppingListEvent
 import week.on.a.plate.screens.base.shoppingList.logic.ShoppingListViewModel
@@ -27,6 +28,7 @@ fun ShoppingListStart(viewModel: ShoppingListViewModel = viewModel()) {
     ShoppingListContent(viewModel.state) { event: ShoppingListEvent ->
         viewModel.onEvent(event)
     }
+    MainEventResolve(viewModel.mainEvent, viewModel.dialogOpenParams)
 }
 
 @Composable

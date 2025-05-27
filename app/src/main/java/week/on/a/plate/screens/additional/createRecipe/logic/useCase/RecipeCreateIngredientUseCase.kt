@@ -3,6 +3,7 @@ package week.on.a.plate.screens.additional.createRecipe.logic.useCase
 import androidx.compose.runtime.MutableState
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import week.on.a.plate.app.mainActivity.event.MainEvent
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
@@ -12,15 +13,17 @@ import week.on.a.plate.dialogs.editIngredientInMenu.logic.EditPositionIngredient
 import week.on.a.plate.screens.additional.createRecipe.event.RecipeCreateEvent
 import week.on.a.plate.screens.additional.createRecipe.state.RecipeCreateUIState
 import week.on.a.plate.screens.additional.filters.navigation.FilterDestination
+import week.on.a.plate.screens.additional.filters.navigation.FilterNavParams
 import week.on.a.plate.screens.additional.filters.state.FilterEnum
 import week.on.a.plate.screens.additional.filters.state.FilterMode
 import week.on.a.plate.screens.additional.filters.state.FilterResult
+import javax.inject.Inject
 
-class RecipeCreateIngredientUseCase(
-    val mainViewModel: MainViewModel,
-    val state: RecipeCreateUIState
-) {
-    fun addIngredient(dialogOpenParams: MutableState<DialogOpenParams?>) {
+class RecipeCreateIngredientUseCase @Inject constructor() {
+    fun addIngredient(
+        dialogOpenParams: MutableState<DialogOpenParams?>,
+        state: RecipeCreateUIState
+    ) {
         val params = EditPositionIngredientViewModel.EditPositionIngredientDialogParams(
             null,
             true
@@ -34,9 +37,8 @@ class RecipeCreateIngredientUseCase(
 
     fun editIngredient(
         event: RecipeCreateEvent.EditIngredient,
-        dialogOpenParams: MutableState<DialogOpenParams?>,
+        dialogOpenParams: MutableState<DialogOpenParams?>, state: RecipeCreateUIState
     ) {
-
         val params = EditPositionIngredientViewModel.EditPositionIngredientDialogParams(
             Position.PositionIngredientView(
                 0,
@@ -54,7 +56,7 @@ class RecipeCreateIngredientUseCase(
         dialogOpenParams.value = params
     }
 
-    fun deleteIngredient(ingredient: IngredientInRecipeView) {
+    fun deleteIngredient(ingredient: IngredientInRecipeView, state: RecipeCreateUIState) {
         val ind = ingredient.ingredientView.ingredientId
         state.steps.value.forEach {
             if (it.pinnedIngredientsInd.value.contains(ind)) {
@@ -69,18 +71,16 @@ class RecipeCreateIngredientUseCase(
         }
     }
 
-    fun addManyIngredients() {
-        mainViewModel.viewModelScope.launch {
-            mainViewModel.nav.navigate(FilterDestination)
-            val ingredientsOld = state.ingredients.value.map { it.ingredientView }
-            //todo nav
-            mainViewModel.filterViewModel.launchAndGet(
-                FilterMode.Multiple, FilterEnum.Ingredient,
-                Pair(listOf(), ingredientsOld), false
-            ) { filterRes ->
-                state.ingredients.value = applyToStateAddManyIngredients(filterRes, ingredientsOld, state.ingredients.value)
-            }
+    fun addManyIngredients(state: RecipeCreateUIState, onEvent: (MainEvent) -> Unit) {
+        val ingredientsOld = state.ingredients.value.map { it.ingredientView }
+        val params = FilterNavParams(
+            FilterMode.Multiple, FilterEnum.Ingredient,
+            Pair(listOf(), ingredientsOld), false
+        ) { filterRes ->
+            state.ingredients.value =
+                applyToStateAddManyIngredients(filterRes, ingredientsOld, state.ingredients.value)
         }
+        onEvent(MainEvent.Navigate(FilterDestination, params))
     }
 
     private fun applyToStateAddManyIngredients(

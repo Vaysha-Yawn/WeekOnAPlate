@@ -3,7 +3,10 @@ package week.on.a.plate.screens.additional.filters.view
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.lifecycle.viewmodel.compose.viewModel
+import week.on.a.plate.app.mainActivity.view.MainEventResolve
 import week.on.a.plate.screens.additional.filters.event.FilterEvent
 import week.on.a.plate.screens.additional.filters.logic.FilterViewModel
 
@@ -21,4 +24,5 @@ fun FilterStart(
         TopSearchPanelFilter(stateUI = viewModel.state, onEvent)
         FilterScreen(viewModel.state, onEvent)
     }
+    MainEventResolve(viewModel.mainEvent, viewModel.dialogOpenParams)
 }

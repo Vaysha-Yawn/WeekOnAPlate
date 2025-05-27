@@ -8,6 +8,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import week.on.a.plate.R
 import week.on.a.plate.app.mainActivity.event.MainEvent
+import week.on.a.plate.app.mainActivity.event.NavParams
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.core.dialogCore.DialogViewModel
@@ -102,15 +103,14 @@ class AddIngredientViewModel(
         }
     }
 
-    companion object {
-        fun launch(
-            context: Context,
-            oldIngredient: IngredientView?,
-            oldCategory: IngredientCategoryView?,
-            defaultCategoryView: IngredientCategoryView,
-            mainViewModel: MainViewModel,
-            useResult: (Pair<IngredientView, IngredientCategoryView>) -> Unit
-        ) {
+    class AddIngredientDialogNavParams(
+        private val context: Context,
+        private val oldIngredient: IngredientView?,
+        private val oldCategory: IngredientCategoryView?,
+        private val defaultCategoryView: IngredientCategoryView,
+        private val useResult: (Pair<IngredientView, IngredientCategoryView>) -> Unit
+    ) : DialogOpenParams {
+        override fun openDialog(mainViewModel: MainViewModel) {
             AddIngredientViewModel(
                 context,
                 oldIngredient,

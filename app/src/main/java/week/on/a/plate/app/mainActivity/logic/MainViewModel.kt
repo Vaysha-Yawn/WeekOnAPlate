@@ -2,6 +2,7 @@ package week.on.a.plate.app.mainActivity.logic
 
 import android.content.Context
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,6 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import week.on.a.plate.app.mainActivity.event.MainEvent
+import week.on.a.plate.app.mainActivity.event.NavParams
 import week.on.a.plate.app.mainActivity.logic.imageFromGallery.ImageFromGalleryUseCase
 import week.on.a.plate.app.mainActivity.logic.takePicture.TakePictureUseCase
 import week.on.a.plate.app.mainActivity.logic.voice.VoiceInputUseCase
@@ -46,7 +48,7 @@ class MainViewModel @Inject constructor(
     val imageFromGalleryUseCase = ImageFromGalleryUseCase(this)
     val takePictureUseCase = TakePictureUseCase(this)
     val snackbarHostState = SnackbarHostState()
-    lateinit var nav: NavHostController
+    val navParams: MutableState<Any?> = mutableStateOf(null)
     val isActiveBaseScreen = mutableStateOf(true)
     val isActivePlusButton = mutableStateOf(true)
     val isActiveFilterScreen = mutableStateOf(false)
@@ -92,26 +94,12 @@ class MainViewModel @Inject constructor(
         specifyRecipeToCookPlanViewModel = specifyRecipeToCookPlan
         documentsWebViewModel = documentsWeb
 
-        filterViewModel.mainViewModel = this
-        recipeCreateViewModel.mainViewModel = this
-        inventoryViewModel.mainViewModel = this
-        deleteApplyViewModel.mainViewModel = this
-        specifyRecipeToCookPlanViewModel.mainViewModel = this
-        tutorial.mainViewModel = this
-        settings.mainViewModel = this
-        documentsWebViewModel.mainViewModel = this
-
-
         val nonPosedText = mainActivity.getString(NonPosed.fullName)
         val forWeek = mainActivity.getString(ForWeek.fullName)
         specifySelectionViewModel.state.nonPosedText = nonPosedText
 
         menuViewModel.menuUIState.value.forWeekFullName.value = forWeek
         menuViewModel.menuUIState.value.nonPosedFullName.value = nonPosedText
-
-        specifySelectionViewModel.updateSelections()
-
-        recipeCreateViewModel.initWithMainVM(this)
     }
 
     fun onEvent(event: Event) {
@@ -121,7 +109,6 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    //todo можно вместо nav в view model создать flow который будет отслеживать события навигации в главном экране и передовать эти события туда
     fun onEvent(event: MainEvent) {
         when (event) {
             MainEvent.CloseDialog -> dialogUseCase.closeDialog()
@@ -137,8 +124,8 @@ class MainViewModel @Inject constructor(
     }
 
     fun navigate(event: MainEvent.Navigate) {
-        nav.navigate(event.destination)
         event.navParams.launch(this)
+        navParams.value = event.destination
     }
 
     fun openDialog(dialog: DialogViewModel<*>) {

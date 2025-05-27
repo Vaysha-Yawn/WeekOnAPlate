@@ -19,8 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import week.on.a.plate.core.navigation.BottomScreens
 import week.on.a.plate.core.navigation.bottomScreens
 import week.on.a.plate.core.theme.ColorTransparent
@@ -30,11 +30,11 @@ import week.on.a.plate.screens.base.searchRecipes.logic.SearchViewModel
 
 @Composable
 fun BottomBar(
-    navController: NavHostController,
     isActiveBaseScreen: Boolean,
     searchViewModel: SearchViewModel
 ) {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val nav = rememberNavController()
+    val navBackStackEntry by nav.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     if (!isActiveBaseScreen) return
     BottomAppBar(
@@ -68,7 +68,7 @@ fun BottomBar(
                     },
                     selected = isSelected,
                     onClick = {
-                        navController.navigate(topLevelRoute.route) {
+                        nav.navigate(topLevelRoute.route) {
                             if (topLevelRoute == BottomScreens.SearchBottomNav){
                                 searchViewModel.onEvent(SearchScreenEvent.Clear)
                             }
