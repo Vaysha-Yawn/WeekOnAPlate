@@ -22,7 +22,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
@@ -53,8 +52,22 @@ import week.on.a.plate.screens.base.shoppingList.logic.ShoppingListViewModel
 class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels()
+    private val specifySelectionViewModel: SpecifySelectionViewModel by viewModels()
+    private val filterViewModel: FilterViewModel by viewModels()
+    private val searchViewModel: SearchViewModel by viewModels()
+    private val recipeDetailsViewModel: RecipeDetailsViewModel by viewModels()
+    private val shoppingListViewModel: ShoppingListViewModel by viewModels()
+    private val recipeCreateViewModel: RecipeCreateViewModel by viewModels()
+    private val menuViewModel: MenuViewModel by viewModels()
+    private val inventoryViewModel: InventoryViewModel by viewModels()
+    private val deleteApplyViewModel: DeleteApplyViewModel by viewModels()
+    private val cookPlannerViewModel: CookPlannerViewModel by viewModels()
+    private val specifyRecipeToCookPlanViewModel: SpecifyRecipeToCookPlanViewModel by viewModels()
+    private val settingsViewModel: SettingsViewModel by viewModels()
+    private val tutorialViewModel: TutorialViewModel by viewModels()
+    private val documentsWebViewModel: DocumentsWebViewModel by viewModels()
 
-    private var nav: NavHostController? = null
+    var nav: NavHostController? = null
     private val voiceInputLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -100,20 +113,6 @@ class MainActivity : ComponentActivity() {
                 }
                 nav!!.navigate(viewModel.navParams.value!!)
             }
-            val specifySelectionViewModel: SpecifySelectionViewModel = viewModel()
-            val filterViewModel: FilterViewModel = viewModel()
-            val searchViewModel: SearchViewModel = viewModel()
-            val recipeDetailsViewModel: RecipeDetailsViewModel = viewModel()
-            val shoppingListViewModel: ShoppingListViewModel = viewModel()
-            val recipeCreateViewModel: RecipeCreateViewModel = viewModel()
-            val menuViewModel: MenuViewModel = viewModel()
-            val inventoryViewModel: InventoryViewModel = viewModel()
-            val deleteApplyViewModel: DeleteApplyViewModel = viewModel()
-            val cookPlannerViewModel: CookPlannerViewModel = viewModel()
-            val specifyRecipeToCookPlanViewModel: SpecifyRecipeToCookPlanViewModel = viewModel()
-            val settingsViewModel: SettingsViewModel = viewModel()
-            val tutorialViewModel: TutorialViewModel = viewModel()
-            val documentsWebViewModel: DocumentsWebViewModel = viewModel()
 
             viewModel.voiceInputUseCase.voiceInputLauncher = voiceInputLauncher
             viewModel.imageFromGalleryUseCase.imageLauncher = getPictureLauncher

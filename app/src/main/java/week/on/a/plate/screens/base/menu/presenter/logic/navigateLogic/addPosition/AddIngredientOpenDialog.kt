@@ -3,7 +3,7 @@ package week.on.a.plate.screens.base.menu.presenter.logic.navigateLogic.addPosit
 import androidx.compose.runtime.MutableState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.dialogs.editIngredientInMenu.logic.EditPositionIngredientViewModel
 import week.on.a.plate.screens.base.menu.domain.dbusecase.AddIngredientPositionToDBUseCase
@@ -19,7 +19,7 @@ class AddIngredientOpenDialog @Inject constructor(
             null,
             true
         ) { newIngredient ->
-            launch(Dispatchers.IO) {
+            withContext(Dispatchers.IO) {
                 addIngredient(
                     newIngredient,
                     selId

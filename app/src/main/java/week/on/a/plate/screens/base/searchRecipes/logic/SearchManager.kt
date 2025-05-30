@@ -1,9 +1,12 @@
 package week.on.a.plate.screens.base.searchRecipes.logic
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import week.on.a.plate.data.dataView.recipe.RecipeView
 import week.on.a.plate.screens.base.searchRecipes.state.SearchState
 import week.on.a.plate.screens.base.searchRecipes.state.SearchUIState
@@ -13,9 +16,9 @@ class SearchManager @Inject constructor() {
     suspend fun search(
         state: SearchUIState,
         floAllRecipe: StateFlow<List<RecipeView>>,
-    ) = coroutineScope {
+    ) = withContext(Dispatchers.Default) {
         searchAbstract(
-            state, floAllRecipe
+            state, this, floAllRecipe
         ) { recipeView ->
             (if (state.favoriteChecked.value) {
                 recipeView.inFavorite
@@ -32,11 +35,12 @@ class SearchManager @Inject constructor() {
 
     private suspend fun searchAbstract(
         state: SearchUIState,
+        scope: CoroutineScope,
         floAllRecipe: StateFlow<List<RecipeView>>,
         filter: (RecipeView) -> Boolean,
     ) = coroutineScope {
         state.searched.value = SearchState.Searching
-        launch {
+        scope.launch(Dispatchers.Default) {
             state.searched.value = SearchState.Done
             floAllRecipe.map { it.filter { t -> filter(t) } }.collect {
                 state.resultSearch.value = it.sorted(state)
@@ -50,16 +54,17 @@ class SearchManager @Inject constructor() {
         floAllRecipe: StateFlow<List<RecipeView>>,
     ) = coroutineScope {
         searchAbstract(
-            state, floAllRecipe,
+            state, this, floAllRecipe,
         ) { true }
     }
 
     suspend fun searchRandom(
         state: SearchUIState,
+        scope: CoroutineScope,
         floAllRecipe: StateFlow<List<RecipeView>>,
     ) = coroutineScope {
         state.searched.value = SearchState.Searching
-        launch {
+        scope.launch(Dispatchers.Default) {
             state.searched.value = SearchState.Done
             floAllRecipe.map { recipeViewList ->
                 if (recipeViewList.isNotEmpty()) {
@@ -83,9 +88,9 @@ class SearchManager @Inject constructor() {
     suspend fun searchFavorite(
         state: SearchUIState,
         floAllRecipe: StateFlow<List<RecipeView>>,
-    ) {
+    ) = coroutineScope {
         searchAbstract(
-            state, floAllRecipe
+            state, this, floAllRecipe
         ) { recipeView ->
             recipeView.inFavorite
         }

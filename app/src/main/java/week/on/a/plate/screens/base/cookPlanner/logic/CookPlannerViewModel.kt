@@ -92,7 +92,12 @@ class CookPlannerViewModel @Inject constructor(
             is WrapperDatePickerEvent -> {
                 wrapperDatePickerManager.onEvent(event, state.value.wrapperDatePickerUIState)
                 viewModelScope.launch {
-                    cookPlannerWrapperDatePickerManager.onEvent(dialogOpenParams, event, ::update)
+                    cookPlannerWrapperDatePickerManager.onEvent(
+                        dialogOpenParams,
+                        event,
+                        viewModelScope,
+                        ::update
+                    )
                 }
             }
 
@@ -106,7 +111,7 @@ class CookPlannerViewModel @Inject constructor(
                 is CookPlannerEvent.CheckStep -> checkStepUseCase(event)
                 is CookPlannerEvent.ShowStepMore -> cookPlannerCardActions.showStepMore(
                     event,
-                    dialogOpenParams
+                    dialogOpenParams, viewModelScope,
                 )
 
                 is CookPlannerEvent.NavToFullStep ->

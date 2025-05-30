@@ -3,7 +3,7 @@ package week.on.a.plate.screens.base.menu.presenter.logic.navigateLogic.addPosit
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import week.on.a.plate.app.mainActivity.event.MainEvent
 import week.on.a.plate.core.Event
 import week.on.a.plate.data.dataView.week.Position
@@ -27,8 +27,8 @@ class CreateDraftNavToScreen @Inject constructor(
             null,
             false
         ) { filters ->
-            if (filters.tags?.isEmpty() == true && filters.ingredients?.isEmpty() == true) return@FilterNavParams
-            launch(Dispatchers.IO) {
+            withContext(Dispatchers.IO) {
+                if (filters.tags?.isEmpty() == true && filters.ingredients?.isEmpty() == true) return@withContext
                 val draft =
                     Position.PositionDraftView(0, filters.tags!!, filters.ingredients!!, selId)
                 addDraft(draft, selId)

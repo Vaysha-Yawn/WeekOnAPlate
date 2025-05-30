@@ -6,8 +6,9 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import week.on.a.plate.R
+import week.on.a.plate.app.mainActivity.event.BackNavParams
 import week.on.a.plate.app.mainActivity.event.MainEvent
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.app.mainActivity.event.NavigateBackDest
 import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.screens.additional.deleteApply.event.DeleteApplyEvent
 import week.on.a.plate.screens.additional.deleteApply.state.DeleteApplyUIState
@@ -31,15 +32,20 @@ class DeleteApplyViewModel @Inject constructor(
     }
 
     fun done() {
-        close()
         resultFlow.value = DeleteApplyEvent.Apply
+        close()
     }
 
     fun close() {
-        mainEvent.value = MainEvent.NavigateBack
+        mainEvent.value = MainEvent.Navigate(NavigateBackDest, BackNavParams)
     }
 
-    suspend fun launchAndGet(context: Context, title:String?=null, message: String, use: suspend (DeleteApplyEvent) -> Unit) {
+    suspend fun launchAndGet(
+        context: Context,
+        title: String? = null,
+        message: String,
+        use: suspend (DeleteApplyEvent) -> Unit
+    ) {
         if (title!=null) state.title.value = title else state.title.value =
             context.getString(R.string.delete_apply)
         state.message.value = message

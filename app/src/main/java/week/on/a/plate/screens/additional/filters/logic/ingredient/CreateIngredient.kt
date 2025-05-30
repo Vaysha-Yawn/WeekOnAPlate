@@ -3,8 +3,8 @@ package week.on.a.plate.screens.additional.filters.logic.ingredient
 import android.content.Context
 import androidx.compose.runtime.MutableState
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.data.dataView.recipe.IngredientCategoryView
 import week.on.a.plate.data.dataView.recipe.IngredientView
@@ -21,11 +21,10 @@ class CreateIngredient @Inject constructor(
         scope: CoroutineScope,
         dialogOpenParams: MutableState<DialogOpenParams?>,
         searchText: String,
-
         allIngredients : List<IngredientCategoryView>,
         onEvent: (FilterEvent) -> Unit,
     ) {
-        scope.launch {
+        scope.launch(Dispatchers.IO) {
             val oldIngredient = IngredientView(
                 0,
                 img = "",
@@ -40,7 +39,7 @@ class CreateIngredient @Inject constructor(
                 null,
                 defCategoryView,
             ) { ingredientData ->
-                scope.launch {
+                scope.launch(Dispatchers.IO) {
                     insertNewIngredientInDB(ingredientData, onEvent)
                     onEvent(FilterEvent.SearchFilter())
                 }

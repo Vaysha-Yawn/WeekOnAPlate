@@ -1,6 +1,8 @@
 package week.on.a.plate.screens.additional.filters.logic.tagCategory
 
 import androidx.compose.runtime.MutableState
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import week.on.a.plate.R
@@ -14,6 +16,7 @@ import javax.inject.Inject
 class EditTagCategory @Inject constructor(private val recipeTagCategoryRepository: RecipeTagCategoryRepository) {
     suspend operator fun invoke(
         oldTagCat: TagCategoryView, dialogOpenParams: MutableState<DialogOpenParams?>,
+        scope: CoroutineScope,
     ) = coroutineScope {
         val params = EditOneStringViewModel.EditOneStringDialogParams(
             EditOneStringUIState(
@@ -22,7 +25,7 @@ class EditTagCategory @Inject constructor(private val recipeTagCategoryRepositor
                 R.string.enter_category_name,
             )
         ) { newName ->
-            launch {
+            scope.launch(Dispatchers.IO) {
                 recipeTagCategoryRepository.updateName(newName, oldTagCat.id)
             }
         }

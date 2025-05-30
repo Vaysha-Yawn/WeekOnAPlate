@@ -1,6 +1,8 @@
 package week.on.a.plate.screens.base.cookPlanner.logic
 
 import androidx.compose.runtime.MutableState
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.dialogCore.DialogOpenParams
@@ -15,6 +17,7 @@ class CookPlannerWrapperDatePickerManager(
     suspend fun onEvent(
         dialogOpenParams: MutableState<DialogOpenParams?>,
         event: WrapperDatePickerEvent,
+        scope: CoroutineScope,
         update: suspend () -> Unit
     ) = coroutineScope {
         when (event) {
@@ -24,7 +27,7 @@ class CookPlannerWrapperDatePickerManager(
                     wrapperDatePickerUIState
                 ) { date ->
                     wrapperDatePickerUIState.activeDay.value = date
-                    launch {
+                    scope.launch(Dispatchers.IO) {
                         update()
                     }
                 }
@@ -37,7 +40,7 @@ class CookPlannerWrapperDatePickerManager(
                     false
                 ) { date ->
                     wrapperDatePickerUIState.activeDay.value = date
-                    launch {
+                    scope.launch(Dispatchers.IO) {
                         update()
                     }
                 }

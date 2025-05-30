@@ -90,7 +90,7 @@ fun Navigation(
             viewModel.isActivePlusButton.value = false
             viewModel.isActiveBaseScreen.value = true
             viewModel.isActiveFilterScreen.value = false
-            CookPlannerStart(viewModel)
+            CookPlannerStart(viewModel, viewModel.cookPlannerViewModel)
         }
 
         //others

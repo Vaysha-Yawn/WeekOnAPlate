@@ -1,5 +1,6 @@
 package week.on.a.plate.dialogs.editOtherPositionMoreDialog.logic.navigateLogic
 
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -20,6 +21,7 @@ class EditDraftOpenDialog @Inject constructor(
 ) {
     suspend operator fun invoke(
         oldDraft: Position.PositionDraftView,
+        scope: CoroutineScope,
         onEvent: (Event) -> Unit
     ) = coroutineScope {
         val params = FilterNavParams(
@@ -27,11 +29,11 @@ class EditDraftOpenDialog @Inject constructor(
             FilterEnum.IngredientAndTag, Pair(oldDraft.tags, oldDraft.ingredients), false
         ) { filters ->
             if (filters.tags?.isEmpty() == true && filters.ingredients?.isEmpty() == true || filters.ingredients == null || filters.tags == null) {
-                launch(Dispatchers.IO) {
+                scope.launch(Dispatchers.IO) {
                     deleteDraft(oldDraft)
                 }
             } else {
-                launch(Dispatchers.IO) {
+                scope.launch(Dispatchers.IO) {
                     editDraft(oldDraft, filters.tags, filters.ingredients)
                 }
             }

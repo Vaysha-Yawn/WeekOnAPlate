@@ -5,9 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import week.on.a.plate.app.mainActivity.event.BackNavParams
 import week.on.a.plate.app.mainActivity.event.EmptyNavParams
 import week.on.a.plate.app.mainActivity.event.MainEvent
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.app.mainActivity.event.NavigateBackDest
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.core.navigation.ShoppingListDestination
@@ -63,7 +64,7 @@ class InventoryViewModel @Inject constructor(
     }
 
     fun close() {
-        mainEvent.value = MainEvent.NavigateBack
+        mainEvent.value = MainEvent.Navigate(NavigateBackDest, BackNavParams)
     }
 
     fun launchAndGet(

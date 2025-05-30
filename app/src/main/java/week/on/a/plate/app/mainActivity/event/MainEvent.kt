@@ -10,7 +10,6 @@ sealed class MainEvent : Event {
     class OpenDialog(val dialog: DialogViewModel<*>) : MainEvent()
     class ShowSnackBar(val message: String) : MainEvent()
     class Navigate(val destination: Any, val navParams: NavParams) : MainEvent()
-    data object NavigateBack : MainEvent()
     data object HideDialog : MainEvent()
     data object ShowDialog : MainEvent()
     class VoiceToText(val context:Context, val use:(ArrayList<String>?)->Unit) : MainEvent()

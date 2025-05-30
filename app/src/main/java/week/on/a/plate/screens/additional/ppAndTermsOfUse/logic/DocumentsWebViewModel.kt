@@ -3,8 +3,9 @@ package week.on.a.plate.screens.additional.ppAndTermsOfUse.logic
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import week.on.a.plate.app.mainActivity.event.BackNavParams
 import week.on.a.plate.app.mainActivity.event.MainEvent
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.app.mainActivity.event.NavigateBackDest
 import week.on.a.plate.core.Event
 import week.on.a.plate.screens.additional.ppAndTermsOfUse.event.DocumentsWebEvent
 import week.on.a.plate.screens.additional.ppAndTermsOfUse.state.DocumentsWebUIState
@@ -26,7 +27,8 @@ class DocumentsWebViewModel @Inject constructor() : ViewModel() {
 
     fun onEvent(event: DocumentsWebEvent) {
         when (event) {
-            DocumentsWebEvent.Back -> mainEvent.value = MainEvent.NavigateBack
+            DocumentsWebEvent.Back -> mainEvent.value =
+                MainEvent.Navigate(NavigateBackDest, BackNavParams)
         }
     }
 

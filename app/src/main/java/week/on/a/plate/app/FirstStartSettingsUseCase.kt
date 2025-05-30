@@ -3,6 +3,7 @@ package week.on.a.plate.app
 import android.content.Context
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import week.on.a.plate.data.dataView.example.getStartIngredients
 import week.on.a.plate.data.dataView.example.getTags
@@ -25,7 +26,6 @@ class FirstStartSettingsUseCase @Inject constructor(
     private val categorySelectionDAO: CategorySelectionDAO
 ) {
 
-    //todo отчистить при завершении
     val scope = CoroutineScope(Dispatchers.IO)
 
     fun setStartValue(context: Context) {
@@ -69,7 +69,9 @@ class FirstStartSettingsUseCase @Inject constructor(
             }
 
         }
-
+        job.invokeOnCompletion {
+            scope.cancel()
+        }
     }
 
 }

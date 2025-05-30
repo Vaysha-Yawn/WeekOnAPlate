@@ -1,5 +1,7 @@
 package week.on.a.plate.screens.base.menu.presenter.logic.navigateLogic.shopList
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import week.on.a.plate.app.mainActivity.event.MainEvent
@@ -20,13 +22,14 @@ class SelectedToShopListNavToInventory @Inject constructor(
 ) {
     suspend operator fun invoke(
         menuUIState: MenuUIState,
+        scope: CoroutineScope,
         onEvent: (Event) -> Unit,
         getSelected: (MenuUIState) -> List<Position.PositionRecipeView>
     ) = coroutineScope {
         onEvent(MenuEvent.ActionWrapperDatePicker(WrapperDatePickerEvent.SwitchEditMode))
         val selected = getSelected(menuUIState)
         val list = selected.flatMap { positionRecipeView ->
-            val recipe = async { getRecipe(positionRecipeView.recipe.id) }
+            val recipe = scope.async(Dispatchers.IO) { getRecipe(positionRecipeView.recipe.id) }
             val ingredients =
                 ingredientsMapByPortions(positionRecipeView.portionsCount, recipe.await())
             ingredients

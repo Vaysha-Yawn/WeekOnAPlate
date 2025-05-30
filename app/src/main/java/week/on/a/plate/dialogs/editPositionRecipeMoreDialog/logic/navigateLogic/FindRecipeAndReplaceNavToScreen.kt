@@ -2,6 +2,7 @@ package week.on.a.plate.dialogs.editPositionRecipeMoreDialog.logic.navigateLogic
 
 import android.content.Context
 import androidx.compose.runtime.MutableState
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -25,11 +26,12 @@ class FindRecipeAndReplaceNavToScreen @Inject constructor(
     suspend operator fun invoke(
         oldRecipe: Position.PositionRecipeView,
         dialogOpenParams: MutableState<DialogOpenParams?>, context: Context,
+        scope: CoroutineScope,
         onEvent: (Event) -> Unit
     ) = coroutineScope {
         val selId = oldRecipe.selectionId
         val params = SearchNavParams(selId, null) { recipe ->
-            choosePortionsCount(context, dialogOpenParams) { count ->
+            choosePortionsCount(context, dialogOpenParams, scope) { count ->
                 val newRecipeToAdd = Position.PositionRecipeView(
                     0,
                     RecipeShortView(recipe.id, recipe.name, recipe.img),
@@ -38,7 +40,7 @@ class FindRecipeAndReplaceNavToScreen @Inject constructor(
                 )
                 addRecipe(newRecipeToAdd, selId)
             }
-            launch(Dispatchers.IO) {
+            scope.launch(Dispatchers.IO) {
                 deleteRecipe(oldRecipe)
             }
         }

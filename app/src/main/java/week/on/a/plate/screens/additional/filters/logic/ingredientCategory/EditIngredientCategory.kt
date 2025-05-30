@@ -1,6 +1,8 @@
 package week.on.a.plate.screens.additional.filters.logic.ingredientCategory
 
 import androidx.compose.runtime.MutableState
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import week.on.a.plate.R
@@ -15,6 +17,7 @@ class EditIngredientCategory @Inject constructor(private val ingredientCategoryR
     suspend operator fun invoke(
         oldIngredientCat: IngredientCategoryView,
         dialogOpenParams: MutableState<DialogOpenParams?>,
+        scope: CoroutineScope,
     ) = coroutineScope {
         val params = EditOneStringViewModel.EditOneStringDialogParams(
             EditOneStringUIState(
@@ -23,7 +26,7 @@ class EditIngredientCategory @Inject constructor(private val ingredientCategoryR
                 R.string.enter_category_name,
             )
         ) { newName ->
-            launch {
+            scope.launch(Dispatchers.IO) {
                 ingredientCategoryRepository.updateName(newName, oldIngredientCat.id)
             }
         }

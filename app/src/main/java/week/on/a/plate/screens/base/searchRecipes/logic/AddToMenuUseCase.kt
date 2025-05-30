@@ -2,6 +2,8 @@ package week.on.a.plate.screens.base.searchRecipes.logic
 
 import android.content.Context
 import androidx.compose.runtime.MutableState
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -31,6 +33,7 @@ class AddToMenuUseCase @Inject constructor(
         resultFlow: MutableStateFlow<RecipeView?>?,
         state: SearchUIState,
         dialogOpenParams: MutableState<DialogOpenParams?>,
+        scope: CoroutineScope,
         onEvent: (Event) -> Unit
     ) = coroutineScope {
         if (state.selId != null) {
@@ -43,7 +46,7 @@ class AddToMenuUseCase @Inject constructor(
                 val std = PreferenceUseCase.getDefaultPortionsCount(context)
                 val params =
                     ChangePortionsCountViewModel.ChangePortionsCountDialogParams(std) { count ->
-                        launch {
+                        scope.launch(Dispatchers.IO) {
                         val recipePosition = Position.PositionRecipeView(
                             0,
                             RecipeShortView(recipeView.id, recipeView.name, recipeView.img),

@@ -124,7 +124,7 @@ class MenuViewModel @Inject constructor(
                 viewModelScope.launch {
                     getSelAndCreate(
                         event.context,
-                        dialogOpenParams,
+                        dialogOpenParams, viewModelScope,
                         ::onEvent
                     )
                 }
@@ -144,12 +144,12 @@ class MenuViewModel @Inject constructor(
                     if (event.position is Position.PositionRecipeView) {
                         recipePositionActionsMore(
                             event.position,
-                            dialogOpenParams,
+                            dialogOpenParams, viewModelScope,
                             ::onEvent
                         )
                     } else otherPositionActionsMore(
                         event.position,
-                        dialogOpenParams,
+                        dialogOpenParams, viewModelScope,
                         ::onEvent
                     )
                 }
@@ -157,12 +157,16 @@ class MenuViewModel @Inject constructor(
 
             MenuEvent.DeleteSelected ->
                 viewModelScope.launch {
-                    selectedRecipeManager.deleteSelected(menuUIState.value, ::onEvent)
+                    selectedRecipeManager.deleteSelected(
+                        menuUIState.value,
+                        viewModelScope,
+                        ::onEvent
+                    )
                 }
 
             MenuEvent.SelectedToShopList -> viewModelScope.launch {
                 selectedToShopList(
-                    menuUIState.value,
+                    menuUIState.value, viewModelScope,
                     ::onEvent,
                     selectedRecipeManager::getSelected
                 )
@@ -178,7 +182,7 @@ class MenuViewModel @Inject constructor(
 
             is MenuEvent.SearchByDraft -> viewModelScope.launch {
                 searchByDraft(
-                    event.draft, ::onEvent
+                    event.draft, viewModelScope, ::onEvent
                 )
             }
 
@@ -186,18 +190,18 @@ class MenuViewModel @Inject constructor(
                 createFirstNonPosedPosition(
                     event.context,
                     activeDay,
-                    dialogOpenParams, ::onEvent
+                    dialogOpenParams, viewModelScope, ::onEvent
                 )
             }
 
             is MenuEvent.EditOrDeleteSelection ->
                 viewModelScope.launch(Dispatchers.IO) {
-                    editOrDeleteSelection(event.sel, dialogOpenParams)
+                    editOrDeleteSelection(event.sel, dialogOpenParams, viewModelScope)
                 }
 
             is MenuEvent.CreateSelection ->
                 viewModelScope.launch(Dispatchers.IO) {
-                    createSelection(event.date, event.isForWeek, dialogOpenParams)
+                    createSelection(event.date, event.isForWeek, dialogOpenParams, viewModelScope)
                 }
 
             is MenuEvent.CreateWeekSelIdAndCreatePosition ->
@@ -205,8 +209,8 @@ class MenuViewModel @Inject constructor(
                     createWeekSelIdAndCreatePos(
                         event.context,
                         activeDay,
-                        dialogOpenParams,
-                        ::onEvent
+                        dialogOpenParams, viewModelScope,
+                        ::onEvent,
                     )
                 }
 

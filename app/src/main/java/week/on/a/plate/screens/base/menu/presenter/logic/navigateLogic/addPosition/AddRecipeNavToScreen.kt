@@ -25,7 +25,7 @@ class AddRecipeNavToScreen @Inject constructor(
         onEvent: (Event) -> Unit,
     ) = coroutineScope {
         val params = SearchNavParams(selId, null) { recipe ->
-            choosePortionsCount(context, dialogOpenParams) { count ->
+            choosePortionsCount(context, dialogOpenParams, this) { count ->
                 val recipePosition = Position.PositionRecipeView(
                     0,
                     RecipeShortView(recipe.id, recipe.name, recipe.img),

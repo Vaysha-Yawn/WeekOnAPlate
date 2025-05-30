@@ -83,7 +83,7 @@ class SearchViewModel @Inject constructor(
                     searchStateManager::close,
                     resultFlow,
                     state,
-                    dialogOpenParams,
+                    dialogOpenParams, viewModelScope,
                     ::onEvent
                 )
 
@@ -95,12 +95,16 @@ class SearchViewModel @Inject constructor(
 
             is SearchScreenEvent.SelectTag -> selectTags(event.recipeTagView, state)
             is SearchScreenEvent.CreateRecipe ->
-                createRecipe(state) { mainEvent.value = it }
+                createRecipe(state, viewModelScope) { mainEvent.value = it }
 
             SearchScreenEvent.Clear -> searchStateManager.searchClear(state)
             SearchScreenEvent.SearchFavorite -> searchManager.searchFavorite(state, floAllRecipe)
             SearchScreenEvent.SearchAll -> searchManager.searchAll(state, floAllRecipe)
-            SearchScreenEvent.SearchRandom -> searchManager.searchRandom(state, floAllRecipe)
+            SearchScreenEvent.SearchRandom -> searchManager.searchRandom(
+                state,
+                viewModelScope,
+                floAllRecipe,
+            )
             is SearchScreenEvent.ChangeSort -> sortingManager.changeSort(event.type, event.direction, state)
             SearchScreenEvent.FiltersMore -> filtersMore(
                 dialogOpenParams = dialogOpenParams,

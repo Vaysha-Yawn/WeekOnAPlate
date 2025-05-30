@@ -2,6 +2,7 @@ package week.on.a.plate.screens.base.menu.domain.dbusecase
 
 
 import android.content.Context
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -36,9 +37,10 @@ class AddSelectionToDBUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(
         date: LocalDate, newName: String, locale: Locale,
-        isForWeek: Boolean, time: LocalTime
+        isForWeek: Boolean, time: LocalTime,
+        scope: CoroutineScope,
     ) = coroutineScope {
-        launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             menuR.createSelection(
                 date, newName, locale,
                 isForWeek, time
@@ -50,8 +52,8 @@ class AddSelectionToDBUseCase @Inject constructor(
 class DeleteSelectionInDBUseCase @Inject constructor(
     private val menuR: ISelectionRepository
 ) {
-    suspend operator fun invoke(sel: SelectionView) = coroutineScope {
-        launch(Dispatchers.IO) {
+    suspend operator fun invoke(sel: SelectionView, scope: CoroutineScope) = coroutineScope {
+        scope.launch(Dispatchers.IO) {
             menuR.deleteSelection(sel)
         }
     }
@@ -60,9 +62,14 @@ class DeleteSelectionInDBUseCase @Inject constructor(
 class EditSelectionInDBUseCase @Inject constructor(
     private val menuR: ISelectionRepository
 ) {
-    suspend operator fun invoke(sel: SelectionView, newName: String, time: LocalTime) =
+    suspend operator fun invoke(
+        sel: SelectionView,
+        newName: String,
+        time: LocalTime,
+        scope: CoroutineScope,
+    ) =
         coroutineScope {
-            launch(Dispatchers.IO) {
+            scope.launch(Dispatchers.IO) {
                 menuR.editSelection(
                     sel, newName, time
                 )

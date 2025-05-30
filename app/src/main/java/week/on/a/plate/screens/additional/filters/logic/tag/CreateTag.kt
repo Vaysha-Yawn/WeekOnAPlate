@@ -2,8 +2,8 @@ package week.on.a.plate.screens.additional.filters.logic.tag
 
 import androidx.compose.runtime.MutableState
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.data.dataView.recipe.TagCategoryView
 import week.on.a.plate.data.repository.room.filters.recipeTag.RecipeTagRepository
@@ -21,7 +21,7 @@ class CreateTag @Inject constructor(
         dialogOpenParams: MutableState<DialogOpenParams?>,
         allTags: List<TagCategoryView>
     ) {
-        scope.launch {
+        scope.launch(Dispatchers.IO) {
             val defCategoryView =
                 allTags.find { it.id == 1L }!!
             dialogOpenParams.value = AddTagViewModel.AddTagDialogNavParams(
@@ -29,7 +29,7 @@ class CreateTag @Inject constructor(
                 null,
                 defCategoryView
             ) { tagData ->
-                scope.launch {
+                scope.launch(Dispatchers.IO) {
                     insertNewTagInDB(tagData, onEvent)
                 }
             }

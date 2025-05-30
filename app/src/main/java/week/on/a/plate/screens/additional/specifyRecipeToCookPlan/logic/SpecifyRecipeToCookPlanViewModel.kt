@@ -7,9 +7,10 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import week.on.a.plate.R
+import week.on.a.plate.app.mainActivity.event.BackNavParams
 import week.on.a.plate.app.mainActivity.event.EmptyNavParams
 import week.on.a.plate.app.mainActivity.event.MainEvent
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.app.mainActivity.event.NavigateBackDest
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.core.navigation.CookPlannerDestination
@@ -102,13 +103,13 @@ class SpecifyRecipeToCookPlanViewModel @Inject constructor(
                     portionsCount
                 )
 
-            mainEvent.value = MainEvent.NavigateBack
+            mainEvent.value = MainEvent.Navigate(NavigateBackDest, BackNavParams)
             mainEvent.value = MainEvent.Navigate(CookPlannerDestination, EmptyNavParams)
         }
     }
 
     fun close() {
-        mainEvent.value = MainEvent.NavigateBack
+        mainEvent.value = MainEvent.Navigate(NavigateBackDest, BackNavParams)
     }
 
     fun launchAndGet(recipePos: Position.PositionRecipeView) {

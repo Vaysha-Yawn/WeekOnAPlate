@@ -8,7 +8,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import week.on.a.plate.app.mainActivity.event.BackNavParams
 import week.on.a.plate.app.mainActivity.event.MainEvent
+import week.on.a.plate.app.mainActivity.event.NavigateBackDest
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.data.dataView.recipe.RecipeView
@@ -36,7 +38,7 @@ class RecipeCreateViewModel @Inject constructor(
 
     var state = RecipeCreateUIState()
     private lateinit var resultFlow: MutableStateFlow<RecipeCreateUIState?>
-    val dialogOpenParams: MutableState<DialogOpenParams?> = mutableStateOf(null)
+    val dialogOpenParams: MutableStateFlow<DialogOpenParams?> = MutableStateFlow(null)
     val mainEvent: MutableState<MainEvent?> = mutableStateOf(null)
 
     fun onEvent(event: Event) {
@@ -51,7 +53,8 @@ class RecipeCreateViewModel @Inject constructor(
     fun onEvent(event: RecipeCreateEvent) {
         viewModelScope.launch {
             when (event) {
-                RecipeCreateEvent.Close -> mainEvent.value = MainEvent.NavigateBack
+                RecipeCreateEvent.Close -> mainEvent.value =
+                    MainEvent.Navigate(NavigateBackDest, BackNavParams)
                 RecipeCreateEvent.Done -> done()
                 RecipeCreateEvent.EditTags -> editTagsUseCase(
                     state.tags
@@ -84,11 +87,11 @@ class RecipeCreateViewModel @Inject constructor(
 
                 RecipeCreateEvent.AddStep -> recipeCreateStepUseCase.addStep(state)
                 is RecipeCreateEvent.EditImage -> recipeCreateImageUseCase.editImage(
-                    dialogOpenParams, event
+                    dialogOpenParams, viewModelScope, event
                 )
 
                 is RecipeCreateEvent.EditMainImage -> recipeCreateImageUseCase.editMainImage(
-                    state, dialogOpenParams, event
+                    state, dialogOpenParams, viewModelScope, event
                 )
 
                 RecipeCreateEvent.AddManyIngredients -> recipeCreateIngredientUseCase.addManyIngredients(
@@ -115,7 +118,7 @@ class RecipeCreateViewModel @Inject constructor(
     private fun openDialogExitApplyFromCreateRecipe() {
         val params = ExitApplyViewModel.ExitApplyDialogParams { event ->
             if (event == ExitApplyEvent.Exit) {
-                mainEvent.value = MainEvent.NavigateBack
+                mainEvent.value = MainEvent.Navigate(NavigateBackDest, BackNavParams)
             }
         }
         dialogOpenParams.value = params
@@ -123,7 +126,7 @@ class RecipeCreateViewModel @Inject constructor(
 
     private fun done() {
         resultFlow.value = state
-        mainEvent.value = MainEvent.NavigateBack
+        mainEvent.value = MainEvent.Navigate(NavigateBackDest, BackNavParams)
     }
 
     fun start(): Flow<RecipeCreateUIState?> {

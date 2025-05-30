@@ -12,14 +12,19 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import week.on.a.plate.app.mainActivity.event.MainEvent
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
-import week.on.a.plate.app.mainActivity.view.MainEventResolve
 import week.on.a.plate.core.Event
+import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
+import week.on.a.plate.screens.additional.createRecipe.event.RecipeCreateEvent
 import week.on.a.plate.screens.additional.createRecipe.logic.RecipeCreateViewModel
 import week.on.a.plate.screens.additional.createRecipe.state.RecipeCreateUIState
 import week.on.a.plate.screens.additional.createRecipe.view.recipe.RecipeEditPage
@@ -28,7 +33,7 @@ import week.on.a.plate.screens.additional.createRecipe.view.web.RowWebActions
 import week.on.a.plate.screens.additional.createRecipe.view.web.WebPageCreateRecipe
 
 @Composable
-fun RecipeCreateStart(viewModel: RecipeCreateViewModel = viewModel(), viewModel1: MainViewModel) {
+fun RecipeCreateStart(viewModel: RecipeCreateViewModel, viewModel1: MainViewModel) {
     val onEvent = { event: Event ->
         viewModel.onEvent(event)
     }
@@ -37,7 +42,28 @@ fun RecipeCreateStart(viewModel: RecipeCreateViewModel = viewModel(), viewModel1
     RecipeCreateBackHandler(viewModel.state, onEvent)
 
     RecipeCreateStartContent(viewModel.state, onEvent, state)
-    MainEventResolve(viewModel.mainEvent, viewModel.dialogOpenParams, viewModel1)
+    MainEventResolveFlow(viewModel.mainEvent, viewModel.dialogOpenParams, viewModel1)
+}
+
+@Composable
+fun MainEventResolveFlow(
+    mainEvent: MutableState<MainEvent?>,
+    dialogOpenParams: MutableStateFlow<DialogOpenParams?>,
+    mainVM: MainViewModel
+) {
+    LaunchedEffect(mainEvent.value) {
+        if (mainEvent.value != null) {
+            mainVM.onEvent(mainEvent.value!!)
+            mainEvent.value = null
+        }
+    }
+    val state = dialogOpenParams.collectAsState()
+    LaunchedEffect(state.value) {
+        if (state.value != null) {
+            state.value!!.openDialog(mainVM)
+            dialogOpenParams.value = null
+        }
+    }
 }
 
 @Composable
@@ -82,12 +108,12 @@ private fun RecipeCreateStartContent(
 private fun RecipeCreateBackHandler(state: RecipeCreateUIState, onEvent: (Event) -> Unit) {
     BackHandler {
         if (state.activeTabIndex.intValue == 0) {
-            onEvent(week.on.a.plate.screens.additional.createRecipe.event.RecipeCreateEvent.OpenDialogExitApplyFromCreateRecipe)
+            onEvent(RecipeCreateEvent.OpenDialogExitApplyFromCreateRecipe)
         } else {
             if (state.webview.value?.canGoBack() == true) {
                 state.webview.value!!.goBack()
             } else {
-                onEvent(week.on.a.plate.screens.additional.createRecipe.event.RecipeCreateEvent.OpenDialogExitApplyFromCreateRecipe)
+                onEvent(RecipeCreateEvent.OpenDialogExitApplyFromCreateRecipe)
             }
         }
     }

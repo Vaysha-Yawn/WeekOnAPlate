@@ -1,6 +1,7 @@
 package week.on.a.plate.dialogs.editPositionRecipeMoreDialog.logic.navigateLogic
 
 import androidx.compose.runtime.MutableState
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -16,11 +17,12 @@ class ChangePortionsRecipePosOpenDialog @Inject constructor(
     suspend operator fun invoke(
         recipe: Position.PositionRecipeView,
         dialogOpenParams: MutableState<DialogOpenParams?>,
+        scope: CoroutineScope,
     ) = coroutineScope {
         val params = ChangePortionsCountViewModel.ChangePortionsCountDialogParams(
             recipe.portionsCount
         ) { portionsCount ->
-            launch(Dispatchers.IO) {
+            scope.launch(Dispatchers.IO) {
                 changePortionsCount(
                     recipe,
                     portionsCount

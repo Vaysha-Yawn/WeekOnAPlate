@@ -3,6 +3,7 @@ package week.on.a.plate.screens.base.menu.presenter.logic.navigateLogic
 import android.content.Context
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -34,10 +35,11 @@ class CreateWeekSelIdAndCreatePosOpenDialog @Inject constructor(
         context: Context,
         activeDay: MutableState<LocalDate>,
         dialogOpenParams: MutableState<DialogOpenParams?>,
+        scope: CoroutineScope,
         onEvent: (Event) -> Unit
     ) = coroutineScope {
-        launch(Dispatchers.IO) {
-            val id = async {
+        scope.launch(Dispatchers.IO) {
+            val id = scope.async(Dispatchers.IO) {
                 getSelOrCreateInDB(
                     LocalDateTime.of(
                         activeDay.value,
@@ -58,6 +60,7 @@ class CreateSelectionOpenDialog @Inject constructor(
         date: LocalDate,
         isForWeek: Boolean,
         dialogOpenParams: MutableState<DialogOpenParams?>,
+        scope: CoroutineScope,
     ) = coroutineScope {
         val params = EditSelectionViewModel.EditSelectionDialogParams(
             EditSelectionUIState(
@@ -65,12 +68,12 @@ class CreateSelectionOpenDialog @Inject constructor(
                 placeholder = R.string.hint_breakfast
             )
         ) { state ->
-            launch(Dispatchers.IO) {
+            scope.launch(Dispatchers.IO) {
                 val newName = state.text.value
                 val time = state.selectedTime.value
                 addSelectionToDB(
                     date,
-                    newName, Locale.getDefault(), isForWeek, time
+                    newName, Locale.getDefault(), isForWeek, time, scope
                 )
             }
         }
@@ -85,15 +88,16 @@ class EditOrDeleteSelectionOpenDialog @Inject constructor(
     suspend operator fun invoke(
         sel: SelectionView,
         dialogOpenParams: MutableState<DialogOpenParams?>,
+        scope: CoroutineScope,
     ) =
         coroutineScope {
             if (sel.isForWeek || sel.id == 0L) return@coroutineScope
             val params = EditOrDeleteViewModel.EditOrDeleteDialogParams { event ->
-                launch(Dispatchers.IO) {
+                scope.launch(Dispatchers.IO) {
                     when (event) {
                         EditOrDeleteEvent.Close -> {}
-                        EditOrDeleteEvent.Delete -> deleteSelectionInDB(sel)
-                        EditOrDeleteEvent.Edit -> editSelection(sel, dialogOpenParams)
+                        EditOrDeleteEvent.Delete -> deleteSelectionInDB(sel, scope)
+                        EditOrDeleteEvent.Edit -> editSelection(sel, dialogOpenParams, scope)
                     }
                 }
             }
@@ -107,6 +111,7 @@ class EditSelectionOpenDialog @Inject constructor(
     suspend operator fun invoke(
         sel: SelectionView,
         dialogOpenParams: MutableState<DialogOpenParams?>,
+        scope: CoroutineScope,
     ) =
         coroutineScope {
             val oldState = EditSelectionUIState(
@@ -118,11 +123,11 @@ class EditSelectionOpenDialog @Inject constructor(
             val params = EditSelectionViewModel.EditSelectionDialogParams(
                 oldState
             ) { state ->
-                launch(Dispatchers.IO) {
+                scope.launch(Dispatchers.IO) {
                     editSelectionInDB(
                         sel,
                         state.text.value,
-                        state.selectedTime.value
+                        state.selectedTime.value, scope
                     )
                 }
             }

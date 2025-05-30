@@ -1,6 +1,7 @@
 package week.on.a.plate.dialogs.editOtherPositionMoreDialog.logic.navigateLogic
 
 import androidx.compose.runtime.MutableState
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -18,6 +19,7 @@ class EditNoteOpenDialog @Inject constructor(
     suspend operator fun invoke(
         note: Position.PositionNoteView,
         dialogOpenParams: MutableState<DialogOpenParams?>,
+        scope: CoroutineScope,
     ) = coroutineScope {
         val params = EditOneStringViewModel.EditOneStringDialogParams(
             EditOneStringUIState(
@@ -26,7 +28,7 @@ class EditNoteOpenDialog @Inject constructor(
                 R.string.enter_text_note
             )
         ) { updatedNote ->
-            launch(Dispatchers.IO) {
+            scope.launch(Dispatchers.IO) {
                 editNote(
                     Position.PositionNoteView(
                         note.id,

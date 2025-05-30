@@ -1,5 +1,7 @@
 package week.on.a.plate.screens.additional.recipeDetails.logic.nav
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import week.on.a.plate.app.mainActivity.event.MainEvent
@@ -16,10 +18,10 @@ class EditRecipeUseCase @Inject constructor(
     private val editRecipeUseCaseDB: EditRecipeUseCaseDB
 ) {
     suspend operator fun invoke(
-        state: RecipeDetailsState, onEvent: (MainEvent) -> Unit,
+        state: RecipeDetailsState, scope: CoroutineScope, onEvent: (MainEvent) -> Unit,
     ) = coroutineScope {
         val params = RecipeCreateNavParams(state.recipe, false) { recipe ->
-            launch {
+            scope.launch(Dispatchers.IO) {
                 val newRecipe = RecipeView(
                     id = state.recipe.id,
                     name = recipe.name.value,

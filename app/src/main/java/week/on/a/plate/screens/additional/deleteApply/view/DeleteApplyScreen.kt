@@ -1,5 +1,6 @@
 package week.on.a.plate.screens.additional.deleteApply.view
 
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -17,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import week.on.a.plate.R
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.app.mainActivity.view.MainActivity
 import week.on.a.plate.app.mainActivity.view.MainEventResolve
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.TextDisplayItalic
@@ -29,15 +31,16 @@ import week.on.a.plate.screens.additional.deleteApply.state.DeleteApplyUIState
 
 @Composable
 fun DeleteApplyStart(
-    viewModel: DeleteApplyViewModel = viewModel(),
+    viewModel: DeleteApplyViewModel,
     viewModel1: MainViewModel
 ) {
+    val mainVM: MainViewModel = viewModel<MainViewModel>((LocalActivity.current as MainActivity))
     val onEvent = { eventData: DeleteApplyEvent ->
         viewModel.onEvent(eventData)
     }
     val state = viewModel.state
     DeleteApplyScreen(state, onEvent)
-    MainEventResolve(viewModel.mainEvent, viewModel.dialogOpenParams, viewModel1)
+    MainEventResolve(viewModel.mainEvent, viewModel.dialogOpenParams, mainVM)
 }
 
 @Composable

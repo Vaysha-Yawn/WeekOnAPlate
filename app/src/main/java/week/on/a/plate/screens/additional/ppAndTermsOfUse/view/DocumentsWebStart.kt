@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import week.on.a.plate.R
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.app.mainActivity.view.MainEventResolve
@@ -29,7 +28,7 @@ import week.on.a.plate.screens.additional.ppAndTermsOfUse.state.DocumentsWebUISt
 
 @Composable
 fun DocumentsWebStart(
-    viewModel: DocumentsWebViewModel = viewModel(),
+    viewModel: DocumentsWebViewModel,
     viewModel1: MainViewModel
 ) {
     val onEvent = { event: Event ->

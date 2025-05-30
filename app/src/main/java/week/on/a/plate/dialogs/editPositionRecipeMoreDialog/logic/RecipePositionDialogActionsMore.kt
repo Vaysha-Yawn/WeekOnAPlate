@@ -1,6 +1,7 @@
 package week.on.a.plate.dialogs.editPositionRecipeMoreDialog.logic
 
 import androidx.compose.runtime.MutableState
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -31,37 +32,38 @@ class RecipePositionDialogActionsMore @Inject constructor(
         position: Position.PositionRecipeView,
         dialogOpenParams: MutableState<DialogOpenParams?>,
         event: ActionMoreRecipePositionEvent,
+        scope: CoroutineScope,
         onEvent: (Event) -> Unit
     ) = coroutineScope {
         when (event) {
             ActionMoreRecipePositionEvent.AddToCart ->
                 recipeToShopList(
-                    position,
+                    position, scope,
                     onEvent
                 )
 
             ActionMoreRecipePositionEvent.ChangePotionsCount -> changePortionsRecipePosOpenDialog(
                 position,
-                dialogOpenParams
+                dialogOpenParams, scope
             )
 
             ActionMoreRecipePositionEvent.Delete ->
-                launch(Dispatchers.IO) {
+                scope.launch(Dispatchers.IO) {
                     deleteRecipe(position)
                 }
 
             ActionMoreRecipePositionEvent.Double -> getSelAndDouble(
-                position,
+                position, scope,
                 onEvent,
             )
 
             is ActionMoreRecipePositionEvent.FindReplace ->
                 findRecipeAndReplace(
-                    position, dialogOpenParams, event.context, onEvent
+                    position, dialogOpenParams, event.context, scope, onEvent
                 )
 
             ActionMoreRecipePositionEvent.Move -> getSelAndMove(
-                position,
+                position, scope,
                 onEvent
             )
 

@@ -2,7 +2,9 @@ package week.on.a.plate.screens.additional.recipeDetails.logic.nav
 
 import android.content.Context
 import week.on.a.plate.R
+import week.on.a.plate.app.mainActivity.event.BackNavParams
 import week.on.a.plate.app.mainActivity.event.MainEvent
+import week.on.a.plate.app.mainActivity.event.NavigateBackDest
 import week.on.a.plate.screens.additional.deleteApply.event.DeleteApplyEvent
 import week.on.a.plate.screens.additional.deleteApply.navigation.DeleteApplyDestination
 import week.on.a.plate.screens.additional.deleteApply.navigation.DeleteApplyNavParams
@@ -22,7 +24,7 @@ class DeleteUseCase @Inject constructor(
         val params = DeleteApplyNavParams(context, message = mes) { event ->
             if (event == DeleteApplyEvent.Apply) {
                 deleteUseCaseDB.invoke(state)
-                onEvent(MainEvent.NavigateBack)
+                onEvent(MainEvent.Navigate(NavigateBackDest, BackNavParams))
             }
         }
         onEvent(MainEvent.Navigate(DeleteApplyDestination, params))

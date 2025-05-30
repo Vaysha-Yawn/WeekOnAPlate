@@ -1,7 +1,6 @@
 package week.on.a.plate.screens.additional.createRecipe.logic.useCase
 
-import androidx.compose.runtime.MutableState
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.dialogs.chooseIngredientsForStep.logic.ChooseIngredientsForStepViewModel
 import week.on.a.plate.screens.additional.createRecipe.event.RecipeCreateEvent
@@ -24,7 +23,7 @@ class RecipeCreateStepUseCase @Inject constructor() {
 
     fun editPinnedIngredients(
         recipeStepState: RecipeStepState,
-        dialogOpenParams: MutableState<DialogOpenParams?>,
+        dialogOpenParams: MutableStateFlow<DialogOpenParams?>,
         state: RecipeCreateUIState
     ) {
         val params = ChooseIngredientsForStepViewModel.ChooseIngredientsForStepDialogParams(

@@ -2,6 +2,8 @@ package week.on.a.plate.screens.additional.filters.logic.ingredient
 
 import android.content.Context
 import androidx.compose.runtime.MutableState
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.dialogCore.DialogOpenParams
@@ -19,6 +21,7 @@ class EditIngredient @Inject constructor(private val ingredientRepository: Ingre
         onEvent: (FilterEvent) -> Unit,
         allIngredients: List<IngredientCategoryView>,
         dialogOpenParams: MutableState<DialogOpenParams?>,
+        scope: CoroutineScope,
     ) = coroutineScope {
         val oldCategory = allIngredients.find { it.ingredientViews.contains(ingredient) }!!
         val params = AddIngredientViewModel.AddIngredientDialogNavParams(
@@ -27,7 +30,7 @@ class EditIngredient @Inject constructor(private val ingredientRepository: Ingre
             oldCategory,
             oldCategory
         ) { newIngredientAndCategory ->
-            launch {
+            scope.launch(Dispatchers.IO) {
                 editIngredientDB(
                     ingredient,
                     newIngredientAndCategory.first,

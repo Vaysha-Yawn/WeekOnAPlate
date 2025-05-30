@@ -5,7 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import week.on.a.plate.app.mainActivity.event.BackNavParams
 import week.on.a.plate.app.mainActivity.event.MainEvent
+import week.on.a.plate.app.mainActivity.event.NavigateBackDest
 import week.on.a.plate.data.repository.room.cookPlanner.mapPinnedIngredients
 import week.on.a.plate.data.repository.room.recipe.recipe.RecipeRepository
 import week.on.a.plate.screens.additional.recipeDetails.event.RecipeDetailsEvent
@@ -41,19 +43,19 @@ class RecipeDetailsViewModel @Inject constructor(
                     addToCartUseCase(
                         event.context,
                         { mainEvent.value = it },
-                        state,
+                        viewModelScope, state,
                     )
                 }
 
             RecipeDetailsEvent.AddToMenu -> viewModelScope.launch {
-                addToMenuUseCase(state) { mainEvent.value = it }
+                addToMenuUseCase(state, viewModelScope) { mainEvent.value = it }
             }
 
             RecipeDetailsEvent.Back -> {
-                mainEvent.value = MainEvent.NavigateBack
+                mainEvent.value = MainEvent.Navigate(NavigateBackDest, BackNavParams)
             }
             RecipeDetailsEvent.Edit -> viewModelScope.launch {
-                editRecipeUseCase(state) {
+                editRecipeUseCase(state, viewModelScope) {
                     mainEvent.value = it
                 }
             }

@@ -1,6 +1,8 @@
 package week.on.a.plate.screens.base.cookPlanner.logic.stepMore
 
 import androidx.compose.runtime.MutableState
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import week.on.a.plate.R
@@ -21,22 +23,23 @@ class CookPlannerCardActions @Inject constructor(
 
     suspend fun showStepMore(
         event: CookPlannerEvent.ShowStepMore,
-        dialogOpenParams: MutableState<DialogOpenParams?>
+        dialogOpenParams: MutableState<DialogOpenParams?>,
+        scope: CoroutineScope,
     ) = coroutineScope {
         val params = CookStepMoreDialogViewModel.CookStepMoreDialogDialogParams {
-            launch {
+            scope.launch(Dispatchers.IO) {
                 when (it) {
                     CookStepMoreEvent.ChangeEndRecipeTime -> {
-                        changeEndRecipeTime(dialogOpenParams, event)
+                        changeEndRecipeTime(dialogOpenParams, event, scope)
                     }
 
                     CookStepMoreEvent.ChangeStartRecipeTime ->
-                        changeStartRecipeTime(dialogOpenParams, event.groupView)
+                        changeStartRecipeTime(dialogOpenParams, event.groupView, scope)
 
                     CookStepMoreEvent.Close -> {}
                     CookStepMoreEvent.ChangePortionsCount -> changePortionsCount(
                         event.groupView,
-                        dialogOpenParams
+                        dialogOpenParams, scope,
                     )
 
                     CookStepMoreEvent.Delete ->
@@ -51,10 +54,11 @@ class CookPlannerCardActions @Inject constructor(
 
     private suspend fun changeEndRecipeTime(
         dialogOpenParams: MutableState<DialogOpenParams?>,
-        event: CookPlannerEvent.ShowStepMore
+        event: CookPlannerEvent.ShowStepMore,
+        scope: CoroutineScope,
     ) = coroutineScope {
         getTime(dialogOpenParams, R.string.when_recipe_end) { time ->
-            launch {
+            scope.launch(Dispatchers.IO) {
                 useCases.changeEndRecipeTimeUseCase(event.groupView, time)
             }
         }
@@ -72,11 +76,12 @@ class CookPlannerCardActions @Inject constructor(
     private suspend fun changePortionsCount(
         group: CookPlannerGroupView,
         dialogOpenParams: MutableState<DialogOpenParams?>,
+        scope: CoroutineScope,
     ) = coroutineScope {
         val params = ChangePortionsCountViewModel.ChangePortionsCountDialogParams(
             group.portionsCount
         ) { portionsCount ->
-            launch {
+            scope.launch(Dispatchers.IO) {
                 useCases.changePortionsCountUseCase(group, portionsCount)
             }
         }
@@ -84,10 +89,11 @@ class CookPlannerCardActions @Inject constructor(
     }
 
     private suspend fun changeStartRecipeTime(
-        dialogOpenParams: MutableState<DialogOpenParams?>, group: CookPlannerGroupView
+        dialogOpenParams: MutableState<DialogOpenParams?>, group: CookPlannerGroupView,
+        scope: CoroutineScope,
     ) = coroutineScope {
         getTime(dialogOpenParams, R.string.when_recipe_start) {
-            launch {
+            scope.launch(Dispatchers.IO) {
                 useCases.changeStartRecipeTimeUseCase(group, it)
             }
         }

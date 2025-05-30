@@ -1,5 +1,7 @@
 package week.on.a.plate.dialogs.editPositionRecipeMoreDialog.logic.navigateLogic
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import week.on.a.plate.app.mainActivity.event.MainEvent
@@ -17,9 +19,10 @@ class RecipeToShopListWithInventoryUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(
         positionRecipeView: Position.PositionRecipeView,
+        scope: CoroutineScope,
         onEvent: (Event) -> Unit
     ) = coroutineScope {
-        val recipe = async { getRecipe(positionRecipeView.recipe.id) }
+        val recipe = scope.async(Dispatchers.IO) { getRecipe(positionRecipeView.recipe.id) }
         val ingredients = ingredientsMapByPortions(positionRecipeView.portionsCount, recipe.await())
         val params = InventoryNavParams(ingredients)
         onEvent(MainEvent.Navigate(InventoryDestination, params))

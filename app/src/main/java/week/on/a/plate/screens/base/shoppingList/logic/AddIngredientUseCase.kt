@@ -1,6 +1,8 @@
 package week.on.a.plate.screens.base.shoppingList.logic
 
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import week.on.a.plate.app.mainActivity.event.EmptyNavParams
@@ -20,9 +22,10 @@ class AddIngredientUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(
         onEvent: (MainEvent) -> Unit,
+        scope: CoroutineScope,
         allItemsUnChecked: List<IngredientInRecipeView>
     ) = coroutineScope {
-        launch {
+        scope.launch(Dispatchers.Default) {
             val params = FilterNavParams(
                 FilterMode.Multiple, FilterEnum.Ingredient, Pair(listOf(),
                     allItemsUnChecked.map { it.ingredientView }), false
@@ -37,7 +40,7 @@ class AddIngredientUseCase @Inject constructor(
                 val listToDelete = startList.toMutableList().apply {
                     removeAll(endList)
                 }.toList()
-                launch {
+                scope.launch(Dispatchers.IO) {
                     listToDelete.forEach { ingredient ->
                         val t = shoppingItemRepository.getAll().find { it ->
                             it.ingredientInRecipe.ingredientView.ingredientId ==

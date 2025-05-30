@@ -23,7 +23,7 @@ class EditPositionIngredientViewModel(
     openDialog: (DialogViewModel<*>) -> Unit,
     closeDialog: () -> Unit,
     private val mainViewModel: MainViewModel,
-    useResult: (Position.PositionIngredientView) -> Unit,
+    useResult: suspend (Position.PositionIngredientView) -> Unit,
 ) : DialogViewModel<Position.PositionIngredientView>(
     viewModelScope,
     openDialog,
@@ -80,7 +80,7 @@ class EditPositionIngredientViewModel(
     class EditPositionIngredientDialogParams(
         private val positionIngredient: Position.PositionIngredientView?,
         private val isForAdd: Boolean,
-        private val useResult: (Position.PositionIngredientView) -> Unit,
+        private val useResult: suspend (Position.PositionIngredientView) -> Unit,
     ) :
         DialogOpenParams {
         override fun openDialog(mainViewModel: MainViewModel) {

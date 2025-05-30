@@ -1,10 +1,7 @@
 package week.on.a.plate.screens.additional.createRecipe.logic.useCase
 
-import androidx.compose.runtime.MutableState
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.MutableStateFlow
 import week.on.a.plate.app.mainActivity.event.MainEvent
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.data.dataView.recipe.IngredientView
@@ -20,8 +17,8 @@ import week.on.a.plate.screens.additional.filters.state.FilterResult
 import javax.inject.Inject
 
 class RecipeCreateIngredientUseCase @Inject constructor() {
-    fun addIngredient(
-        dialogOpenParams: MutableState<DialogOpenParams?>,
+    suspend fun addIngredient(
+        dialogOpenParams: MutableStateFlow<DialogOpenParams?>,
         state: RecipeCreateUIState
     ) {
         val params = EditPositionIngredientViewModel.EditPositionIngredientDialogParams(
@@ -32,12 +29,12 @@ class RecipeCreateIngredientUseCase @Inject constructor() {
                 this.add(ingredient.ingredient)
             }.toList()
         }
-        dialogOpenParams.value = params
+        dialogOpenParams.emit(params)
     }
 
-    fun editIngredient(
+    suspend fun editIngredient(
         event: RecipeCreateEvent.EditIngredient,
-        dialogOpenParams: MutableState<DialogOpenParams?>, state: RecipeCreateUIState
+        dialogOpenParams: MutableStateFlow<DialogOpenParams?>, state: RecipeCreateUIState
     ) {
         val params = EditPositionIngredientViewModel.EditPositionIngredientDialogParams(
             Position.PositionIngredientView(
@@ -53,7 +50,7 @@ class RecipeCreateIngredientUseCase @Inject constructor() {
             }.toList()
         }
 
-        dialogOpenParams.value = params
+        dialogOpenParams.emit(params)
     }
 
     fun deleteIngredient(ingredient: IngredientInRecipeView, state: RecipeCreateUIState) {

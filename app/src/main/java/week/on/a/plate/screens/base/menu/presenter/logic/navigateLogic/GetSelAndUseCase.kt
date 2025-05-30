@@ -2,6 +2,7 @@ package week.on.a.plate.screens.base.menu.presenter.logic.navigateLogic
 
 import android.content.Context
 import androidx.compose.runtime.MutableState
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -42,10 +43,11 @@ class GetSelAndCreateUseCase @Inject constructor(
     suspend operator fun invoke(
         context: Context,
         dialogOpenParams: MutableState<DialogOpenParams?>,
+        scope: CoroutineScope,
         onEvent: (Event) -> Unit,
     ) = coroutineScope {
         specifyDate(onEvent) { res ->
-            launch {
+            scope.launch(Dispatchers.IO) {
                 addPosition(
                     res.selId,
                     context,
@@ -66,10 +68,11 @@ class GetSelAndMoveUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(
         position: Position,
+        scope: CoroutineScope,
         onEvent: (Event) -> Unit,
     ) = coroutineScope {
         specifyDate(onEvent) { res ->
-            launch(Dispatchers.IO) {
+            scope.launch(Dispatchers.IO) {
                 when (position) {
                     is Position.PositionDraftView -> draftMove(position, res.selId)
                     is Position.PositionIngredientView -> ingredientMove(position, res.selId)
@@ -91,10 +94,11 @@ class GetSelAndDoubleUseCase @Inject constructor(
 
     suspend operator fun invoke(
         position: Position,
+        scope: CoroutineScope,
         onEvent: (Event) -> Unit,
     ) = coroutineScope {
         specifyDate(onEvent) { res ->
-            launch(Dispatchers.IO) {
+            scope.launch(Dispatchers.IO) {
                 when (position) {
                     is Position.PositionDraftView -> draftDouble(position, res.selId)
                     is Position.PositionIngredientView -> ingredientDouble(position, res.selId)

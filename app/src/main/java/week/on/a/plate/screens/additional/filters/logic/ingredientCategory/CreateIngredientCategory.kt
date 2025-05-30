@@ -1,6 +1,8 @@
 package week.on.a.plate.screens.additional.filters.logic.ingredientCategory
 
 import androidx.compose.runtime.MutableState
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import week.on.a.plate.R
@@ -18,6 +20,7 @@ class CreateIngredientCategory @Inject constructor(
         onEvent: (FilterEvent) -> Unit,
         searchText: String,
         dialogOpenParams: MutableState<DialogOpenParams?>,
+        scope: CoroutineScope,
     ) = coroutineScope {
         val params = EditOneStringViewModel.EditOneStringDialogParams(
             EditOneStringUIState(
@@ -26,7 +29,7 @@ class CreateIngredientCategory @Inject constructor(
                 R.string.enter_category_name,
             )
         ) { name ->
-            launch {
+            scope.launch(Dispatchers.IO) {
                 insertNewIngredientCategoryInDB(name, onEvent)
             }
         }

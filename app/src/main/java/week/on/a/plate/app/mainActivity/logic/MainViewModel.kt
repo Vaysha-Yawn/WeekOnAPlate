@@ -8,9 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import week.on.a.plate.app.mainActivity.event.BackNavParams
 import week.on.a.plate.app.mainActivity.event.MainEvent
-import week.on.a.plate.app.mainActivity.event.NavigateBackDest
 import week.on.a.plate.app.mainActivity.logic.imageFromGallery.ImageFromGalleryUseCase
 import week.on.a.plate.app.mainActivity.logic.takePicture.TakePictureUseCase
 import week.on.a.plate.app.mainActivity.logic.voice.VoiceInputUseCase
@@ -63,6 +61,7 @@ class MainViewModel @Inject constructor(
     lateinit var deleteApplyViewModel: DeleteApplyViewModel
     lateinit var specifyRecipeToCookPlanViewModel: SpecifyRecipeToCookPlanViewModel
     lateinit var documentsWebViewModel: DocumentsWebViewModel
+    lateinit var cookPlannerViewModel: CookPlannerViewModel
 
     fun initViewModels(
         specifySelection: SpecifySelectionViewModel,
@@ -92,6 +91,7 @@ class MainViewModel @Inject constructor(
         deleteApplyViewModel = delete
         specifyRecipeToCookPlanViewModel = specifyRecipeToCookPlan
         documentsWebViewModel = documentsWeb
+        cookPlannerViewModel = cookPlanner
 
         val nonPosedText = mainActivity.getString(NonPosed.fullName)
         val forWeek = mainActivity.getString(ForWeek.fullName)
@@ -114,7 +114,6 @@ class MainViewModel @Inject constructor(
             is MainEvent.OpenDialog -> dialogUseCase.openDialog(event.dialog)
             is MainEvent.ShowSnackBar -> showSnackBar(event.message)
             is MainEvent.Navigate -> navigate(event)
-            MainEvent.NavigateBack -> navigate(MainEvent.Navigate(NavigateBackDest, BackNavParams))
             MainEvent.HideDialog -> dialogUseCase.hide()
             MainEvent.ShowDialog -> dialogUseCase.show()
             is MainEvent.VoiceToText -> voiceToText(event.context, event.use)

@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.app.mainActivity.view.MainEventResolve
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
@@ -23,7 +22,7 @@ import week.on.a.plate.screens.base.shoppingList.logic.ShoppingListViewModel
 import week.on.a.plate.screens.base.shoppingList.state.ShoppingListUIState
 
 @Composable
-fun ShoppingListStart(viewModel: ShoppingListViewModel = viewModel(), viewModel1: MainViewModel) {
+fun ShoppingListStart(viewModel: ShoppingListViewModel, viewModel1: MainViewModel) {
     viewModel.state.listChecked = viewModel.allItemsChecked.collectAsState()
     viewModel.state.listUnchecked = viewModel.allItemsUnChecked.collectAsState()
     ShoppingListContent(viewModel.state) { event: ShoppingListEvent ->

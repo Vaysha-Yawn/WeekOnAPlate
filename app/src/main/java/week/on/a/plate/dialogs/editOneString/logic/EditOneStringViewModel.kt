@@ -40,7 +40,7 @@ class EditOneStringViewModel(
                 mainViewModel.getCoroutineScope(),
                 mainViewModel::openDialog,
                 mainViewModel::closeDialog,
-                useResult
+                useResult,
             )
         }
     }

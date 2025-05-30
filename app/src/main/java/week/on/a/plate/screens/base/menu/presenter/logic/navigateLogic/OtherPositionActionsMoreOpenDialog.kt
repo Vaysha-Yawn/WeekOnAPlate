@@ -2,6 +2,8 @@ package week.on.a.plate.screens.base.menu.presenter.logic.navigateLogic
 
 
 import androidx.compose.runtime.MutableState
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.Event
@@ -17,13 +19,14 @@ class OtherPositionActionsMoreOpenDialog @Inject constructor(
     suspend operator fun invoke(
         position: Position,
         dialogOpenParams: MutableState<DialogOpenParams?>,
+        scope: CoroutineScope,
         onEvent: (Event) -> Unit,
     ) = coroutineScope {
         val params = EditOtherPositionViewModel.EditOtherPositionDialogParams(
             position is Position.PositionIngredientView,
         ) { event ->
-            launch {
-                otherPositionActionsMore(position, dialogOpenParams, onEvent, event)
+            scope.launch(Dispatchers.IO) {
+                otherPositionActionsMore(position, dialogOpenParams, onEvent, scope, event)
             }
         }
         dialogOpenParams.value = params

@@ -8,8 +8,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import week.on.a.plate.app.mainActivity.event.BackNavParams
 import week.on.a.plate.app.mainActivity.event.EmptyNavParams
 import week.on.a.plate.app.mainActivity.event.MainEvent
+import week.on.a.plate.app.mainActivity.event.NavigateBackDest
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.core.navigation.MenuDestination
@@ -145,7 +147,7 @@ class SpecifySelectionViewModel @Inject constructor(
     }
 
     fun close() {
-        mainEvent.value = MainEvent.NavigateBack
+        mainEvent.value = MainEvent.Navigate(NavigateBackDest, BackNavParams)
     }
 
     fun start(): Flow<SpecifySelectionResult?> {

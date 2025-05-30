@@ -1,6 +1,7 @@
 package week.on.a.plate.screens.base.menu.presenter.logic
 
 import androidx.compose.runtime.mutableStateOf
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -36,10 +37,14 @@ class SelectedRecipeManager @Inject constructor(
         }
     }
 
-    suspend fun deleteSelected(menuUIState: MenuUIState, onEvent: (MenuEvent) -> Unit) =
+    suspend fun deleteSelected(
+        menuUIState: MenuUIState,
+        scope: CoroutineScope,
+        onEvent: (MenuEvent) -> Unit
+    ) =
         coroutineScope {
             getSelected(menuUIState).forEach { recipe ->
-                launch(Dispatchers.IO) {
+                scope.launch(Dispatchers.IO) {
                     deleteRecipe(recipe)
                 }
         }

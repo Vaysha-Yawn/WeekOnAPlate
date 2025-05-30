@@ -10,7 +10,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.app.mainActivity.view.MainEventResolve
 import week.on.a.plate.core.Event
@@ -26,8 +25,8 @@ import week.on.a.plate.screens.additional.recipeDetails.view.steps.RecipeDetails
 
 @Composable
 fun RecipeDetailsStart(
-    vm: RecipeDetailsViewModel = viewModel(),
-    mainViewModel: MainViewModel = viewModel()
+    vm: RecipeDetailsViewModel,
+    mainViewModel: MainViewModel
 ) {
     RecipeDetailsStart(vm.state, { event: Event ->
         mainViewModel.onEvent(event)

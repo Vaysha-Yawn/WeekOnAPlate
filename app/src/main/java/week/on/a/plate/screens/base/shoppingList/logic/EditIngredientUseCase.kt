@@ -1,6 +1,8 @@
 package week.on.a.plate.screens.base.shoppingList.logic
 
 import androidx.compose.runtime.MutableState
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.dialogCore.DialogOpenParams
@@ -16,7 +18,8 @@ class EditIngredientUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(
         ingredient: IngredientInRecipeView,
-        dialogOpenParams: MutableState<DialogOpenParams?>
+        dialogOpenParams: MutableState<DialogOpenParams?>,
+        scope: CoroutineScope,
     ) = coroutineScope {
         val params = EditPositionIngredientViewModel.EditPositionIngredientDialogParams(
             Position.PositionIngredientView(
@@ -27,7 +30,7 @@ class EditIngredientUseCase @Inject constructor(
             false,
 
         ) { updatedIngredient ->
-            launch {
+            scope.launch(Dispatchers.IO) {
                 val item = shoppingItemRepository.getAll().find { it ->
                     it.ingredientInRecipe.id ==
                             ingredient.id

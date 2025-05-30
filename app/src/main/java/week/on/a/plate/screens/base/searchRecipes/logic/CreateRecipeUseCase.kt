@@ -1,5 +1,7 @@
 package week.on.a.plate.screens.base.searchRecipes.logic
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import week.on.a.plate.app.mainActivity.event.MainEvent
@@ -19,11 +21,11 @@ class CreateRecipeUseCase @Inject constructor(
     private val recipeRepository: RecipeRepository
 ) {
     suspend operator fun invoke(
-        state: SearchUIState, onEvent: (MainEvent) -> Unit
+        state: SearchUIState, scope: CoroutineScope, onEvent: (MainEvent) -> Unit
     ) = coroutineScope {
         val recipeStart = getRecipeBaseFromSearchState(state)
         val params = RecipeCreateNavParams(recipeStart, true) { recipe ->
-            launch {
+            scope.launch(Dispatchers.IO) {
                 val newRecipe = getRecipeFromCreateState(recipe)
                 recipeRepository.create(newRecipe)
             }

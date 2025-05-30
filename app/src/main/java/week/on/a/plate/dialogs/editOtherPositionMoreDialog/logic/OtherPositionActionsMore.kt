@@ -1,6 +1,7 @@
 package week.on.a.plate.dialogs.editOtherPositionMoreDialog.logic
 
 import androidx.compose.runtime.MutableState
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import week.on.a.plate.core.Event
@@ -38,12 +39,13 @@ class OtherPositionActionsMore @Inject constructor(
         position: Position,
         dialogOpenParams: MutableState<DialogOpenParams?>,
         onEvent: (Event) -> Unit,
+        scope: CoroutineScope,
         event: OtherPositionMoreEvent,
     ) = coroutineScope {
         when (event) {
             OtherPositionMoreEvent.Close -> {}
             OtherPositionMoreEvent.Delete ->
-                launch {
+                scope.launch {
                     when (position) {
                         is Position.PositionDraftView -> deleteDraft(position)
                         is Position.PositionIngredientView -> deleteIngredient(position)
@@ -53,26 +55,26 @@ class OtherPositionActionsMore @Inject constructor(
                 }
 
             OtherPositionMoreEvent.Double -> getSelAndDouble(
-                position,
-                onEvent
+                position, scope,
+                onEvent,
             )
 
             OtherPositionMoreEvent.Edit ->
-                launch {
+                scope.launch {
                     when (position) {
                         is Position.PositionDraftView -> editDraftOpenDialog(
-                            position,
+                            position, scope,
                             onEvent
                         )
 
                         is Position.PositionIngredientView -> editIngredientOpenDialog(
                             position,
-                            dialogOpenParams
+                            dialogOpenParams, scope
                         )
 
                         is Position.PositionNoteView -> editNoteOpenDialog(
                             position,
-                            dialogOpenParams
+                            dialogOpenParams, scope
                         )
 
                         is Position.PositionRecipeView -> {}
@@ -80,12 +82,12 @@ class OtherPositionActionsMore @Inject constructor(
                 }
 
             OtherPositionMoreEvent.Move -> getSelAndMove(
-                position,
+                position, scope,
                 onEvent
             )
 
             is OtherPositionMoreEvent.AddToShopList -> {
-                launch {
+                scope.launch {
                     if (position is Position.PositionIngredientView) {
                         val ingredientNew = IngredientInRecipeView(
                             0,

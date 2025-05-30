@@ -1,6 +1,7 @@
 package week.on.a.plate.screens.additional.filters.navigation
 
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import week.on.a.plate.app.mainActivity.event.NavParams
@@ -21,7 +22,7 @@ class FilterNavParams(
     private val use: suspend (FilterResult) -> Unit
 ) : NavParams {
     override fun launch(vm: MainViewModel) {
-        vm.viewModelScope.launch {
+        vm.viewModelScope.launch(Dispatchers.Default) {
             vm.filterViewModel.launchAndGet(mode, enum, lastFilters, isForCategory, use)
         }
     }

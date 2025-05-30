@@ -1,5 +1,7 @@
 package week.on.a.plate.screens.additional.recipeDetails.logic.nav
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import week.on.a.plate.app.mainActivity.event.MainEvent
@@ -15,10 +17,10 @@ class AddToMenuUseCase @Inject constructor(
     private val addRecipePosToDB: AddRecipePosToDBUseCase,
 ) {
     suspend operator fun invoke(
-        state: RecipeDetailsState, onEvent: (MainEvent) -> Unit,
+        state: RecipeDetailsState, scope: CoroutineScope, onEvent: (MainEvent) -> Unit,
     ) = coroutineScope {
         val params = SpecifySelectionParams { res ->
-            launch {
+            scope.launch(Dispatchers.IO) {
                 val recipe = Position.PositionRecipeView(
                     0,
                     RecipeShortView(

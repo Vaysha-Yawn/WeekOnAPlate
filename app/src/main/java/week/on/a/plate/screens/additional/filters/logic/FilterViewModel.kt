@@ -5,12 +5,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import week.on.a.plate.app.mainActivity.event.BackNavParams
 import week.on.a.plate.app.mainActivity.event.MainEvent
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.app.mainActivity.event.NavigateBackDest
 import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.data.dataView.recipe.IngredientCategoryView
 import week.on.a.plate.data.dataView.recipe.IngredientView
@@ -98,19 +100,19 @@ class FilterViewModel @Inject constructor(
         when (event) {
             FilterEvent.Back -> close()
             FilterEvent.Done -> done()
-            is FilterEvent.SearchFilter -> viewModelScope.launch {
+            is FilterEvent.SearchFilter -> viewModelScope.launch(Dispatchers.IO) {
                 searchUseCase.search(event.text, allTags.value, allIngredients.value, state)
             }
 
             FilterEvent.SelectedFilters -> openSelectedFilters()
             is FilterEvent.VoiceSearchFilters ->
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     voiceSearch(
                         event.context,
                         ::onEvent,
                         state.searchText,
-                        state,
-                        dialogOpenParams
+                        state, viewModelScope,
+                        dialogOpenParams,
                     ) { mainEvent.value = it }
                 }
 
@@ -134,21 +136,21 @@ class FilterViewModel @Inject constructor(
             )
 
             is FilterEvent.CreateIngredientCategory ->
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     ingredientCategoryCRUD.createIngredientCategory(
                         ::onEvent,
                         state.searchText.value,
-                        dialogOpenParams
+                        dialogOpenParams, viewModelScope,
                     )
                 }
 
 
             is FilterEvent.CreateTagCategory ->
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     tagCategoryCRUD.createTagCategory(
                         ::onEvent,
                         state.searchText.value,
-                        dialogOpenParams
+                        dialogOpenParams, viewModelScope,
                     )
                 }
 
@@ -182,7 +184,7 @@ class FilterViewModel @Inject constructor(
 
             is FilterEvent.EditOrDeleteIngredient -> editOrDelete(
                 delete = {
-                    viewModelScope.launch {
+                    viewModelScope.launch(Dispatchers.IO) {
                         ingredientCRUD.deleteIngredient(
                             event.ingredient,
                             event.context,
@@ -190,20 +192,20 @@ class FilterViewModel @Inject constructor(
                     }
                 },
                 edit = {
-                    viewModelScope.launch {
+                    viewModelScope.launch(Dispatchers.IO) {
                         ingredientCRUD.editIngredient(
                             event.context,
                             event.ingredient,
                             ::onEvent,
                             allIngredients.value,
-                            dialogOpenParams
+                            dialogOpenParams, viewModelScope,
                         )
                     }
                 })
 
             is FilterEvent.EditOrDeleteTag -> editOrDelete(
                 delete = {
-                    viewModelScope.launch {
+                    viewModelScope.launch(Dispatchers.IO) {
                         tagCRUD.deleteTag(
                             event.tag,
                             event.context,
@@ -211,10 +213,10 @@ class FilterViewModel @Inject constructor(
                     }
                 },
                 edit = {
-                    viewModelScope.launch {
+                    viewModelScope.launch(Dispatchers.IO) {
                         tagCRUD.editTag(
                             event.tag, dialogOpenParams,
-                            allTags.value
+                            allTags.value, viewModelScope,
                         )
                     }
                 })
@@ -223,17 +225,17 @@ class FilterViewModel @Inject constructor(
                 if (event.ingredientCategory.id == 1L) return
                 editOrDelete(
                     delete = {
-                        viewModelScope.launch {
+                        viewModelScope.launch(Dispatchers.IO) {
                             ingredientCategoryCRUD.deleteIngredientCategory(
                                 event.ingredientCategory
                             )
                         }
                     },
                     edit = {
-                        viewModelScope.launch {
+                        viewModelScope.launch(Dispatchers.IO) {
                             ingredientCategoryCRUD.editIngredientCategory(
                                 event.ingredientCategory,
-                                dialogOpenParams
+                                dialogOpenParams, viewModelScope,
                             )
                         }
                     })
@@ -243,15 +245,15 @@ class FilterViewModel @Inject constructor(
                 if (event.tagCategory.id == 1L) return
                 editOrDelete(
                     delete = {
-                        viewModelScope.launch {
+                        viewModelScope.launch(Dispatchers.IO) {
                             tagCategoryCRUD.deleteTagCategory(event.tagCategory)
                         }
                     },
                     edit = {
-                        viewModelScope.launch {
+                        viewModelScope.launch(Dispatchers.IO) {
                             tagCategoryCRUD.editTagCategory(
                                 event.tagCategory,
-                                dialogOpenParams
+                                dialogOpenParams, viewModelScope,
                             )
                         }
                     })
@@ -289,7 +291,7 @@ class FilterViewModel @Inject constructor(
     }
 
     private fun openSelectedFilters() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val params = SelectedFiltersViewModel.SelectedFiltersDialogNavParams(
                 state.activeFilterTabIndex.intValue,
                 state.selectedTags.value,
@@ -306,7 +308,7 @@ class FilterViewModel @Inject constructor(
 
     fun done() {
         state.searchText.value = ""
-        mainEvent.value = MainEvent.NavigateBack
+        mainEvent.value = MainEvent.Navigate(NavigateBackDest, BackNavParams)
         if (isForCategory) {
             resultFlowCategory!!.value = FilterResult(
                 state.selectedTags.value,

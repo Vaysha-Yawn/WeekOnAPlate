@@ -68,7 +68,7 @@ fun LazyListScope.RecipeEditPage(
             TextTitle(text = stringResource(R.string.step_by_step_recipe))
         }
     }
-    itemsIndexed(items = state.steps.value, key = { _, step -> step.id }) { ind, step ->
+    itemsIndexed(items = state.steps.value, key = { ind, k -> ind }) { ind, step ->
         Column(Modifier.padding(horizontal = 24.dp)) {
             StepRecipeEdit(
                 ind,

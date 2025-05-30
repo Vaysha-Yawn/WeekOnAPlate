@@ -58,8 +58,8 @@ class ShoppingListViewModel @Inject constructor(
         viewModelScope.launch {
             when (event) {
                 ShoppingListEvent.Add -> addIngredient(
-                    { event -> mainEvent.value = event },
-                    allItemsUnChecked.value
+                    { event -> mainEvent.value = event }, viewModelScope,
+                    allItemsUnChecked.value,
                 )
 
                 is ShoppingListEvent.Check -> updateCheck(true, event.position)
@@ -67,7 +67,7 @@ class ShoppingListViewModel @Inject constructor(
                 is ShoppingListEvent.Uncheck -> updateCheck(false, event.position)
                 is ShoppingListEvent.Edit -> editIngredient(
                     event.ingredient,
-                    dialogOpenParams
+                    dialogOpenParams, viewModelScope,
                 )
 
                 is ShoppingListEvent.Share -> ShareShoppingListUseCase(event.context).shareShoppingList(

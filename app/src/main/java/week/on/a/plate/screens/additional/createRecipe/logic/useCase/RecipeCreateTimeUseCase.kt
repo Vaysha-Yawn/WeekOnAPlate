@@ -1,6 +1,6 @@
 package week.on.a.plate.screens.additional.createRecipe.logic.useCase
 
-import androidx.compose.runtime.MutableState
+import kotlinx.coroutines.flow.MutableStateFlow
 import week.on.a.plate.R
 import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.dialogs.timePick.logic.TimePickViewModel
@@ -10,17 +10,17 @@ import java.time.LocalTime
 import javax.inject.Inject
 
 class RecipeCreateTimeUseCase @Inject constructor() {
-    private fun getTime(
-        dialogOpenParams: MutableState<DialogOpenParams?>,
+    private suspend fun getTime(
+        dialogOpenParams: MutableStateFlow<DialogOpenParams?>,
         title: Int,
         use: (Long) -> Unit
     ) {
         val params = TimePickViewModel.TimePickDialogParams(title, use)
-        dialogOpenParams.value = params
+        dialogOpenParams.emit(params)
     }
 
-    fun editRecipeDuration(
-        dialogOpenParams: MutableState<DialogOpenParams?>,
+    suspend fun editRecipeDuration(
+        dialogOpenParams: MutableStateFlow<DialogOpenParams?>,
         state: RecipeCreateUIState
     ) {
         getTime(dialogOpenParams, R.string.recipe_duration) { time ->
@@ -28,8 +28,8 @@ class RecipeCreateTimeUseCase @Inject constructor() {
         }
     }
 
-    fun editTimer(
-        dialogOpenParams: MutableState<DialogOpenParams?>,
+    suspend fun editTimer(
+        dialogOpenParams: MutableStateFlow<DialogOpenParams?>,
         event: RecipeCreateEvent.EditTimer
     ) {
         getTime(dialogOpenParams, R.string.set_timer) { time ->
