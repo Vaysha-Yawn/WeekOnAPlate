@@ -308,7 +308,6 @@ class FilterViewModel @Inject constructor(
 
     fun done() {
         state.searchText.value = ""
-        mainEvent.value = MainEvent.Navigate(NavigateBackDest, BackNavParams)
         if (isForCategory) {
             resultFlowCategory!!.value = FilterResult(
                 state.selectedTags.value,
@@ -324,6 +323,7 @@ class FilterViewModel @Inject constructor(
                 state.selectedIngredientsCategories.value
             )
         }
+        mainEvent.value = MainEvent.Navigate(NavigateBackDest, BackNavParams)
     }
 
     fun close() {

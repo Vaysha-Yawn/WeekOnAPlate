@@ -105,13 +105,17 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             nav = rememberNavController()
-            LaunchedEffect(viewModel.navParams.value) {
+            LaunchedEffect(viewModel.navParams.value) {//todo лучше oneach ибо фильтер и фильтер одинаковая
+                // но должны быть разными экранами
+                // и два nav back подряд второй игнорируется
                 if (viewModel.navParams.value == null) return@LaunchedEffect
                 if (viewModel.navParams.value is NavigateBackDest) {
                     nav?.popBackStack()
+                    viewModel.navParams.value = null
                     return@LaunchedEffect
                 }
                 nav!!.navigate(viewModel.navParams.value!!)
+                viewModel.navParams.value = null
             }
 
             viewModel.voiceInputUseCase.voiceInputLauncher = voiceInputLauncher
