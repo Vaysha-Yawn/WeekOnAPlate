@@ -54,6 +54,7 @@ class RecipeDetailsViewModel @Inject constructor(
             RecipeDetailsEvent.Back -> {
                 mainEvent.value = MainEvent.Navigate(NavigateBackDest, BackNavParams)
             }
+
             RecipeDetailsEvent.Edit -> viewModelScope.launch {
                 editRecipeUseCase(state, viewModelScope) {
                     mainEvent.value = it
@@ -92,9 +93,8 @@ class RecipeDetailsViewModel @Inject constructor(
                     state.recipe = recipe
                     state.isFavorite.value = recipe.inFavorite
                     state.ingredients.value = recipe.ingredients
-                    state.currentPortions.intValue = if (state.currentPortions.intValue == 0) {
+                    state.currentPortions.intValue =
                         portionsCount ?: recipe.standardPortionsCount
-                    } else state.currentPortions.intValue
 
                     state.mapPinnedStepIdToIngredients.value = recipe.steps.associate { stepView ->
                         Pair(

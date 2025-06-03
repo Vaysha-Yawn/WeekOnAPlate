@@ -41,7 +41,7 @@ private fun ShoppingListContent(state: ShoppingListUIState, onEvent: (ShoppingLi
     ) {
         ShoppingTopBar(onEvent, context)
         LazyColumn() {
-            items(items = state.listUnchecked.value, key = { it.id }) { ingredient ->
+            items(items = state.listUnchecked.value) { ingredient ->
                 ShoppingListPosition(ingredient, false, {
                     onEvent(ShoppingListEvent.Edit(it))
                 }) {
@@ -52,7 +52,7 @@ private fun ShoppingListContent(state: ShoppingListUIState, onEvent: (ShoppingLi
                 DeleteCheckedRow(state, onEvent)
                 Spacer(Modifier.height(12.dp))
             }
-            items(items = state.listChecked.value, key = { it.id }) { ingredient ->
+            items(items = state.listChecked.value) { ingredient ->
                 ShoppingListPosition(ingredient, true, {
                     onEvent(ShoppingListEvent.Edit(it))
                 }) {
