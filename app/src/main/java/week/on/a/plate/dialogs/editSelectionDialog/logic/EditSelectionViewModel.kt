@@ -4,6 +4,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import kotlinx.coroutines.CoroutineScope
 import week.on.a.plate.R
+import week.on.a.plate.app.mainActivity.event.MainEvent
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.core.dialogCore.DialogViewModel
@@ -27,6 +28,7 @@ class EditSelectionViewModel(
 ) {
     val state: EditSelectionUIState = oldData
     val dialogOpenParams: MutableState<DialogOpenParams?> = mutableStateOf(null)
+    val mainEvent: MutableState<MainEvent?> = mutableStateOf(null)
 
     fun onEvent(event: EditSelectionEvent) {
         when (event) {

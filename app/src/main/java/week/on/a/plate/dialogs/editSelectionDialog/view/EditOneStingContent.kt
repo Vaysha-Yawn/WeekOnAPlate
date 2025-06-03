@@ -17,6 +17,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
+import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.app.mainActivity.view.MainEventResolve
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.EditTextLine
 import week.on.a.plate.core.uitools.TextSmall
@@ -30,13 +32,15 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 fun EditSelectionContent(
-    vm: EditSelectionViewModel
+    vm: EditSelectionViewModel,
+    mainVM: MainViewModel
 ) {
     val state = vm.state
     val onEvent = { event: EditSelectionEvent ->
         vm.onEvent(event)
     }
     EditSelectionView(state, onEvent)
+    MainEventResolve(vm.mainEvent, vm.dialogOpenParams, mainVM)
 }
 
 @Composable

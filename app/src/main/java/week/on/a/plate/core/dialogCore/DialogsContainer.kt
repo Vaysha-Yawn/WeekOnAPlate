@@ -272,7 +272,7 @@ fun DialogsContainer(
                 sheetState,
                 { onEvent(EditSelectionEvent.Close) }) {
                 EditSelectionContent(
-                    data
+                    data, viewModel
                 )
             }
             LaunchedEffect(Unit) {
