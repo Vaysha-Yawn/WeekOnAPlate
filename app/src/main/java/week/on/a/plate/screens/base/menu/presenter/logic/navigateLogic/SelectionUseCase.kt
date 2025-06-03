@@ -27,13 +27,37 @@ import java.time.LocalDateTime
 import java.util.Locale
 import javax.inject.Inject
 
+class CreateSelIdAndCreatePosOpenDialog @Inject constructor(
+    private val getSelOrCreateInDB: GetSelOrCreateInDBUseCase,
+    private val addPosition: AddPositionOpenDialog
+) {
+    suspend operator fun invoke(
+        context: Context,
+        dateTime: LocalDateTime,
+        name: String,
+        dialogOpenParams: MutableState<DialogOpenParams?>,
+        scope: CoroutineScope,
+        onEvent: (Event) -> Unit
+    ) = coroutineScope {
+        scope.launch(Dispatchers.IO) {
+            val id = scope.async(Dispatchers.IO) {
+                getSelOrCreateInDB(
+                    dateTime,
+                    false, name, Locale.getDefault(),
+                )
+            }
+            addPosition(id.await(), context, dialogOpenParams, onEvent)
+        }
+    }
+}
+
 class CreateWeekSelIdAndCreatePosOpenDialog @Inject constructor(
     private val getSelOrCreateInDB: GetSelOrCreateInDBUseCase,
     private val addPosition: AddPositionOpenDialog
 ) {
     suspend operator fun invoke(
         context: Context,
-        activeDay: MutableState<LocalDate>,
+        date: LocalDate,
         dialogOpenParams: MutableState<DialogOpenParams?>,
         scope: CoroutineScope,
         onEvent: (Event) -> Unit
@@ -42,7 +66,7 @@ class CreateWeekSelIdAndCreatePosOpenDialog @Inject constructor(
             val id = scope.async(Dispatchers.IO) {
                 getSelOrCreateInDB(
                     LocalDateTime.of(
-                        activeDay.value,
+                        date,
                         ForWeek.stdTime
                     ),
                     true, context.getString(ForWeek.fullName), Locale.getDefault(),

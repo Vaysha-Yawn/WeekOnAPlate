@@ -29,7 +29,6 @@ import week.on.a.plate.screens.base.menu.presenter.logic.MenuViewModel
 import week.on.a.plate.screens.base.wrapperDatePicker.event.WrapperDatePickerEvent
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.LocalTime
 import java.util.Locale
 import javax.inject.Inject
 
@@ -107,7 +106,7 @@ class SpecifySelectionViewModel @Inject constructor(
         }
     }
 
-    fun updateSelections() {
+    private fun updateSelections() {
         viewModelScope.launch {
             val allSelections = weekMenuRepository.getSelectionsByDate(state.date.value)
             val listSelName = allSelections.map { it.name }.toMutableList()
@@ -135,12 +134,23 @@ class SpecifySelectionViewModel @Inject constructor(
     fun done(context: Context) {
         val category = getCategory(context) ?: return
         viewModelScope.launch {
-            val selId = weekMenuRepository.getSelIdOrCreate(
-                LocalDateTime.of(state.date.value, LocalTime.of(0, 0)),
-                state.checkWeek.value,
-                category,
-                Locale.getDefault(),
-            )
+            val selId = if (!state.checkWeek.value) {
+                val time = categorySelectionDAO.getByName(category).stdTime
+                weekMenuRepository.getSelIdOrCreate(
+                    LocalDateTime.of(state.date.value, time),
+                    state.checkWeek.value,
+                    category,
+                    Locale.getDefault(),
+                )
+            } else {
+                weekMenuRepository.getSelIdOrCreate(
+                    LocalDateTime.of(state.date.value, ForWeek.stdTime),
+                    state.checkWeek.value,
+                    category,
+                    Locale.getDefault(),
+                )
+            }
+
             resultFlow.value =
                 SpecifySelectionResult(selId, state.date.value, state.portionsCount.intValue)
         }

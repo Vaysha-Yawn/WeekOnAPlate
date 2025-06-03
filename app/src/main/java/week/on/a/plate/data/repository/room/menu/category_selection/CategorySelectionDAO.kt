@@ -14,6 +14,9 @@ interface CategorySelectionDAO {
     @Query("SELECT * FROM CategorySelectionRoom")
     suspend fun getAll(): List<CategorySelectionRoom>
 
+    @Query("SELECT * FROM CategorySelectionRoom WHERE name= :name")
+    suspend fun getByName(name: String): CategorySelectionRoom
+
     @Query("SELECT * FROM CategorySelectionRoom")
     fun getAllFlow(): Flow<List<CategorySelectionRoom>>
 

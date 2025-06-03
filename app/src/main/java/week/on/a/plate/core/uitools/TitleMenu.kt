@@ -45,7 +45,7 @@ fun TitleMenu(selection: SelectionView, modifier: Modifier, onEvent: (event: Eve
             if (selection.id == 0L) {
                 onEvent(
                     MenuEvent.CreateFirstNonPosedPosition(
-                        selection.dateTime.toLocalDate(),
+                        selection,
                         context
                     )
                 )
@@ -80,7 +80,7 @@ fun TitleMenuS(selection: SelectionView, modifier: Modifier, onEvent: (event: Ev
             if (selection.id == 0L) {
                 onEvent(
                     MenuEvent.CreateFirstNonPosedPosition(
-                        selection.dateTime.toLocalDate(),
+                        selection,
                         context,
                     )
                 )

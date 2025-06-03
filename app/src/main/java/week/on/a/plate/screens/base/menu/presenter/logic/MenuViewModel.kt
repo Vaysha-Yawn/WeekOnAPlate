@@ -16,6 +16,7 @@ import week.on.a.plate.screens.additional.recipeDetails.navigation.RecipeDetails
 import week.on.a.plate.screens.base.menu.domain.dbusecase.GetWeekFlowUseCase
 import week.on.a.plate.screens.base.menu.presenter.event.MenuEvent
 import week.on.a.plate.screens.base.menu.presenter.event.MenuNavEvent
+import week.on.a.plate.screens.base.menu.presenter.logic.navigateLogic.CreateSelIdAndCreatePosOpenDialog
 import week.on.a.plate.screens.base.menu.presenter.logic.navigateLogic.CreateSelectionOpenDialog
 import week.on.a.plate.screens.base.menu.presenter.logic.navigateLogic.CreateWeekSelIdAndCreatePosOpenDialog
 import week.on.a.plate.screens.base.menu.presenter.logic.navigateLogic.EditOrDeleteSelectionOpenDialog
@@ -41,7 +42,7 @@ class MenuViewModel @Inject constructor(
 
     //create pos
     private val getSelAndCreate: GetSelAndCreateUseCase,
-    private val createFirstNonPosedPosition: CreateWeekSelIdAndCreatePosOpenDialog,
+    private val createFirstNonPosedPosition: CreateSelIdAndCreatePosOpenDialog,
     private val addPosition: AddPositionOpenDialog,
 
     //act with pos
@@ -189,7 +190,8 @@ class MenuViewModel @Inject constructor(
             is MenuEvent.CreateFirstNonPosedPosition -> viewModelScope.launch {
                 createFirstNonPosedPosition(
                     event.context,
-                    activeDay,
+                    event.selection.dateTime,
+                    event.selection.name,
                     dialogOpenParams, viewModelScope, ::onEvent
                 )
             }
@@ -208,7 +210,7 @@ class MenuViewModel @Inject constructor(
                 viewModelScope.launch(Dispatchers.IO) {
                     createWeekSelIdAndCreatePos(
                         event.context,
-                        activeDay,
+                        activeDay.value,
                         dialogOpenParams, viewModelScope,
                         ::onEvent,
                     )

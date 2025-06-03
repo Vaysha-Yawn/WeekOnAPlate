@@ -14,7 +14,7 @@ sealed interface MenuEvent : Event {
     class GetSelIdAndCreate(val context: Context) : MenuEvent
     class CreatePosition(val selId: Long, val context: Context) : MenuEvent
     class CreateFirstNonPosedPosition(
-        val date: LocalDate,
+        val selection: SelectionView,
         val context: Context
     ) : MenuEvent
 
