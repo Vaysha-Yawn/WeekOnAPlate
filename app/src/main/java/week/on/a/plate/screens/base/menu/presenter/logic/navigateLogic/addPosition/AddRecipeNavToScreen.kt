@@ -2,7 +2,7 @@ package week.on.a.plate.screens.base.menu.presenter.logic.navigateLogic.addPosit
 
 import android.content.Context
 import androidx.compose.runtime.MutableState
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.CoroutineScope
 import week.on.a.plate.app.mainActivity.event.MainEvent
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.dialogCore.DialogOpenParams
@@ -18,14 +18,15 @@ class AddRecipeNavToScreen @Inject constructor(
     private val addRecipe: AddRecipePosToDBUseCase,
     private val choosePortionsCount: ChoosePortionsCountOpenDialog
 ) {
-    suspend operator fun invoke(
+    operator fun invoke(
         selId: Long,
         context: Context,
+        scope: CoroutineScope,
         dialogOpenParams: MutableState<DialogOpenParams?>,
         onEvent: (Event) -> Unit,
-    ) = coroutineScope {
+    ) {
         val params = SearchNavParams(selId, null) { recipe ->
-            choosePortionsCount(context, dialogOpenParams, this) { count ->
+            choosePortionsCount(context, dialogOpenParams, scope) { count ->
                 val recipePosition = Position.PositionRecipeView(
                     0,
                     RecipeShortView(recipe.id, recipe.name, recipe.img),

@@ -27,8 +27,8 @@ class AddPositionOpenDialog @Inject constructor(
                 AddPositionEvent.AddNote -> createNoteOpenDialog(selId, dialogOpenParams)
                 AddPositionEvent.AddRecipe -> addRecipeNavToScreen(
                     selId,
-                    context,
-                    dialogOpenParams, onEvent
+                    context, this,
+                    dialogOpenParams, onEvent,
                 )
 
                 AddPositionEvent.Close -> {}

@@ -7,11 +7,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 abstract class DialogViewModel<T>(
-    val viewModelScope : CoroutineScope,
+    val viewModelScope: CoroutineScope,
     val openDialog: (DialogViewModel<*>) -> Unit,
-    val closeDialog:() -> Unit,
+    val closeDialog: () -> Unit,
     val useResult: suspend (T) -> Unit
-){
+) {
     val show = mutableStateOf(true)
     protected lateinit var resultFlow: MutableStateFlow<T?>
 
@@ -31,7 +31,9 @@ abstract class DialogViewModel<T>(
             val flow = getResultFlow()
             flow.collect { value ->
                 if (value != null) {
-                    useResult(value)
+                    viewModelScope.launch {
+                        useResult(value)
+                    }
                 }
             }
         }

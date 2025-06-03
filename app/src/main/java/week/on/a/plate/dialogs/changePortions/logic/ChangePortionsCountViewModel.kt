@@ -12,7 +12,7 @@ class ChangePortionsCountViewModel(
     openDialog: (DialogViewModel<*>) -> Unit,
     closeDialog: () -> Unit,
     startValued: Int,
-    useResult: (Int) -> Unit,
+    useResult: suspend (Int) -> Unit,
 ) : DialogViewModel<Int>(
     viewModelScope,
     openDialog,
@@ -32,7 +32,7 @@ class ChangePortionsCountViewModel(
 
     class ChangePortionsCountDialogParams(
         private val startValued: Int,
-        private val useResult: (Int) -> Unit
+        private val useResult: suspend (Int) -> Unit
     ) : DialogOpenParams {
         override fun openDialog(mainViewModel: MainViewModel) {
             ChangePortionsCountViewModel(

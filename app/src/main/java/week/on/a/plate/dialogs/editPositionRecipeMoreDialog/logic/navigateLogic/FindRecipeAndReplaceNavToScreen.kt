@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.compose.runtime.MutableState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import week.on.a.plate.app.mainActivity.event.MainEvent
 import week.on.a.plate.core.Event
@@ -23,12 +22,12 @@ class FindRecipeAndReplaceNavToScreen @Inject constructor(
     private val addRecipe: AddRecipePosToDBUseCase,
     private val choosePortionsCount: ChoosePortionsCountOpenDialog
 ) {
-    suspend operator fun invoke(
+    operator fun invoke(
         oldRecipe: Position.PositionRecipeView,
         dialogOpenParams: MutableState<DialogOpenParams?>, context: Context,
         scope: CoroutineScope,
         onEvent: (Event) -> Unit
-    ) = coroutineScope {
+    ) {
         val selId = oldRecipe.selectionId
         val params = SearchNavParams(selId, null) { recipe ->
             choosePortionsCount(context, dialogOpenParams, scope) { count ->
