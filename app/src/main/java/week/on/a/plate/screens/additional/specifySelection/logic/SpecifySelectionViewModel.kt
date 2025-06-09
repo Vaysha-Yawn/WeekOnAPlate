@@ -9,12 +9,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import week.on.a.plate.app.mainActivity.event.BackNavParams
-import week.on.a.plate.app.mainActivity.event.EmptyNavParams
 import week.on.a.plate.app.mainActivity.event.MainEvent
 import week.on.a.plate.app.mainActivity.event.NavigateBackDest
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.core.navigation.MenuDestination
+import week.on.a.plate.core.navigation.MenuNavParams
 import week.on.a.plate.data.dataView.week.ForWeek
 import week.on.a.plate.data.dataView.week.NonPosed
 import week.on.a.plate.data.repository.room.menu.category_selection.CategorySelectionDAO
@@ -29,6 +29,7 @@ import week.on.a.plate.screens.base.menu.presenter.logic.MenuViewModel
 import week.on.a.plate.screens.base.wrapperDatePicker.event.WrapperDatePickerEvent
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.util.Locale
 import javax.inject.Inject
 
@@ -109,14 +110,15 @@ class SpecifySelectionViewModel @Inject constructor(
     private fun updateSelections() {
         viewModelScope.launch {
             val allSelections = weekMenuRepository.getSelectionsByDate(state.date.value)
-            val listSelName = allSelections.map { it.name }.toMutableList()
+            val listSelName =
+                allSelections.map { Pair(it.name, it.dateTime.toLocalTime()) }.toMutableList()
             var listSuggest = categorySelectionDAO.getAll().toMutableList()
             listSuggest.add(CategorySelectionRoom(state.nonPosedText, NonPosed.stdTime))
             listSuggest = listSuggest.sortedBy { it.stdTime }.toMutableList()
             for (i in listSuggest) {
-                if (listSelName.find { it == i.name } == null) {
+                if (listSelName.find { it.first == i.name } == null) {
                     listSelName.add(
-                        i.name
+                        Pair(i.name, i.stdTime)
                     )
                 }
             }
@@ -125,32 +127,36 @@ class SpecifySelectionViewModel @Inject constructor(
     }
 
 
-    private fun getCategory(context: Context): String? {
-        if (!state.checkWeek.value && state.checkDayCategory.value == null) return null
-        if (state.checkWeek.value) return context.getString(ForWeek.fullName)
-        return state.checkDayCategory.value
+    private fun getCategory(context: Context): Pair<String, LocalTime>? {
+        if (!state.checkWeek.value && state.checkDayCategory.intValue == 0) return Pair(
+            context.getString(
+                NonPosed.fullName
+            ), NonPosed.stdTime
+        )
+        if (state.checkWeek.value) return Pair(context.getString(ForWeek.fullName), ForWeek.stdTime)
+        return state.allSelectionsIdDay.value[state.checkDayCategory.intValue]
     }
 
     fun done(context: Context) {
         val category = getCategory(context) ?: return
+        val time = category.second
+        val name = category.first
         viewModelScope.launch {
             val selId = if (!state.checkWeek.value) {
-                val time = categorySelectionDAO.getByName(category).stdTime
                 weekMenuRepository.getSelIdOrCreate(
                     LocalDateTime.of(state.date.value, time),
                     state.checkWeek.value,
-                    category,
+                    name,
                     Locale.getDefault(),
                 )
             } else {
                 weekMenuRepository.getSelIdOrCreate(
                     LocalDateTime.of(state.date.value, ForWeek.stdTime),
                     state.checkWeek.value,
-                    category,
+                    name,
                     Locale.getDefault(),
                 )
             }
-
             resultFlow.value =
                 SpecifySelectionResult(selId, state.date.value, state.portionsCount.intValue)
         }
@@ -173,7 +179,7 @@ class SpecifySelectionViewModel @Inject constructor(
             if (value != null) {
                 use(value)
                 menuViewModel.onEvent(WrapperDatePickerEvent.ChangeWeek(value.date))
-                mainEvent.value = MainEvent.Navigate(MenuDestination, EmptyNavParams)
+                mainEvent.value = MainEvent.Navigate(MenuDestination, MenuNavParams(value.date))
             }
         }
     }

@@ -2,7 +2,6 @@ package week.on.a.plate.screens.base.menu.presenter.logic.navigateLogic.addPosit
 
 import androidx.compose.runtime.MutableState
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.dialogs.editIngredientInMenu.logic.EditPositionIngredientViewModel
@@ -14,7 +13,7 @@ class AddIngredientOpenDialog @Inject constructor(
 ) {
     suspend operator fun invoke(
         selId: Long, dialogOpenParams: MutableState<DialogOpenParams?>,
-    ) = coroutineScope {
+    ) {
         val params = EditPositionIngredientViewModel.EditPositionIngredientDialogParams(
             null,
             true

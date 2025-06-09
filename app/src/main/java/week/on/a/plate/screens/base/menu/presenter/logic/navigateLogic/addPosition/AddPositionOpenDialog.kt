@@ -2,7 +2,7 @@ package week.on.a.plate.screens.base.menu.presenter.logic.navigateLogic.addPosit
 
 import android.content.Context
 import androidx.compose.runtime.MutableState
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.supervisorScope
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.dialogs.addPositionChoose.event.AddPositionEvent
@@ -19,7 +19,7 @@ class AddPositionOpenDialog @Inject constructor(
         selId: Long, context: Context,
         dialogOpenParams: MutableState<DialogOpenParams?>,
         onEvent: (Event) -> Unit
-    ) = coroutineScope {
+    ) = supervisorScope {
         val params = AddPositionViewModel.AddPositionDialogParams { event ->
             when (event) {
                 AddPositionEvent.AddDraft -> createDraftNavToScreen(selId, onEvent)

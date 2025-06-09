@@ -2,6 +2,7 @@ package week.on.a.plate.screens.additional.specifySelection.logic
 
 import androidx.compose.runtime.MutableState
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import week.on.a.plate.R
 import week.on.a.plate.core.dialogCore.DialogOpenParams
@@ -29,9 +30,10 @@ class AddCustomSelectionUseCase @Inject constructor(
         ) { selState ->
             state.allSelectionsIdDay.value =
                 state.allSelectionsIdDay.value.toMutableList().apply {
-                    add(selState.text.value)
+                    add(Pair(selState.text.value, selState.selectedTime.value))
+                    sortBy { it.second }
                 }
-            scope.launch {
+            scope.launch(Dispatchers.IO) {
                 weekMenuRepository.getSelIdOrCreate(
                     LocalDateTime.of(
                         state.date.value,
@@ -41,7 +43,8 @@ class AddCustomSelectionUseCase @Inject constructor(
                 )
             }
             state.checkWeek.value = false
-            state.checkDayCategory.value = selState.text.value
+            state.checkDayCategory.intValue =
+                state.allSelectionsIdDay.value.indexOfFirst { it.first == selState.text.value }
         }
         dialogOpenParams.value = params
     }

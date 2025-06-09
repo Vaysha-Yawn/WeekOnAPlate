@@ -2,16 +2,13 @@ package week.on.a.plate.screens.base.searchRecipes.logic
 
 import android.content.Context
 import androidx.compose.runtime.MutableState
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
 import week.on.a.plate.app.mainActivity.event.EmptyNavParams
 import week.on.a.plate.app.mainActivity.event.MainEvent
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.core.navigation.MenuDestination
+import week.on.a.plate.core.navigation.MenuNavParams
 import week.on.a.plate.data.dataView.recipe.RecipeView
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.data.dataView.week.RecipeShortView
@@ -33,9 +30,8 @@ class AddToMenuUseCase @Inject constructor(
         resultFlow: MutableStateFlow<RecipeView?>?,
         state: SearchUIState,
         dialogOpenParams: MutableState<DialogOpenParams?>,
-        scope: CoroutineScope,
         onEvent: (Event) -> Unit
-    ) = coroutineScope {
+    ) {
         if (state.selId != null) {
             resultFlow?.value = recipeView
             state.selId = null
@@ -46,7 +42,6 @@ class AddToMenuUseCase @Inject constructor(
                 val std = PreferenceUseCase.getDefaultPortionsCount(context)
                 val params =
                     ChangePortionsCountViewModel.ChangePortionsCountDialogParams(std) { count ->
-                        scope.launch(Dispatchers.IO) {
                         val recipePosition = Position.PositionRecipeView(
                             0,
                             RecipeShortView(recipeView.id, recipeView.name, recipeView.img),
@@ -54,9 +49,8 @@ class AddToMenuUseCase @Inject constructor(
                             res.selId
                         )
                         addRecipePosToDB(recipePosition, res.selId)
-                            onEvent(MainEvent.Navigate(MenuDestination, EmptyNavParams))
+                        onEvent(MainEvent.Navigate(MenuDestination, MenuNavParams(res.date)))
                     }
-                }
                 dialogOpenParams.value = params
             }
             onEvent(MainEvent.Navigate(SpecifySelectionDestination, params))

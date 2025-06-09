@@ -6,7 +6,6 @@ import androidx.compose.runtime.mutableStateOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import week.on.a.plate.R
 import week.on.a.plate.core.Event
@@ -38,16 +37,14 @@ class CreateSelIdAndCreatePosOpenDialog @Inject constructor(
         dialogOpenParams: MutableState<DialogOpenParams?>,
         scope: CoroutineScope,
         onEvent: (Event) -> Unit
-    ) = coroutineScope {
-        scope.launch(Dispatchers.IO) {
-            val id = scope.async(Dispatchers.IO) {
-                getSelOrCreateInDB(
-                    dateTime,
-                    false, name, Locale.getDefault(),
-                )
-            }
-            addPosition(id.await(), context, dialogOpenParams, onEvent)
+    ) {
+        val id = scope.async {
+            getSelOrCreateInDB(
+                dateTime,
+                false, name, Locale.getDefault(),
+            )
         }
+        addPosition(id.await(), context, dialogOpenParams, onEvent)
     }
 }
 
@@ -61,19 +58,17 @@ class CreateWeekSelIdAndCreatePosOpenDialog @Inject constructor(
         dialogOpenParams: MutableState<DialogOpenParams?>,
         scope: CoroutineScope,
         onEvent: (Event) -> Unit
-    ) = coroutineScope {
-        scope.launch(Dispatchers.IO) {
-            val id = scope.async(Dispatchers.IO) {
-                getSelOrCreateInDB(
-                    LocalDateTime.of(
-                        date,
-                        ForWeek.stdTime
-                    ),
-                    true, context.getString(ForWeek.fullName), Locale.getDefault(),
-                )
-            }
-            addPosition(id.await(), context, dialogOpenParams, onEvent)
+    ) {
+        val id = scope.async(Dispatchers.IO) {
+            getSelOrCreateInDB(
+                LocalDateTime.of(
+                    date,
+                    ForWeek.stdTime
+                ),
+                true, context.getString(ForWeek.fullName), Locale.getDefault(),
+            )
         }
+        addPosition(id.await(), context, dialogOpenParams, onEvent)
     }
 }
 
@@ -85,14 +80,14 @@ class CreateSelectionOpenDialog @Inject constructor(
         isForWeek: Boolean,
         dialogOpenParams: MutableState<DialogOpenParams?>,
         scope: CoroutineScope,
-    ) = coroutineScope {
+    ) {
         val params = EditSelectionViewModel.EditSelectionDialogParams(
             EditSelectionUIState(
                 title = R.string.add_meal,
                 placeholder = R.string.hint_breakfast
             )
         ) { state ->
-            scope.launch(Dispatchers.IO) {
+            scope.launch {
                 val newName = state.text.value
                 val time = state.selectedTime.value
                 addSelectionToDB(
@@ -113,20 +108,30 @@ class EditOrDeleteSelectionOpenDialog @Inject constructor(
         sel: SelectionView,
         dialogOpenParams: MutableState<DialogOpenParams?>,
         scope: CoroutineScope,
-    ) =
-        coroutineScope {
-            if (sel.isForWeek || sel.id == 0L) return@coroutineScope
-            val params = EditOrDeleteViewModel.EditOrDeleteDialogParams { event ->
-                scope.launch(Dispatchers.IO) {
-                    when (event) {
-                        EditOrDeleteEvent.Close -> {}
-                        EditOrDeleteEvent.Delete -> deleteSelectionInDB(sel, scope)
-                        EditOrDeleteEvent.Edit -> editSelection(sel, dialogOpenParams, scope)
-                    }
+    ) {
+        if (sel.isForWeek || sel.id == 0L) return
+        val params = EditOrDeleteViewModel.EditOrDeleteDialogParams { event ->
+            when (event) {
+                EditOrDeleteEvent.Close -> {}
+                EditOrDeleteEvent.Delete -> scope.launch(Dispatchers.IO) {
+                    deleteSelectionInDB(
+                        sel,
+                        scope
+                    )
+                }
+
+                EditOrDeleteEvent.Edit -> scope.launch {
+                    editSelection(
+                        sel,
+                        dialogOpenParams,
+                        scope
+                    )
                 }
             }
-            dialogOpenParams.value = params
         }
+        dialogOpenParams.value = params
+
+    }
 }
 
 class EditSelectionOpenDialog @Inject constructor(
@@ -136,25 +141,24 @@ class EditSelectionOpenDialog @Inject constructor(
         sel: SelectionView,
         dialogOpenParams: MutableState<DialogOpenParams?>,
         scope: CoroutineScope,
-    ) =
-        coroutineScope {
-            val oldState = EditSelectionUIState(
-                mutableStateOf(sel.name), R.string.edit_meal_name,
-                R.string.hint_breakfast
-            ).apply {
-                this.selectedTime.value = sel.dateTime.toLocalTime()
-            }
-            val params = EditSelectionViewModel.EditSelectionDialogParams(
-                oldState
-            ) { state ->
-                scope.launch(Dispatchers.IO) {
-                    editSelectionInDB(
-                        sel,
-                        state.text.value,
-                        state.selectedTime.value, scope
-                    )
-                }
-            }
-            dialogOpenParams.value = params
+    ) {
+        val oldState = EditSelectionUIState(
+            mutableStateOf(sel.name), R.string.edit_meal_name,
+            R.string.hint_breakfast
+        ).apply {
+            this.selectedTime.value = sel.dateTime.toLocalTime()
         }
+        val params = EditSelectionViewModel.EditSelectionDialogParams(
+            oldState
+        ) { state ->
+            scope.launch(Dispatchers.IO) {
+                editSelectionInDB(
+                    sel,
+                    state.text.value,
+                    state.selectedTime.value, scope
+                )
+            }
+        }
+        dialogOpenParams.value = params
+    }
 }

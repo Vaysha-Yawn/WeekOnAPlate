@@ -83,7 +83,7 @@ class SearchViewModel @Inject constructor(
                     searchStateManager::close,
                     resultFlow,
                     state,
-                    dialogOpenParams, viewModelScope,
+                    dialogOpenParams,
                     ::onEvent
                 )
 

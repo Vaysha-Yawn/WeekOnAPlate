@@ -10,6 +10,9 @@ import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.data.dataView.recipe.IngredientView
 import week.on.a.plate.data.dataView.recipe.RecipeTagView
 import week.on.a.plate.data.dataView.recipe.RecipeView
+import week.on.a.plate.screens.base.menu.presenter.event.MenuEvent
+import week.on.a.plate.screens.base.wrapperDatePicker.event.WrapperDatePickerEvent
+import java.time.LocalDate
 
 @Serializable
 sealed class BottomScreens<T>(val icon: Int, val route: T) {
@@ -49,6 +52,22 @@ object ShoppingListDestination
 
 @Serializable
 object MenuDestination
+
+class MenuNavParams(
+    private val dateLaunch: LocalDate,
+) : NavParams {
+    override fun launch(vm: MainViewModel) {
+        vm.viewModelScope.launch(Dispatchers.Default) {
+            vm.menuViewModel.onEvent(
+                MenuEvent.ActionWrapperDatePicker(
+                    WrapperDatePickerEvent.ChangeWeek(
+                        dateLaunch
+                    )
+                )
+            )
+        }
+    }
+}
 
 @Serializable
 object SearchDestination

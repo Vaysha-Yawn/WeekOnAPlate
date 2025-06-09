@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -52,7 +52,7 @@ fun ChooseSelectionSpecifySelection(
                     state.checkWeek.value = false
                 } else {
                     state.checkWeek.value = true
-                    state.checkDayCategory.value = null
+                    state.checkDayCategory.intValue = 0
                 }
             }
         }
@@ -76,21 +76,25 @@ fun ChooseSelectionSpecifySelection(
                         .weight(1f)
                         .fillMaxWidth()
                 ) {
-                    items(items = state.allSelectionsIdDay.value, key = { it }) { item ->
+                    itemsIndexed(items = state.allSelectionsIdDay.value) { ind, item ->
                         val check = remember {
-                            mutableStateOf(item == state.checkDayCategory.value)
+                            mutableStateOf(!state.checkWeek.value && ind == state.checkDayCategory.intValue)
                         }
-                        LaunchedEffect(key1 = state.checkDayCategory.value) {
-                            check.value = item == state.checkDayCategory.value
+                        LaunchedEffect(
+                            key1 = state.checkDayCategory.intValue,
+                            key2 = state.checkWeek.value
+                        ) {
+                            check.value =
+                                !state.checkWeek.value && ind == state.checkDayCategory.intValue
                         }
-                        CheckBoxAndText(item, check) {
+                        CheckBoxAndText(item.first, check) {
                             if (state.checkWeek.value) {
                                 state.checkWeek.value = false
                             }
                             if (check.value) {
-                                state.checkDayCategory.value = null
+                                state.checkDayCategory.intValue = 0
                             } else {
-                                state.checkDayCategory.value = item
+                                state.checkDayCategory.intValue = ind
                             }
                         }
                         Spacer(modifier = Modifier.height(24.dp))
