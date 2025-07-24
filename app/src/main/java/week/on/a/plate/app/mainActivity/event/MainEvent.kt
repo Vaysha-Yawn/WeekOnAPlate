@@ -1,16 +1,19 @@
 package week.on.a.plate.app.mainActivity.event
 
 import android.content.Context
+import android.os.Bundle
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.dialogCore.DialogViewModel
 
 
 sealed class MainEvent : Event {
-    data object CloseDialog : MainEvent()
+    object CloseDialog : MainEvent()
     class OpenDialog(val dialog: DialogViewModel<*>) : MainEvent()
     class ShowSnackBar(val message: String) : MainEvent()
-    class Navigate(val destination: Any, val navParams: NavParams) : MainEvent()
-    data object HideDialog : MainEvent()
-    data object ShowDialog : MainEvent()
+    object NavigateBack : MainEvent()
+    class Navigate(val destination: Any) : MainEvent()
+    class NavigateBackWithResult(val key: String, val result: Any) : MainEvent()
+    object HideDialog : MainEvent()
+    object ShowDialog : MainEvent()
     class VoiceToText(val context:Context, val use:(ArrayList<String>?)->Unit) : MainEvent()
 }

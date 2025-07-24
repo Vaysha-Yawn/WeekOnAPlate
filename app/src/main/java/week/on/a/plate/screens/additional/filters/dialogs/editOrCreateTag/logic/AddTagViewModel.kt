@@ -10,9 +10,9 @@ import week.on.a.plate.data.dataView.recipe.TagCategoryView
 import week.on.a.plate.screens.additional.filters.dialogs.editOrCreateTag.event.AddTagEvent
 import week.on.a.plate.screens.additional.filters.dialogs.editOrCreateTag.state.AddTagUIState
 import week.on.a.plate.screens.additional.filters.navigation.FilterDestination
-import week.on.a.plate.screens.additional.filters.navigation.FilterNavParams
 import week.on.a.plate.screens.additional.filters.state.FilterEnum
 import week.on.a.plate.screens.additional.filters.state.FilterMode
+import week.on.a.plate.screens.additional.filters.state.FilterResult
 
 
 class AddTagViewModel(
@@ -38,7 +38,6 @@ class AddTagViewModel(
         state.category.value = oldCategory ?: defaultCategoryView
     }
 
-
     fun onEvent(event: AddTagEvent) {
         when (event) {
             AddTagEvent.Close -> close()
@@ -54,24 +53,33 @@ class AddTagViewModel(
 
     private fun toSearchCategory() {
         viewModelScope.launch {
-            val vm = mainViewModel.filterViewModel
-            vm.state.selectedTagsCategories.value = listOf()
-            vm.state.resultSearchTagsCategories.value = listOf()
-            vm.state.searchText.value = ""
-
-            val oldFilterState = vm.state.getCopy()
             mainViewModel.onEvent(MainEvent.HideDialog)
-
-            val params =
-                FilterNavParams(FilterMode.One, FilterEnum.CategoryTag, null, true) { filters ->
-                val res = filters.tagsCategories?.getOrNull(0)
-                if (res != null) state.category.value = res
-                mainViewModel.onEvent(MainEvent.ShowDialog)
-                vm.isForCategory = false
-                vm.state.restoreState(oldFilterState)
-            }
-            mainViewModel.onEvent(MainEvent.Navigate(FilterDestination, params))
+            mainViewModel.onEvent(
+                MainEvent.Navigate(
+                    FilterDestination(
+                        FilterMode.One, FilterEnum.CategoryTag, null, true
+                    )
+                )
+            )
         }
+    }
+
+    //todo use
+    jyyjyjy
+    fun afterResult(filters: FilterResult) {
+
+        val vm = mainViewModel.filterViewModel
+        vm.state.selectedTagsCategories.value = listOf()
+        vm.state.resultSearchTagsCategories.value = listOf()
+        vm.state.searchText.value = ""
+
+        val oldFilterState = vm.state.getCopy()
+
+        val res = filters.tagsCategories?.getOrNull(0)
+        if (res != null) state.category.value = res
+        mainViewModel.onEvent(MainEvent.ShowDialog)
+        vm.isForCategory = false
+        vm.state.restoreState(oldFilterState)
     }
 
     class AddTagDialogNavParams(

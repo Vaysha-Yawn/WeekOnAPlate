@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.app.mainActivity.view.MainEventResolve
 import week.on.a.plate.core.Event
+import week.on.a.plate.core.navigation.SearchDestination
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.screens.base.searchRecipes.event.SearchScreenEvent
 import week.on.a.plate.screens.base.searchRecipes.logic.SearchViewModel
@@ -27,15 +28,17 @@ import week.on.a.plate.screens.base.searchRecipes.view.resultScreen.SearchResult
 @Composable
 fun SearchStart(
     viewModel: SearchViewModel,
-    viewModel1: MainViewModel,
+    mainVM: MainViewModel,
+    args: SearchDestination,
 ) {
     val state = viewModel.state
     val onEvent = { eventData: Event ->
         viewModel.onEvent(eventData)
     }
     state.allTagsCategories = viewModel.allTagCategories.collectAsState()
+    viewModel.launch(args.selId, args.filters)
     SearchStartContent(state, onEvent)
-    MainEventResolve(viewModel.mainEvent, viewModel.dialogOpenParams, viewModel1)
+    MainEventResolve(viewModel.mainEvent, viewModel.dialogOpenParams, mainVM)
 }
 
 @Composable

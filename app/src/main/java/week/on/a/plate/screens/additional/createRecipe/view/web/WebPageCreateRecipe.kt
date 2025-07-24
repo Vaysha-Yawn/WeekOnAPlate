@@ -39,17 +39,17 @@ import week.on.a.plate.screens.additional.createRecipe.state.RecipeCreateUIState
 fun WebPageCreateRecipe(state: RecipeCreateUIState, onEvent: (Event) -> Unit) {
     val context = LocalContext.current
     val yScrollState = remember { mutableIntStateOf(0) }
-    if (state.source.value == "") {
+    if (state.link.value == "") {
         DoneButtonSmall(text = stringResource(R.string.search_be_name_recipe_in_internet), Modifier.padding(24.dp)) {
-            state.source.value =
-                getLinkByName(context, state.name.value, )
-            state.webview.value?.loadUrl(state.source.value)
+            state.link.value =
+                getLinkByName(context, state.name.value)
+            state.webview.value?.loadUrl(state.link.value)
         }
     } else {
         LaunchedEffect(Unit) {
             state.webview.value?.scrollY = yScrollState.intValue
         }
-        WebPage(url = state.source, state.webview, onEvent, WhenGoFromWebView.InsideView)
+        WebPage(url = state.link, state.webview, onEvent, WhenGoFromWebView.InsideView)
         DisposableEffect(Unit) {
             onDispose {
                 yScrollState.intValue = state.webview.value?.scrollY?:0
@@ -90,8 +90,8 @@ fun RowWebActions(state: RecipeCreateUIState) {
         Spacer(Modifier.width(10.dp))
         val context = LocalContext.current
         TextButton(stringResource(R.string.search_again)) {
-            state.source.value = getLinkByName(context, state.name.value)
-            state.webview.value?.loadUrl(state.source.value)
+            state.link.value = getLinkByName(context, state.name.value)
+            state.webview.value?.loadUrl(state.link.value)
         }
     }
 }

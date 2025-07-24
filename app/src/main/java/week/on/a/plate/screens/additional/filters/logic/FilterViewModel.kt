@@ -6,13 +6,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import week.on.a.plate.app.mainActivity.event.BackNavParams
 import week.on.a.plate.app.mainActivity.event.MainEvent
-import week.on.a.plate.app.mainActivity.event.NavigateBackDest
 import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.data.dataView.recipe.IngredientCategoryView
 import week.on.a.plate.data.dataView.recipe.IngredientView
@@ -28,12 +25,13 @@ import week.on.a.plate.screens.additional.filters.logic.ingredient.IngredientCRU
 import week.on.a.plate.screens.additional.filters.logic.ingredientCategory.IngredientCategoryCRUD
 import week.on.a.plate.screens.additional.filters.logic.tag.TagCRUD
 import week.on.a.plate.screens.additional.filters.logic.tagCategory.TagCategoryCRUD
+import week.on.a.plate.screens.additional.filters.navigation.FilterDestination
 import week.on.a.plate.screens.additional.filters.state.FilterEnum
-import week.on.a.plate.screens.additional.filters.state.FilterMode
 import week.on.a.plate.screens.additional.filters.state.FilterResult
 import week.on.a.plate.screens.additional.filters.state.FilterUIState
 import javax.inject.Inject
 
+const val filterResultKey = "filterResultKey"
 
 @HiltViewModel
 class FilterViewModel @Inject constructor(
@@ -51,12 +49,13 @@ class FilterViewModel @Inject constructor(
     val state = FilterUIState()
     lateinit var allIngredients: StateFlow<List<IngredientCategoryView>>
     lateinit var allTags: StateFlow<List<TagCategoryView>>
-    private var resultFlow: MutableStateFlow<FilterResult?>? = null
-    private var resultFlowCategory: MutableStateFlow<FilterResult?>? = null
     var isForCategory = false
 
     val dialogOpenParams = mutableStateOf<DialogOpenParams?>(null)
     val mainEvent = mutableStateOf<MainEvent?>(null)
+
+    private var waitingIngredientToDelete: IngredientView? = null
+    private var waitingTagToDelete: RecipeTagView? = null
 
     init {
         viewModelScope.launch {
@@ -64,35 +63,6 @@ class FilterViewModel @Inject constructor(
                 .stateIn(viewModelScope)
             allTags = recipeTagCategoryRepository.getAllTagsByCategoriesForFilters()
                 .stateIn(viewModelScope)
-        }
-    }
-
-    suspend fun launchAndGet(
-        mode: FilterMode, enum: FilterEnum,
-        lastFilters: Pair<List<RecipeTagView>, List<IngredientView>>?, isForCategory: Boolean,
-        use: suspend (FilterResult) -> Unit
-    ) {
-
-        state.selectedTags.value = lastFilters?.first ?: listOf()
-        state.selectedIngredients.value = lastFilters?.second ?: listOf()
-        state.filterMode.value = mode
-        state.filterEnum.value = enum
-
-        this.isForCategory = isForCategory
-        if (isForCategory) {
-            resultFlowCategory = MutableStateFlow(null)
-            resultFlowCategory!!.collect { value ->
-                if (value != null) {
-                    use(value)
-                }
-            }
-        } else {
-            resultFlow = MutableStateFlow(null)
-            resultFlow!!.collect { value ->
-                if (value != null) {
-                    use(value)
-                }
-            }
         }
     }
 
@@ -185,8 +155,10 @@ class FilterViewModel @Inject constructor(
             is FilterEvent.EditOrDeleteIngredient -> editOrDelete(
                 delete = {
                     viewModelScope.launch(Dispatchers.IO) {
+
+                        waitingIngredientToDelete = event.ingredient
+
                         ingredientCRUD.deleteIngredient(
-                            event.ingredient,
                             event.context,
                         ) { mainEvent.value = it }
                     }
@@ -206,8 +178,9 @@ class FilterViewModel @Inject constructor(
             is FilterEvent.EditOrDeleteTag -> editOrDelete(
                 delete = {
                     viewModelScope.launch(Dispatchers.IO) {
+                        waitingTagToDelete = event.tag
+
                         tagCRUD.deleteTag(
-                            event.tag,
                             event.context,
                         ) { mainEvent.value = it }
                     }
@@ -308,22 +281,22 @@ class FilterViewModel @Inject constructor(
 
     fun done() {
         state.searchText.value = ""
-        if (isForCategory) {
-            resultFlowCategory!!.value = FilterResult(
+        val res = if (isForCategory) {
+            FilterResult(
                 state.selectedTags.value,
                 state.selectedIngredients.value,
                 state.selectedTagsCategories.value,
                 state.selectedIngredientsCategories.value
             )
         } else {
-            resultFlow!!.value = FilterResult(
+            FilterResult(
                 state.selectedTags.value,
                 state.selectedIngredients.value,
                 state.selectedTagsCategories.value,
                 state.selectedIngredientsCategories.value
             )
         }
-        mainEvent.value = MainEvent.Navigate(NavigateBackDest, BackNavParams)
+        mainEvent.value = MainEvent.NavigateBackWithResult(filterResultKey, res)
     }
 
     fun close() {
@@ -354,4 +327,25 @@ class FilterViewModel @Inject constructor(
         state.resultSearchIngredientsCategories.value = listOf()
     }
 
+    fun initState(args: FilterDestination) {
+        state.selectedTags.value = args.lastFilters?.first ?: listOf()
+        state.selectedIngredients.value = args.lastFilters?.second ?: listOf()
+        state.filterMode.value = args.mode
+        state.filterEnum.value = args.enum
+        isForCategory = args.isForCategory
+    }
+
+    fun afterDeleteApplied() {
+        if (waitingIngredientToDelete != null) {
+            viewModelScope.launch(Dispatchers.IO) {
+                ingredientCRUD.deleteIngredient.doAfterApplyDelete(waitingIngredientToDelete!!)
+                waitingIngredientToDelete = null
+            }
+        } else if (waitingTagToDelete != null) {
+            viewModelScope.launch(Dispatchers.IO) {
+                tagCRUD.deleteTag.doAfterApplyDelete(waitingTagToDelete!!)
+                waitingTagToDelete = null
+            }
+        }
+    }
 }

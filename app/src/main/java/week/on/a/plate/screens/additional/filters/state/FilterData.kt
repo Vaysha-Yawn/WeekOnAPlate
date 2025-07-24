@@ -1,5 +1,6 @@
 package week.on.a.plate.screens.additional.filters.state
 
+import kotlinx.serialization.Serializable
 import week.on.a.plate.data.dataView.recipe.IngredientCategoryView
 import week.on.a.plate.data.dataView.recipe.IngredientView
 import week.on.a.plate.data.dataView.recipe.RecipeTagView
@@ -13,6 +14,7 @@ enum class FilterEnum {
     Ingredient, Tag, CategoryTag, CategoryIngredient, IngredientAndTag,
 }
 
+@Serializable
 data class FilterResult(
     val tags:List<RecipeTagView>?,
     val ingredients:List<IngredientView>?,

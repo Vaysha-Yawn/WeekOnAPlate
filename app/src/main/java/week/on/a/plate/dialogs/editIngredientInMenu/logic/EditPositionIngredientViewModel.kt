@@ -1,7 +1,7 @@
 package week.on.a.plate.dialogs.editIngredientInMenu.logic
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.coroutineScope
 import week.on.a.plate.app.mainActivity.event.MainEvent
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.core.dialogCore.DialogOpenParams
@@ -11,9 +11,9 @@ import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.dialogs.editIngredientInMenu.event.EditPositionIngredientEvent
 import week.on.a.plate.dialogs.editIngredientInMenu.state.EditPositionIngredientUIState
 import week.on.a.plate.screens.additional.filters.navigation.FilterDestination
-import week.on.a.plate.screens.additional.filters.navigation.FilterNavParams
 import week.on.a.plate.screens.additional.filters.state.FilterEnum
 import week.on.a.plate.screens.additional.filters.state.FilterMode
+import week.on.a.plate.screens.additional.filters.state.FilterResult
 
 
 class EditPositionIngredientViewModel(
@@ -40,7 +40,7 @@ class EditPositionIngredientViewModel(
         when (event) {
             EditPositionIngredientEvent.Close -> close()
             EditPositionIngredientEvent.Done -> {
-                if (state.ingredientState.value!=null){
+                if (state.ingredientState.value != null) {
                     val newIngredientPosition = Position.PositionIngredientView(
                         state.positionIngredientView?.id ?: 0,
                         IngredientInRecipeView(
@@ -51,7 +51,7 @@ class EditPositionIngredientViewModel(
                         ), state.positionIngredientView?.selectionId ?: 0
                     )
                     done(newIngredientPosition)
-                }else{
+                } else {
                     onEvent(EditPositionIngredientEvent.Close)
                 }
             }
@@ -61,21 +61,29 @@ class EditPositionIngredientViewModel(
     }
 
     private fun chooseIngredient() {
-        viewModelScope.launch {
-            mainViewModel.onEvent(
-                MainEvent.Navigate(FilterDestination, FilterNavParams(
+        mainViewModel.onEvent(
+            MainEvent.Navigate(
+                FilterDestination(
                     FilterMode.One, FilterEnum.Ingredient,
                     Pair(listOf(), listOf()), false
-                ) {
-                    mainViewModel.onEvent(MainEvent.ShowDialog)
-                    val new = it.ingredients?.getOrNull(0)
-                    if (new != null) state.ingredientState.value = new
-                    else onEvent(EditPositionIngredientEvent.Close)
-                })
+                )
             )
-            mainViewModel.onEvent(MainEvent.HideDialog)
-        }
+        )
+        mainViewModel.onEvent(MainEvent.HideDialog)
     }
+
+    //todo use
+    jyyjyjy
+    suspend fun afterResult(
+        filters: FilterResult,
+    ) =
+        coroutineScope {
+            mainViewModel.onEvent(MainEvent.ShowDialog)
+            val new = filters.ingredients?.getOrNull(0)
+            if (new != null) state.ingredientState.value = new
+            else onEvent(EditPositionIngredientEvent.Close)
+        }
+
 
     class EditPositionIngredientDialogParams(
         private val positionIngredient: Position.PositionIngredientView?,

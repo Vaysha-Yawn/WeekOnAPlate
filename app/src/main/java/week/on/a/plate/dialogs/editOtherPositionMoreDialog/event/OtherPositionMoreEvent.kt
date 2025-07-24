@@ -5,9 +5,8 @@ import week.on.a.plate.dialogs.forCreateRecipeScreen.chooseHowImagePick.event.Ba
 
 sealed interface OtherPositionMoreEvent : Event {
     object Edit : OtherPositionMoreEvent
-    object Double : OtherPositionMoreEvent
     object Delete : OtherPositionMoreEvent
     object Move : OtherPositionMoreEvent
     object Close : OtherPositionMoreEvent
-    class AddToShopList(val contextProvider: BaseContextProvider) : OtherPositionMoreEvent
+    class AddToCart(val contextProvider: BaseContextProvider) : OtherPositionMoreEvent
 }

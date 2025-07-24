@@ -5,16 +5,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import week.on.a.plate.app.mainActivity.event.BackNavParams
 import week.on.a.plate.app.mainActivity.event.MainEvent
-import week.on.a.plate.app.mainActivity.event.NavigateBackDest
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.dialogCore.DialogOpenParams
-import week.on.a.plate.core.navigation.MenuDestination
-import week.on.a.plate.core.navigation.MenuNavParams
 import week.on.a.plate.data.dataView.week.ForWeek
 import week.on.a.plate.data.dataView.week.NonPosed
 import week.on.a.plate.data.repository.room.menu.category_selection.CategorySelectionDAO
@@ -25,14 +20,13 @@ import week.on.a.plate.dialogs.calendarMy.logic.CalendarMyUseCase
 import week.on.a.plate.dialogs.calendarMy.state.StateCalendarMy
 import week.on.a.plate.screens.additional.specifySelection.event.SpecifySelectionEvent
 import week.on.a.plate.screens.additional.specifySelection.state.SpecifySelectionUIState
-import week.on.a.plate.screens.base.menu.presenter.logic.MenuViewModel
-import week.on.a.plate.screens.base.wrapperDatePicker.event.WrapperDatePickerEvent
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.util.Locale
 import javax.inject.Inject
 
+const val SpecifySelectionResultKey = "SpecifySelectionResultKey"
 
 @HiltViewModel
 class SpecifySelectionViewModel @Inject constructor(
@@ -43,7 +37,6 @@ class SpecifySelectionViewModel @Inject constructor(
 ) : ViewModel() {
 
     val state: SpecifySelectionUIState = SpecifySelectionUIState()
-    private lateinit var resultFlow: MutableStateFlow<SpecifySelectionResult?>
     var stateCalendar: StateCalendarMy = StateCalendarMy.emptyState
 
     val dialogOpenParams = mutableStateOf<DialogOpenParams?>(null)
@@ -102,7 +95,7 @@ class SpecifySelectionViewModel @Inject constructor(
     private fun updatePreview(date: LocalDate) {
         state.date.value = date
         viewModelScope.launch {
-            val selections = weekMenuRepository.getSelectionsByDate(state.date.value!!)
+            val selections = weekMenuRepository.getSelectionsByDate(state.date.value)
             state.dayViewPreview.value = selections
         }
     }
@@ -157,30 +150,11 @@ class SpecifySelectionViewModel @Inject constructor(
                     Locale.getDefault(),
                 )
             }
-            resultFlow.value =
-                SpecifySelectionResult(selId, state.date.value, state.portionsCount.intValue)
+            mainEvent.value = MainEvent.NavigateBackWithResult(SpecifySelectionResultKey, selId)
         }
     }
 
     fun close() {
-        mainEvent.value = MainEvent.Navigate(NavigateBackDest, BackNavParams)
-    }
-
-    fun start(): Flow<SpecifySelectionResult?> {
-        val flow = MutableStateFlow<SpecifySelectionResult?>(null)
-        resultFlow = flow
-        return flow
-    }
-
-    suspend fun launchAndGet(use: (SpecifySelectionResult) -> Unit, menuViewModel: MenuViewModel) {
-        calendarMyUseCase.updateMonthValue(stateCalendar, true)
-        val flow = start()
-        flow.collect { value ->
-            if (value != null) {
-                use(value)
-                menuViewModel.onEvent(WrapperDatePickerEvent.ChangeWeek(value.date))
-                mainEvent.value = MainEvent.Navigate(MenuDestination, MenuNavParams(value.date))
-            }
-        }
+        mainEvent.value = MainEvent.NavigateBack
     }
 }

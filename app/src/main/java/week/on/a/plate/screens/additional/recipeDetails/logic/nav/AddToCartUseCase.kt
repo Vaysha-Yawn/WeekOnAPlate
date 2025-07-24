@@ -8,7 +8,6 @@ import kotlinx.coroutines.launch
 import week.on.a.plate.R
 import week.on.a.plate.app.mainActivity.event.MainEvent
 import week.on.a.plate.screens.additional.inventory.navigation.InventoryDestination
-import week.on.a.plate.screens.additional.inventory.navigation.InventoryNavParams
 import week.on.a.plate.screens.additional.recipeDetails.state.RecipeDetailsState
 import javax.inject.Inject
 
@@ -21,8 +20,7 @@ class AddToCartUseCase @Inject constructor() {
     ) = coroutineScope {
         if (state.recipe.ingredients.isNotEmpty()) {
             scope.launch(Dispatchers.IO) {
-                val params = InventoryNavParams(state.ingredients.value)
-                onEvent(MainEvent.Navigate(InventoryDestination, params))
+                onEvent(MainEvent.Navigate(InventoryDestination(state.ingredients.value)))
             }
         } else {
             onEvent(MainEvent.ShowSnackBar(context.getString(R.string.no_ingredients)))

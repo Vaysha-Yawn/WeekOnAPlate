@@ -220,6 +220,10 @@ class WeekMenuRepository @Inject constructor(
         }
     }
 
+    suspend fun getSelectionDateById(selId: Long): LocalDate {
+        return selectionDAO.findSelection(selId).dateTime.toLocalDate()
+    }
+
     @OptIn(ExperimentalCoroutinesApi::class)
     fun getSelectionsByDateFlow(date: LocalDate): Flow<List<SelectionView>> {
         return selectionDAO.findSelectionsForDayFlow(date.toString()).onEmpty { emit(emptyList()) }

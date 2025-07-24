@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
 import week.on.a.plate.app.mainActivity.event.MainEvent
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.core.dialogCore.DialogOpenParams
@@ -17,10 +18,10 @@ fun MainEventResolve(
     dialogOpenParams: MutableState<DialogOpenParams?>,
     mainVM: MainViewModel = viewModel<MainViewModel>((LocalActivity.current as MainActivity))
 ) {
-    val nav = (LocalActivity.current as MainActivity).nav
+    val nav = rememberNavController()
 
     BackHandler {
-        nav?.popBackStack()
+        nav.popBackStack()
     }
 
     LaunchedEffect(mainEvent.value) {

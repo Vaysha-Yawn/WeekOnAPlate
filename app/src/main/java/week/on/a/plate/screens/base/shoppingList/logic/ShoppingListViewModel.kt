@@ -4,6 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -78,6 +79,12 @@ class ShoppingListViewModel @Inject constructor(
                     mainEvent.value = event
                 }
             }
+        }
+    }
+
+    fun doAfterDeleteApply() {
+        viewModelScope.launch(Dispatchers.IO) {
+            deleteApply.doAfterDeleteApply()
         }
     }
 }

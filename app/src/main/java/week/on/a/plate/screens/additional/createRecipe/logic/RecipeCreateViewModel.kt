@@ -5,18 +5,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import week.on.a.plate.app.mainActivity.event.BackNavParams
 import week.on.a.plate.app.mainActivity.event.MainEvent
-import week.on.a.plate.app.mainActivity.event.NavigateBackDest
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.dialogCore.DialogOpenParams
+import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.data.dataView.recipe.RecipeView
 import week.on.a.plate.dialogs.forCreateRecipeScreen.exitApply.event.ExitApplyEvent
 import week.on.a.plate.dialogs.forCreateRecipeScreen.exitApply.logic.ExitApplyViewModel
 import week.on.a.plate.screens.additional.createRecipe.event.RecipeCreateEvent
+import week.on.a.plate.screens.additional.createRecipe.logic.useCase.CreateRecipeUseCase
+import week.on.a.plate.screens.additional.createRecipe.logic.useCase.EditRecipeUseCaseDB
 import week.on.a.plate.screens.additional.createRecipe.logic.useCase.EditTagsUseCase
 import week.on.a.plate.screens.additional.createRecipe.logic.useCase.RecipeCreateImageUseCase
 import week.on.a.plate.screens.additional.createRecipe.logic.useCase.RecipeCreateIngredientUseCase
@@ -24,6 +25,8 @@ import week.on.a.plate.screens.additional.createRecipe.logic.useCase.RecipeCreat
 import week.on.a.plate.screens.additional.createRecipe.logic.useCase.RecipeCreateTimeUseCase
 import week.on.a.plate.screens.additional.createRecipe.state.RecipeCreateUIState
 import week.on.a.plate.screens.additional.createRecipe.state.RecipeStepState
+import week.on.a.plate.screens.additional.filters.state.FilterResult
+import week.on.a.plate.screens.base.menu.domain.dbusecase.GetRecipeUseCase
 import javax.inject.Inject
 
 
@@ -34,10 +37,13 @@ class RecipeCreateViewModel @Inject constructor(
     private val recipeCreateTimeUseCase: RecipeCreateTimeUseCase,
     private val recipeCreateStepUseCase: RecipeCreateStepUseCase,
     private val recipeCreateIngredientUseCase: RecipeCreateIngredientUseCase,
+    private val getRecipe: GetRecipeUseCase,
+    private val editRecipe: EditRecipeUseCaseDB,
+    private val createRecipe: CreateRecipeUseCase,
 ) : ViewModel() {
 
     var state = RecipeCreateUIState()
-    private lateinit var resultFlow: MutableStateFlow<RecipeCreateUIState?>
+    var oldRecipe: RecipeView? = null
     val dialogOpenParams: MutableStateFlow<DialogOpenParams?> = MutableStateFlow(null)
     val mainEvent: MutableState<MainEvent?> = mutableStateOf(null)
 
@@ -54,7 +60,8 @@ class RecipeCreateViewModel @Inject constructor(
         viewModelScope.launch {
             when (event) {
                 RecipeCreateEvent.Close -> mainEvent.value =
-                    MainEvent.Navigate(NavigateBackDest, BackNavParams)
+                    MainEvent.NavigateBack
+
                 RecipeCreateEvent.Done -> done()
                 RecipeCreateEvent.EditTags -> editTagsUseCase(
                     state.tags
@@ -97,6 +104,7 @@ class RecipeCreateViewModel @Inject constructor(
                 RecipeCreateEvent.AddManyIngredients -> recipeCreateIngredientUseCase.addManyIngredients(
                     state
                 ) { mainEvent.value = it }
+
                 is RecipeCreateEvent.DeleteIngredient -> recipeCreateIngredientUseCase.deleteIngredient(
                     event.ingredient, state
                 )
@@ -115,66 +123,107 @@ class RecipeCreateViewModel @Inject constructor(
         }
     }
 
+    fun applyToStateAddManyIngredients(
+        filterRes: FilterResult,
+    ) {
+        val ingredientsOld = state.ingredients.value.map { it.ingredientView }
+        val currentIngredients = state.ingredients.value
+        val ingredientsNew = filterRes.ingredients ?: return
+
+        val listToAdd = ingredientsNew.toMutableList().apply {
+            removeAll(ingredientsOld)
+        }.toList()
+
+        val listToDelete = ingredientsOld.toMutableList().apply {
+            removeAll(ingredientsNew)
+        }.toList()
+
+        val currentIngredientsMutableCopy = currentIngredients.toMutableList()
+
+        listToAdd.forEach { ingredient ->
+            currentIngredientsMutableCopy.add(IngredientInRecipeView(0, ingredient, "", 0))
+        }
+
+        listToDelete.forEach { ingredient ->
+            val t =
+                currentIngredients.find { it.ingredientView.ingredientId == ingredient.ingredientId }
+            currentIngredientsMutableCopy.remove(t)
+        }
+
+        state.ingredients.value = currentIngredientsMutableCopy.toList()
+    }
+
     private fun openDialogExitApplyFromCreateRecipe() {
         val params = ExitApplyViewModel.ExitApplyDialogParams { event ->
             if (event == ExitApplyEvent.Exit) {
-                mainEvent.value = MainEvent.Navigate(NavigateBackDest, BackNavParams)
+                mainEvent.value = MainEvent.NavigateBack
             }
         }
         dialogOpenParams.value = params
     }
 
     private fun done() {
-        resultFlow.value = state
-        mainEvent.value = MainEvent.Navigate(NavigateBackDest, BackNavParams)
+        viewModelScope.launch {
+            //todo значок загрузки пока сохраняется как состояние экрана
+            if (state.isForCreate.value) {
+                createRecipe(state)
+            } else {
+                editRecipe(state, oldRecipe!!)
+            }
+            oldRecipe = null
+            mainEvent.value = MainEvent.NavigateBack
+        }
     }
 
-    fun start(): Flow<RecipeCreateUIState?> {
-        val flow = MutableStateFlow<RecipeCreateUIState?>(null)
-        resultFlow = flow
-        return flow
-    }
-
-    suspend fun launchAndGet(
-        oldRecipe: RecipeView?, isForCreate: Boolean,
-        use: (RecipeCreateUIState) -> Unit
+    fun launch(
+        oldRecipeId: Long?, isForCreate: Boolean, startRecipe: RecipeView?
     ) {
-        if (oldRecipe != null) setStateByOldRecipe(oldRecipe) else state = RecipeCreateUIState()
-
+        if (oldRecipeId != null) setStateByOldRecipe(oldRecipeId) else if (startRecipe != null)
+            setStateRecipe(startRecipe) else state = RecipeCreateUIState()
         state.isForCreate.value = isForCreate
+    }
 
-        val flow = start()
-        flow.collect { value ->
-            if (value != null) {
-                use(value)
+    private fun setStateByOldRecipe(oldRecipeId: Long) {
+        viewModelScope.launch {
+            //todo значок загрузки пока инициализируется состояние экрана
+            val oldRecipeAsync = viewModelScope.async() {
+                getRecipe(oldRecipeId)
+            }
+            oldRecipe = oldRecipeAsync.await()
+            setStateRecipe(oldRecipe)
+        }
+    }
+
+    private fun setStateRecipe(recipe: RecipeView?) {
+        if (recipe == null) {
+            state = RecipeCreateUIState()
+        } else {
+            viewModelScope.launch {
+                state.link.value = recipe.link
+                state.photoLink.value = recipe.img
+                state.name.value = recipe.name
+                state.description.value = recipe.description
+                state.portionsCount.intValue = recipe.standardPortionsCount
+                state.tags.value = recipe.tags
+                state.ingredients.value = recipe.ingredients
+                state.mainImageContainer.value = null
+
+                val list = mutableListOf<RecipeStepState>()
+                recipe.steps.forEach { stepOld ->
+                    val step =
+                        RecipeStepState(stepOld.id).also { stepState ->
+                            with(stepState) {
+                                description.value = stepOld.description
+                                image.value = stepOld.image
+                                timer.longValue = stepOld.timer
+                                pinnedIngredientsInd.value = stepOld.ingredientsPinnedId
+                                imageContainer.value = null
+                            }
+                        }
+                    list.add(step)
+                }
+                state.steps.value = list
             }
         }
-    }
-
-    private fun setStateByOldRecipe(oldRecipe: RecipeView) {
-        state.source.value = oldRecipe.link
-        state.photoLink.value = oldRecipe.img
-        state.name.value = oldRecipe.name
-        state.description.value = oldRecipe.description
-        state.portionsCount.intValue = oldRecipe.standardPortionsCount
-        state.tags.value = oldRecipe.tags
-        state.ingredients.value = oldRecipe.ingredients
-        state.mainImageContainer.value = null
-
-        val list = mutableListOf<RecipeStepState>()
-        oldRecipe.steps.forEach { stepOld ->
-            val step =
-                RecipeStepState(stepOld.id).also { stepState ->
-                    with(stepState) {
-                        description.value = stepOld.description
-                        image.value = stepOld.image
-                        timer.longValue = stepOld.timer
-                        pinnedIngredientsInd.value = stepOld.ingredientsPinnedId
-                        imageContainer.value = null
-                    }
-                }
-            list.add(step)
-        }
-        state.steps.value = list
     }
 }

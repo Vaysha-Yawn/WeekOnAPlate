@@ -2,31 +2,26 @@ package week.on.a.plate.screens.additional.recipeDetails.logic.nav
 
 import android.content.Context
 import week.on.a.plate.R
-import week.on.a.plate.app.mainActivity.event.BackNavParams
 import week.on.a.plate.app.mainActivity.event.MainEvent
-import week.on.a.plate.app.mainActivity.event.NavigateBackDest
-import week.on.a.plate.screens.additional.deleteApply.event.DeleteApplyEvent
 import week.on.a.plate.screens.additional.deleteApply.navigation.DeleteApplyDestination
-import week.on.a.plate.screens.additional.deleteApply.navigation.DeleteApplyNavParams
 import week.on.a.plate.screens.additional.recipeDetails.logic.dataLogic.DeleteUseCaseDB
 import week.on.a.plate.screens.additional.recipeDetails.state.RecipeDetailsState
 import javax.inject.Inject
 
+// used in RecipeDetailsViewModel
 class DeleteUseCase @Inject constructor(
     private val deleteUseCaseDB: DeleteUseCaseDB
 ) {
-    suspend operator fun invoke(
+    operator fun invoke(
         context: Context,
-        state: RecipeDetailsState,
         onEvent: (MainEvent) -> Unit,
     ) {
         val mes = context.getString(R.string.delete_alert)
-        val params = DeleteApplyNavParams(context, message = mes) { event ->
-            if (event == DeleteApplyEvent.Apply) {
-                deleteUseCaseDB.invoke(state)
-                onEvent(MainEvent.Navigate(NavigateBackDest, BackNavParams))
-            }
-        }
-        onEvent(MainEvent.Navigate(DeleteApplyDestination, params))
+        onEvent(MainEvent.Navigate(DeleteApplyDestination(null, mes)))
+    }
+
+    suspend fun doAfterApplyDelete(state: RecipeDetailsState, onEvent: (MainEvent) -> Unit) {
+        deleteUseCaseDB(state)
+        onEvent(MainEvent.NavigateBack)
     }
 }

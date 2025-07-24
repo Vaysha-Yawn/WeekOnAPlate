@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import week.on.a.plate.app.mainActivity.event.MainEvent
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.data.preference.PreferenceUseCase
@@ -14,7 +13,6 @@ import week.on.a.plate.dialogs.changePortions.logic.ChangePortionsCountViewModel
 import week.on.a.plate.dialogs.forSettingsScreen.setPermanentMeals.logic.SetPermanentMealsViewModel
 import week.on.a.plate.dialogs.forSettingsScreen.setTheme.logic.SetThemesViewModel
 import week.on.a.plate.screens.additional.ppAndTermsOfUse.navigation.DocumentsWebDestination
-import week.on.a.plate.screens.additional.ppAndTermsOfUse.navigation.DocumentsWebNavParams
 import week.on.a.plate.screens.base.settings.event.SettingsEvent
 import week.on.a.plate.screens.base.settings.state.SettingsUIState
 import javax.inject.Inject
@@ -75,11 +73,11 @@ class SettingsViewModel @Inject constructor(val dao: CategorySelectionDAO) : Vie
     }
 
     private fun privacyPolicy() {
-        mainEvent.value = MainEvent.Navigate(DocumentsWebDestination, DocumentsWebNavParams(true))
+        mainEvent.value = MainEvent.Navigate(DocumentsWebDestination(true))
     }
 
     private fun termsOfUse() {
-        mainEvent.value = MainEvent.Navigate(DocumentsWebDestination, DocumentsWebNavParams(false))
+        mainEvent.value = MainEvent.Navigate(DocumentsWebDestination(false))
     }
 
     private fun profile(context: Context) {

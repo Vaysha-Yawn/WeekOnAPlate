@@ -1,39 +1,43 @@
 package week.on.a.plate.screens.base.menu.presenter.logic.navigateLogic.addPosition
 
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.withContext
 import week.on.a.plate.app.mainActivity.event.MainEvent
 import week.on.a.plate.core.Event
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.screens.additional.filters.navigation.FilterDestination
-import week.on.a.plate.screens.additional.filters.navigation.FilterNavParams
 import week.on.a.plate.screens.additional.filters.state.FilterEnum
 import week.on.a.plate.screens.additional.filters.state.FilterMode
+import week.on.a.plate.screens.additional.filters.state.FilterResult
 import week.on.a.plate.screens.base.menu.domain.dbusecase.AddDraftToDBUseCase
 import javax.inject.Inject
 
 class CreateDraftNavToScreen @Inject constructor(
     private val addDraft: AddDraftToDBUseCase
 ) {
-    suspend operator fun invoke(
+    operator fun invoke(
         selId: Long,
         onEvent: (Event) -> Unit
-    ) = coroutineScope {
-        val params = FilterNavParams(
-            FilterMode.Multiple,
-            FilterEnum.IngredientAndTag,
-            null,
-            false
-        ) { filters ->
-            withContext(Dispatchers.IO) {
-                if (filters.tags?.isEmpty() == true && filters.ingredients?.isEmpty() == true) return@withContext
-                val draft =
-                    Position.PositionDraftView(0, filters.tags!!, filters.ingredients!!, selId)
-                addDraft(draft, selId)
-            }
-        }
-        onEvent(MainEvent.Navigate(FilterDestination, params))
+    ) {
+        onEvent(
+            MainEvent.Navigate(
+                FilterDestination(
+                    FilterMode.Multiple,
+                    FilterEnum.IngredientAndTag,
+                    null,
+                    false
+                )
+            )
+        )
+    }
+
+    //todo use
+    jyyjyjy
+    suspend fun afterResult(
+        res: FilterResult, selId: Long,
+    ) {
+        if (res.tags?.isEmpty() == true && res.ingredients?.isEmpty() == true) return
+        val draft =
+            Position.PositionDraftView(0, res.tags!!, res.ingredients!!, selId)
+        addDraft(draft, selId)
     }
 }

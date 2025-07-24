@@ -4,6 +4,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 
 class DeleteApplyUIState() {
-    val title:MutableState<String> = mutableStateOf("Уверены, что хотите удалить?")
+    val title: MutableState<String?> = mutableStateOf(null)
     val message:MutableState<String> = mutableStateOf("")
 }

@@ -12,7 +12,6 @@ class SpecifySelectionUIState() {
     val checkWeek = mutableStateOf<Boolean>(false)
     val checkDayCategory = mutableIntStateOf(0)//only day selections, by index in allSelectionsIdDay
     val date = mutableStateOf<LocalDate>(LocalDate.now())
-    val portionsCount = mutableIntStateOf(2)
     val allSelectionsIdDay = mutableStateOf<List<Pair<String, LocalTime>>>(listOf())
     val dayViewPreview:MutableState<List<SelectionView>> = mutableStateOf(listOf())
 }

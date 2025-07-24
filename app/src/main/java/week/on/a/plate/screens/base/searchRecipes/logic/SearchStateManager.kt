@@ -1,8 +1,6 @@
 package week.on.a.plate.screens.base.searchRecipes.logic
 
-import week.on.a.plate.app.mainActivity.event.BackNavParams
 import week.on.a.plate.app.mainActivity.event.MainEvent
-import week.on.a.plate.app.mainActivity.event.NavigateBackDest
 import week.on.a.plate.screens.base.searchRecipes.state.SearchState
 import week.on.a.plate.screens.base.searchRecipes.state.SearchUIState
 import javax.inject.Inject
@@ -22,7 +20,7 @@ class SearchStateManager @Inject constructor() {
             state.allTime.intValue = 0
             state.prepTime.intValue = 0
         } else {
-            onEvent(MainEvent.Navigate(NavigateBackDest, BackNavParams))
+            onEvent(MainEvent.NavigateBack)
         }
     }
 

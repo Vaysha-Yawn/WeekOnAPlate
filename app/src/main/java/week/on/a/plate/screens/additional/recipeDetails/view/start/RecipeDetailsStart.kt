@@ -17,6 +17,7 @@ import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.data.dataView.example.recipeTom
 import week.on.a.plate.screens.additional.recipeDetails.event.RecipeDetailsEvent
 import week.on.a.plate.screens.additional.recipeDetails.logic.RecipeDetailsViewModel
+import week.on.a.plate.screens.additional.recipeDetails.navigation.RecipeDetailsDestination
 import week.on.a.plate.screens.additional.recipeDetails.state.RecipeDetailsState
 import week.on.a.plate.screens.additional.recipeDetails.view.base.RecipeBase
 import week.on.a.plate.screens.additional.recipeDetails.view.ingredients.RecipeDetailsIngredients
@@ -26,9 +27,11 @@ import week.on.a.plate.screens.additional.recipeDetails.view.steps.RecipeDetails
 @Composable
 fun RecipeDetailsStart(
     vm: RecipeDetailsViewModel,
-    mainViewModel: MainViewModel
+    mainViewModel: MainViewModel,
+    args: RecipeDetailsDestination
 ) {
-    RecipeDetailsStart(vm.state, { event: Event ->
+    vm.launch(args.resId, args.portionsCount)
+    RecipeDetailsContent(vm.state, { event: Event ->
         mainViewModel.onEvent(event)
     }) { event: RecipeDetailsEvent ->
         vm.onEvent(event)
@@ -37,7 +40,7 @@ fun RecipeDetailsStart(
 }
 
 @Composable
-private fun RecipeDetailsStart(
+private fun RecipeDetailsContent(
     state: RecipeDetailsState,
     onEventMain: (Event) -> Unit,
     onEvent: (RecipeDetailsEvent) -> Unit
@@ -77,7 +80,7 @@ private fun RecipeDetailsStart(
 @Composable
 fun PreviewRecipeDetailsStart() {
     WeekOnAPlateTheme {
-        RecipeDetailsStart(RecipeDetailsState().apply {
+        RecipeDetailsContent(RecipeDetailsState().apply {
             recipe = recipeTom
         }, {}) {}
     }

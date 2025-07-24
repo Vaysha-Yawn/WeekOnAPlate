@@ -9,24 +9,35 @@ import week.on.a.plate.core.Event
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.data.dataView.example.WeekDataExample
 import week.on.a.plate.data.dataView.week.WeekView
+import week.on.a.plate.screens.base.menu.presenter.event.MenuEvent
 import week.on.a.plate.screens.base.menu.presenter.logic.MenuViewModel
 import week.on.a.plate.screens.base.menu.presenter.state.MenuUIState
 import week.on.a.plate.screens.base.menu.presenter.view.day.DayView
 import week.on.a.plate.screens.base.menu.presenter.view.week.WeekMenu
+import week.on.a.plate.screens.base.wrapperDatePicker.event.WrapperDatePickerEvent
 import week.on.a.plate.screens.base.wrapperDatePicker.view.WrapperDatePicker
+import java.time.LocalDate
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun MenuScreen(mainViewModel: MainViewModel, vm: MenuViewModel) {
-    MenuScreenSuccess(vm.menuUIState.value, vm.menuUIState.value.week) { event: Event ->
+fun MenuScreen(mainViewModel: MainViewModel, vm: MenuViewModel, dateLaunch: LocalDate?) {
+    dateLaunch?.let {
+        vm.onEvent(
+            MenuEvent.ActionWrapperDatePicker(
+                WrapperDatePickerEvent.ChangeWeek(
+                    dateLaunch
+                )
+            )
+        )
+    }
+    MenuContent(vm.menuUIState.value, vm.menuUIState.value.week) { event: Event ->
         vm.onEvent(event)
     }
-
     MainEventResolve(vm.mainEvent, vm.dialogOpenParams, mainViewModel)
 }
 
 @Composable
-private fun MenuScreenSuccess(
+private fun MenuContent(
     uiState: MenuUIState,
     week: WeekView,
     onEvent: (event: Event) -> Unit
@@ -61,6 +72,6 @@ private fun MenuScreenSuccess(
 @Composable
 fun PreviewMenuScreen() {
     WeekOnAPlateTheme {
-        MenuScreenSuccess(MenuUIState.MenuUIStateExample, WeekDataExample) {}
+        MenuContent(MenuUIState.MenuUIStateExample, WeekDataExample) {}
     }
 }

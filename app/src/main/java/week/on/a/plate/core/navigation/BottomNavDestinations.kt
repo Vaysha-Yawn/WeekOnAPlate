@@ -1,18 +1,12 @@
 package week.on.a.plate.core.navigation
 
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import week.on.a.plate.R
-import week.on.a.plate.app.mainActivity.event.NavParams
-import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.data.dataView.recipe.IngredientView
 import week.on.a.plate.data.dataView.recipe.RecipeTagView
-import week.on.a.plate.data.dataView.recipe.RecipeView
-import week.on.a.plate.screens.base.menu.presenter.event.MenuEvent
-import week.on.a.plate.screens.base.wrapperDatePicker.event.WrapperDatePickerEvent
+import week.on.a.plate.data.repository.utils.DateTypeConverter
 import java.time.LocalDate
+import kotlin.jvm.java
 
 @Serializable
 sealed class BottomScreens<T>(val icon: Int, val route: T) {
@@ -23,10 +17,12 @@ sealed class BottomScreens<T>(val icon: Int, val route: T) {
     )
 
     @Serializable
-    data object MenuBottomNav : BottomScreens<MenuDestination>(icon = R.drawable.menu, route = MenuDestination)
+    data object MenuBottomNav :
+        BottomScreens<MenuDestination>(icon = R.drawable.menu, route = MenuDestination())
 
     @Serializable
-    data object SearchBottomNav : BottomScreens<SearchDestination>(icon = R.drawable.search, route = SearchDestination)
+    data object SearchBottomNav :
+        BottomScreens<SearchDestination>(icon = R.drawable.search, route = SearchDestination())
 
     @Serializable
     data object SettingsBottomNav :
@@ -34,7 +30,10 @@ sealed class BottomScreens<T>(val icon: Int, val route: T) {
 
     @Serializable
     data object CookPlannerBottomNav :
-        BottomScreens<CookPlannerDestination>(icon = R.drawable.cook_cap, route = CookPlannerDestination)
+        BottomScreens<CookPlannerDestination>(
+            icon = R.drawable.cook_cap,
+            route = CookPlannerDestination
+        )
 }
 
 val bottomScreens = listOf(
@@ -50,42 +49,14 @@ val bottomScreens = listOf(
 @Serializable
 object ShoppingListDestination
 
-@Serializable
-object MenuDestination
-
-class MenuNavParams(
-    private val dateLaunch: LocalDate,
-) : NavParams {
-    override fun launch(vm: MainViewModel) {
-        vm.viewModelScope.launch(Dispatchers.Default) {
-            vm.menuViewModel.onEvent(
-                MenuEvent.ActionWrapperDatePicker(
-                    WrapperDatePickerEvent.ChangeWeek(
-                        dateLaunch
-                    )
-                )
-            )
-        }
-    }
-}
+@Serializable(LocalDateSerializer::class)
+data class MenuDestination(val dateLaunch: LocalDate? = null)
 
 @Serializable
-object SearchDestination
-
-class SearchNavParams(
-    private val selIde: Long?,
-    private val filters: Pair<List<RecipeTagView>, List<IngredientView>>?,
-    private val use: suspend (RecipeView) -> Unit
-) : NavParams {
-    override fun launch(vm: MainViewModel) {
-        vm.viewModelScope.launch(Dispatchers.Default) {
-            vm.searchViewModel.launchAndGet(
-                selIde,
-                filters, use
-            )
-        }
-    }
-}
+data class SearchDestination(
+    val selId: Long? = null,
+    val filters: Pair<List<RecipeTagView>, List<IngredientView>>? = null
+)
 
 @Serializable
 object SettingsDestination

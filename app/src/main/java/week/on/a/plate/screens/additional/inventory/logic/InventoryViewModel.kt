@@ -5,10 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import week.on.a.plate.app.mainActivity.event.BackNavParams
-import week.on.a.plate.app.mainActivity.event.EmptyNavParams
 import week.on.a.plate.app.mainActivity.event.MainEvent
-import week.on.a.plate.app.mainActivity.event.NavigateBackDest
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.core.navigation.ShoppingListDestination
@@ -64,16 +61,10 @@ class InventoryViewModel @Inject constructor(
     }
 
     fun close() {
-        mainEvent.value = MainEvent.Navigate(NavigateBackDest, BackNavParams)
+        mainEvent.value = MainEvent.NavigateBack
     }
 
-    fun launchAndGet(
-        listStart: List<IngredientInRecipeView>
-    ) {
-        state.list.value = listStart.map { InventoryPositionData.getByIngredientInRecipe(it) }
-    }
-
-    fun launchAndGetMore(
+    fun addMultipliesIngredientsToState(
         listsStart: List<IngredientInRecipeView>
     ) {
         val listResult = mutableMapOf<Long, IngredientInRecipeView>()
@@ -119,7 +110,7 @@ class InventoryViewModel @Inject constructor(
                     }
                 }
             }
-            mainEvent.value = MainEvent.Navigate(ShoppingListDestination, EmptyNavParams)
+            mainEvent.value = MainEvent.Navigate(ShoppingListDestination)
         }
     }
 

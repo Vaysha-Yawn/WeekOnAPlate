@@ -8,13 +8,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.ImageBitmap
 import week.on.a.plate.data.dataView.recipe.IngredientInRecipeView
 import week.on.a.plate.data.dataView.recipe.RecipeTagView
+import week.on.a.plate.data.dataView.recipe.RecipeView
+import java.time.LocalDateTime
 import java.time.LocalTime
 
 class RecipeCreateUIState {
     val activeTabIndex = mutableIntStateOf(0)
-    val source = mutableStateOf("")
+    val link = mutableStateOf("")
     val photoLink = mutableStateOf("")
-    val mainImageContainer =  mutableStateOf<ImageBitmap?>(null)
+    val mainImageContainer = mutableStateOf<ImageBitmap?>(null)
     val name = mutableStateOf("")
     val description = mutableStateOf("")
     val portionsCount = mutableIntStateOf(0)
@@ -26,10 +28,15 @@ class RecipeCreateUIState {
     val duration = mutableStateOf<LocalTime>(LocalTime.of(0, 0))
 }
 
-class RecipeStepState(val id:Long) {
+val emptyRecipe = RecipeView(
+    0, "", "", "", emptyList(), 0, emptyList(), emptyList(), "", false,
+    LocalDateTime.now(), LocalTime.of(0, 0)
+)
+
+class RecipeStepState(val id: Long) {
     val description = mutableStateOf("")
     val image = mutableStateOf("")
-    val imageContainer =  mutableStateOf<ImageBitmap?>(null)
+    val imageContainer = mutableStateOf<ImageBitmap?>(null)
     val timer = mutableLongStateOf(0)
-    val pinnedIngredientsInd:MutableState<List<Long>> = mutableStateOf(listOf())
+    val pinnedIngredientsInd: MutableState<List<Long>> = mutableStateOf(listOf())
 }

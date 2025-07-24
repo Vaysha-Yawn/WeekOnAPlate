@@ -19,16 +19,20 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
+import androidx.navigation.Navigator
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import week.on.a.plate.app.mainActivity.event.NavigateBackDest
+import week.on.a.plate.app.mainActivity.event.MainEvent
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.core.dialogCore.DialogsContainer
+import week.on.a.plate.core.navigation.Navigation
 import week.on.a.plate.core.theme.ColorBackgroundWhite
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.buttons.ActionPlusButton
@@ -101,21 +105,26 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
-
-
         setContent {
             nav = rememberNavController()
-            LaunchedEffect(viewModel.navParams.value) {//todo лучше oneach ибо фильтер и фильтер одинаковая
-                // но должны быть разными экранами
-                // и два nav back подряд второй игнорируется
-                if (viewModel.navParams.value == null) return@LaunchedEffect
-                if (viewModel.navParams.value is NavigateBackDest) {
-                    nav?.popBackStack()
-                    viewModel.navParams.value = null
-                    return@LaunchedEffect
+
+            val navEvents = viewModel.navigationEvents.collectAsState(
+                MainEvent.HideDialog,
+                rememberCoroutineScope().coroutineContext
+            )
+
+            LaunchedEffect(navEvents.value) {
+                when (navEvents.value) {
+                    is MainEvent.Navigate -> nav!!.navigate((navEvents.value as MainEvent.Navigate).destination)
+                    MainEvent.NavigateBack -> nav!!.popBackStack()
+                    is MainEvent.NavigateBackWithResult -> {
+                        val res = (navEvents.value as MainEvent.NavigateBackWithResult)
+                        nav!!.previousBackStackEntry?.savedStateHandle?.set(res.key, res.result)
+                        nav!!.popBackStack()
+                    }
+
+                    else -> {}
                 }
-                nav!!.navigate(viewModel.navParams.value!!)
-                viewModel.navParams.value = null
             }
 
             viewModel.voiceInputUseCase.voiceInputLauncher = voiceInputLauncher
@@ -222,9 +231,7 @@ class MainActivity : ComponentActivity() {
     private fun useSharedLink() {
         if (!viewModel.getSharedLinkUseCase.isCheckedSharedAction && nav != null) {
             viewModel.getSharedLinkUseCase.useSharedLink(
-                viewModel.viewModelScope,
-                nav!!,
-                viewModel.recipeCreateViewModel
+                nav!!
             )
         }
     }

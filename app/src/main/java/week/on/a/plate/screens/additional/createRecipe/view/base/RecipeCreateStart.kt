@@ -33,16 +33,18 @@ import week.on.a.plate.screens.additional.createRecipe.view.web.RowWebActions
 import week.on.a.plate.screens.additional.createRecipe.view.web.WebPageCreateRecipe
 
 @Composable
-fun RecipeCreateStart(viewModel: RecipeCreateViewModel, viewModel1: MainViewModel) {
+fun RecipeCreateStart(
+    viewModel: RecipeCreateViewModel,
+    mainVM: MainViewModel,
+) {
     val onEvent = { event: Event ->
         viewModel.onEvent(event)
     }
     val state = rememberLazyListState()
-
     RecipeCreateBackHandler(viewModel.state, onEvent)
 
     RecipeCreateStartContent(viewModel.state, onEvent, state)
-    MainEventResolveFlow(viewModel.mainEvent, viewModel.dialogOpenParams, viewModel1)
+    MainEventResolveFlow(viewModel.mainEvent, viewModel.dialogOpenParams, mainVM)
 }
 
 @Composable

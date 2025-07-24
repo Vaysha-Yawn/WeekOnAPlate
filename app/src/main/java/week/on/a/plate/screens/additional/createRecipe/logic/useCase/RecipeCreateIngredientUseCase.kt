@@ -10,7 +10,6 @@ import week.on.a.plate.dialogs.editIngredientInMenu.logic.EditPositionIngredient
 import week.on.a.plate.screens.additional.createRecipe.event.RecipeCreateEvent
 import week.on.a.plate.screens.additional.createRecipe.state.RecipeCreateUIState
 import week.on.a.plate.screens.additional.filters.navigation.FilterDestination
-import week.on.a.plate.screens.additional.filters.navigation.FilterNavParams
 import week.on.a.plate.screens.additional.filters.state.FilterEnum
 import week.on.a.plate.screens.additional.filters.state.FilterMode
 import week.on.a.plate.screens.additional.filters.state.FilterResult
@@ -70,45 +69,13 @@ class RecipeCreateIngredientUseCase @Inject constructor() {
 
     fun addManyIngredients(state: RecipeCreateUIState, onEvent: (MainEvent) -> Unit) {
         val ingredientsOld = state.ingredients.value.map { it.ingredientView }
-        val params = FilterNavParams(
-            FilterMode.Multiple, FilterEnum.Ingredient,
-            Pair(listOf(), ingredientsOld), false
-        ) { filterRes ->
-            state.ingredients.value =
-                applyToStateAddManyIngredients(filterRes, ingredientsOld, state.ingredients.value)
-        }
-        onEvent(MainEvent.Navigate(FilterDestination, params))
+        onEvent(
+            MainEvent.Navigate(
+                FilterDestination(
+                    FilterMode.Multiple, FilterEnum.Ingredient,
+                    Pair(listOf(), ingredientsOld), false
+                )
+            )
+        )
     }
-
-    private fun applyToStateAddManyIngredients(
-        filterRes: FilterResult,
-        ingredientsOld: List<IngredientView>,
-        list: List<IngredientInRecipeView>
-    ): List<IngredientInRecipeView> {
-
-        val ingredientsNew = filterRes.ingredients ?: return list
-
-        val listToAdd = ingredientsNew.toMutableList().apply {
-            removeAll(ingredientsOld)
-        }.toList()
-
-        val listToDelete = ingredientsOld.toMutableList().apply {
-            removeAll(ingredientsNew)
-        }.toList()
-
-        val mutableList = list.toMutableList()
-
-        listToAdd.forEach { ingredient ->
-            mutableList.add(IngredientInRecipeView(0, ingredient, "", 0))
-        }
-
-        listToDelete.forEach { ingredient ->
-            val t = list.find { it.ingredientView.ingredientId == ingredient.ingredientId }
-            mutableList.remove(t)
-        }
-
-        return mutableList.toList()
-    }
-
-
 }

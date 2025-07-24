@@ -8,7 +8,7 @@ import week.on.a.plate.data.dataView.recipe.RecipeTagView
 import week.on.a.plate.data.dataView.recipe.RecipeView
 import week.on.a.plate.data.dataView.recipe.TagCategoryView
 
-//todo задуматься о том, чтобы вместо множества полей как state сделать state, как дата и делать copy () и неизменяемое состояние будет
+
 class SearchUIState {
     var allTagsCategories: State<List<TagCategoryView>> = mutableStateOf(listOf())
     val resultSearch = mutableStateOf<List<RecipeView>>(listOf())

@@ -44,7 +44,7 @@ class CreateSelIdAndCreatePosOpenDialog @Inject constructor(
                 false, name, Locale.getDefault(),
             )
         }
-        addPosition(id.await(), context, dialogOpenParams, onEvent)
+        addPosition(id.await(), dialogOpenParams, onEvent)
     }
 }
 
@@ -68,7 +68,7 @@ class CreateWeekSelIdAndCreatePosOpenDialog @Inject constructor(
                 true, context.getString(ForWeek.fullName), Locale.getDefault(),
             )
         }
-        addPosition(id.await(), context, dialogOpenParams, onEvent)
+        addPosition(id.await(), dialogOpenParams, onEvent)
     }
 }
 

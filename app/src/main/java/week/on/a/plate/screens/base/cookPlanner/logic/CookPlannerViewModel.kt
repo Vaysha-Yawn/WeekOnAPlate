@@ -11,7 +11,6 @@ import week.on.a.plate.core.Event
 import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.data.dataView.week.getTitleWeek
 import week.on.a.plate.screens.additional.recipeDetails.navigation.RecipeDetailsDestination
-import week.on.a.plate.screens.additional.recipeDetails.navigation.RecipeDetailsNavParams
 import week.on.a.plate.screens.base.cookPlanner.event.CookPlannerEvent
 import week.on.a.plate.screens.base.cookPlanner.logic.stepMore.CookPlannerCardActions
 import week.on.a.plate.screens.base.cookPlanner.logic.stepMore.usecases.CheckStepUseCase
@@ -116,7 +115,7 @@ class CookPlannerViewModel @Inject constructor(
 
                 is CookPlannerEvent.NavToFullStep ->
                     mainEvent.value = MainEvent.Navigate(
-                        RecipeDetailsDestination, RecipeDetailsNavParams(
+                        RecipeDetailsDestination(
                             event.groupView.recipeId,
                             event.groupView.portionsCount
                         )

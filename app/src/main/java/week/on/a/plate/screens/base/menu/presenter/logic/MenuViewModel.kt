@@ -1,5 +1,6 @@
 package week.on.a.plate.screens.base.menu.presenter.logic
 
+import android.content.Context
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,10 +10,10 @@ import kotlinx.coroutines.launch
 import week.on.a.plate.app.mainActivity.event.MainEvent
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.dialogCore.DialogOpenParams
+import week.on.a.plate.core.navigation.SearchDestination
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.data.dataView.week.getTitleWeek
 import week.on.a.plate.screens.additional.recipeDetails.navigation.RecipeDetailsDestination
-import week.on.a.plate.screens.additional.recipeDetails.navigation.RecipeDetailsNavParams
 import week.on.a.plate.screens.base.menu.domain.dbusecase.GetWeekFlowUseCase
 import week.on.a.plate.screens.base.menu.presenter.event.MenuEvent
 import week.on.a.plate.screens.base.menu.presenter.event.MenuNavEvent
@@ -21,9 +22,10 @@ import week.on.a.plate.screens.base.menu.presenter.logic.navigateLogic.CreateSel
 import week.on.a.plate.screens.base.menu.presenter.logic.navigateLogic.CreateWeekSelIdAndCreatePosOpenDialog
 import week.on.a.plate.screens.base.menu.presenter.logic.navigateLogic.EditOrDeleteSelectionOpenDialog
 import week.on.a.plate.screens.base.menu.presenter.logic.navigateLogic.GetSelAndCreateUseCase
+import week.on.a.plate.screens.base.menu.presenter.logic.navigateLogic.GetSelAndMoveUseCase
 import week.on.a.plate.screens.base.menu.presenter.logic.navigateLogic.OtherPositionActionsMoreOpenDialog
 import week.on.a.plate.screens.base.menu.presenter.logic.navigateLogic.RecipePositionMoreOpenDialog
-import week.on.a.plate.screens.base.menu.presenter.logic.navigateLogic.SearchByDraftUseCase
+import week.on.a.plate.screens.base.menu.presenter.logic.navigateLogic.ReplaceDraftToRecipeUseCase
 import week.on.a.plate.screens.base.menu.presenter.logic.navigateLogic.addPosition.AddPositionOpenDialog
 import week.on.a.plate.screens.base.menu.presenter.logic.navigateLogic.shopList.SelectedToShopListNavToInventory
 import week.on.a.plate.screens.base.menu.presenter.state.MenuUIState
@@ -48,8 +50,8 @@ class MenuViewModel @Inject constructor(
     //act with pos
     private val recipePositionActionsMore: RecipePositionMoreOpenDialog,
     private val otherPositionActionsMore: OtherPositionActionsMoreOpenDialog,
-    private val searchByDraft: SearchByDraftUseCase,
-
+    private val replaceDraftToRecipeUseCase: ReplaceDraftToRecipeUseCase,
+    private val getSelAndMove: GetSelAndMoveUseCase,
     private val getCurrentWeekFlow: GetWeekFlowUseCase,
 
     //act with selection
@@ -65,6 +67,8 @@ class MenuViewModel @Inject constructor(
 
     val dialogOpenParams = mutableStateOf<DialogOpenParams?>(null)
     val mainEvent = mutableStateOf<MainEvent?>(null)
+    var waitingDraft: Position.PositionDraftView? = null
+    var waitingPositionToMove: Position? = null
 
     init {
         updateWeek()
@@ -105,8 +109,7 @@ class MenuViewModel @Inject constructor(
                     is MenuNavEvent.NavToFullRecipe -> {
                         onEvent(
                             MainEvent.Navigate(
-                                RecipeDetailsDestination,
-                                RecipeDetailsNavParams(
+                                RecipeDetailsDestination(
                                     event.navData.recId,
                                     event.navData.portionsCount
                                 )
@@ -123,18 +126,13 @@ class MenuViewModel @Inject constructor(
 
             is MenuEvent.GetSelIdAndCreate -> {
                 viewModelScope.launch {
-                    getSelAndCreate(
-                        event.context,
-                        dialogOpenParams, viewModelScope,
-                        ::onEvent
-                    )
+                    getSelAndCreate(::onEvent)
                 }
             }
 
             is MenuEvent.CreatePosition -> viewModelScope.launch(Dispatchers.IO) {
                 addPosition(
                     event.selId,
-                    event.context,
                     dialogOpenParams,
                     ::onEvent
                 )
@@ -181,9 +179,16 @@ class MenuViewModel @Inject constructor(
                 ::onEvent
             )
 
-            is MenuEvent.SearchByDraft -> viewModelScope.launch {
-                searchByDraft(
-                    event.draft, viewModelScope, ::onEvent
+            is MenuEvent.SearchByDraft -> {
+                val draft = event.draft
+                waitingDraft = draft
+                onEvent(
+                    MainEvent.Navigate(
+                        SearchDestination(
+                            draft.selectionId,
+                            Pair(draft.tags, draft.ingredients)
+                        )
+                    )
                 )
             }
 
@@ -219,6 +224,28 @@ class MenuViewModel @Inject constructor(
             MenuEvent.ClearSelected -> {
                 menuUIState.value =
                     menuUIState.value.copy(isAllSelected = false, chosenRecipes = mutableMapOf())
+            }
+        }
+    }
+
+    fun returnWithRecipeForDraft(recipeId: Long, context: Context) {
+        viewModelScope.launch {
+            if (waitingDraft != null) {
+                replaceDraftToRecipeUseCase(waitingDraft!!, recipeId, context, dialogOpenParams)
+                waitingDraft = null
+            }
+        }
+    }
+
+    fun returnWithSelId(selId: Long) {
+        if (waitingPositionToMove == null) {
+            viewModelScope.launch(Dispatchers.IO) {
+                getSelAndCreate.afterResult(selId, dialogOpenParams, ::onEvent)
+            }
+        } else {
+            viewModelScope.launch(Dispatchers.IO) {
+                getSelAndMove.afterResult(selId, waitingPositionToMove!!)
+                waitingPositionToMove = null
             }
         }
     }

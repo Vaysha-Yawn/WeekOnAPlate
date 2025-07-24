@@ -32,15 +32,14 @@ import week.on.a.plate.screens.additional.deleteApply.state.DeleteApplyUIState
 @Composable
 fun DeleteApplyStart(
     viewModel: DeleteApplyViewModel,
-    viewModel1: MainViewModel
+    mainViewModel: MainViewModel
 ) {
-    val mainVM: MainViewModel = viewModel<MainViewModel>((LocalActivity.current as MainActivity))
     val onEvent = { eventData: DeleteApplyEvent ->
         viewModel.onEvent(eventData)
     }
     val state = viewModel.state
     DeleteApplyScreen(state, onEvent)
-    MainEventResolve(viewModel.mainEvent, viewModel.dialogOpenParams, mainVM)
+    MainEventResolve(viewModel.mainEvent, viewModel.dialogOpenParams, mainViewModel)
 }
 
 @Composable
@@ -57,7 +56,7 @@ private fun DeleteApplyScreen(
     ) {
         Spacer(modifier = Modifier.height(36.dp))
         TextDisplayItalic(
-            text = state.title.value,
+            text = state.title.value ?: stringResource(R.string.delete_apply),
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(36.dp))

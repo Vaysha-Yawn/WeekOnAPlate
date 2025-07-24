@@ -43,13 +43,6 @@ fun EditRecipePositionDialogContent(onEvent: (ActionMoreRecipePositionEvent) -> 
         }
 
         ButtonRow(
-            R.drawable.find_replace,
-            text= stringResource(R.string.change_recipe),
-        ) {
-            onEvent(ActionMoreRecipePositionEvent.FindReplace(context))
-        }
-
-        ButtonRow(
             R.drawable.numbers,
             text= stringResource(R.string.Change_number_of_servings)
         ) {

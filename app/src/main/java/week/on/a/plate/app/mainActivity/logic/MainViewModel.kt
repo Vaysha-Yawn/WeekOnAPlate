@@ -2,11 +2,12 @@ package week.on.a.plate.app.mainActivity.logic
 
 import android.content.Context
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import week.on.a.plate.app.mainActivity.event.MainEvent
 import week.on.a.plate.app.mainActivity.logic.imageFromGallery.ImageFromGalleryUseCase
@@ -45,10 +46,12 @@ class MainViewModel @Inject constructor(
     val imageFromGalleryUseCase = ImageFromGalleryUseCase(this)
     val takePictureUseCase = TakePictureUseCase(this)
     val snackbarHostState = SnackbarHostState()
-    val navParams: MutableState<Any?> = mutableStateOf(null)
     val isActiveBaseScreen = mutableStateOf(true)
     val isActivePlusButton = mutableStateOf(true)
     val isActiveFilterScreen = mutableStateOf(false)
+
+    private val _navigationEvents = MutableSharedFlow<MainEvent>()
+    val navigationEvents = _navigationEvents.asSharedFlow()
 
     lateinit var menuViewModel: MenuViewModel
     lateinit var specifySelectionViewModel: SpecifySelectionViewModel
@@ -113,16 +116,13 @@ class MainViewModel @Inject constructor(
             MainEvent.CloseDialog -> dialogUseCase.closeDialog()
             is MainEvent.OpenDialog -> dialogUseCase.openDialog(event.dialog)
             is MainEvent.ShowSnackBar -> showSnackBar(event.message)
-            is MainEvent.Navigate -> navigate(event)
             MainEvent.HideDialog -> dialogUseCase.hide()
             MainEvent.ShowDialog -> dialogUseCase.show()
             is MainEvent.VoiceToText -> voiceToText(event.context, event.use)
+            is MainEvent.Navigate -> _navigationEvents.tryEmit(event)
+            MainEvent.NavigateBack -> _navigationEvents.tryEmit(event)
+            is MainEvent.NavigateBackWithResult -> _navigationEvents.tryEmit(event)
         }
-    }
-
-    fun navigate(event: MainEvent.Navigate) {
-        event.navParams.launch(this)
-        navParams.value = event.destination
     }
 
     fun openDialog(dialog: DialogViewModel<*>) {

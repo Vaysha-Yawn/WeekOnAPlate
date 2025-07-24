@@ -16,14 +16,12 @@ import week.on.a.plate.screens.base.menu.domain.dbusecase.DeleteDraftInDBUseCase
 import week.on.a.plate.screens.base.menu.domain.dbusecase.DeleteIngredientPositionInDBUseCase
 import week.on.a.plate.screens.base.menu.domain.dbusecase.DeleteNoteInDBUseCase
 import week.on.a.plate.screens.base.menu.domain.dbusecase.DeleteRecipePosInDBUseCase
-import week.on.a.plate.screens.base.menu.presenter.logic.navigateLogic.GetSelAndDoubleUseCase
 import week.on.a.plate.screens.base.menu.presenter.logic.navigateLogic.GetSelAndMoveUseCase
 import week.on.a.plate.screens.base.menu.presenter.logic.navigateLogic.shopList.AddIngredientToShoppingListInBd
 import javax.inject.Inject
 
 class OtherPositionActionsMore @Inject constructor(
     private val addIngredientToShoppingListInBd: AddIngredientToShoppingListInBd,
-    private val getSelAndDouble: GetSelAndDoubleUseCase,
     private val getSelAndMove: GetSelAndMoveUseCase,
 
     private val deleteDraft: DeleteDraftInDBUseCase,
@@ -35,6 +33,7 @@ class OtherPositionActionsMore @Inject constructor(
     private val editDraftOpenDialog: EditDraftOpenDialog,
     private val editIngredientOpenDialog: EditIngredientOpenDialog,
 ) {
+
     suspend operator fun invoke(
         position: Position,
         dialogOpenParams: MutableState<DialogOpenParams?>,
@@ -53,11 +52,6 @@ class OtherPositionActionsMore @Inject constructor(
                         is Position.PositionRecipeView -> deleteRecipe(position)
                     }
                 }
-
-            OtherPositionMoreEvent.Double -> getSelAndDouble(
-                position, scope,
-                onEvent,
-            )
 
             OtherPositionMoreEvent.Edit ->
                 scope.launch {
@@ -81,12 +75,13 @@ class OtherPositionActionsMore @Inject constructor(
                     }
                 }
 
-            OtherPositionMoreEvent.Move -> getSelAndMove(
-                position, scope,
-                onEvent
-            )
+            OtherPositionMoreEvent.Move -> {
+                getSelAndMove(
+                    onEvent, position
+                )
+            }
 
-            is OtherPositionMoreEvent.AddToShopList -> {
+            is OtherPositionMoreEvent.AddToCart -> {
                 scope.launch {
                     if (position is Position.PositionIngredientView) {
                         val ingredientNew = IngredientInRecipeView(

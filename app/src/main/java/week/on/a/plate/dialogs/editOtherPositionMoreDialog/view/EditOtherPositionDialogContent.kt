@@ -35,7 +35,7 @@ fun EditOtherPositionDialogContent( isForIngredient:Boolean, onEvent: (OtherPosi
                 R.drawable.add_shopping_cart,
                 text=stringResource(R.string.add_shopping_cart),
             ){
-                onEvent(OtherPositionMoreEvent.AddToShopList(contextProvider))
+                onEvent(OtherPositionMoreEvent.AddToCart(contextProvider))
             }
         }
 
@@ -44,13 +44,6 @@ fun EditOtherPositionDialogContent( isForIngredient:Boolean, onEvent: (OtherPosi
             text=stringResource(R.string.move),
         ){
             onEvent(OtherPositionMoreEvent.Move)
-        }
-
-        ButtonRow(
-            R.drawable.add,
-            text=stringResource(R.string.doubleR),
-        ){
-            onEvent(OtherPositionMoreEvent.Double)
         }
 
         ButtonRow(

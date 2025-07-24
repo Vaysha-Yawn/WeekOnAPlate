@@ -7,15 +7,11 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import week.on.a.plate.R
-import week.on.a.plate.app.mainActivity.event.BackNavParams
-import week.on.a.plate.app.mainActivity.event.EmptyNavParams
 import week.on.a.plate.app.mainActivity.event.MainEvent
-import week.on.a.plate.app.mainActivity.event.NavigateBackDest
 import week.on.a.plate.core.Event
 import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.core.navigation.CookPlannerDestination
 import week.on.a.plate.data.dataView.recipe.RecipeView
-import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.data.repository.room.cookPlanner.CookPlannerStepRepository
 import week.on.a.plate.data.repository.room.recipe.recipe.RecipeRepository
 import week.on.a.plate.dialogs.calendarMy.event.CalendarMyEvent
@@ -103,20 +99,20 @@ class SpecifyRecipeToCookPlanViewModel @Inject constructor(
                     portionsCount
                 )
 
-            mainEvent.value = MainEvent.Navigate(NavigateBackDest, BackNavParams)
-            mainEvent.value = MainEvent.Navigate(CookPlannerDestination, EmptyNavParams)
+            mainEvent.value = MainEvent.NavigateBack
+            mainEvent.value = MainEvent.Navigate(CookPlannerDestination)
         }
     }
 
     fun close() {
-        mainEvent.value = MainEvent.Navigate(NavigateBackDest, BackNavParams)
+        mainEvent.value = MainEvent.NavigateBack
     }
 
-    fun launchAndGet(recipePos: Position.PositionRecipeView) {
+    fun launch(recipeId: Long, portions: Int) {
         viewModelScope.launch {
             calendarMyUseCase.updateMonthValue(stateCalendar, false)
-            recipe = recipeRepository.getRecipe(recipePos.recipe.id)
-            portionsCount = recipePos.portionsCount
+            recipe = recipeRepository.getRecipe(recipeId)
+            portionsCount = portions
         }
     }
 }

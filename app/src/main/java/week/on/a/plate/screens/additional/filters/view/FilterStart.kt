@@ -7,11 +7,13 @@ import week.on.a.plate.app.mainActivity.logic.MainViewModel
 import week.on.a.plate.app.mainActivity.view.MainEventResolve
 import week.on.a.plate.screens.additional.filters.event.FilterEvent
 import week.on.a.plate.screens.additional.filters.logic.FilterViewModel
+import week.on.a.plate.screens.additional.filters.navigation.FilterDestination
 
 @Composable
 fun FilterStart(
     viewModel: FilterViewModel,
-    viewModel1: MainViewModel
+    mainVM: MainViewModel,
+    args: FilterDestination
 ) {
     val onEvent = {event: FilterEvent ->
         viewModel.onEvent(event)
@@ -19,9 +21,11 @@ fun FilterStart(
     viewModel.state.allIngredientsCategories = viewModel.allIngredients.collectAsState()
     viewModel.state.allTagsCategories = viewModel.allTags.collectAsState()
 
+    viewModel.initState(args)
+
     Column {
         TopSearchPanelFilter(stateUI = viewModel.state, onEvent)
         FilterScreen(viewModel.state, onEvent)
     }
-    MainEventResolve(viewModel.mainEvent, viewModel.dialogOpenParams, viewModel1)
+    MainEventResolve(viewModel.mainEvent, viewModel.dialogOpenParams, mainVM)
 }

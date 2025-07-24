@@ -8,7 +8,6 @@ import week.on.a.plate.app.mainActivity.event.MainEvent
 import week.on.a.plate.core.Event
 import week.on.a.plate.data.dataView.week.Position
 import week.on.a.plate.screens.additional.inventory.navigation.InventoryDestination
-import week.on.a.plate.screens.additional.inventory.navigation.InventoryNavParams
 import week.on.a.plate.screens.base.menu.domain.dbusecase.GetRecipeUseCase
 import week.on.a.plate.screens.base.menu.domain.utilsUseCase.IngredientsMapByPortionsUseCase
 import week.on.a.plate.screens.base.menu.presenter.event.MenuEvent
@@ -34,6 +33,6 @@ class SelectedToShopListNavToInventory @Inject constructor(
                 ingredientsMapByPortions(positionRecipeView.portionsCount, recipe.await())
             ingredients
         }
-        onEvent(MainEvent.Navigate(InventoryDestination, InventoryNavParams(list)))
+        onEvent(MainEvent.Navigate(InventoryDestination(list)))
     }
 }
