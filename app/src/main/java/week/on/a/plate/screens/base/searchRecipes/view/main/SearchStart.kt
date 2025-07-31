@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,6 +37,9 @@ fun SearchStart(
     state.allTagsCategories = viewModel.allTagCategories.collectAsState()
     SearchStartContent(state, onEvent)
     MainEventResolve(viewModel.mainEvent, viewModel.dialogOpenParams, viewModel1)
+    LaunchedEffect(true) {
+        viewModel.onEvent(SearchScreenEvent.SearchAll)
+    }
 }
 
 @Composable

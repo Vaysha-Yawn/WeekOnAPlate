@@ -51,7 +51,6 @@ fun CalendarMy(
     Column(
         Modifier
             .fillMaxWidth()
-            .padding(horizontal = 24.dp)
     ) {
         MonthName(state, locale, onEvent)
         Spacer(Modifier.size(24.dp))

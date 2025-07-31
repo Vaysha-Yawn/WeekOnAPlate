@@ -10,7 +10,7 @@ import week.on.a.plate.app.mainActivity.event.MainEvent
 import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.data.dataView.recipe.IngredientView
 import week.on.a.plate.data.dataView.recipe.RecipeTagView
-import week.on.a.plate.screens.additional.filters.dialogs.filterVoiceApply.logic.FilterVoiceApplyViewModel
+import week.on.a.plate.dialogs.filterVoiceApply.logic.FilterVoiceApplyViewModel
 import week.on.a.plate.screens.additional.filters.event.FilterEvent
 import week.on.a.plate.screens.additional.filters.state.FilterUIState
 import javax.inject.Inject

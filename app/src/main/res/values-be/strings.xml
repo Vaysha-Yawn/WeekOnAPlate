@@ -101,6 +101,7 @@
     <string name="portions_count">Колькасць порцый</string>
     <string name="ingredients">Інгрэдыенты</string>
 
+    <string name="edit_ingredient">Рэдагаваць інгрэдыент</string>
     <string name="edit_ingredients">Рэдагаваць інгрэдыенты</string>
     <string name="step_by_step_recipe">Пакрокавы рэцэпт</string>
     <string name="add_step">Дадаць крок</string>

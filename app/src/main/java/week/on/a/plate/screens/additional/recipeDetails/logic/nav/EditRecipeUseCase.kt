@@ -38,7 +38,7 @@ class EditRecipeUseCase @Inject constructor(
                             it.timer.longValue, it.pinnedIngredientsInd.value
                         )
                     },
-                    link = recipe.source.value,
+                    link = recipe.link.value,
                     state.recipe.inFavorite,
                     LocalDateTime.now(),
                     recipe.duration.value

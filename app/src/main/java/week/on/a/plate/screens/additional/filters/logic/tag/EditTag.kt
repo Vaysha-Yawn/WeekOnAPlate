@@ -9,7 +9,7 @@ import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.data.dataView.recipe.RecipeTagView
 import week.on.a.plate.data.dataView.recipe.TagCategoryView
 import week.on.a.plate.data.repository.room.filters.recipeTag.RecipeTagRepository
-import week.on.a.plate.screens.additional.filters.dialogs.editOrCreateTag.logic.AddTagViewModel
+import week.on.a.plate.dialogs.editOrCreateTag.logic.EditOrCreateTagViewModel
 import javax.inject.Inject
 
 class EditTag @Inject constructor(private val recipeTagRepository: RecipeTagRepository) {
@@ -19,7 +19,7 @@ class EditTag @Inject constructor(private val recipeTagRepository: RecipeTagRepo
         scope: CoroutineScope,
     ) = coroutineScope {
         val oldCategory = allTags.find { it.tags.contains(tag) }
-        val params = AddTagViewModel.AddTagDialogNavParams(
+        val params = EditOrCreateTagViewModel.AddTagDialogNavParams(
             tag.tagName, oldCategory, oldCategory!!
         ) { newNameAndCategory ->
             scope.launch(Dispatchers.IO) {

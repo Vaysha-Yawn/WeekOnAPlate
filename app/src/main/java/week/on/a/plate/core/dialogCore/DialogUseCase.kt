@@ -20,6 +20,10 @@ import week.on.a.plate.dialogs.editIngredientInMenu.event.EditPositionIngredient
 import week.on.a.plate.dialogs.editIngredientInMenu.logic.EditPositionIngredientViewModel
 import week.on.a.plate.dialogs.editOneString.event.EditOneStringEvent
 import week.on.a.plate.dialogs.editOneString.logic.EditOneStringViewModel
+import week.on.a.plate.dialogs.editOrCreateIngredient.event.EditOrCreateIngredientEvent
+import week.on.a.plate.dialogs.editOrCreateIngredient.logic.EditOrCreateIngredientViewModel
+import week.on.a.plate.dialogs.editOrCreateTag.event.EditOrCreateTagEvent
+import week.on.a.plate.dialogs.editOrCreateTag.logic.EditOrCreateTagViewModel
 import week.on.a.plate.dialogs.editOrDelete.event.EditOrDeleteEvent
 import week.on.a.plate.dialogs.editOrDelete.logic.EditOrDeleteViewModel
 import week.on.a.plate.dialogs.editOtherPositionMoreDialog.event.OtherPositionMoreEvent
@@ -28,6 +32,8 @@ import week.on.a.plate.dialogs.editPositionRecipeMoreDialog.event.ActionMoreReci
 import week.on.a.plate.dialogs.editPositionRecipeMoreDialog.logic.EditRecipePositionViewModel
 import week.on.a.plate.dialogs.editSelectionDialog.event.EditSelectionEvent
 import week.on.a.plate.dialogs.editSelectionDialog.logic.EditSelectionViewModel
+import week.on.a.plate.dialogs.filterVoiceApply.event.FilterVoiceApplyEvent
+import week.on.a.plate.dialogs.filterVoiceApply.logic.FilterVoiceApplyViewModel
 import week.on.a.plate.dialogs.forCreateRecipeScreen.chooseHowImagePick.event.ChooseHowImagePickEvent
 import week.on.a.plate.dialogs.forCreateRecipeScreen.chooseHowImagePick.logic.ChooseHowImagePickViewModel
 import week.on.a.plate.dialogs.forCreateRecipeScreen.exitApply.event.ExitApplyEvent
@@ -40,16 +46,10 @@ import week.on.a.plate.dialogs.forSettingsScreen.setPermanentMeals.event.SetPerm
 import week.on.a.plate.dialogs.forSettingsScreen.setPermanentMeals.logic.SetPermanentMealsViewModel
 import week.on.a.plate.dialogs.forSettingsScreen.setTheme.event.SetThemeEvent
 import week.on.a.plate.dialogs.forSettingsScreen.setTheme.logic.SetThemesViewModel
+import week.on.a.plate.dialogs.selectedFilters.event.SelectedFiltersEvent
+import week.on.a.plate.dialogs.selectedFilters.logic.SelectedFiltersViewModel
 import week.on.a.plate.dialogs.timePick.event.TimePickEvent
 import week.on.a.plate.dialogs.timePick.logic.TimePickViewModel
-import week.on.a.plate.screens.additional.filters.dialogs.editOrCreateIngredient.event.AddIngredientEvent
-import week.on.a.plate.screens.additional.filters.dialogs.editOrCreateIngredient.logic.AddIngredientViewModel
-import week.on.a.plate.screens.additional.filters.dialogs.editOrCreateTag.event.AddTagEvent
-import week.on.a.plate.screens.additional.filters.dialogs.editOrCreateTag.logic.AddTagViewModel
-import week.on.a.plate.screens.additional.filters.dialogs.filterVoiceApply.event.FilterVoiceApplyEvent
-import week.on.a.plate.screens.additional.filters.dialogs.filterVoiceApply.logic.FilterVoiceApplyViewModel
-import week.on.a.plate.screens.additional.filters.dialogs.selectedFilters.event.SelectedFiltersEvent
-import week.on.a.plate.screens.additional.filters.dialogs.selectedFilters.logic.SelectedFiltersViewModel
 import java.util.Stack
 import javax.inject.Inject
 
@@ -120,11 +120,12 @@ class DialogUseCase @Inject constructor() {
             is DatePickerEvent -> if (activeDialog.value is DatePickerViewModel) {
                 (activeDialog.value as DatePickerViewModel).onEvent(event)
             }
-            is AddTagEvent -> if (activeDialog.value is AddTagViewModel) {
-                (activeDialog.value as AddTagViewModel).onEvent(event)
+            is EditOrCreateTagEvent -> if (activeDialog.value is EditOrCreateTagViewModel) {
+                (activeDialog.value as EditOrCreateTagViewModel).onEvent(event)
             }
-            is AddIngredientEvent -> if (activeDialog.value is AddIngredientViewModel) {
-                (activeDialog.value as AddIngredientViewModel).onEvent(event)
+
+            is EditOrCreateIngredientEvent -> if (activeDialog.value is EditOrCreateIngredientViewModel) {
+                (activeDialog.value as EditOrCreateIngredientViewModel).onEvent(event)
             }
             is SelectedFiltersEvent -> if (activeDialog.value is SelectedFiltersViewModel) {
                 (activeDialog.value as SelectedFiltersViewModel).onEvent(event)

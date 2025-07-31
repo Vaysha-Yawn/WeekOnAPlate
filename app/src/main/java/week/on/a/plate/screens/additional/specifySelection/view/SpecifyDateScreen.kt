@@ -11,8 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -62,7 +60,6 @@ fun ChooseSelectionSpecifySelection(
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.background, RoundedCornerShape(20.dp))
                 .padding(horizontal = 12.dp, vertical = 12.dp)
-                .weight(1f),
         ) {
             if (state.allSelectionsIdDay.value.isEmpty()) {
                 TextBody(text = stringResource(R.string.mess_select_day_first))
@@ -71,12 +68,11 @@ fun ChooseSelectionSpecifySelection(
                     onEvent(SpecifySelectionEvent.AddCustomSelection )
                 }
                 Spacer(modifier = Modifier.height(24.dp))
-                LazyColumn(
+                Column(
                     Modifier
-                        .weight(1f)
                         .fillMaxWidth()
                 ) {
-                    itemsIndexed(items = state.allSelectionsIdDay.value) { ind, item ->
+                    for ((ind, item) in state.allSelectionsIdDay.value.withIndex()) {
                         val check = remember {
                             mutableStateOf(!state.checkWeek.value && ind == state.checkDayCategory.intValue)
                         }

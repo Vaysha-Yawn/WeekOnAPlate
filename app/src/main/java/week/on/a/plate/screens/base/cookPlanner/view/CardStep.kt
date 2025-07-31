@@ -95,7 +95,10 @@ fun CookGroup(group: CookPlannerGroupView, onEvent: (Event) -> Unit) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                TextTitle(group.recipeName +", "+ + group.portionsCount +" "+ stringResource(R.string.portions_end_of_phrase))
+                TextTitle(
+                    group.recipeName + ", " + +group.portionsCount + " " + stringResource(R.string.portions_end_of_phrase),
+                    modifier = Modifier.fillMaxWidth(0.9f)
+                )
                 MoreButton {
                     onEvent(CookPlannerEvent.ShowStepMore(group, context))
                 }

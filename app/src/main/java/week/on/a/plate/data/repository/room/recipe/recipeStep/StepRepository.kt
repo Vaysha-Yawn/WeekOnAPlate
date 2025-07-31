@@ -40,7 +40,7 @@ class StepRepository @Inject constructor(
     }
 
     suspend fun deleteByRecipeId(recipeId: Long) {
-        daoStep.deleteByIdStep(recipeId)
+        daoStep.deleteByRecipeId(recipeId)
     }
 
     suspend fun update(step: RecipeStepView, recipeId: Long) {

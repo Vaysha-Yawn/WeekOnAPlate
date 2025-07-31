@@ -7,7 +7,7 @@ import kotlinx.coroutines.launch
 import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.data.dataView.recipe.TagCategoryView
 import week.on.a.plate.data.repository.room.filters.recipeTag.RecipeTagRepository
-import week.on.a.plate.screens.additional.filters.dialogs.editOrCreateTag.logic.AddTagViewModel
+import week.on.a.plate.dialogs.editOrCreateTag.logic.EditOrCreateTagViewModel
 import week.on.a.plate.screens.additional.filters.event.FilterEvent
 import javax.inject.Inject
 
@@ -24,7 +24,7 @@ class CreateTag @Inject constructor(
         scope.launch(Dispatchers.IO) {
             val defCategoryView =
                 allTags.find { it.id == 1L }!!
-            dialogOpenParams.value = AddTagViewModel.AddTagDialogNavParams(
+            dialogOpenParams.value = EditOrCreateTagViewModel.AddTagDialogNavParams(
                 searchText,
                 null,
                 defCategoryView

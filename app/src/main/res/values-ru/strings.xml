@@ -100,6 +100,7 @@
     <string name="portions_count">Колличество порций</string>
     <string name="ingredients">Ингредиенты</string>
 
+    <string name="edit_ingredient">Редактировать ингредиент</string>
     <string name="edit_ingredients">Редактировать ингредиенты</string>
     <string name="step_by_step_recipe">Пошаговый рецепт</string>
     <string name="add_step">Добавить шаг</string>
@@ -210,6 +211,7 @@
     <string name="edit_pinned_ingredients">Редактировать прикреплённые ингредиенты</string>
     <string name="timer">Таймер</string>
 
+    <string name="edit_tag">Редактировать тэг</string>
     <string name="edit_tags">Редактировать тэги</string>
     <string name="recipe_creation">Создание рецепта</string>
     <string name="recipe_edition">Редактирование рецепта</string>

@@ -105,9 +105,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             nav = rememberNavController()
-            LaunchedEffect(viewModel.navParams.value) {//todo лучше oneach ибо фильтер и фильтер одинаковая
-                // но должны быть разными экранами
-                // и два nav back подряд второй игнорируется
+            LaunchedEffect(viewModel.navParams.value) {
                 if (viewModel.navParams.value == null) return@LaunchedEffect
                 if (viewModel.navParams.value is NavigateBackDest) {
                     nav?.popBackStack()

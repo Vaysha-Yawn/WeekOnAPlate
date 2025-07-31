@@ -5,6 +5,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import week.on.a.plate.R
 import week.on.a.plate.app.mainActivity.event.MainEvent
@@ -47,13 +48,13 @@ class SetPermanentMealsViewModel(
     }
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             state.selections.value = dao.getAll().sortedBy { it.stdTime }
         }
     }
 
     private fun delete(sel: CategorySelectionRoom) {
-        mainViewModel.viewModelScope.launch {
+        mainViewModel.viewModelScope.launch(Dispatchers.IO) {
             state.selections.value =
                 state.selections.value.toMutableList().apply {
                     remove(sel)
@@ -64,55 +65,52 @@ class SetPermanentMealsViewModel(
     }
 
     private fun edit(sel: CategorySelectionRoom) {
-        mainViewModel.viewModelScope.launch {
-            val stateToEdit = EditSelectionUIState(
-                title = R.string.edit_meal,
-                placeholder = R.string.hint_breakfast
-            ).apply {
-                text.value = sel.name
-                selectedTime.value = sel.stdTime
-            }
-
-            val params = EditSelectionViewModel.EditSelectionDialogParams(stateToEdit) { selState ->
-                mainViewModel.viewModelScope.launch {
-                    applyEdit(sel, selState)
-                    mainViewModel.onEvent(MainEvent.ShowDialog)
-                }
-            }
-            dialogOpenParams.value = params
-            mainViewModel.onEvent(MainEvent.HideDialog)
+        val stateToEdit = EditSelectionUIState(
+            title = R.string.edit_meal,
+            placeholder = R.string.hint_breakfast
+        ).apply {
+            text.value = sel.name
+            selectedTime.value = sel.stdTime
         }
+        val params = EditSelectionViewModel.EditSelectionDialogParams(stateToEdit) { selState ->
+            mainViewModel.onEvent(MainEvent.HideDialog)
+            applyEdit(sel, selState)
+        }
+        dialogOpenParams.value = params
+        mainViewModel.onEvent(MainEvent.ShowDialog)
     }
 
-    private suspend fun applyEdit(sel: CategorySelectionRoom, selState: EditSelectionUIState) {
-        state.selections.value =
-            state.selections.value.toMutableList().apply {
-                remove(sel)
-                add(
-                    CategorySelectionRoom(
-                        selState.text.value,
-                        selState.selectedTime.value
+    private fun applyEdit(sel: CategorySelectionRoom, selState: EditSelectionUIState) {
+        mainViewModel.viewModelScope.launch(Dispatchers.IO) {
+            state.selections.value =
+                state.selections.value.toMutableList().apply {
+                    remove(sel)
+                    add(
+                        CategorySelectionRoom(
+                            selState.text.value,
+                            selState.selectedTime.value
+                        )
                     )
-                )
-            }.sortedBy { it.stdTime }
+                }.sortedBy { it.stdTime }
 
-        dao.update(
-            CategorySelectionRoom(
-                selState.text.value,
-                selState.selectedTime.value
-            ).apply { id = sel.id })
+            dao.update(
+                CategorySelectionRoom(
+                    selState.text.value,
+                    selState.selectedTime.value
+                ).apply { id = sel.id })
+        }
     }
 
 
     private fun add() {
-        mainViewModel.viewModelScope.launch {
+        mainViewModel.viewModelScope.launch(Dispatchers.IO) {
             val params = EditSelectionViewModel.EditSelectionDialogParams(
                 EditSelectionUIState(
                     title = R.string.add_meal,
                     placeholder = R.string.hint_breakfast
                 )
             ) { selState ->
-                mainViewModel.viewModelScope.launch {
+                mainViewModel.viewModelScope.launch(Dispatchers.IO) {
                     applyAdd(selState)
                 }
                 mainViewModel.onEvent(MainEvent.ShowDialog)
@@ -122,7 +120,7 @@ class SetPermanentMealsViewModel(
         }
     }
 
-    private suspend fun applyAdd( selState: EditSelectionUIState){
+    private suspend fun applyAdd(selState: EditSelectionUIState) {
         state.selections.value =
             state.selections.value.toMutableList().apply {
                 add(

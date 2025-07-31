@@ -102,6 +102,7 @@
     <string name="portions_count">Nombre de portions</string>
     <string name="ingredients">Ingrédients</string>
 
+    <string name="edit_ingredient">Modifier les ingrédient</string>
     <string name="edit_ingredients">Modifier les ingrédients</string>
     <string name="step_by_step_recipe">Recette étape par étape</string>
     <string name="add_step">Ajouter étape</string>

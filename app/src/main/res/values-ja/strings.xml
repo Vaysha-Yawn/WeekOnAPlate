@@ -102,7 +102,8 @@
     <string name="portions_count">人数</string>
     <string name="ingredients">材料</string>
 
-    <string name="edit_ingredients">材料を編集</string>
+    <string name="edit_ingredient">材料を編集</string>
+    <string name="edit_ingredients">材料を編集する</string>
     <string name="step_by_step_recipe">レシピのステップバイステップ</string>
     <string name="add_step">ステップを追加</string>
     <string name="settings">設定</string>

@@ -19,14 +19,13 @@ import week.on.a.plate.core.theme.WeekOnAPlateTheme
 import week.on.a.plate.core.uitools.clickNoRipple
 
 @Composable
-fun CloseButton(actionClose: () -> Unit) {
+fun CloseButton(modifier: Modifier = Modifier.padding(12.dp), actionClose: () -> Unit) {
     Image(
         painter = painterResource(id = R.drawable.close),
         contentDescription = "Close",
-        modifier = Modifier
-            .padding(12.dp)
+        modifier = modifier
             .size(24.dp)
-            .clickNoRipple  (actionClose),
+            .clickNoRipple(actionClose),
     )
 }
 
@@ -36,9 +35,9 @@ fun CloseOutlined(actionClose: () -> Unit) {
         painter = painterResource(id = R.drawable.close),
         contentDescription = "Close",
         modifier = Modifier
-            .clickNoRipple (actionClose)
+            .clickNoRipple(actionClose)
             .border(1.dp, ColorStrokeGrey, RoundedCornerShape(10.dp))
-            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(10.dp ))
+            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(10.dp))
             .padding(12.dp)
             .size(24.dp),
     )

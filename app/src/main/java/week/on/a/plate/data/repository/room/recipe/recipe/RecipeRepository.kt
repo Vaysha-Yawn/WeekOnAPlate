@@ -20,7 +20,7 @@ import javax.inject.Singleton
 
 @Singleton
 class RecipeRepository @Inject constructor(
-    private val dao: RecipeDAO,
+    private val recipeDAO: RecipeDAO,
     private val stepRepository: StepRepository,
     private val tagCrossRefRepository: RecipeTagCrossRefRepository,
     private val ingredientInRecipeRepository: IngredientInRecipeRepository,
@@ -32,7 +32,7 @@ class RecipeRepository @Inject constructor(
     private val recipeMapper = RecipeMapper()
 
     suspend fun getRecipe(id: Long): RecipeView {
-        val recipe = dao.getRecipeById(id)
+        val recipe = recipeDAO.getRecipeById(id)
         val steps = stepRepository.getSteps(id)
         val ingredients = ingredientInRecipeRepository.getIngredients(id)
         val tags = tagCrossRefRepository.getTags(id)
@@ -47,7 +47,7 @@ class RecipeRepository @Inject constructor(
     }
 
     fun getAllRecipeFlow(): Flow<List<RecipeView>> {
-        return dao.getAllFlow().map { roomRecipeList ->
+        return recipeDAO.getAllFlow().map { roomRecipeList ->
             roomRecipeList.map { recipeRoom ->
                 getRecipe(recipeRoom.recipeId)
             }
@@ -55,7 +55,7 @@ class RecipeRepository @Inject constructor(
     }
 
     fun getRecipeFlow(id: Long): Flow<RecipeView?> {
-        val recipeF = dao.getRecipeByIdFlow(id).onEmpty { emit(null) }
+        val recipeF = recipeDAO.getRecipeByIdFlow(id).onEmpty { emit(null) }
         val stepsF = stepRepository.getStepsFlow(id).onEmpty { emit(emptyList()) }
         val ingredientsF =
             ingredientInRecipeRepository.getIngredientsFlow(id).onEmpty { emit(emptyList()) }
@@ -76,7 +76,7 @@ class RecipeRepository @Inject constructor(
         val recipe = with(recipeMapper) {
             recipeView.viewToRoom()
         }
-        val recipeId = dao.insert(recipe)
+        val recipeId = recipeDAO.insert(recipe)
 
         recipeView.steps.forEach {
             stepRepository.insertStep(it, recipeId)
@@ -101,7 +101,7 @@ class RecipeRepository @Inject constructor(
 
         val updatedRoomRecipe =
             with(recipeMapper) { updatedRecipe.viewToRoom() }.apply { this.recipeId = recipeId }
-        dao.update(updatedRoomRecipe)
+        recipeDAO.update(updatedRoomRecipe)
 
         updateListOfEntity(
             oldList = oldRecipe.ingredients,
@@ -219,11 +219,11 @@ class RecipeRepository @Inject constructor(
             this.recipeId = recipeId
             this.inFavorite = inFavoriteNow
         }
-        dao.update(updatedRoomRecipe)
+        recipeDAO.update(updatedRoomRecipe)
     }
 
     suspend fun delete(id: Long) {
-        dao.deleteById(id)
+        recipeDAO.deleteById(id)
         stepRepository.deleteByRecipeId(id)
         tagCrossRefRepository.deleteByRecipeId(id)
         ingredientInRecipeRepository.deleteByRecipeId(id)

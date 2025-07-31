@@ -12,7 +12,7 @@ import java.time.LocalTime
 
 class RecipeCreateUIState {
     val activeTabIndex = mutableIntStateOf(0)
-    val source = mutableStateOf("")
+    val link = mutableStateOf("")
     val photoLink = mutableStateOf("")
     val mainImageContainer =  mutableStateOf<ImageBitmap?>(null)
     val name = mutableStateOf("")

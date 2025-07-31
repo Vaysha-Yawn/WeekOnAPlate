@@ -101,6 +101,7 @@
     <string name="portions_count">份数</string>
     <string name="ingredients">配料</string>
 
+    <string name="edit_ingredient">编辑成分</string>
     <string name="edit_ingredients">编辑配料</string>
     <string name="step_by_step_recipe">分步食谱</string>
     <string name="add_step">添加步骤</string>

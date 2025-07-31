@@ -51,7 +51,7 @@ class CreateRecipeUseCase @Inject constructor(
                     it.timer.longValue, it.pinnedIngredientsInd.value
                 )
             },
-            link = recipe.source.value,
+            link = recipe.link.value,
             false,
             LocalDateTime.now(),
             recipe.duration.value

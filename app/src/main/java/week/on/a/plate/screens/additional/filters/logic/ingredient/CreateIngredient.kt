@@ -9,7 +9,7 @@ import week.on.a.plate.core.dialogCore.DialogOpenParams
 import week.on.a.plate.data.dataView.recipe.IngredientCategoryView
 import week.on.a.plate.data.dataView.recipe.IngredientView
 import week.on.a.plate.data.repository.room.filters.ingredient.IngredientRepository
-import week.on.a.plate.screens.additional.filters.dialogs.editOrCreateIngredient.logic.AddIngredientViewModel
+import week.on.a.plate.dialogs.editOrCreateIngredient.logic.EditOrCreateIngredientViewModel
 import week.on.a.plate.screens.additional.filters.event.FilterEvent
 import javax.inject.Inject
 
@@ -33,7 +33,7 @@ class CreateIngredient @Inject constructor(
             )
             val defCategoryView =
                 allIngredients.find { it.id == 1L }!!
-            val params = AddIngredientViewModel.AddIngredientDialogNavParams(
+            val params = EditOrCreateIngredientViewModel.AddIngredientDialogNavParams(
                 context,
                 oldIngredient,
                 null,

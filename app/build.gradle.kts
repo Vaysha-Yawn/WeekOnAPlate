@@ -17,14 +17,14 @@ room {
 android {
 
     namespace = "week.on.a.plate"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "week.on.a.plate"
         minSdk = 28
-        targetSdk = 34
-        versionCode = 7
-        versionName = "1.4"
+        targetSdk = 36
+        versionCode = 9
+        versionName = "1.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

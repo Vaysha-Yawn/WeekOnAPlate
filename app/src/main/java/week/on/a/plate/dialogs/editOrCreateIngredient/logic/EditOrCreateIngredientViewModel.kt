@@ -1,0 +1,130 @@
+package week.on.a.plate.dialogs.editOrCreateIngredient.logic
+
+import android.content.Context
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import week.on.a.plate.R
+import week.on.a.plate.app.mainActivity.event.MainEvent
+import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.core.dialogCore.DialogOpenParams
+import week.on.a.plate.core.dialogCore.DialogViewModel
+import week.on.a.plate.data.dataView.example.Measure
+import week.on.a.plate.data.dataView.recipe.IngredientCategoryView
+import week.on.a.plate.data.dataView.recipe.IngredientView
+import week.on.a.plate.dialogs.editOrCreateIngredient.event.EditOrCreateIngredientEvent
+import week.on.a.plate.dialogs.editOrCreateIngredient.state.EditOrCreateIngredientUIState
+import week.on.a.plate.dialogs.forCreateRecipeScreen.chooseHowImagePick.logic.ChooseHowImagePickViewModel
+import week.on.a.plate.screens.additional.filters.navigation.FilterDestination
+import week.on.a.plate.screens.additional.filters.navigation.FilterNavParams
+import week.on.a.plate.screens.additional.filters.state.FilterEnum
+import week.on.a.plate.screens.additional.filters.state.FilterMode
+
+class EditOrCreateIngredientViewModel(
+    context: Context,
+    oldIngredient: IngredientView?,
+    oldCategory: IngredientCategoryView?,
+    defaultCategoryView: IngredientCategoryView,
+    viewModelScope: CoroutineScope,
+    openDialog: (DialogViewModel<*>) -> Unit,
+    closeDialog: () -> Unit,
+    val mainViewModel: MainViewModel,
+    useResult: (Pair<IngredientView, IngredientCategoryView>) -> Unit,
+) : DialogViewModel<Pair<IngredientView, IngredientCategoryView>>(
+    viewModelScope,
+    openDialog,
+    closeDialog,
+    useResult
+) {
+
+    val state: EditOrCreateIngredientUIState = EditOrCreateIngredientUIState(
+        oldIngredient?.name ?: "",
+        oldIngredient?.measure == context.getString(R.string.ml),
+        oldCategory,
+        oldIngredient?.img ?: "", oldIngredient == null
+    ).apply {
+        category.value = defaultCategoryView
+    }
+
+    val dialogOpenParams: MutableState<DialogOpenParams?> = mutableStateOf(null)
+
+    fun onEvent(event: EditOrCreateIngredientEvent) {
+        when (event) {
+            EditOrCreateIngredientEvent.Close -> close()
+            is EditOrCreateIngredientEvent.Done -> {
+                val value =
+                    if (state.isLiquid.value) Measure.Milliliters.small else Measure.Grams.small
+                val result = Pair(
+                    IngredientView(
+                        0,
+                        state.photoUri.value.lowercase(),
+                        state.name.value,
+                        event.context.getString(value)
+                    ),
+                    state.category.value!!
+                )
+                done(result)
+            }
+
+            EditOrCreateIngredientEvent.ChooseCategory -> toSearchCategory()
+            EditOrCreateIngredientEvent.PickImage -> pickImage()
+        }
+    }
+
+    private fun pickImage() {
+        mainViewModel.onEvent(MainEvent.HideDialog)
+        val params =
+            ChooseHowImagePickViewModel.ChooseHowImagePickDialogParams(state.photoUri.value) {
+                state.photoUri.value = it
+            }
+        dialogOpenParams.value = params
+    }
+
+    private fun toSearchCategory() {
+        mainViewModel.viewModelScope.launch(Dispatchers.Default) {
+            val vm = mainViewModel.filterViewModel
+            vm.state.selectedIngredientsCategories.value = listOf()
+            vm.state.resultSearchIngredientsCategories.value = listOf()
+            vm.state.searchText.value = ""
+
+            val oldFilterState = vm.state.getCopy()
+            mainViewModel.onEvent(MainEvent.HideDialog)
+            mainViewModel.onEvent(
+                MainEvent.Navigate(FilterDestination, FilterNavParams(
+                    FilterMode.One, FilterEnum.CategoryIngredient, null, true
+                ) { filters ->
+                val res = filters.ingredientsCategories?.getOrNull(0)
+                if (res != null) state.category.value = res
+                mainViewModel.onEvent(MainEvent.ShowDialog)
+                vm.isForCategory = false
+                vm.state.restoreState(oldFilterState)
+                })
+            )
+        }
+    }
+
+    class AddIngredientDialogNavParams(
+        private val context: Context,
+        private val oldIngredient: IngredientView?,
+        private val oldCategory: IngredientCategoryView?,
+        private val defaultCategoryView: IngredientCategoryView,
+        private val useResult: (Pair<IngredientView, IngredientCategoryView>) -> Unit
+    ) : DialogOpenParams {
+        override fun openDialog(mainViewModel: MainViewModel) {
+            EditOrCreateIngredientViewModel(
+                context,
+                oldIngredient,
+                oldCategory,
+                defaultCategoryView,
+                mainViewModel.getCoroutineScope(),
+                mainViewModel::openDialog,
+                mainViewModel::closeDialog,
+                mainViewModel,
+                useResult
+            )
+        }
+    }
+}

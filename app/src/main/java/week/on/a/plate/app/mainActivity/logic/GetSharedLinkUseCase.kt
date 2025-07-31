@@ -67,7 +67,7 @@ class GetSharedLinkUseCase
                         it.pinnedIngredientsInd.value
                     )
                 },
-                link = recipe.source.value, false, LocalDateTime.now(),
+                link = recipe.link.value, false, LocalDateTime.now(),
                 recipe.duration.value
             )
             recipeRepository.create(newRecipe)

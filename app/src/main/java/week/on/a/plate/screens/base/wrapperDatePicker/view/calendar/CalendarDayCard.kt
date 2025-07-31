@@ -6,7 +6,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -34,7 +33,6 @@ fun CalendarDayCard(
 ) {
     Column(
         Modifier
-            .defaultMinSize(minWidth = 48.dp)
             .padding(end = 3.dp)
             .border(
                 1.dp, if (active) {
@@ -44,12 +42,13 @@ fun CalendarDayCard(
                 }, RoundedCornerShape(10.dp)
             )
             .clickable(onClick = { change(currentInd) })
-            .padding(5.dp,), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally
+            .padding(3.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         TextInApp(
             text = dayInWeek,
             modifier = Modifier
-                .padding(horizontal = 3.dp)
         )
         TextInApp(
             dayNumber.dayOfMonth.toString(), modifier = Modifier
@@ -70,7 +69,7 @@ fun CalendarDayCard(
                         ColorTransparent
                     }, CircleShape
                 )
-                .padding(5.dp), color = MaterialTheme.colorScheme.onBackground
+                .padding(3.dp), color = MaterialTheme.colorScheme.onBackground
         )
     }
 }

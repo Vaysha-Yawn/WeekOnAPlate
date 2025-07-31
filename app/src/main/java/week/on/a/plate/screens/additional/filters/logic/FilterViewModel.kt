@@ -22,7 +22,7 @@ import week.on.a.plate.data.repository.room.filters.ingredientCategory.Ingredien
 import week.on.a.plate.data.repository.room.filters.recipeTagCategory.RecipeTagCategoryRepository
 import week.on.a.plate.dialogs.editOrDelete.event.EditOrDeleteEvent
 import week.on.a.plate.dialogs.editOrDelete.logic.EditOrDeleteViewModel
-import week.on.a.plate.screens.additional.filters.dialogs.selectedFilters.logic.SelectedFiltersViewModel
+import week.on.a.plate.dialogs.selectedFilters.logic.SelectedFiltersViewModel
 import week.on.a.plate.screens.additional.filters.event.FilterEvent
 import week.on.a.plate.screens.additional.filters.logic.ingredient.IngredientCRUD
 import week.on.a.plate.screens.additional.filters.logic.ingredientCategory.IngredientCategoryCRUD

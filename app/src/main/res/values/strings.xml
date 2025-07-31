@@ -99,7 +99,7 @@
     <string name="add_photo">Add Photo</string>
     <string name="portions_count">Number of Servings</string>
     <string name="ingredients">Ingredients</string>
-
+    <string name="edit_ingredient">Edit ingredient</string>
     <string name="edit_ingredients">Edit ingredients</string>
     <string name="step_by_step_recipe">Step by step recipe</string>
     <string name="add_step">Add step</string>
@@ -207,7 +207,7 @@
     <string name="enter_step_description">Enter Step Description</string>
     <string name="edit_pinned_ingredients">Edit Pinned Ingredients</string>
     <string name="timer">Timer</string>
-
+    <string name="edit_tag">Edit Tag</string>
     <string name="edit_tags">Edit Tags</string>
     <string name="recipe_creation">Create Recipe</string>
     <string name="recipe_edition">Edit Recipe</string>

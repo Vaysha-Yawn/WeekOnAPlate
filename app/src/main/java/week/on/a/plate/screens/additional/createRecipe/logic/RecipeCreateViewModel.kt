@@ -152,7 +152,7 @@ class RecipeCreateViewModel @Inject constructor(
     }
 
     private fun setStateByOldRecipe(oldRecipe: RecipeView) {
-        state.source.value = oldRecipe.link
+        state.link.value = oldRecipe.link
         state.photoLink.value = oldRecipe.img
         state.name.value = oldRecipe.name
         state.description.value = oldRecipe.description

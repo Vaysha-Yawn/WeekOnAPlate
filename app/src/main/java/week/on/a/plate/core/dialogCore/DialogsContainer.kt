@@ -46,6 +46,12 @@ import week.on.a.plate.dialogs.editIngredientInMenu.view.EditOrAddIngredientBott
 import week.on.a.plate.dialogs.editOneString.event.EditOneStringEvent
 import week.on.a.plate.dialogs.editOneString.logic.EditOneStringViewModel
 import week.on.a.plate.dialogs.editOneString.view.EditOneStringContent
+import week.on.a.plate.dialogs.editOrCreateIngredient.event.EditOrCreateIngredientEvent
+import week.on.a.plate.dialogs.editOrCreateIngredient.logic.EditOrCreateIngredientViewModel
+import week.on.a.plate.dialogs.editOrCreateIngredient.view.EditOrCreateIngredient
+import week.on.a.plate.dialogs.editOrCreateTag.event.EditOrCreateTagEvent
+import week.on.a.plate.dialogs.editOrCreateTag.logic.EditOrCreateTagViewModel
+import week.on.a.plate.dialogs.editOrCreateTag.view.EditOrCreateTag
 import week.on.a.plate.dialogs.editOrDelete.event.EditOrDeleteEvent
 import week.on.a.plate.dialogs.editOrDelete.logic.EditOrDeleteViewModel
 import week.on.a.plate.dialogs.editOrDelete.view.EditOrDeleteDialogContent
@@ -58,6 +64,9 @@ import week.on.a.plate.dialogs.editPositionRecipeMoreDialog.view.EditRecipePosit
 import week.on.a.plate.dialogs.editSelectionDialog.event.EditSelectionEvent
 import week.on.a.plate.dialogs.editSelectionDialog.logic.EditSelectionViewModel
 import week.on.a.plate.dialogs.editSelectionDialog.view.EditSelectionContent
+import week.on.a.plate.dialogs.filterVoiceApply.event.FilterVoiceApplyEvent
+import week.on.a.plate.dialogs.filterVoiceApply.logic.FilterVoiceApplyViewModel
+import week.on.a.plate.dialogs.filterVoiceApply.view.DialogVoiceApplyTags
 import week.on.a.plate.dialogs.forCreateRecipeScreen.chooseHowImagePick.event.ChooseHowImagePickEvent
 import week.on.a.plate.dialogs.forCreateRecipeScreen.chooseHowImagePick.logic.ChooseHowImagePickViewModel
 import week.on.a.plate.dialogs.forCreateRecipeScreen.chooseHowImagePick.view.ChooseHowImagePickContent
@@ -76,21 +85,12 @@ import week.on.a.plate.dialogs.forSettingsScreen.setPermanentMeals.view.SetPerma
 import week.on.a.plate.dialogs.forSettingsScreen.setTheme.event.SetThemeEvent
 import week.on.a.plate.dialogs.forSettingsScreen.setTheme.logic.SetThemesViewModel
 import week.on.a.plate.dialogs.forSettingsScreen.setTheme.view.SetThemeStart
+import week.on.a.plate.dialogs.selectedFilters.event.SelectedFiltersEvent
+import week.on.a.plate.dialogs.selectedFilters.logic.SelectedFiltersViewModel
+import week.on.a.plate.dialogs.selectedFilters.view.DialogSelectedTags
 import week.on.a.plate.dialogs.timePick.event.TimePickEvent
 import week.on.a.plate.dialogs.timePick.logic.TimePickViewModel
 import week.on.a.plate.dialogs.timePick.view.TimePickDialog
-import week.on.a.plate.screens.additional.filters.dialogs.editOrCreateIngredient.event.AddIngredientEvent
-import week.on.a.plate.screens.additional.filters.dialogs.editOrCreateIngredient.logic.AddIngredientViewModel
-import week.on.a.plate.screens.additional.filters.dialogs.editOrCreateIngredient.view.AddIngredient
-import week.on.a.plate.screens.additional.filters.dialogs.editOrCreateTag.event.AddTagEvent
-import week.on.a.plate.screens.additional.filters.dialogs.editOrCreateTag.logic.AddTagViewModel
-import week.on.a.plate.screens.additional.filters.dialogs.editOrCreateTag.view.AddTag
-import week.on.a.plate.screens.additional.filters.dialogs.filterVoiceApply.event.FilterVoiceApplyEvent
-import week.on.a.plate.screens.additional.filters.dialogs.filterVoiceApply.logic.FilterVoiceApplyViewModel
-import week.on.a.plate.screens.additional.filters.dialogs.filterVoiceApply.view.DialogVoiceApplyTags
-import week.on.a.plate.screens.additional.filters.dialogs.selectedFilters.event.SelectedFiltersEvent
-import week.on.a.plate.screens.additional.filters.dialogs.selectedFilters.logic.SelectedFiltersViewModel
-import week.on.a.plate.screens.additional.filters.dialogs.selectedFilters.view.DialogSelectedTags
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -110,7 +110,7 @@ fun DialogsContainer(
                     Modifier
                         .background(MaterialTheme.colorScheme.background, RoundedCornerShape(20.dp))
                         .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(20.dp))
-                        .padding(vertical = 36.dp)
+                        .padding(36.dp)
                 ) {
                     CalendarMy(data.stateCalendar, { event -> data.onEvent(event) }) {
                         onEvent(ChooseWeekDialogEvent.Done(it))
@@ -203,28 +203,32 @@ fun DialogsContainer(
             }
         }
 
-        is AddTagViewModel -> {
+        is EditOrCreateTagViewModel -> {
             val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
             BottomDialogContainer(
                 sheetState,
-                { onEvent(AddTagEvent.Close) }) {
-                AddTag(
+                { onEvent(EditOrCreateTagEvent.Close) }) {
+                EditOrCreateTag(
                     state = data.state
-                ) { addTagEvent: AddTagEvent -> onEvent(addTagEvent) }
+                ) { editOrCreateTagEvent: EditOrCreateTagEvent -> onEvent(editOrCreateTagEvent) }
             }
             LaunchedEffect(Unit) {
                 sheetState.show()
             }
         }
 
-        is AddIngredientViewModel -> {
+        is EditOrCreateIngredientViewModel -> {
             val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
             BottomDialogContainer(
                 sheetState,
-                { onEvent(AddIngredientEvent.Close) }) {
-                AddIngredient(
+                { onEvent(EditOrCreateIngredientEvent.Close) }) {
+                EditOrCreateIngredient(
                     state = data.state
-                ) { addIngredientEvent: AddIngredientEvent -> onEvent(addIngredientEvent) }
+                ) { editOrCreateIngredientEvent: EditOrCreateIngredientEvent ->
+                    onEvent(
+                        editOrCreateIngredientEvent
+                    )
+                }
             }
             LaunchedEffect(Unit) {
                 sheetState.show()

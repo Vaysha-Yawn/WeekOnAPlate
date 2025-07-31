@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -57,7 +59,8 @@ private fun SpecifySelectionAltContent(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.surface)
-            .padding(24.dp),
+            .padding(24.dp)
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.Start
     ) {
         Row(
@@ -65,7 +68,7 @@ private fun SpecifySelectionAltContent(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            CloseButton { onEvent(SpecifySelectionEvent.Back) }
+            CloseButton(Modifier) { onEvent(SpecifySelectionEvent.Back) }
             TextTitleItalic(
                 text = stringResource(R.string.specify_selection),
                 modifier = Modifier.fillMaxWidth(),
@@ -77,7 +80,7 @@ private fun SpecifySelectionAltContent(
             onEvent(SpecifySelectionEvent.UpdateSelections(context))
             onEvent(SpecifySelectionEvent.ApplyDate(date))
         }
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         ChooseSelectionSpecifySelection(state, onEvent, this)
 
