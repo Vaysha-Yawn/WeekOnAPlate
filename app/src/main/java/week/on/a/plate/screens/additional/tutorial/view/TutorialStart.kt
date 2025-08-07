@@ -1,12 +1,13 @@
 package week.on.a.plate.screens.additional.tutorial.view
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,8 +17,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,23 +28,29 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import week.on.a.plate.R
 import week.on.a.plate.app.mainActivity.logic.MainViewModel
+import week.on.a.plate.app.mainActivity.view.MainEventResolve
 import week.on.a.plate.core.theme.WeekOnAPlateTheme
-import week.on.a.plate.core.uitools.ImageLoad
-import week.on.a.plate.core.uitools.TextBody
+import week.on.a.plate.core.uitools.TextAnnotated
 import week.on.a.plate.core.uitools.TextTitle
 import week.on.a.plate.core.uitools.buttons.DoneButton
 import week.on.a.plate.screens.additional.tutorial.event.TutorialEvent
 import week.on.a.plate.screens.additional.tutorial.logic.TutorialViewModel
+import week.on.a.plate.screens.additional.tutorial.state.TutorialEnum
 import week.on.a.plate.screens.additional.tutorial.state.TutorialStateUI
 
 @Composable
 fun TutorialStart(
     viewModel: MainViewModel,
-    vm: TutorialViewModel = hiltViewModel()
+    target: TutorialEnum,
+    vm: TutorialViewModel = hiltViewModel<TutorialViewModel>()
 ) {
+    LaunchedEffect(target) {
+        vm.launch(target)
+    }
     TutorialContent(vm.stateUI) { event: TutorialEvent ->
         vm.onEvent(event)
     }
+    MainEventResolve(vm.mainEvent, vm.dialogOpenParams, viewModel)
 }
 
 @Composable
@@ -50,17 +59,57 @@ private fun TutorialContent(
     onEvent: (TutorialEvent) -> Unit,
 ) {
     TutorialWrapper(state, onEvent) { scope ->
+        val page = state.tutorialEnum.value.pages[state.activePageInd.intValue]
         with(scope) {
-            ImageLoad(
-                state.imgUri.value,
-                Modifier
-                    .weight(1f)
-                    .defaultMinSize(minHeight = 150.dp)
+            Image(
+                painterResource(page.img), contentDescription = "",
+                modifier = Modifier.fillMaxSize(0.6f),
+                contentScale = ContentScale.Fit
             )
             Empty()
-            TextTitle(state.title.value)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                if (state.activePageInd.intValue != 0) {
+                    Icon(
+                        painterResource(R.drawable.back),
+                        "Back",
+                        tint = MaterialTheme.colorScheme.onBackground,
+                        modifier = Modifier
+                            .clickable {
+                                onEvent(TutorialEvent.LastPage)
+                            }
+                            .size(24.dp)
+                    )
+                } else {
+                    Empty()
+                }
+                for (i in 0 until state.tutorialEnum.value.pages.size) {
+                    RadioButton(
+                        state.activePageInd.intValue == i,
+                        {
+                            onEvent(TutorialEvent.SelectPage(i))
+                        },
+                        colors = RadioButtonDefaults
+                            .colors(selectedColor = MaterialTheme.colorScheme.secondary),
+                        modifier = Modifier.size(36.dp)
+                    )
+                }
+                if (state.activePageInd.intValue != state.tutorialEnum.value.pages.size - 1) {
+                    Icon(
+                        painterResource(R.drawable.forward),
+                        "Next",
+                        tint = MaterialTheme.colorScheme.onBackground,
+                        modifier = Modifier
+                            .clickable {
+                                onEvent(TutorialEvent.NextPage)
+                            }
+                            .size(24.dp)
+                    )
+                } else {
+                    Empty()
+                }
+            }
             Empty()
-            TextBody(state.description.value)
+            TextAnnotated(page.text, page.inlineContent)
         }
     }
 }
@@ -70,9 +119,12 @@ private fun TutorialWrapper(
     state: TutorialStateUI,
     onEvent: (TutorialEvent) -> Unit, content: @Composable (scope: ColumnScope) -> Unit
 ) {
+    val page = state.tutorialEnum.value.pages[state.activePageInd.intValue]
+    val sizePages = state.tutorialEnum.value.pages.size
     Column(
         Modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
             .padding(24.dp),
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -82,31 +134,8 @@ private fun TutorialWrapper(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                painterResource(R.drawable.back),
-                "Back",
-                tint = MaterialTheme.colorScheme.onBackground,
-                modifier = Modifier
-                    .clickable {
-                        onEvent(TutorialEvent.LastPage)
-                    }
-                    .size(36.dp)
-            )
-
-            Row {
-                for (i in 0 until state.sizePages.intValue) {
-                    RadioButton(
-                        state.activePageInd.intValue == i,
-                        {
-                            onEvent(TutorialEvent.SelectPage(i))
-                        },
-                        colors = RadioButtonDefaults
-                            .colors(selectedColor = MaterialTheme.colorScheme.primary),
-                        modifier = Modifier.size(36.dp)
-                    )
-                }
-            }
-
+            Empty()
+            TextTitle(page.title)
             Icon(
                 painterResource(R.drawable.close),
                 "",
@@ -122,11 +151,11 @@ private fun TutorialWrapper(
         content(this)
         Empty()
         DoneButton(
-            if (state.activePageInd.intValue == state.sizePages.intValue - 1) stringResource(
+            if (state.activePageInd.intValue != sizePages - 1) stringResource(
                 R.string.next
             ) else stringResource(R.string.done)
         ) {
-            if (state.activePageInd.intValue == state.sizePages.intValue - 1) {
+            if (state.activePageInd.intValue == sizePages - 1) {
                 onEvent(TutorialEvent.Done)
             } else {
                 onEvent(TutorialEvent.NextPage)
@@ -136,7 +165,7 @@ private fun TutorialWrapper(
 }
 
 @Composable
-fun Empty(){
+fun Empty() {
     Spacer(Modifier.size(24.dp))
 }
 
@@ -145,12 +174,7 @@ fun Empty(){
 fun PreviewTutorial() {
     WeekOnAPlateTheme {
         val state = TutorialStateUI()
-        state.sizePages.intValue = 5
-        state.activePageInd.intValue = 2
-        state.title.value = "Создание рецепта"
-        state.imgUri.value = "https???"
-        state.description.value =
-            "Чтобы создать рецепт, вы можете нажать на зелёную кнопку + на экране поиска рецептов или при поиске выбрать опцию создание рецепта."
+        state.activePageInd.intValue = 0
         TutorialContent(state) {}
     }
 }

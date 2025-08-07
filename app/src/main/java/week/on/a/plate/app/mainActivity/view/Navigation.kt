@@ -32,6 +32,7 @@ import week.on.a.plate.screens.additional.specifyRecipeToCookPlan.view.SpecifyFo
 import week.on.a.plate.screens.additional.specifySelection.navigation.SpecifySelectionDestination
 import week.on.a.plate.screens.additional.specifySelection.view.SpecifySelectionAltStart
 import week.on.a.plate.screens.additional.tutorial.navigation.TutorialDestination
+import week.on.a.plate.screens.additional.tutorial.state.TutorialEnum
 import week.on.a.plate.screens.additional.tutorial.view.TutorialStart
 import week.on.a.plate.screens.base.cookPlanner.view.CookPlannerStart
 import week.on.a.plate.screens.base.menu.presenter.event.MenuEvent
@@ -101,11 +102,13 @@ fun Navigation(
             SpecifySelectionAltStart(viewModel.specifySelectionViewModel, viewModel)
         }
 
-        composable<TutorialDestination> {
+        composable<TutorialDestination> { entry ->
             viewModel.isActiveBaseScreen.value = false
             viewModel.isActivePlusButton.value = false
             viewModel.isActiveFilterScreen.value = false
-            TutorialStart(viewModel)
+            val targetName = entry.arguments?.getString("target")
+            val target = TutorialEnum.entries.find { it -> targetName == it.name }!!
+            TutorialStart(viewModel, target)
         }
 
         composable<FilterDestination>() {

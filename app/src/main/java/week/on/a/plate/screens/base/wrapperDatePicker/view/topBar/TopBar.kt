@@ -19,9 +19,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import week.on.a.plate.R
-import week.on.a.plate.core.uitools.TextBodyDisActive
+import week.on.a.plate.core.Event
 import week.on.a.plate.core.theme.ColorButtonNegativeGrey
 import week.on.a.plate.core.uitools.TextBody
+import week.on.a.plate.core.uitools.TextBodyDisActive
+import week.on.a.plate.core.uitools.buttons.HelpButton
+import week.on.a.plate.screens.additional.tutorial.state.TutorialEnum
+import week.on.a.plate.screens.additional.tutorial.view.Empty
 import week.on.a.plate.screens.base.wrapperDatePicker.event.WrapperDatePickerEvent
 import week.on.a.plate.screens.base.wrapperDatePicker.state.WrapperDatePickerUIState
 
@@ -33,7 +37,7 @@ fun TopBar(
     wrapperDatePickerUIState: WrapperDatePickerUIState,
     actionDeleteSelected:()->Unit = {},
     actionSelectedToShopList:()->Unit = {},
-    onEvent: (event: WrapperDatePickerEvent) -> Unit,
+    onEvent: (event: Event) -> Unit,
 ) {
     Column {
         Row(
@@ -77,6 +81,8 @@ fun TopBar(
                             .padding(6.dp)
                             .size(24.dp)
                     )
+                    Empty()
+                    HelpButton(TutorialEnum.Menu, onEvent)
                 }
             }
         }
